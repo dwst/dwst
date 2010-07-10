@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<!--
+DarkWebSocketTerminal
+
+CC0, http://creativecommons.org/publicdomain/zero/1.0/
+
+To the extent possible under law, DarkWebSocketTerminal developers have waived all copyright and related or neighboring rights to DarkWebSocketTerminal.
+
+DarkWebSocketTerminal developers:
+Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010
+
+-->
+<html>
+<head>
+<title>DarkWebSocketTerminal 0.1.1</title>
+<script>
+
+var ws;
+
+refreshclock = function(){
+  var time = currenttime();
+  document.getElementById('clock1').innerHTML = time;
+};
+
+currenttime = function(){
+  addzero = function(i){
+    if (i < 10){
+      return "0"+i;
+    }
+    return ""+i;
+  };
+  var date = new Date();
+  return time = addzero(date.getHours()) +":"+ addzero(date.getMinutes())+'<span class="sec">:'+ addzero(date.getSeconds())+'</span>';
+
+};
+
+log = function(msg, type){
+  var time = currenttime();
+  document.getElementById('ter1').innerHTML += '<tr><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+msg+'</td></tr>';
+  var screen = document.getElementById("screen1");
+  screen.scrollTop = screen.scrollHeight;
+};
+
+send = function() {
+  var msg = document.getElementById('msg1').value;
+  document.getElementById('msg1').value = "";
+  log(msg, "sent");
+  ws.send(msg);
+};
+
+connect = function(){
+
+if (("WebSocket" in window) == false) {
+  alert('Your browser does not seem to support websockets.');
+  return;
+}
+
+
+if(document.getElementById('conbut1').value != "disconnect") {
+  document.getElementById('conbut1').value = "disconnect";
+  document.getElementById('url1').setAttribute("readonly", "readonly");
+  document.getElementById('proto1').setAttribute("readonly", "readonly");
+  var url = document.getElementById('url1').value;
+  var proto = document.getElementById('proto1').value;
+  var protostring = ''
+  if(proto == '')
+  {
+    ws = new WebSocket(url);
+  }
+  else
+  {
+    ws = new WebSocket(url,proto);
+    protostring = " (protocol: " + proto + ")"
+  }
+  ws.onopen = function() {
+    document.getElementById('sendbut1').removeAttribute("disabled");
+    log("connection established, " + url + protostring, "system");
+    document.getElementById('msg1').focus();
+  };
+  ws.onclose = function() {
+    log("connection closed, " + url + protostring, "system");
+    document.getElementById('conbut1').value = "connect";
+    document.getElementById('url1').removeAttribute("readonly");
+    document.getElementById('proto1').removeAttribute("readonly");
+    document.getElementById('sendbut1').setAttribute("disabled", "disabled");
+  };
+  ws.onmessage = function(msg) {
+    log(msg.data, "received");
+  };
+  ws.onerror = function() {
+    log('websocket error + url + protostring', "system");
+  };
+}
+else {
+  ws.close();
+}
+};
+
+setInterval( "refreshclock();", 500 );
+
+linkfix = function() {
+  document.getElementById("sourcelink").setAttribute("href","view-source:"+location.href);
+};
+
+</script>
+
+<style>
+
+body
+{
+  background-color: #540;
+}
+
+div.terminal
+{
+  font-family: monospace;
+  background-color: #222;
+  color: #777;
+  border: thin solid #000;
+  margin: 1em;
+}
+
+div.terminal input[type="text"]
+{
+  border: thin solid #000;
+}
+input[type="text"]
+{
+  width: 100%;
+}
+input[type="button"]
+{
+  padding: 0;
+  width: 6em;
+}
+.button
+{
+  width: 5em;
+}
+.consolebar
+{
+  width: 100%;
+  margin: 0;
+  padding: 0.2em 0;
+}
+
+.consolebar table
+{
+  margin: 0;
+  padding: 0;
+}
+table.terminal
+{
+  width: 98%;
+  background-color: #000;
+  color: #ccc;
+  font-family: monospace;
+}
+.direction
+{
+  width: 3em;
+  text-align: right;
+}
+
+.sent
+{
+  color: #77c;
+}
+
+.received
+{
+  color: #c77;
+}
+
+.system
+{
+  color: #7f7;
+}
+
+.terminal input[type="text"]
+{
+  background-color: #444;
+  color: #fff;
+  font-family: monospace;
+  border: thin solid #f00;
+}
+
+.terminal input[readonly="readonly"]
+{
+  background-color: #555;
+  color: #ddd;
+
+}
+
+.consolebar .time
+{
+  font-family: monospace;
+  width: 1em;
+  color: #ddd;
+}
+
+.time
+{
+  width: 3em;
+}
+
+.screen
+{
+  height: 20em;
+  background-color: #000;
+  overflow: auto;
+}
+
+.sec
+{
+  color: #777;
+}
+
+.label
+{
+  width: 1em;
+}
+
+.protofield
+{
+  width: 15%;
+}
+
+.consolebar .leftpad
+{
+  padding-left: 1em;
+}
+
+.consolebar .rightpad
+{
+  padding-right: 1em;
+}
+
+.footer
+{
+  text-align: center;
+}
+
+h1
+{
+  text-align: center;
+  font-family: sans-serif;
+}
+.footer a
+{
+  color: #000;
+}
+.footer img
+{
+  opacity: 0.2;
+}
+.footer img:hover
+{
+  opacity: 0.9;
+}
+</style>
+</head>
+<body onload="linkfix();">
+<h1>DarkWebSocketTerminal</h1>
+<div class="terminal">
+<table class="consolebar"><tr>
+<td class="label leftpad">socket:</td>
+<td><input type="text" id="url1" value="ws://websox.org/echo"></td>
+<td class="label leftpad">protocol:</td>
+<td class="protofield"><input type="text" id="proto1" value=""></td>
+<td class="button leftpad rightpad"><input id="conbut1" type="button" value="connect" onClick="connect();"></td>
+</tr></table>
+<div id="screen1" class="screen">
+<table id="ter1" class="terminal">
+</table>
+</div>
+<table class="consolebar"><tr>
+<td id="clock1" class="time rightpad leftpad">00:00<span class="sec">:00</span></td>
+<td><input id="msg1" type="text" value="" onkeydown="if (event.keyCode == 13) document.getElementById('sendbut1').click()"></td>
+<td class="button rightpad leftpad"><input id="sendbut1" type="button" value="send" disabled="disabled" onClick="send();"></td>
+</tr></table>
+</div>
+
+<p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#" class="footer"> 
+  <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"> 
+    <img src="http://i.creativecommons.org/l/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /> 
+  </a> 
+  <br /> 
+
+  To the extent possible under law, <a id="sourcelink" href="" rel="dct:publisher"><span property="dct:title">DarkWebSocketTerminal developers</span></a> 
+  have waived all copyright and related or neighboring rights to
+  <span property="dct:title">DarkWebSocketTerminal</span>.
+</p>
+</body>
+</html>
