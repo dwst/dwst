@@ -88,7 +88,7 @@ if(document.getElementById('conbut1').value != "disconnect") {
     log(msg.data, "received");
   };
   ws.onerror = function() {
-    log('websocket error + url + protostring', "system");
+    log('websocket error: ' + url + ' ' + protostring, "system");
   };
 }
 else {
