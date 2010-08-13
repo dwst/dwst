@@ -20,11 +20,11 @@ var ws;
 function refreshclock() {
   var time = currenttime();
   document.getElementById('clock1').innerHTML = time;
-};
+}
 
 function currenttime() {
-  addzero = function(i){
-    if (i < 10){
+  addzero = function(i) {
+    if (i < 10) {
       return "0"+i;
     }
     return ""+i;
@@ -32,85 +32,78 @@ function currenttime() {
   var date = new Date();
   return time = addzero(date.getHours()) +":"+ addzero(date.getMinutes())+'<span class="sec">:'+ addzero(date.getSeconds())+'</span>';
 
-};
+}
 
 function log(msg, type) {
   var time = currenttime();
   document.getElementById('ter1').innerHTML += '<tr><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+msg+'</td></tr>';
   var screen = document.getElementById("screen1");
   screen.scrollTop = screen.scrollHeight;
-};
+}
 
 function send() {
   var msg = document.getElementById('msg1').value;
   document.getElementById('msg1').value = "";
   log(msg, "sent");
   ws.send(msg);
-};
+}
 
 function connect() {
-
-if (("WebSocket" in window) == false) {
-  alert('Your browser does not seem to support websockets.');
-  return;
-}
-
-
-if(document.getElementById('conbut1').value != "disconnect") {
-  document.getElementById('conbut1').value = "disconnect";
-  document.getElementById('url1').setAttribute("readonly", "readonly");
-  document.getElementById('proto1').setAttribute("readonly", "readonly");
-  var url = document.getElementById('url1').value;
-  var proto = document.getElementById('proto1').value;
-  var protostring = ''
-  if(proto == '')
-  {
-    ws = new WebSocket(url);
+  if (("WebSocket" in window) == false) {
+    alert('Your browser does not seem to support websockets.');
+    return;
   }
-  else
-  {
-    ws = new WebSocket(url,proto);
-    protostring = " (protocol: " + proto + ")"
+  if(document.getElementById('conbut1').value != "disconnect") {
+    document.getElementById('conbut1').value = "disconnect";
+    document.getElementById('url1').setAttribute("readonly", "readonly");
+    document.getElementById('proto1').setAttribute("readonly", "readonly");
+    var url = document.getElementById('url1').value;
+    var proto = document.getElementById('proto1').value;
+    var protostring = ''
+    if(proto == '') {
+      ws = new WebSocket(url);
+    }
+    else {
+      ws = new WebSocket(url,proto);
+      protostring = " (protocol: " + proto + ")"
+    }
+    ws.onopen = function() {
+      document.getElementById('sendbut1').removeAttribute("disabled");
+      log("connection established, " + url + protostring, "system");
+      document.getElementById('msg1').focus();
+    };
+    ws.onclose = function() {
+      log("connection closed, " + url + protostring, "system");
+      document.getElementById('conbut1').value = "connect";
+      document.getElementById('url1').removeAttribute("readonly");
+      document.getElementById('proto1').removeAttribute("readonly");
+      document.getElementById('sendbut1').setAttribute("disabled", "disabled");
+    };
+    ws.onmessage = function(msg) {
+      log(msg.data, "received");
+    };
+    ws.onerror = function() {
+      log('websocket error: ' + url + ' ' + protostring, "system");
+    };
   }
-  ws.onopen = function() {
-    document.getElementById('sendbut1').removeAttribute("disabled");
-    log("connection established, " + url + protostring, "system");
-    document.getElementById('msg1').focus();
-  };
-  ws.onclose = function() {
-    log("connection closed, " + url + protostring, "system");
-    document.getElementById('conbut1').value = "connect";
-    document.getElementById('url1').removeAttribute("readonly");
-    document.getElementById('proto1').removeAttribute("readonly");
-    document.getElementById('sendbut1').setAttribute("disabled", "disabled");
-  };
-  ws.onmessage = function(msg) {
-    log(msg.data, "received");
-  };
-  ws.onerror = function() {
-    log('websocket error: ' + url + ' ' + protostring, "system");
-  };
+  else {
+    ws.close();
+  }
 }
-else {
-  ws.close();
-}
-};
-
+  
 setInterval( "refreshclock();", 500 );
 
 function linkfix() {
   document.getElementById("sourcelink").setAttribute("href","view-source:"+location.href);
-};
+}
 
 function parseParams() {
     var query = window.location.href.split('?')[1];
-    if (query !== undefined)
-    {
+    if (query !== undefined) {
         var defs = query.split('&');
     }
     var params = {}
-    for (var i in defs)
-    {
+    for (var i in defs) {
         var parts = defs[i].split("=");
         params[parts[0]] = parts[1];
     }
