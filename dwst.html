@@ -102,6 +102,12 @@ linkfix = function() {
   document.getElementById("sourcelink").setAttribute("href","view-source:"+location.href);
 };
 
+function init() {
+  linkfix();
+  document.getElementById('url1').focus();
+
+}
+
 </script>
 
 <style>
@@ -109,6 +115,11 @@ linkfix = function() {
 body
 {
   background-color: #540;
+}
+
+h1 a
+{
+  color: #000;
 }
 
 div.terminal
@@ -260,14 +271,14 @@ h1
 }
 </style>
 </head>
-<body onload="linkfix();">
-<h1>DarkWebSocketTerminal</h1>
+<body onload="init();">
+<h1><a href="?">DarkWebSocketTerminal</a></h1>
 <div class="terminal">
 <table class="consolebar"><tr>
 <td class="label leftpad">socket:</td>
-<td><input type="text" id="url1" value="ws://websox.org/echo"></td>
+<td><input type="text" id="url1" value="ws://websox.org/echo" onkeydown="if (event.keyCode == 13) document.getElementById('conbut1').click()"></td>
 <td class="label leftpad">protocol:</td>
-<td class="protofield"><input type="text" id="proto1" value=""></td>
+<td class="protofield"><input type="text" id="proto1" value="" onkeydown="if (event.keyCode == 13) document.getElementById('conbut1').click()"></td>
 <td class="button leftpad rightpad"><input id="conbut1" type="button" value="connect" onClick="connect();"></td>
 </tr></table>
 <div id="screen1" class="screen">
@@ -276,7 +287,7 @@ h1
 </div>
 <table class="consolebar"><tr>
 <td id="clock1" class="time rightpad leftpad">00:00<span class="sec">:00</span></td>
-<td><input id="msg1" type="text" value="" onkeydown="if (event.keyCode == 13) document.getElementById('sendbut1').click()"></td>
+<td><input id="msg1" type="text" value="" onkeydown="if (event.keyCode == 13) {document.getElementById('sendbut1').click() }else if (event.keyIdentifier == 'U+001B') {document.getElementById('conbut1').click(); document.getElementById('url1').focus();}"></td>
 <td class="button rightpad leftpad"><input id="sendbut1" type="button" value="send" disabled="disabled" onClick="send();"></td>
 </tr></table>
 </div>
