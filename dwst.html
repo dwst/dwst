@@ -17,12 +17,12 @@ Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010
 
 var ws;
 
-refreshclock = function(){
+function refreshclock() {
   var time = currenttime();
   document.getElementById('clock1').innerHTML = time;
 };
 
-currenttime = function(){
+function currenttime() {
   addzero = function(i){
     if (i < 10){
       return "0"+i;
@@ -34,21 +34,21 @@ currenttime = function(){
 
 };
 
-log = function(msg, type){
+function log(msg, type) {
   var time = currenttime();
   document.getElementById('ter1').innerHTML += '<tr><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+msg+'</td></tr>';
   var screen = document.getElementById("screen1");
   screen.scrollTop = screen.scrollHeight;
 };
 
-send = function() {
+function send() {
   var msg = document.getElementById('msg1').value;
   document.getElementById('msg1').value = "";
   log(msg, "sent");
   ws.send(msg);
 };
 
-connect = function(){
+function connect() {
 
 if (("WebSocket" in window) == false) {
   alert('Your browser does not seem to support websockets.');
@@ -98,12 +98,38 @@ else {
 
 setInterval( "refreshclock();", 500 );
 
-linkfix = function() {
+function linkfix() {
   document.getElementById("sourcelink").setAttribute("href","view-source:"+location.href);
 };
 
+function parseParams() {
+    var query = window.location.href.split('?')[1];
+    if (query !== undefined)
+    {
+        var defs = query.split('&');
+    }
+    var params = {}
+    for (var i in defs)
+    {
+        var parts = defs[i].split("=");
+        params[parts[0]] = parts[1];
+    }
+    return params;
+}
+
 function init() {
+  var params = parseParams();
+  var socket = params.socket;
+  var proto = params.proto;
+
   linkfix();
+  if (proto) {
+      document.getElementById('proto1').value = proto
+  }
+  if (socket) {
+      document.getElementById('url1').value = socket
+  }
+
   document.getElementById('url1').focus();
 
 }
