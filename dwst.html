@@ -35,8 +35,9 @@ function currenttime() {
 }
 
 function log(msg, type) {
+  var escaped = msg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   var time = currenttime();
-  document.getElementById('ter1').innerHTML += '<tr><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+msg+'</td></tr>';
+  document.getElementById('ter1').innerHTML += '<tr><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+escaped+'</td></tr>';
   var screen = document.getElementById("screen1");
   screen.scrollTop = screen.scrollHeight;
 }
