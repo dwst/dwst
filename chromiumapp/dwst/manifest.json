@@ -1,7 +1,7 @@
 {
   "name": "Dark WebSocket Terminal",
   "description": "Dark WebSocket Terminal is a web application that provides netcat like functionality for conversing with a WebSocket server.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "app": {
     "launch": {
       "local_path": "dwst.html"
