@@ -7,15 +7,218 @@ CC0, http://creativecommons.org/publicdomain/zero/1.0/
 To the extent possible under law, Dark WebSocket Terminal developers have waived all copyright and related or neighboring rights to Dark WebSocket Terminal.
 
 Dark WebSocket Terminal developers:
-Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010
+Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010-2012
 
 -->
 <html>
 <head>
-<title>Dark WebSocket Terminal 1.1.5</title>
+<title>Dark WebSocket Terminal</title>
 <script>
 
-var ws;
+var ws = {};
+var intervalId = null;
+var VERSION = '1.1.6';
+
+function Interval() {}
+Interval.prototype.commands = function() {
+  return ['interval'];
+}
+Interval.prototype.help = function() {
+  return ['usage: /interval <interval> [message]','       /interval'];
+}
+Interval.prototype.run = function(params) {
+  if (params.length < 1) {
+    if (intervalId != null) {
+      clearInterval(intervalId);
+      log('interval cleared', 'system');
+    } else {
+      log('no interval to clear', 'error');
+    }
+    return;
+  }
+  var count = 0;
+  var first = params.shift();
+  var interval = parseInt(first, 10);
+  var spammer = function() {
+    if (!isconnected()) {
+      if (intervalId != null) {
+        log('interval failed, no connection', 'error');
+        run('interval');
+      }
+      return;
+    }
+    if (params.length < 1) {
+      run('send', ['' + count]);
+      count += 1;
+      return;
+    }
+    run('send', params);
+  }
+  if (intervalId != null) {
+    log('clearing old interval', 'system');
+    clearInterval(intervalId);
+  }
+  intervalId = setInterval(spammer, interval);
+  log('interval set', 'system');
+}
+
+function Spam() {}
+Spam.prototype.commands = function() {
+  return ['spam'];
+}
+Spam.prototype.help = function() {
+  return ['usage: /spam <times> [message]'];
+}
+Spam.prototype.run = function(params) {
+  var times = params.shift();
+  function spam(limit, i) {
+    if (typeof(i) == typeof(undefiend)) {
+      i = 0;
+    }
+    if (i == limit) {
+      return;
+    }
+    if (params.length < 1) {
+      run('send', ['' + i]);
+    } else {    
+      run('send', params);
+    }
+    var nextspam = function() {
+      spam(limit, i + 1);
+    }
+    setTimeout(nextspam, 0)
+  }
+  spam(times);
+}
+
+function Send() {}
+Send.prototype.commands = function() {
+  return ['send',''];
+}
+Send.prototype.run = function(params) {
+  var msg = params.join(' ');
+  if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
+    mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
+    return;
+  }
+  log(msg, "sent");
+  ws.send(msg);
+}
+
+function Help() {}
+Help.prototype.commands = function() {
+  return ['help'];
+}
+Help.prototype.run = function(params) {
+  for (var i in params) {
+    var command = params[i];
+    var plugin = commands[command];
+    if (typeof(plugin) == typeof(undefined)) {
+      log('the command does not exist: ' + command, 'error');
+      return;
+    }
+    if (typeof(plugin.help) == typeof(undefined))
+    {
+      log(['no help available for: ' + command], 'system');
+      return;
+    }
+    mlog(plugin.help(), 'system');
+    return;
+  }
+  var available = [];
+  for (var c in commands) {
+    if (c.length > 0) {
+      available.push(c);
+    }
+  }
+  available.sort();
+  mlog(['Dark WebSocket Terminal ' + VERSION, 'available commands: ' + available.join(', '), 'for help on a command use: /help <command>'], 'system');
+}
+
+function Connect() {}
+Connect.prototype.commands = function() {
+  return ['connect'];
+}
+Connect.prototype.help = function() {
+  return ['Usage: /connect <ws-url> [protocol]'];
+}
+Connect.prototype.run = function(params) {
+  var url = params[0];
+  var proto = params[1];
+  var protostring = ''
+  document.getElementById('conbut1').setAttribute('onclick', "guidisconnect();");
+  document.getElementById('conbut1').value = "disconnect";
+  if(proto == '') {
+    ws = new WebSocket(url);
+  }
+  else {
+    ws = new WebSocket(url,proto);
+    protostring = " (protocol: " + proto + ")"
+  }
+  history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=true');
+  ws.onopen = function() {
+    log("connection established, " + url + protostring, "system");
+    document.getElementById('msg1').focus();
+  };
+  ws.onclose = function() {
+    log("connection closed, " + url + protostring, "system");
+  };
+  ws.onmessage = function(msg) {
+    log(msg.data, "received");
+  };
+  ws.onerror = function() {
+    log('websocket error: ' + url + ' ' + protostring, "system");
+  };
+}
+
+function Disconnect() {}
+Disconnect.prototype.commands = function() {
+  return ['disconnect'];
+}
+Disconnect.prototype.help = function() {
+  return ["Disconnects from the server. (usage: /disconnect)"];
+}
+Disconnect.prototype.run = function()
+{
+  var url = document.getElementById('url1').value;
+  var proto = document.getElementById('proto1').value;
+  document.getElementById('conbut1').setAttribute('onclick', "guiconnect();");
+  document.getElementById('conbut1').value = "connect";
+  history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=false');
+  ws.close();
+  document.getElementById('url1').focus();
+}
+
+var plugins = [Connect, Disconnect, Help, Send, Spam, Interval];
+var commands = {}
+
+for (var i in plugins) {
+  var constructor = plugins[i];
+  var plugin = new constructor();
+  var c = plugin.commands();
+  for (var j in c) {
+    var command = c[j];
+    commands[command] = plugin;
+  }
+}
+
+function process(param) {
+  return param;
+}
+
+function run(command, params) {
+  if (typeof(params) == typeof(undefined)){
+    params = [];
+  }
+  var plugin = commands[command];
+  if (typeof(plugin) == typeof(undefined)) {
+    log('invalid command: ' + command, 'error');
+    return;
+  }
+  var processed = Array.prototype.map.call(params, process);
+  plugin.run(processed);
+}
+
 
 function refreshclock() {
   var time = currenttime();
@@ -34,63 +237,113 @@ function currenttime() {
 
 }
 
-function log(msg, type) {
-  var escaped = msg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function htmlescape(line) {
+  return line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function log(line, type) {
+  mlog([line], type);
+}
+
+function mlog(lines, type) {
+  var escaped = Array.prototype.map.call(lines, htmlescape);
   var time = currenttime();
-  document.getElementById('ter1').innerHTML += '<tr><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+escaped+'</td></tr>';
+  document.getElementById('ter1').innerHTML += '<tr class="logline"><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+escaped.join('<br />')+'</td></tr>';
   var screen = document.getElementById("screen1");
   screen.scrollTop = screen.scrollHeight;
 }
 
-function send() {
-  var msg = document.getElementById('msg1').value;
-  document.getElementById('msg1').value = "";
-  log(msg, "sent");
-  ws.send(msg);
+function lol(line) {
+  log(line, 'command');
+  var noslash = line.substring(1);
+  var parts = noslash.split(' ');
+  var command = parts.shift();
+  var params = parts;
+  run(command, params);
 }
 
-function connect() {
-  if (("WebSocket" in window) == false) {
-    alert('Your browser does not seem to support websockets.');
+function send() {
+  var raw = document.getElementById('msg1').value;
+  document.getElementById('msg1').value = "";
+  if (raw.length < 1) {
+    log('type /help to list available commands', 'system');
     return;
   }
-  document.getElementById('open').setAttribute("style", "visibility: hidden;");
-  var url = document.getElementById('url1').value;
-  var proto = document.getElementById('proto1').value;
-  var protostring = ''
-  if(proto == '') {
-    ws = new WebSocket(url);
+  if (raw[0] == '/') {
+    lol(raw);
+    return ;
   }
-  else {
-    ws = new WebSocket(url,proto);
-    protostring = " (protocol: " + proto + ")"
-  }
-  history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=true');
-  ws.onopen = function() {
-    document.getElementById('sendbut1').removeAttribute("disabled");
-    log("connection established, " + url + protostring, "system");
-    document.getElementById('msg1').focus();
-  };
-  ws.onclose = function() {
-    log("connection closed, " + url + protostring, "system");
-  };
-  ws.onmessage = function(msg) {
-    log(msg.data, "received");
-  };
-  ws.onerror = function() {
-    log('websocket error: ' + url + ' ' + protostring, "system");
-  };
+  lol('/send ' + raw);
+  return ;
 }
 
-function disconnect()
-{
-  var url = document.getElementById('url1').value;
-  var proto = document.getElementById('proto1').value;
-  history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=false');
-  document.getElementById('sendbut1').setAttribute("disabled", "disabled");
-  ws.close();
+
+function Menu() {}
+Menu.prototype.isopen = function() {
+  return (document.getElementById('open').getAttribute("style") == null)
+}
+
+Menu.prototype.hide = function() {
+  document.getElementById('open').setAttribute("style", "visibility: hidden;");
+  document.getElementById('msg1').focus();
+  document.getElementById('sendbut1').removeAttribute("disabled");
+  document.getElementById('menubut1').removeAttribute("class");
+}
+
+Menu.prototype.show = function() {
   document.getElementById('open').removeAttribute("style");
   document.getElementById('url1').focus();
+  document.getElementById('sendbut1').setAttribute("disabled", "disabled");
+  document.getElementById('menubut1').setAttribute("class", "active");
+}
+
+Menu.prototype.toggle = function() {
+  if (this.isopen()) {
+    menu.hide();
+  } else {
+    menu.show();
+  }
+}
+menu = new Menu();
+
+function guidisconnect() {
+  lol('/disconnect');
+
+}
+
+function guiconnect() {
+  menu.hide();
+  var url = document.getElementById('url1').value;
+  var proto = document.getElementById('proto1').value;
+  lol('/connect ' + url + ' ' + proto);
+}
+
+function keypress() {
+  if (event.keyCode == 13) {
+    if (menu.isopen()) {
+      document.getElementById('conbut1').click()
+    } else {
+      document.getElementById('sendbut1').click()
+    }
+  } else if (event.keyIdentifier == 'U+001B') {
+    if (typeof(ws.readyState) == typeof(undefined)) {
+      menu.toggle();
+    } else if (ws.readyState < 2) { // OPEN or CONNECTING
+      guidisconnect();
+    } else {
+      menu.toggle();
+    }
+  }
+}
+
+function isconnected() {
+  if (typeof(ws.readyState) == typeof(undefined)) {
+    return false;
+  }
+  if (ws.readyState == 1) {
+    return true;
+  }
+  return false;
 }
 
 function linkfix() {
@@ -126,14 +379,18 @@ function init() {
   refreshclock();
   document.getElementById('clock1').removeAttribute("style");
   setInterval( "refreshclock();", 500 );
+  if (("WebSocket" in window) == false) {
+    log('Your browser does not seem to support websockets.', 'error');
+    return;
+  }
+  lol('/help');
   if(connected == "true")
   {
     document.getElementById('conbut1').click()
   }
   else
   {
-    document.getElementById('open').removeAttribute("style");
-    document.getElementById('url1').focus();
+    menu.show();
   }
 }
 
@@ -156,7 +413,11 @@ h1 a
 
 .button
 {
-  width: 5em;
+  width: 3em;
+}
+.iconbutton
+{
+  width: 1em;
 }
 .direction
 {
@@ -172,6 +433,16 @@ h1 a
 .received
 {
   color: #c77;
+}
+
+.command
+{
+  color: #3ef;
+}
+
+.error
+{
+  color: #f00;
 }
 
 .system
@@ -199,10 +470,17 @@ h1 a
   width: 15%;
 }
 
+h1 a
+{
+  color: #aaa;
+  font-family: sans-serif;
+  text-decoration: none;
+
+}
+
 h1
 {
   text-align: center;
-  font-family: sans-serif;
 }
 .footer
 {
@@ -256,6 +534,89 @@ input[readonly="readonly"]
   border: thin solid #000;
   width: 100%;
 }
+
+
+.button input[type="button"]
+{
+  text-align: center;
+  padding: 0;
+  background-color: #444;
+  color: #ccc;
+  border-width: thin;
+  border-style: solid;
+  border-color: #888 #444 #444 #888;
+  border-radius: 0 6px 6px 0;
+  width: 4em;
+}
+
+.button input[type="button"]:hover
+{
+  background-color: #555;
+}
+  color: #ddd;
+
+.button input[disabled="disabled"]:hover
+{
+  background-color: #444;
+  color: #777;
+}
+.button input[disabled="disabled"]
+{
+  color: #777;
+}
+.button input[disabled="disabled"]:active
+{
+  border-color: #888 #444 #444 #888;
+  background-color: #444;
+  color: #777;
+
+}
+.button input[type="button"]:active
+{
+  border-color: #000 #888 #888 #000;
+  background-color: #333;
+  color: #999;
+}
+
+.iconbutton input[type="button"]
+{
+  text-align: center;
+  background-color: #210;
+  color: #aaa;
+  border-width: thin;
+  border-style: solid;
+  border-color: #444 #222 #222 #444;
+  border-radius: 5px;
+  padding: 0;
+  width: 4em;
+}
+.iconbutton input[type="button"]:hover
+{
+  color: #ccc;
+}
+.iconbutton input[type="button"]:active
+{
+  border-color: #000 #888 #888 #000;
+  background-color: #200;
+  color: #fff;
+}
+
+.iconbutton input[type="button"].active
+{
+  border-color: #000 #888 #888 #000;
+  background-color: #630;
+  color: #fff;
+}
+.iconbutton input[type="button"].active:active
+{
+  color: #aaa;
+}
+.iconbutton input[type="button"].active:hover
+{
+  background-color: #740;
+}
+
+
 input[type="button"]
 {
   padding: 0;
@@ -266,7 +627,10 @@ body
 {
   margin: 0;
 }
-
+.logline td
+{
+  vertical-align: top;
+}
 
 .consolebar
 {
@@ -343,7 +707,7 @@ body
 }
 </style>
 </head>
-<body onload="init();" onkeydown="if (event.keyCode == 13) {document.getElementById('sendbut1').click() }else if (event.keyIdentifier == 'U+001B') {disconnect();}">
+<body onload="init();" onkeydown="keypress();">
 <div id="screen1" class="screen">
 <table id="ter1" class="terminal">
 </table>
@@ -352,16 +716,17 @@ body
 <table class="consolebar"><tr>
 <td id="clock1" style="color: transparent;" class="time rightpad leftpad">00:00:00</td>
 <td><input id="msg1" type="text" value=""></td>
-<td class="button rightpad leftpad"><input id="sendbut1" type="button" value="send" disabled="disabled" onClick="send();"></td>
+<td class="button rightpad"><input id="sendbut1" type="button" value="send" disabled="disabled" onClick="send();"></td>
+<td class="iconbutton rightpad"><input id="menubut1" type="button" value="menu" onClick="menu.toggle();"></td>
 </tr></table>
 </div>
 
 <div id="open" style="visibility: hidden;">
 <h1><a href="?">Dark WebSocket Terminal</a></h1>
 <table class="panel">
-<tr><td class="label">socket:</td><td><input type="text" id="url1" value="ws://echo.websocket.org/" onkeydown="if (event.keyCode == 13) document.getElementById('conbut1').click()"></td></tr>
-<tr><td>protocol:</td><td><input type="text" id="proto1" value="" onkeydown="if (event.keyCode == 13) document.getElementById('conbut1').click()"></td></tr>
-<tr><td colspan="2"><input id="conbut1" type="button" value="connect" onClick="connect();"></td></tr>
+<tr><td class="label">socket:</td><td><input type="text" id="url1" value="ws://echo.websocket.org/"></td></tr>
+<tr><td>protocol:</td><td><input type="text" id="proto1" value=""></td></tr>
+<tr><td colspan="2"><input id="conbut1" type="button" value="connect" onClick="guiconnect();"></td></tr>
 </table>
 
 <p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#" class="footer"> 
