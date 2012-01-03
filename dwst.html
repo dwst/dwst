@@ -105,6 +105,29 @@ Send.prototype.run = function(params) {
   ws.send(msg);
 }
 
+function Binary() {}
+Binary.prototype.commands = function() {
+  return ['binary','b'];
+}
+Binary.prototype.run = function(params) {
+  var msg = params.join(' ');
+  function byteValue(x) {
+    return x.charCodeAt(0) & 0xff;
+  }
+  var ords = Array.prototype.map.call(msg, byteValue);
+  var ords = [];
+  for (var i = 0; i <= 0xff; i++) {
+    ords.push(i);
+  }
+  var ui8a = new Uint8Array(ords);
+  if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
+    mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
+    return;
+  }
+  bmlog(ui8a.buffer, "sent");
+  ws.send(ui8a.buffer);
+}
+
 function Help() {}
 Help.prototype.commands = function() {
   return ['help'];
@@ -148,6 +171,8 @@ Connect.prototype.run = function(params) {
   var protostring = ''
   document.getElementById('conbut1').setAttribute('onclick', "guidisconnect();");
   document.getElementById('conbut1').value = "disconnect";
+  document.getElementById('url1').setAttribute("disabled", "disabled");
+  document.getElementById('proto1').setAttribute("disabled", "disabled");
   if(proto == '') {
     ws = new WebSocket(url);
   }
@@ -158,13 +183,23 @@ Connect.prototype.run = function(params) {
   history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=true');
   ws.onopen = function() {
     log("connection established, " + url + protostring, "system");
-    document.getElementById('msg1').focus();
   };
   ws.onclose = function() {
     log("connection closed, " + url + protostring, "system");
   };
   ws.onmessage = function(msg) {
-    log(msg.data, "received");
+    if (typeof(msg.data) == typeof('')) {
+      log(msg.data, "received");
+    }
+    else {
+      var fr = new FileReader();
+      fr.onload = function(e) {
+        var buffer = e.target.result;
+        bmlog(buffer, "received");
+      }
+      fr.readAsArrayBuffer(msg.data);
+    }
+
   };
   ws.onerror = function() {
     log('websocket error: ' + url + ' ' + protostring, "system");
@@ -184,12 +219,14 @@ Disconnect.prototype.run = function()
   var proto = document.getElementById('proto1').value;
   document.getElementById('conbut1').setAttribute('onclick', "guiconnect();");
   document.getElementById('conbut1').value = "connect";
+  document.getElementById('url1').removeAttribute("disabled");
+  document.getElementById('proto1').removeAttribute("disabled");
   history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=false');
   ws.close();
   document.getElementById('url1').focus();
 }
 
-var plugins = [Connect, Disconnect, Help, Send, Spam, Interval];
+var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary];
 var commands = {}
 
 for (var i in plugins) {
@@ -245,12 +282,77 @@ function log(line, type) {
   mlog([line], type);
 }
 
-function mlog(lines, type) {
+function mlog(lines, type, binary) {
+  binclass = '';
+  if (binary == true) {
+    binclass = ' binary';
+  }
   var escaped = Array.prototype.map.call(lines, htmlescape);
   var time = currenttime();
-  document.getElementById('ter1').innerHTML += '<tr class="logline"><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td>'+escaped.join('<br />')+'</td></tr>';
+  document.getElementById('ter1').innerHTML += '<tr class="logline"><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td class="preserved' + binclass + '">'+escaped.join('<br />')+'</td></tr>';
   var screen = document.getElementById("screen1");
   screen.scrollTop = screen.scrollHeight;
+}
+
+function divissimo(l, n) {
+  var chunks = [];
+  var chunk = [];
+  var i = 0;
+  for (var j in l) {
+    b = l[j];
+    if (i >= n) {
+      chunks.push(chunk);
+      chunk = [];
+      i = 0;
+    }
+    chunk.push(b);
+    i += 1;
+  }
+  chunks.push(chunk);
+  return chunks;
+}
+
+function bmlog(buffer, type) {
+  var dv = new DataView(buffer);
+  var bytes = [];
+  for (var i = 0; i < buffer.byteLength; i++) {
+      bytes.push(dv.getUint8(i));
+  }
+  var parts = divissimo(bytes, 8);
+  var rows = divissimo(parts, 2);
+  function prow(row) {
+    function hexify(num) {
+      var hex = num.toString(16);
+      var zero = hex.length < 2 ? '0' : ''
+      return zero + hex;
+    }
+    function charify(num) {
+      if (num > 0x7e || num < 0x20) { // non-printable
+        return '.';
+      }
+      return String.fromCharCode(num);
+    }
+    var s = row[0];
+    var e = row[1];
+    var sh = Array.prototype.map.call(s, hexify);
+
+
+    var sc = Array.prototype.map.call(s, charify);
+    ec = [];
+    eh = [];
+    if (e) {
+      var ec = Array.prototype.map.call(e, charify);
+      var eh = Array.prototype.map.call(e, hexify);
+    }
+    var hexed =  sh.join(' ') + '  ' + eh.join(' ')
+    var chars =  sc.join('') + ' ' + ec.join('')
+    var hexpad = Array(49 - hexed.length).join(" ")
+    var charpad = Array(18 - chars.length).join(" ")
+    return hexed + hexpad + ' ' + '|' + chars + charpad + '|';
+  }
+  var prows = Array.prototype.map.call(rows, prow);
+
+  mlog(prows, type, true);
 }
 
 function lol(line) {
@@ -321,6 +423,9 @@ function guiconnect() {
 function keypress() {
   if (event.keyCode == 13) {
     if (menu.isopen()) {
+      if (isconnected()) {
+        return true;
+      }
       document.getElementById('conbut1').click()
     } else {
       document.getElementById('sendbut1').click()
@@ -409,15 +514,9 @@ h1 a
   color: #000;
   font-family: serif;
 }
-
-
 .button
 {
   width: 3em;
-}
-.iconbutton
-{
-  width: 1em;
 }
 .direction
 {
@@ -535,92 +634,10 @@ input[readonly="readonly"]
   width: 100%;
 }
 
-
-.button input[type="button"]
-{
-  text-align: center;
-  padding: 0;
-  background-color: #444;
-  color: #ccc;
-  border-width: thin;
-  border-style: solid;
-  border-color: #888 #444 #444 #888;
-  border-radius: 0 6px 6px 0;
-  width: 4em;
-}
-
-.button input[type="button"]:hover
-{
-  background-color: #555;
-}
-  color: #ddd;
-
-.button input[disabled="disabled"]:hover
-{
-  background-color: #444;
-  color: #777;
-}
-.button input[disabled="disabled"]
-{
-  color: #777;
-}
-.button input[disabled="disabled"]:active
-{
-  border-color: #888 #444 #444 #888;
-  background-color: #444;
-  color: #777;
-
-}
-.button input[type="button"]:active
-{
-  border-color: #000 #888 #888 #000;
-  background-color: #333;
-  color: #999;
-}
-
-.iconbutton input[type="button"]
-{
-  text-align: center;
-  background-color: #210;
-  color: #aaa;
-  border-width: thin;
-  border-style: solid;
-  border-color: #444 #222 #222 #444;
-  border-radius: 5px;
-  padding: 0;
-  width: 4em;
-}
-.iconbutton input[type="button"]:hover
-{
-  color: #ccc;
-}
-.iconbutton input[type="button"]:active
-{
-  border-color: #000 #888 #888 #000;
-  background-color: #200;
-  color: #fff;
-}
-
-.iconbutton input[type="button"].active
-{
-  border-color: #000 #888 #888 #000;
-  background-color: #630;
-  color: #fff;
-}
-.iconbutton input[type="button"].active:active
-{
-  color: #aaa;
-}
-.iconbutton input[type="button"].active:hover
-{
-  background-color: #740;
-}
-
-
-input[type="button"]
+.consolebar input[type="button"]
 {
   padding: 0;
-  width: 6em;
+  width: 5em;
 }
 
 body
@@ -630,6 +647,9 @@ body
 .logline td
 {
   vertical-align: top;
+}
+.preserved {
+  white-space: pre;
 }
 
 .consolebar
@@ -705,6 +725,10 @@ body
 {
   width: 3em;
 }
+.binary
+{
+  color: #888;
+}
 </style>
 </head>
 <body onload="init();" onkeydown="keypress();">
@@ -717,7 +741,7 @@ body
 <td id="clock1" style="color: transparent;" class="time rightpad leftpad">00:00:00</td>
 <td><input id="msg1" type="text" value=""></td>
 <td class="button rightpad"><input id="sendbut1" type="button" value="send" disabled="disabled" onClick="send();"></td>
-<td class="iconbutton rightpad"><input id="menubut1" type="button" value="menu" onClick="menu.toggle();"></td>
+<td class="button rightpad"><input id="menubut1" type="button" value="menu" onClick="menu.toggle();"></td>
 </tr></table>
 </div>
 
