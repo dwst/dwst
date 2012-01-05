@@ -18,6 +18,30 @@ Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010-2012
 var ws = {};
 var intervalId = null;
 var VERSION = '1.1.6';
+var vars = {};
+
+function Loadfile() {}
+Loadfile.prototype.commands = function() {
+  return ['loadfile'];
+}
+Loadfile.prototype.help = function() {
+  return ['usage: /loadfile <variable>'];
+}
+Loadfile.prototype.run = function(params) {
+      var variable = params[0];
+      var upload = document.getElementById('file1');
+      upload.onchange = function(e) {
+        var file = upload.files[0];
+        reader = new FileReader();
+        reader.onload = function(e2) {
+          var buffer = e2.target.result;
+          vars[variable] = buffer;
+          log('file ' + file.fileName + ' (' + buffer.byteLength + 'B)' + ' loaded to ' + variable, 'system');
+        };
+        reader.readAsArrayBuffer(file);
+      }
+      upload.click();
+}
 
 function Interval() {}
 Interval.prototype.commands = function() {
@@ -86,7 +110,11 @@ Spam.prototype.run = function(params) {
     var nextspam = function() {
       spam(limit, i + 1);
     }
-    setTimeout(nextspam, 0)
+    if (isconnected()) {
+      setTimeout(nextspam, 0)
+    } else {
+        log('spam failed, no connection', 'error');
+    }
   }
   spam(times);
 }
@@ -96,7 +124,34 @@ Send.prototype.commands = function() {
   return ['send',''];
 }
 Send.prototype.run = function(params) {
-  var msg = params.join(' ');
+  function process(par) {
+    var end = '';
+    if (par[par.length - 1] == '\\') {
+      end = ' ';
+      par =  par.substr(0, par.length - 1);
+    }
+    if (par.substr(0,2) == '\\[') {
+      out =  par.substr(1);
+    } else if (par.match(/^\[random\(/) != null) {
+      function randomchar() {
+        var out = Math.floor(Math.random()* (0xffff + 1));
+        out /= 2; // avoid risky characters
+        var char = String.fromCharCode(out);
+        return char;
+      }
+      var num = parseInt(par.substring(8, par.length - 2), 10);
+      var str = '';
+      for (var i = 0; i < num; i++) {
+        str += randomchar();
+      }
+      out = str;      
+    } else {
+      out = par;
+    }
+    return out + end;
+  }
+  var processed = Array.prototype.map.call(params, process);
+  var msg = processed.join('');
   if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
     mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
     return;
@@ -110,22 +165,68 @@ Binary.prototype.commands = function() {
   return ['binary','b'];
 }
 Binary.prototype.run = function(params) {
-  var msg = params.join(' ');
   function byteValue(x) {
     return x.charCodeAt(0) & 0xff;
   }
-  var ords = Array.prototype.map.call(msg, byteValue);
-  var ords = [];
-  for (var i = 0; i <= 0xff; i++) {
-    ords.push(i);
+  function hexpairtobyte(hp) {
+    hex = hp.join('');
+    if (hex.length != 2) {
+      return;
+    }
+    return parseInt(hex, 16);
   }
-  var ui8a = new Uint8Array(ords);
+  function binpara(par) {
+    var bytes = [];
+    if (par.match(/^\[var\(/) != null) {
+      var variable = par.substring(5, par.length - 2);
+      var buffer = vars[variable];
+      return new Uint8Array(buffer);
+    } else if (par.match(/^\[random\(/) != null) {
+      function randombyte() {
+        var out = Math.floor(Math.random()* (0xff + 1));
+        return out;
+      }
+      var num = parseInt(par.substring(8, par.length - 2), 10);
+      var bytes = [];
+      for (var i = 0; i < num; i++) {
+        bytes.push(randombyte());
+      }
+    } else if (par.match(/^\[0x/) != null) {
+      var hex = par.substring(3, par.length - 1);
+      var nums = hex.split('');
+      var pairs = divissimo(nums, 2);
+      tmp = Array.prototype.map.call(pairs, hexpairtobyte);
+      bytes = tmp.filter(function(b){return typeof(b) == typeof(0);})
+    } else {   
+      bytes = Array.prototype.map.call(par, byteValue);
+    }
+    return new Uint8Array(bytes);
+  }
+  function joinbufs(buffers) {
+
+    var total = 0;
+    for (var i in buffers) {
+      buffer = buffers[i];
+      total += buffer.length;
+    }
+    var out = new Uint8Array(total);
+    var offset = 0;
+    for (var i in buffers) {
+      buffer = buffers[i];
+      out.set(buffer, offset);
+      offset += buffer.length;
+    }
+    return out;
+  }
+  var buffers = Array.prototype.map.call(params, binpara);
+  var out = joinbufs(buffers).buffer;
+  var msg = params.join(' ');
   if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
     mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
     return;
   }
-  bmlog(ui8a.buffer, "sent");
-  ws.send(ui8a.buffer);
+  bmlog(out, "sent");
+  ws.send(out);
 }
 
 function Help() {}
@@ -226,7 +327,7 @@ Disconnect.prototype.run = function()
   document.getElementById('url1').focus();
 }
 
-var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary];
+var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary, Loadfile];
 var commands = {}
 
 for (var i in plugins) {
@@ -239,9 +340,6 @@ for (var i in plugins) {
   }
 }
 
-function process(param) {
-  return param;
-}
 
 function run(command, params) {
   if (typeof(params) == typeof(undefined)){
@@ -252,8 +350,7 @@ function run(command, params) {
     log('invalid command: ' + command, 'error');
     return;
   }
-  var processed = Array.prototype.map.call(params, process);
-  plugin.run(processed);
+  plugin.run(params);
 }
 
 
@@ -348,10 +445,16 @@ function bmlog(buffer, type) {
     var chars =  sc.join('') + ' ' + ec.join('')
     var hexpad = Array(49 - hexed.length).join(" ")
     var charpad = Array(18 - chars.length).join(" ")
-    return hexed + hexpad + ' ' + '|' + chars + charpad + '|';
+    return hexed + hexpad + '  ' + '|' + chars + charpad + '|';
   }
   var prows = Array.prototype.map.call(rows, prow);
-
+  var offset = 0;
+  for (var i in prows) {
+    num = offset.toString(16);
+    var pad = Array(8 - num.length).join("0")
+    prows[i] = pad + num + '  ' + prows[i];
+    offset += 16;
+  }
   mlog(prows, type, true);
 }
 
@@ -375,7 +478,29 @@ function send() {
     lol(raw);
     return ;
   }
-  lol('/send ' + raw);
+  var korvailut = [['[','\\['], [' ','\\ ']];
+
+  function korvaile(str, kor) {
+    if (kor.length < 1) {
+      return str;
+    }
+    var head = kor[0];
+    var find = head[0];
+    var rep = head[1];
+
+    var parts = str.split(find);
+    var complete = []
+    for (var i in parts) {
+      var part = parts[i];
+      var loput = kor.slice(1)
+      var news = korvaile(part, loput);
+      complete.push(news);
+    }
+    var out = complete.join(rep);
+    return(out);
+  }
+
+  lol('/send ' + korvaile(raw, korvailut));
   return ;
 }
 
@@ -762,6 +887,6 @@ body
   <span property="dct:title">Dark WebSocket Terminal</span>.
 </p>
 </div>
-
+<input id="file1" type="file" style="visibility: hidden;"/>
 </body>
 </html>
