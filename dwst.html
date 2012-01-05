@@ -123,34 +123,47 @@ function Send() {}
 Send.prototype.commands = function() {
   return ['send',''];
 }
-Send.prototype.run = function(params) {
-  function process(par) {
-    var end = '';
-    if (par[par.length - 1] == '\\') {
-      end = ' ';
-      par =  par.substr(0, par.length - 1);
-    }
-    if (par.substr(0,2) == '\\[') {
-      out =  par.substr(1);
-    } else if (par.match(/^\[random\(/) != null) {
-      function randomchar() {
-        var out = Math.floor(Math.random()* (0xffff + 1));
-        out /= 2; // avoid risky characters
-        var char = String.fromCharCode(out);
-        return char;
-      }
-      var num = parseInt(par.substring(8, par.length - 2), 10);
-      var str = '';
-      for (var i = 0; i < num; i++) {
-        str += randomchar();
-      }
-      out = str;      
-    } else {
-      out = par;
-    }
-    return out + end;
+Send.prototype.process = function(instr, params) {
+  var out;
+  if (instr == 'default') {
+    return params[0];
   }
-  var processed = Array.prototype.map.call(params, process);
+  if (instr == 'random') {
+    function randomchar() {
+      var out = Math.floor(Math.random()* (0xffff + 1));
+      out /= 2; // avoid risky characters
+      var char = String.fromCharCode(out);
+      return char;
+    }
+    var num = 16;
+    if (params.length == 1){
+      num = parseInt(params[0], 10);
+    }
+    var str = '';
+    for (var i = 0; i < num; i++) {
+      str += randomchar();
+    }
+    out = str;      
+  }
+  if (instr == 'range') {
+    var start = 32;
+    var end = 126;
+    if (params.length == 1){
+      end = parseInt(params[0], 10);
+    }
+    if (params.length == 2){
+      start = parseInt(params[0], 10);
+      end = parseInt(params[1], 10);
+    }
+    var str = '';
+    for (var i = start; i < end; i++) {
+      str += String.fromCharCode(i);
+    }
+    out = str;      
+  }
+  return out;
+}
+Send.prototype.run = function(processed) {
   var msg = processed.join('');
   if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
     mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
@@ -164,9 +177,13 @@ function Binary() {}
 Binary.prototype.commands = function() {
   return ['binary','b'];
 }
-Binary.prototype.run = function(params) {
+Binary.prototype.process = function(instr, params) {
   function byteValue(x) {
-    return x.charCodeAt(0) & 0xff;
+    var code = x.charCodeAt(0);
+    if (code != (code & 0xff)) {
+      return 0;
+    }
+    return code;
   }
   function hexpairtobyte(hp) {
     hex = hp.join('');
@@ -175,33 +192,62 @@ Binary.prototype.run = function(params) {
     }
     return parseInt(hex, 16);
   }
-  function binpara(par) {
+  var bytes = [];
+  if (instr == 'default') {
+    bytes = Array.prototype.map.call(params[0], byteValue);
+  }
+  if (instr == 'random') {
+    function randombyte() {
+      var out = Math.floor(Math.random()* (0xff + 1));
+      return out;
+    }
+    var num = 16;
+    if (params.length == 1) {
+     num = parseInt(params[0], 10);
+    }
     var bytes = [];
-    if (par.match(/^\[var\(/) != null) {
-      var variable = par.substring(5, par.length - 2);
-      var buffer = vars[variable];
-      return new Uint8Array(buffer);
-    } else if (par.match(/^\[random\(/) != null) {
-      function randombyte() {
-        var out = Math.floor(Math.random()* (0xff + 1));
-        return out;
-      }
-      var num = parseInt(par.substring(8, par.length - 2), 10);
-      var bytes = [];
-      for (var i = 0; i < num; i++) {
-        bytes.push(randombyte());
-      }
-    } else if (par.match(/^\[0x/) != null) {
-      var hex = par.substring(3, par.length - 1);
+    for (var i = 0; i < num; i++) {
+      bytes.push(randombyte());
+    }
+  }
+  if (instr == 'range') {
+    var start = 0;
+    var end = 0xff + 1;
+    if (params.length == 1){
+      end = parseInt(params[0], 10);
+    }
+    if (params.length == 2){
+      start = parseInt(params[0], 10);
+      end = parseInt(params[1], 10);
+    }
+    var bytes = [];
+    for (var i = start; i < end; i++) {
+      bytes.push(i);
+    }
+  }
+  if (instr == 'var') {
+    var variable = 'default';
+    if (params.length == 1) {
+      variable = params[0];
+    }
+    var buffer = vars[variable];
+    return new Uint8Array(buffer);
+  }
+  if (instr == 'hex') {
+    if (params.length == 1) {
+      var hex = params[0];
       var nums = hex.split('');
       var pairs = divissimo(nums, 2);
       tmp = Array.prototype.map.call(pairs, hexpairtobyte);
       bytes = tmp.filter(function(b){return typeof(b) == typeof(0);})
-    } else {   
-      bytes = Array.prototype.map.call(par, byteValue);
+    } else {
+      bytes = [];
     }
-    return new Uint8Array(bytes);
   }
+  return new Uint8Array(bytes);
+}
+
+Binary.prototype.run = function(buffers) {
   function joinbufs(buffers) {
 
     var total = 0;
@@ -218,9 +264,8 @@ Binary.prototype.run = function(params) {
     }
     return out;
   }
-  var buffers = Array.prototype.map.call(params, binpara);
   var out = joinbufs(buffers).buffer;
-  var msg = params.join(' ');
+  var msg = '<' + out.byteLength + 'B of data> ';
   if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
     mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
     return;
@@ -340,6 +385,35 @@ for (var i in plugins) {
   }
 }
 
+function process(plugin, param) {
+  var pro = plugin.process;
+  if (param.substr(param.length - 2, 2) == '\\\\') {
+    param = param.substr(0, param.length - 2) + '\\';
+  } else if (param.substr(param.length - 1, 1) == '\\') {
+    param = param.substr(0, param.length - 1) + ' ';
+  }
+  if (typeof(pro) == typeof(undefined)) {
+    return param;
+  }
+  var instruction = "default";
+  var params = [];
+  if (param.substr(0,2) == '\\\\') {
+    params.push(param.substr(1));
+  } else if (param.substr(0,2) == '\\[') {
+    params.push(param.substr(1));
+  } else if (param.substr(0,1) == '[') {
+    call = param.substr(1, param.length - 2);
+    tmp = call.split('(').concat('');
+    instruction = tmp[0];
+    pl = tmp[1].split(')')[0];
+    if(pl.length > 0) {
+      params = pl.split(',');
+    }
+  } else {
+    params.push(param);
+  }
+  return pro(instruction, params);
+}
 
 function run(command, params) {
   if (typeof(params) == typeof(undefined)){
@@ -350,7 +424,9 @@ function run(command, params) {
     log('invalid command: ' + command, 'error');
     return;
   }
-  plugin.run(params);
+  var processor = function(param){return process(plugin, param);}
+  var processed = Array.prototype.map.call(params, processor);
+  plugin.run(processed);
 }
 
 
@@ -409,7 +485,7 @@ function divissimo(l, n) {
   return chunks;
 }
 
-function bmlog(buffer, type) {
+function hexdump(buffer) {
   var dv = new DataView(buffer);
   var bytes = [];
   for (var i = 0; i < buffer.byteLength; i++) {
@@ -455,7 +531,13 @@ function bmlog(buffer, type) {
     prows[i] = pad + num + '  ' + prows[i];
     offset += 16;
   }
-  mlog(prows, type, true);
+  return prows
+}
+
+function bmlog(buffer, type) {
+  msg = '<' + buffer.byteLength + 'B of binary data>';
+  hd = hexdump(buffer);
+  mlog([msg].concat(hd), type, true);
 }
 
 function lol(line) {
