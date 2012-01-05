@@ -48,7 +48,7 @@ Interval.prototype.commands = function() {
   return ['interval'];
 }
 Interval.prototype.help = function() {
-  return ['usage: /interval <interval> [message]','       /interval'];
+  return ['usage: /interval <interval> [command line...]','       /interval'];
 }
 Interval.prototype.run = function(params) {
   if (params.length < 1) {
@@ -62,7 +62,7 @@ Interval.prototype.run = function(params) {
   }
   var count = 0;
   var first = params.shift();
-  var interval = parseInt(first, 10);
+  var interval = parseNum(first);
   var spammer = function() {
     if (!isconnected()) {
       if (intervalId != null) {
@@ -76,7 +76,7 @@ Interval.prototype.run = function(params) {
       count += 1;
       return;
     }
-    run('send', params);
+    silent(params.join(' '));
   }
   if (intervalId != null) {
     log('clearing old interval', 'system');
@@ -91,7 +91,7 @@ Spam.prototype.commands = function() {
   return ['spam'];
 }
 Spam.prototype.help = function() {
-  return ['usage: /spam <times> [message]'];
+  return ['usage: /spam <times> [command line...]'];
 }
 Spam.prototype.run = function(params) {
   var times = params.shift();
@@ -105,7 +105,7 @@ Spam.prototype.run = function(params) {
     if (params.length < 1) {
       run('send', ['' + i]);
     } else {    
-      run('send', params);
+      silent(params.join(' '));
     }
     var nextspam = function() {
       spam(limit, i + 1);
@@ -137,7 +137,7 @@ Send.prototype.process = function(instr, params) {
     }
     var num = 16;
     if (params.length == 1){
-      num = parseInt(params[0], 10);
+      num = parseNum(params[0]);
     }
     var str = '';
     for (var i = 0; i < num; i++) {
@@ -145,15 +145,26 @@ Send.prototype.process = function(instr, params) {
     }
     out = str;      
   }
+  if (instr == 'var') {
+    var variable = 'default';
+    if (params.length == 1) {
+      variable = params[0];
+    }
+    var buffer = vars[variable];
+    return buffer;
+  }
+  if (instr == 'time') {
+    return Math.round(new Date().getTime() / 1000);
+  }
   if (instr == 'range') {
     var start = 32;
     var end = 126;
     if (params.length == 1){
-      end = parseInt(params[0], 10);
+      end = parseNum(params[0]);
     }
     if (params.length == 2){
-      start = parseInt(params[0], 10);
-      end = parseInt(params[1], 10);
+      start = parseNum(params[0]);
+      end = parseNum(params[1]);
     }
     var str = '';
     for (var i = start; i < end; i++) {
@@ -203,7 +214,7 @@ Binary.prototype.process = function(instr, params) {
     }
     var num = 16;
     if (params.length == 1) {
-     num = parseInt(params[0], 10);
+     num = parseNum(params[0]);
     }
     var bytes = [];
     for (var i = 0; i < num; i++) {
@@ -214,11 +225,11 @@ Binary.prototype.process = function(instr, params) {
     var start = 0;
     var end = 0xff + 1;
     if (params.length == 1){
-      end = parseInt(params[0], 10);
+      end = parseNum(params[0]);
     }
     if (params.length == 2){
-      start = parseInt(params[0], 10);
-      end = parseInt(params[1], 10);
+      start = parseNum(params[0]);
+      end = parseNum(params[1]);
     }
     var bytes = [];
     for (var i = start; i < end; i++) {
@@ -270,7 +281,7 @@ Binary.prototype.run = function(buffers) {
     mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
     return;
   }
-  bmlog(out, "sent");
+  blog(out, "sent");
   ws.send(out);
 }
 
@@ -341,7 +352,7 @@ Connect.prototype.run = function(params) {
       var fr = new FileReader();
       fr.onload = function(e) {
         var buffer = e.target.result;
-        bmlog(buffer, "received");
+        blog(buffer, "received");
       }
       fr.readAsArrayBuffer(msg.data);
     }
@@ -451,6 +462,13 @@ function htmlescape(line) {
   return line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+function parseNum(str) {
+  if (str.length > 2 && str.substr(0,2) == '0x') {
+    return parseInt(str.substr(2), 16);
+  }
+  return parseInt(str, 10);
+}
+
 function log(line, type) {
   mlog([line], type);
 }
@@ -534,19 +552,23 @@ function hexdump(buffer) {
   return prows
 }
 
-function bmlog(buffer, type) {
+function blog(buffer, type) {
   msg = '<' + buffer.byteLength + 'B of binary data>';
   hd = hexdump(buffer);
   mlog([msg].concat(hd), type, true);
 }
 
-function lol(line) {
-  log(line, 'command');
+function silent(line) {
   var noslash = line.substring(1);
   var parts = noslash.split(' ');
   var command = parts.shift();
   var params = parts;
   run(command, params);
+}
+
+function lol(line) {
+  log(line, 'command');
+  silent(line);
 }
 
 function send() {
