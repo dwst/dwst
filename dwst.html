@@ -18,25 +18,65 @@ Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010-2012
 var ws = {};
 var intervalId = null;
 var VERSION = '1.1.6';
-var vars = {};
+var bins = {};
 
-function Loadfile() {}
-Loadfile.prototype.commands = function() {
-  return ['loadfile'];
+function Clear() {}
+Clear.prototype.commands = function() {
+  return ['clear'];
 }
-Loadfile.prototype.help = function() {
-  return ['usage: /loadfile <variable>'];
+Clear.prototype.help = function() {
+  return ['usage: /clear'];
 }
-Loadfile.prototype.run = function(params) {
-      var variable = params[0];
+Clear.prototype.run = function(params) {
+  document.getElementById('ter1').innerHTML = '';
+}
+
+function Bins() {}
+Bins.prototype.commands = function() {
+  return ['bins'];
+}
+Bins.prototype.help = function() {
+  return ['usage: /bins [name]'];
+}
+Bins.prototype.run = function(params) {
+  if (params.length == 1) {
+    variable = params[0];
+    buffer = bins[variable];
+    if (typeof(buffer) != typeof(undefined)) {
+      blog(buffer);
+      return;
+    }
+    log('binary "' + variable + '" does not exist', 'error');
+  }
+  var strs = ['Loaded binaries:'];
+  for (var i in bins) {
+    var name = i;
+    var buffer = bins[i];
+    strs.push('"' + name + '": <' + buffer.byteLength + 'B of binary data>');
+  }
+  mlog(strs, 'system');
+}
+
+function Loadbin() {}
+Loadbin.prototype.commands = function() {
+  return ['loadbin'];
+}
+Loadbin.prototype.help = function() {
+  return ['usage: /loadbin [variable]'];
+}
+Loadbin.prototype.run = function(params) {
+      var variable = 'default';
+      if (params.length == 1) {
+        variable = params[0];
+      }
       var upload = document.getElementById('file1');
       upload.onchange = function(e) {
         var file = upload.files[0];
         reader = new FileReader();
         reader.onload = function(e2) {
           var buffer = e2.target.result;
-          vars[variable] = buffer;
-          log('file ' + file.fileName + ' (' + buffer.byteLength + 'B)' + ' loaded to ' + variable, 'system');
+          bins[variable] = buffer;
+          log('Binary file ' + file.fileName + ' (' + buffer.byteLength + 'B)' + ' loaded to "' + variable + '"', 'system');
         };
         reader.readAsArrayBuffer(file);
       }
@@ -145,12 +185,12 @@ Send.prototype.process = function(instr, params) {
     }
     out = str;      
   }
-  if (instr == 'var') {
+  if (instr == 'text') {
     var variable = 'default';
     if (params.length == 1) {
       variable = params[0];
     }
-    var buffer = vars[variable];
+    var buffer = texts[variable];
     return buffer;
   }
   if (instr == 'time') {
@@ -236,12 +276,12 @@ Binary.prototype.process = function(instr, params) {
       bytes.push(i);
     }
   }
-  if (instr == 'var') {
+  if (instr == 'bin') {
     var variable = 'default';
     if (params.length == 1) {
       variable = params[0];
     }
-    var buffer = vars[variable];
+    var buffer = bins[variable];
     return new Uint8Array(buffer);
   }
   if (instr == 'hex') {
@@ -383,7 +423,7 @@ Disconnect.prototype.run = function()
   document.getElementById('url1').focus();
 }
 
-var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary, Loadfile];
+var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear];
 var commands = {}
 
 for (var i in plugins) {
