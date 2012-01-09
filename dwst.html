@@ -730,52 +730,41 @@ function divissimo(l, n) {
 }
 
 function hexdump(buffer) {
+  function hexify(num) {
+    var hex = num.toString(16);
+    var zero = hex.length < 2 ? '0' : ''
+    return zero + hex;
+  }
+  function charify(num) {
+    if (num > 0x7e || num < 0x20) { // non-printable
+      return '.';
+    }
+    return String.fromCharCode(num);
+  }
   var dv = new DataView(buffer);
-  var bytes = [];
-  for (var i = 0; i < buffer.byteLength; i++) {
-      bytes.push(dv.getUint8(i));
-  }
-  var parts = divissimo(bytes, 8);
-  var rows = divissimo(parts, 2);
-  function prow(row) {
-    function hexify(num) {
-      var hex = num.toString(16);
-      var zero = hex.length < 2 ? '0' : ''
-      return zero + hex;
-    }
-    function charify(num) {
-      if (num > 0x7e || num < 0x20) { // non-printable
-        return '.';
-      }
-      return String.fromCharCode(num);
-    }
-    var s = row[0];
-    var e = row[1];
-    var sh = Array.prototype.map.call(s, hexify);
-
-
-    var sc = Array.prototype.map.call(s, charify);
-    ec = [];
-    eh = [];
-    if (e) {
-      var ec = Array.prototype.map.call(e, charify);
-      var eh = Array.prototype.map.call(e, hexify);
-    }
-    var hexed =  sh.join(' ') + '  ' + eh.join(' ')
-    var chars =  sc.join('') + ' ' + ec.join('')
-    var hexpad = Array(49 - hexed.length).join(" ")
-    var charpad = Array(18 - chars.length).join(" ")
-    return hexed + hexpad + '  ' + '|' + chars + charpad + '|';
-  }
-  var prows = Array.prototype.map.call(rows, prow);
   var offset = 0;
-  for (var i in prows) {
-    num = offset.toString(16);
-    var pad = Array(8 - num.length).join("0")
-    prows[i] = pad + num + '  ' + prows[i];
-    offset += 16;
+  var lines = [];
+  while(offset < buffer.byteLength){
+    var chars = '';
+    var hexes = '';
+    for (var i = 0; i < 16; i++) {
+      if (offset < buffer.byteLength) {
+        byte = dv.getUint8(offset);
+        chars += charify(byte);
+        hexes += hexify(byte);
+      } else {
+        chars += ' ';
+        hexes += '  '
+      }
+      hexes += ' ';
+      if (i == 7) {
+        hexes += ' ';
+      } 
+      offset += 1;
+    }
+    lines.push(hexes + '  |' + chars + '|');
   }
-  return prows
+  return lines;
 }
 
 function blog(buffer, type) {
