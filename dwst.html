@@ -864,15 +864,22 @@ function guiconnect() {
   loud('/connect ' + url + ' ' + proto);
 }
 
+var hist_array = [];
+var histdex = -1;
+
 function keypress() {
   if (event.keyCode == 13) {
     if (menu.isopen()) {
       if (isconnected()) {
         return true;
       }
-      document.getElementById('conbut1').click()
+      if (document.querySelector('#msg1').value != "")
+        hist_array.unshift(document.querySelector('#msg1').value);
+      document.getElementById('conbut1').click();
     } else {
-      document.getElementById('sendbut1').click()
+      if (document.querySelector('#msg1').value != "")
+        hist_array.unshift(document.querySelector('#msg1').value);
+      document.getElementById('sendbut1').click();
     }
   } else if (event.keyIdentifier == 'U+001B') {
     if (typeof(ws.readyState) == typeof(undefined)) {
@@ -881,6 +888,17 @@ function keypress() {
       guidisconnect();
     } else {
       menu.toggle();
+    }
+  } else if (event.keyCode == 38) {
+    if (histdex + 1 < hist_array.length) {
+      document.querySelector('#msg1').value = hist_array[++histdex];
+    }
+  } else if (event.keyCode == 40) {
+    if (histdex > 0) {
+      document.querySelector('#msg1').value = hist_array[--histdex];
+    } else if (histdex == 0) {
+      document.querySelector('#msg1').value = "";
+      histdex--;
     }
   }
 }
