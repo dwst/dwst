@@ -867,7 +867,6 @@ function guiconnect() {
 function ElementHistory() {
   this.idx = -1;
   this.history = [""];
-  this.partial = false;
 }
 ElementHistory.prototype.getNext = function() {
   if (this.idx > 0) {
@@ -963,7 +962,7 @@ function keypress() {
   } else if (event.keyCode == 38) {
     box = document.activeElement;
     if (hist.atBottom(box))
-      hist.select(box, true);
+      hist.select(box);
     box.value = hist.getPrevious(box);
     return true;
   } else if (event.keyCode == 40) {
