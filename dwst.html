@@ -888,11 +888,16 @@ ElementHistory.prototype.getPrevious = function() {
 ElementHistory.prototype.gotoBottom = function() {
   this.idx = -1;
 };
+ElementHistory.prototype.getLast = function() {
+  return this.history[0]
+}
 ElementHistory.prototype.addItem = function(item, edition) {
-  if (item != "")
+  if (item != "" && item != this.getLast()) {
     this.history.unshift(item);
-  if (item != "" && edition)
-	(this.idx)++;
+    if (edition) {
+      (this.idx)++;
+    }
+  }
 };
 ElementHistory.prototype.removeBottom = function(item) {
   this.history.shift();
