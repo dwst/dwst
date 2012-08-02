@@ -1,0 +1,228 @@
+
+body
+{
+  height: 100%;
+  background-color: #540;
+}
+h1 a
+{
+  padding: 0;
+  color: #000;
+  font-family: serif;
+}
+.button
+{
+  width: 3em;
+}
+.direction
+{
+  width: 3em;
+  text-align: right;
+}
+
+.sent
+{
+  color: #77c;
+}
+
+.received
+{
+  color: #c77;
+}
+
+.command
+{
+  color: #3ef;
+}
+
+.error
+{
+  color: #f00;
+}
+
+.system
+{
+  color: #7f7;
+}
+
+.time
+{
+  width: 3em;
+}
+
+.sec
+{
+  color: #777;
+}
+
+.label
+{
+  width: 1em;
+}
+
+.protofield
+{
+  width: 15%;
+}
+
+h1 a
+{
+  color: #aaa;
+  font-family: sans-serif;
+  text-decoration: none;
+
+}
+
+h1
+{
+  text-align: center;
+}
+.footer
+{
+  margin-top: 4em;
+  text-align: center;
+  font-size: 0.4em;
+  font-family: sans-serif;
+  color: #ddd;
+  padding: 1em;
+}
+
+.footer a
+{
+  color: #ddf;
+}
+.footer img
+{
+  width: 5em;
+  height: 1.8em;
+  padding-right: 1em;
+}
+
+table.terminal
+{
+  background-color: #000;
+  color: #ccc;
+  font-family: monospace;
+}
+input[type="text"]
+{
+  background-color: #444;
+  color: #fff;
+  font-family: monospace;
+  border: thin solid #f00;
+}
+
+input[readonly="readonly"]
+{
+  background-color: #555;
+  color: #ddd;
+
+}
+
+#open input[type="text"]
+{
+  border: thin solid #000;
+  width: 100%;
+}
+.bar2 input[type="text"]
+{
+  border: thin solid #000;
+  width: 100%;
+}
+
+.consolebar input[type="button"]
+{
+  padding: 0;
+  width: 5em;
+}
+
+body
+{
+  margin: 0;
+}
+.logline td
+{
+  vertical-align: top;
+}
+.preserved {
+  white-space: pre;
+}
+
+.consolebar
+{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2em;
+  background-color: #222;
+}
+
+.consolebar .time
+{
+  font-family: monospace;
+  width: 1em;
+  color: #ddd;
+}
+
+.consolebar .leftpad
+{
+  padding-left: 1em;
+}
+
+.consolebar .rightpad
+{
+  padding-right: 1em;
+}
+
+#screen1
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 2em;
+  background-color: #000;
+  overflow: auto;
+  vertical-align: top;
+}
+
+#open
+{
+  background-color: rgba(85, 68, 0, 0.8);
+  color: #777;
+  border-radius: 15px;
+  position: absolute;
+  margin: 10%;
+  width: 80%;
+  border: medium solid #777;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 0.8em;
+}
+.bar2
+{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2em;
+}
+.panel
+{
+  border: medium solid #540;
+  border-radius: 5px;
+  padding: 1em;
+  margin: auto 10%;
+  width: 80%;
+  background-color: #320;
+  text-align: right;
+}
+.panel .label
+{
+  width: 3em;
+}
+.binary
+{
+  color: #888;
+}
+
