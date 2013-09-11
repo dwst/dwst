@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Dark WebSocket Terminal",
   "description": "Dark WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server.",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "app": {
     "background": {
       "scripts": ["background.js"]
