@@ -526,7 +526,6 @@ Connect.prototype.run = function(params) {
     ws = new WebSocket(url,proto);
     protostring = " (protocol: " + proto + ")"
   }
-  history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=true');
   ws.onopen = function() {
     log("connection established, " + url + protostring, "system");
   };
@@ -567,10 +566,7 @@ Disconnect.prototype.info = function() {
 }
 Disconnect.prototype.run = function()
 {
-  var url = document.getElementById('url1').value;
-  var proto = document.getElementById('proto1').value;
   discogui();
-  history.replaceState({}, "", "?socket=" + url + '&proto=' + proto + '&connected=false');
   ws.close();
   document.getElementById('url1').focus();
 }
