@@ -154,7 +154,7 @@ body
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 2em;
+  height: 24pt;
   background-color: #222;
 }
 
@@ -181,7 +181,7 @@ body
   top: 0;
   left: 0;
   right: 0;
-  bottom: 2em;
+  bottom: 24pt;
   background-color: #000;
   overflow: auto;
   vertical-align: top;
@@ -206,7 +206,7 @@ body
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 2em;
+  height: 24pt;
 }
 .panel
 {
