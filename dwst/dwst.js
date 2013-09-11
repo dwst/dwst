@@ -971,10 +971,6 @@ function isconnected() {
   return false;
 }
 
-function linkfix() {
-  document.getElementById("sourcelink").setAttribute("href","view-source:"+location.href);
-}
-
 function parseParams() {
     var query = window.location.href.split('?')[1];
     if (query !== undefined) {
@@ -994,7 +990,6 @@ function init() {
   var socket = params.socket;
   var proto = params.proto;
 
-  linkfix();
   if (proto) {
       document.getElementById('proto1').value = proto
   }
