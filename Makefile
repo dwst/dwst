@@ -1,7 +1,7 @@
 .PHONY : clean
 
 all:
-	zip -r dwst.zip dwst
+	zip -r owst.zip owst
 
 clean:
-	-rm dwst.zip
+	-rm owst.zip

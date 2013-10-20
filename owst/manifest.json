@@ -5,7 +5,7 @@
   "version": "1.2.2",
   "app": {
     "launch": {
-      "local_path": "dwst.html"
+      "local_path": "owst.html"
     }
   },
   "offline_enabled": true,
