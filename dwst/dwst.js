@@ -498,7 +498,7 @@ Help.prototype.run = function(params) {
     }
   }
   available.sort();
-  mlog(['Dark WebSocket Terminal ' + VERSION, 'Available commands:'].concat(available).concat(['for help on a command use: /help <command>']), 'system');
+  mlog(['Old WebSocket Terminal ' + VERSION, 'Available commands:'].concat(available).concat(['for help on a command use: /help <command>']), 'system');
 }
 
 function Connect() {}
