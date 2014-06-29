@@ -783,7 +783,7 @@ function send() {
     loud(raw);
     return ;
   }
-  var replmap = [['[','\\['], [' ','\\ ']];
+  var replmap = [[' [','\\ \\['], [' ','\\ ']];
 
   function replacer(str, rm) {
     if (rm.length < 1) {
@@ -804,8 +804,14 @@ function send() {
     var out = complete.join(rep);
     return(out);
   }
-
-  loud('/send ' + replacer(raw, replmap));
+  var almost = replacer(raw, replmap);
+  var final;
+  if (almost[0] == '[') {
+    final = '\\' + almost;
+  } else {
+    final = almost; 
+  }
+  loud('/send ' + final);
   return ;
 }
 
