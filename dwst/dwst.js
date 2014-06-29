@@ -805,10 +805,11 @@ function send() {
     return(out);
   }
   var almost = replacer(raw, replmap);
+  var final;
   if (almost[0] == '[') {
-    var final = '\\' + almost;
+    final = '\\' + almost;
   } else {
-    var final = almost; 
+    final = almost; 
   }
   loud('/send ' + final);
   return ;
