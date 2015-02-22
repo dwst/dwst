@@ -185,6 +185,7 @@ body
   background-color: #000;
   overflow: auto;
   vertical-align: top;
+  -webkit-user-select: text;
 }
 
 #open
