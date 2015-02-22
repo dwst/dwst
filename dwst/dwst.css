@@ -186,6 +186,7 @@ body
   overflow: auto;
   vertical-align: top;
   -webkit-user-select: text;
+  cursor: text;
 }
 
 #open
