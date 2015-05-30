@@ -174,10 +174,29 @@ body
   padding-right: 1em;
 }
 
-#screen1
+.notification
 {
   position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  font-family: monospace;
+  font-size: monospace;
+  background-color: #000;
+  color: #f00;
+  padding: 1em 1em 0 1em;
+
+}
+
+.notification a {
+    color: #fff;
+}
+
+#screen1
+{
+  position: absolute;
+  top: 60px;
   left: 0;
   right: 0;
   bottom: 2em;
