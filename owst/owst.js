@@ -1,7 +1,7 @@
 
 var ws = {};
 var intervalId = null;
-var VERSION = '1.2.5';
+var VERSION = '1.2.6';
 var bins = {};
 var texts = {};
 

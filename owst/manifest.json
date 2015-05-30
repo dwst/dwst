@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Old WebSocket Terminal",
   "description": "Old WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server.",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "app": {
     "launch": {
       "local_path": "owst.html"
