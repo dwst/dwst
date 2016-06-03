@@ -43,10 +43,10 @@ class Texts {
   }
 
   run(params) {
-    if (params.length == 1) {
+    if (params.length === 1) {
       variable = params[0];
       text = texts[variable];
-      if (typeof(text) != typeof(undefined)) {
+      if (typeof(text) !== typeof(undefined)) {
         log(text, 'system');
         return;
       }
@@ -81,10 +81,10 @@ class Bins {
   }
 
   run(params) {
-    if (params.length == 1) {
+    if (params.length === 1) {
       variable = params[0];
       buffer = bins[variable];
-      if (typeof(buffer) != typeof(undefined)) {
+      if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
         return;
       }
@@ -165,7 +165,7 @@ class Loadbin {
 
   run(params) {
     var variable = 'default';
-    if (params.length == 1) {
+    if (params.length === 1) {
       variable = params[0];
     }
     var upload = document.getElementById('file1');
@@ -206,7 +206,7 @@ class Interval {
 
   run(params) {
     if (params.length < 1) {
-      if (intervalId != null) {
+      if (intervalId !== null) {
         clearInterval(intervalId);
         log('interval cleared', 'system');
       } else {
@@ -219,7 +219,7 @@ class Interval {
     var interval = parseNum(first);
     var spammer = () => {
       if (!isconnected()) {
-        if (intervalId != null) {
+        if (intervalId !== null) {
           log('interval failed, no connection', 'error');
           run('interval');
         }
@@ -232,7 +232,7 @@ class Interval {
       }
       silent(params.join(' '));
     }
-    if (intervalId != null) {
+    if (intervalId !== null) {
       log('clearing old interval', 'system');
       clearInterval(intervalId);
     }
@@ -262,10 +262,10 @@ class Spam {
   run(params) {
     var times = parseNum(params.shift());
     function spam(limit, i) {
-      if (typeof(i) == typeof(undefiend)) {
+      if (typeof(i) === typeof(undefiend)) {
         i = 0;
       }
-      if (i == limit) {
+      if (i === limit) {
         return;
       }
       if (params.length < 1) {
@@ -310,10 +310,10 @@ class Send {
 
   process(instr, params, postfix) {
     var out;
-    if (instr == 'default') {
+    if (instr === 'default') {
       out = params[0];
     }
-    if (instr == 'random') {
+    if (instr === 'random') {
       function randomchar() {
         var out = Math.floor(Math.random()* (0xffff + 1));
         out /= 2; // avoid risky characters
@@ -321,7 +321,7 @@ class Send {
         return char;
       }
       var num = 16;
-      if (params.length == 1){
+      if (params.length === 1){
         num = parseNum(params[0]);
       }
       var str = '';
@@ -330,23 +330,23 @@ class Send {
       }
       out = str;      
     }
-    if (instr == 'text') {
+    if (instr === 'text') {
       var variable = 'default';
-      if (params.length == 1) {
+      if (params.length === 1) {
         variable = params[0];
       }
       out = texts[variable];
     }
-    if (instr == 'time') {
+    if (instr === 'time') {
       out = '' + Math.round(new Date().getTime() / 1000);
     }
-    if (instr == 'range') {
+    if (instr === 'range') {
       var start = 32;
       var end = 126;
-      if (params.length == 1){
+      if (params.length === 1){
         end = parseNum(params[0]);
       }
-      if (params.length == 2){
+      if (params.length === 2){
         start = parseNum(params[0]);
         end = parseNum(params[1]);
       }
@@ -361,7 +361,7 @@ class Send {
 
   run(processed) {
     var msg = processed.join('');
-    if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
+    if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
       return;
     }
@@ -397,29 +397,29 @@ class Binary {
   process(instr, params) {
     function byteValue(x) {
       var code = x.charCodeAt(0);
-      if (code != (code & 0xff)) {
+      if (code !== (code & 0xff)) {
         return 0;
       }
       return code;
     }
     function hexpairtobyte(hp) {
       hex = hp.join('');
-      if (hex.length != 2) {
+      if (hex.length !== 2) {
         return;
       }
       return parseInt(hex, 16);
     }
     var bytes = [];
-    if (instr == 'default') {
+    if (instr === 'default') {
       bytes = Array.prototype.map.call(params[0], byteValue);
     }
-    if (instr == 'random') {
+    if (instr === 'random') {
       function randombyte() {
         var out = Math.floor(Math.random()* (0xff + 1));
         return out;
       }
       var num = 16;
-      if (params.length == 1) {
+      if (params.length === 1) {
         num = parseNum(params[0]);
       }
       var bytes = [];
@@ -427,13 +427,13 @@ class Binary {
         bytes.push(randombyte());
       }
     }
-    if (instr == 'range') {
+    if (instr === 'range') {
       var start = 0;
       var end = 0xff;
-      if (params.length == 1){
+      if (params.length === 1){
         end = parseNum(params[0]);
       }
-      if (params.length == 2){
+      if (params.length === 2){
         start = parseNum(params[0]);
         end = parseNum(params[1]);
       }
@@ -442,31 +442,31 @@ class Binary {
         bytes.push(i);
       }
     }
-    if (instr == 'bin') {
+    if (instr === 'bin') {
       var variable = 'default';
-      if (params.length == 1) {
+      if (params.length === 1) {
         variable = params[0];
       }
       var buffer = bins[variable];
-      if (typeof(buffer) == typeof(undefined)) {
+      if (typeof(buffer) === typeof(undefined)) {
         buffer = [];
       }
       return new Uint8Array(buffer);
     }
-    if (instr == 'text') {
+    if (instr === 'text') {
       var variable = 'default';
-      if (params.length == 1) {
+      if (params.length === 1) {
         variable = params[0];
       }
       text = texts[variable];
-      if (typeof(text) != typeof(undefined)) {
+      if (typeof(text) !== typeof(undefined)) {
         bytes = Array.prototype.map.call(text, byteValue);
       } else {
         bytes = [];
       }
     }
-    if (instr == 'hex') {
-      if (params.length == 1) {
+    if (instr === 'hex') {
+      if (params.length === 1) {
         var hex = params[0];
         var nums = hex.split('');
         var pairs = divissimo(nums, 2);
@@ -499,7 +499,7 @@ class Binary {
     }
     var out = joinbufs(buffers).buffer;
     var msg = '<' + out.byteLength + 'B of data> ';
-    if (typeof(ws.readyState) == typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
+    if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
       return;
     }
@@ -522,11 +522,11 @@ class Help {
     for (var i in params) {
       var command = params[i];
       var plugin = commands[command];
-      if (typeof(plugin) == typeof(undefined)) {
+      if (typeof(plugin) === typeof(undefined)) {
         log('the command does not exist: ' + command, 'error');
         return;
       }
-      if (typeof(plugin.help) == typeof(undefined))
+      if (typeof(plugin.help) === typeof(undefined))
       {
         log('no help available for: ' + command, 'system');
         return;
@@ -539,7 +539,7 @@ class Help {
       if (c.length > 1) {
         var plugin = commands[c];
         var info = '- ';
-        if (typeof(plugin.info) != typeof(undefined)) {
+        if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
         }
         var cpad = Array(15 - c.length).join(" ")
@@ -574,7 +574,7 @@ class Connect {
     var proto = params[1];
     var protostring = ''
       congui();
-    if(proto == '') {
+    if(proto === '') {
       ws = new WebSocket(url);
     }
     else {
@@ -586,12 +586,12 @@ class Connect {
     };
     ws.onclose = () => {
       log("connection closed, " + url + protostring, "system");
-      if (document.getElementById('conbut1').value == "disconnect") {
+      if (document.getElementById('conbut1').value === "disconnect") {
         discogui();
       }
     };
     ws.onmessage = (msg) => {
-      if (typeof(msg.data) == typeof('')) {
+      if (typeof(msg.data) === typeof('')) {
         log(msg.data, "received");
       }
       else {
@@ -658,7 +658,7 @@ function discogui() {
 }
 
 function guiconbut() {
-  if (document.getElementById('conbut1').value == "connect") {
+  if (document.getElementById('conbut1').value === "connect") {
     guiconnect();
   } else {
     guidisconnect();
@@ -667,22 +667,22 @@ function guiconbut() {
 
 function process(plugin, param) {
   var pro = plugin.process;
-  if (param.substr(param.length - 2, 2) == '\\\\') {
+  if (param.substr(param.length - 2, 2) === '\\\\') {
     param = param.substr(0, param.length - 2) + '\\';
-  } else if (param.substr(param.length - 1, 1) == '\\') {
+  } else if (param.substr(param.length - 1, 1) === '\\') {
     param = param.substr(0, param.length - 1) + ' ';
   }
-  if (typeof(pro) == typeof(undefined)) {
+  if (typeof(pro) === typeof(undefined)) {
     return param;
   }
   var instruction = "default";
   var params = [];
   var end = '';
-  if (param.substr(0,2) == '\\\\') {
+  if (param.substr(0,2) === '\\\\') {
     params.push(param.substr(1));
-  } else if (param.substr(0,2) == '\\[') {
+  } else if (param.substr(0,2) === '\\[') {
     params.push(param.substr(1));
-  } else if (param.substr(0,1) == '[') {
+  } else if (param.substr(0,1) === '[') {
     tmp = param.split(']')
     call = tmp[0].split('[')[1];
     end = tmp[1];
@@ -699,11 +699,11 @@ function process(plugin, param) {
 }
 
 function run(command, params) {
-  if (typeof(params) == typeof(undefined)){
+  if (typeof(params) === typeof(undefined)){
     params = [];
   }
   var plugin = commands[command];
-  if (typeof(plugin) == typeof(undefined)) {
+  if (typeof(plugin) === typeof(undefined)) {
     log('invalid command: ' + command, 'error');
     return;
   }
@@ -735,7 +735,7 @@ function htmlescape(line) {
 }
 
 function parseNum(str) {
-  if (str.length > 2 && str.substr(0,2) == '0x') {
+  if (str.length > 2 && str.substr(0,2) === '0x') {
     return parseInt(str.substr(2), 16);
   }
   var num = parseInt(str, 10);
@@ -748,7 +748,7 @@ function log(line, type) {
 
 function mlog(lines, type, binary) {
   binclass = '';
-  if (binary == true) {
+  if (binary === true) {
     binclass = ' binary';
   }
   var escaped = Array.prototype.map.call(lines, htmlescape);
@@ -804,7 +804,7 @@ function hexdump(buffer) {
         hexes += '  '
       }
       hexes += ' ';
-      if (i == 7) {
+      if (i === 7) {
         hexes += ' ';
       } 
       offset += 1;
@@ -840,7 +840,7 @@ function send() {
     log('type /help to list available commands', 'system');
     return;
   }
-  if (raw[0] == '/') {
+  if (raw[0] === '/') {
     loud(raw);
     return ;
   }
@@ -867,7 +867,7 @@ function send() {
   }
   var almost = replacer(raw, replmap);
   var final;
-  if (almost[0] == '[') {
+  if (almost[0] === '[') {
     final = '\\' + almost;
   } else {
     final = almost; 
@@ -880,7 +880,7 @@ function send() {
 class Menu {
 
   isopen() {
-    return (document.getElementById('open').getAttribute("style") == null)
+    return (document.getElementById('open').getAttribute("style") === null)
   }
 
 
@@ -933,7 +933,7 @@ class ElementHistory {
   getNext() {
     if (this.idx > 0)
       return this.history[--(this.idx)];
-    if (this.idx == 0) {
+    if (this.idx === 0) {
       (this.idx)--;
       return "";
     }
@@ -942,7 +942,7 @@ class ElementHistory {
   };
 
   getPrevious() {
-    if (this.history.length == 0)
+    if (this.history.length === 0)
       return "";
     if (this.idx + 1 < this.history.length)
       return this.history[++(this.idx)];
@@ -958,7 +958,7 @@ class ElementHistory {
   }
 
   addItem(item, edition) {
-    if (item != "" && item != this.getLast()) {
+    if (item !== "" && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
         (this.idx)++;
@@ -990,7 +990,7 @@ class History {
     if (! this.hasElement(ele))
       this.addElement(ele);
 
-    if (ele.value != this[ele.id].getCurrent())
+    if (ele.value !== this[ele.id].getCurrent())
       this[ele.id].addItem(ele.value, true);
 
     return this[ele.id].getNext();
@@ -1000,7 +1000,7 @@ class History {
     if (! this.hasElement(ele))
       this.addElement(ele);
 
-    if (ele.value != this[ele.id].getCurrent())
+    if (ele.value !== this[ele.id].getCurrent())
       this[ele.id].addItem(ele.value, true);
 
     return this[ele.id].getPrevious();
@@ -1015,14 +1015,14 @@ class History {
   };
 
   atBottom(ele) {
-    return this[ele.id].idx == -1;
+    return this[ele.id].idx === -1;
   };
 }
 
 var hist = new History();
 
 function keypress() {
-  if (event.keyCode == 13) {
+  if (event.keyCode === 13) {
     if (menu.isopen()) {
       if (isconnected()) {
         return true;
@@ -1033,19 +1033,19 @@ function keypress() {
     hist.select(document.activeElement);
       document.getElementById('sendbut1').click();
     }
-  } else if (event.keyIdentifier == 'U+001B') {
-    if (typeof(ws.readyState) == typeof(undefined)) {
+  } else if (event.keyIdentifier === 'U+001B') {
+    if (typeof(ws.readyState) === typeof(undefined)) {
       menu.toggle();
     } else if (ws.readyState < 2) { // OPEN or CONNECTING
       guidisconnect();
     } else {
       menu.toggle();
     }
-  } else if (event.keyCode == 38) { // up
+  } else if (event.keyCode === 38) { // up
     box = document.activeElement;
     box.value = hist.getPrevious(box);
     return true;
-  } else if (event.keyCode == 40) { // down
+  } else if (event.keyCode === 40) { // down
     box = document.activeElement;
     box.value = hist.getNext(box);
     return true;
@@ -1053,10 +1053,10 @@ function keypress() {
 }
 
 function isconnected() {
-  if (typeof(ws.readyState) == typeof(undefined)) {
+  if (typeof(ws.readyState) === typeof(undefined)) {
     return false;
   }
-  if (ws.readyState == 1) {
+  if (ws.readyState === 1) {
     return true;
   }
   return false;
@@ -1090,12 +1090,12 @@ function init() {
   refreshclock();
   document.getElementById('clock1').removeAttribute("style");
   setInterval( refreshclock, 500 );
-  if (("WebSocket" in window) == false) {
+  if (("WebSocket" in window) === false) {
     log('Your browser does not seem to support websockets.', 'error');
     return;
   }
   loud('/help');
-  if(connected == "true")
+  if(connected === "true")
   {
     document.getElementById('conbut1').click()
   }
