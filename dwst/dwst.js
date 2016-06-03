@@ -314,12 +314,12 @@ class Send {
       out = params[0];
     }
     if (instr === 'random') {
-      function randomchar() {
+      let randomchar = () => {
         var out = Math.floor(Math.random()* (0xffff + 1));
         out /= 2; // avoid risky characters
         var char = String.fromCharCode(out);
         return char;
-      }
+      };
       var num = 16;
       if (params.length === 1){
         num = parseNum(params[0]);
@@ -414,10 +414,10 @@ class Binary {
       bytes = Array.prototype.map.call(params[0], byteValue);
     }
     if (instr === 'random') {
-      function randombyte() {
+      let randombyte = () => {
         var out = Math.floor(Math.random()* (0xff + 1));
         return out;
-      }
+      };
       var num = 16;
       if (params.length === 1) {
         num = parseNum(params[0]);
