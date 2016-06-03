@@ -44,19 +44,19 @@ class Texts {
 
   run(params) {
     if (params.length === 1) {
-      variable = params[0];
+      const variable = params[0];
       text = texts[variable];
       if (typeof(text) !== typeof(undefined)) {
         log(text, 'system');
         return;
       }
-      log('text "' + variable + '" does not exist', 'error');
+      log(`text "${variable}" does not exist`, 'error');
     }
     var strs = ['Loaded texts:'];
     for (var i in texts) {
       var name = i;
       var text = texts[i];
-      strs.push('"' + name + '": <' + text.length + 'B of text data>');
+      strs.push(`"${name}": <${text.length}B of text data>`);
     }
     mlog(strs, 'system');
   }
@@ -88,13 +88,13 @@ class Bins {
         blog(buffer, 'system');
         return;
       }
-      log('binary "' + variable + '" does not exist', 'error');
+      log(`binary "${variable}" does not exist`, 'error');
     }
     var strs = ['Loaded binaries:'];
     for (var i in bins) {
       var name = i;
       var buffer = bins[i];
-      strs.push('"' + name + '": <' + buffer.byteLength + 'B of binary data>');
+      strs.push(`"${name}": <${buffer.byteLength}B of binary data>`);
     }
     mlog(strs, 'system');
   }
@@ -137,7 +137,7 @@ class Loadtext {
       reader.onload = (e2) => {
         var text = e2.target.result;
         texts[variable] = text;
-        log('Text file ' + file.fileName + ' (' + text.length + 'B)' + ' loaded to "' + variable + '"', 'system');
+        log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsText(file, encoding);
     }
@@ -177,7 +177,7 @@ class Loadbin {
       reader.onload = (e2) => {
         var buffer = e2.target.result;
         bins[variable] = buffer;
-        log('Binary file ' + file.fileName + ' (' + buffer.byteLength + 'B)' + ' loaded to "' + variable + '"', 'system');
+        log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
     }
@@ -362,7 +362,7 @@ class Send {
   run(processed) {
     var msg = processed.join('');
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
-      mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
+      mlog(['no connection', `cannot send: ${msg}`, 'connect first with /connect'], 'error');
       return;
     }
     log(msg, 'sent');
@@ -498,9 +498,9 @@ class Binary {
       return out;
     }
     var out = joinbufs(buffers).buffer;
-    var msg = '<' + out.byteLength + 'B of data> ';
+    var msg = `<${out.byteLength}B of data> `;
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
-      mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
+      mlog(['no connection', `cannot send: ${msg}`, 'connect first with /connect'], 'error');
       return;
     }
     blog(out, 'sent');
@@ -523,12 +523,12 @@ class Help {
       var command = params[i];
       var plugin = commands[command];
       if (typeof(plugin) === typeof(undefined)) {
-        log('the command does not exist: ' + command, 'error');
+        log(`the command does not exist: ${command}`, 'error');
         return;
       }
       if (typeof(plugin.help) === typeof(undefined))
       {
-        log('no help available for: ' + command, 'system');
+        log(`no help available for: ${command}`, 'system');
         return;
       }
       mlog(plugin.help(), 'system');
@@ -548,7 +548,7 @@ class Help {
       }
     }
     available.sort();
-    mlog(['Dark WebSocket Terminal ' + VERSION, 'Available commands:'].concat(available).concat(['for help on a command use: /help <command>']), 'system');
+    mlog([`Dark WebSocket Terminal ${VERSION}`, 'Available commands:'].concat(available).concat(['for help on a command use: /help <command>']), 'system');
   }
 }
 
@@ -572,20 +572,20 @@ class Connect {
   run(params) {
     var url = params[0];
     var proto = params[1];
-    var protostring = ''
+    var protostring = '';
       congui();
     if(proto === '') {
       ws = new WebSocket(url);
     }
     else {
       ws = new WebSocket(url,proto);
-      protostring = ' (protocol: ' + proto + ')'
+      protostring = `(protocol: ${proto})`
     }
     ws.onopen = () => {
-      log('connection established, ' + url + protostring, 'system');
+      log(`connection established, ${url} ${protostring}`, 'system');
     };
     ws.onclose = () => {
-      log('connection closed, ' + url + protostring, 'system');
+      log(`connection closed, ${url} ${protostring}`, 'system');
       if (document.getElementById('conbut1').value === 'disconnect') {
         discogui();
       }
@@ -605,7 +605,7 @@ class Connect {
 
     };
     ws.onerror = () => {
-      log('websocket error: ' + url + ' ' + protostring, 'system');
+      log(`websocket error: ${url} ${protostring}`, 'system');
     };
   }
 }
@@ -704,7 +704,7 @@ function run(command, params) {
   }
   var plugin = commands[command];
   if (typeof(plugin) === typeof(undefined)) {
-    log('invalid command: ' + command, 'error');
+    log(`invalid command: ${command}`, 'error');
     return;
   }
   var processor = (param) => process(plugin, param);
@@ -726,7 +726,7 @@ function currenttime() {
     return ''+i;
   };
   var date = new Date();
-  return time = addzero(date.getHours()) + ':' + addzero(date.getMinutes()) + '<span class="sec">:' + addzero(date.getSeconds()) + '</span>';
+  return time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
 
 }
 
@@ -753,7 +753,7 @@ function mlog(lines, type, binary) {
   }
   var escaped = Array.prototype.map.call(lines, htmlescape);
   var time = currenttime();
-  document.getElementById('ter1').innerHTML += '<tr class="logline"><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td class="preserved' + binclass + '">'+escaped.join('<br />')+'</td></tr>';
+  document.getElementById('ter1').innerHTML += `<tr class="logline"><td class="time">${time}</td><td class="direction ${type}">${type}:</td><td class="preserved${binclass}">${escaped.join('<br />')}</td></tr>`;
   var screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
@@ -810,12 +810,13 @@ function hexdump(buffer) {
       offset += 1;
     }
     lines.push(hexes + '  |' + chars + '|');
+
   }
   return lines;
 }
 
 function blog(buffer, type) {
-  msg = '<' + buffer.byteLength + 'B of binary data>';
+  msg = `<${buffer.byteLength}B of binary data>`;
   hd = hexdump(buffer);
   mlog([msg].concat(hd), type, true);
 }
@@ -920,7 +921,7 @@ function guiconnect() {
   menu.hide();
   var url = document.getElementById('url1').value;
   var proto = document.getElementById('proto1').value;
-  loud('/connect ' + url + ' ' + proto);
+  loud(`/connect ${url} ${proto}`);
 }
 
 class ElementHistory {
