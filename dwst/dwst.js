@@ -129,12 +129,12 @@ class Loadtext {
       encoding = params[1];
     }
     var upload = document.getElementById('file1');
-    upload.onchange = function(e) {
+    upload.onchange = (e) => {
       var file = upload.files[0];
       var ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
       reader = new FileReader();
-      reader.onload = function(e2) {
+      reader.onload = (e2) => {
         var text = e2.target.result;
         texts[variable] = text;
         log('Text file ' + file.fileName + ' (' + text.length + 'B)' + ' loaded to "' + variable + '"', 'system');
@@ -169,12 +169,12 @@ class Loadbin {
       variable = params[0];
     }
     var upload = document.getElementById('file1');
-    upload.onchange = function(e) {
+    upload.onchange = (e) => {
       var file = upload.files[0];
       var ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
       reader = new FileReader();
-      reader.onload = function(e2) {
+      reader.onload = (e2) => {
         var buffer = e2.target.result;
         bins[variable] = buffer;
         log('Binary file ' + file.fileName + ' (' + buffer.byteLength + 'B)' + ' loaded to "' + variable + '"', 'system');
@@ -217,7 +217,7 @@ class Interval {
     var count = 0;
     var first = params.shift();
     var interval = parseNum(first);
-    var spammer = function() {
+    var spammer = () => {
       if (!isconnected()) {
         if (intervalId != null) {
           log('interval failed, no connection', 'error');
@@ -273,7 +273,7 @@ class Spam {
       } else {    
         silent(params.join(' '));
       }
-      var nextspam = function() {
+      var nextspam = () => {
         spam(limit, i + 1);
       }
       if (isconnected()) {
@@ -471,7 +471,7 @@ class Binary {
         var nums = hex.split('');
         var pairs = divissimo(nums, 2);
         tmp = Array.prototype.map.call(pairs, hexpairtobyte);
-        bytes = tmp.filter(function(b){return typeof(b) == typeof(0);})
+        bytes = tmp.filter(b => (typeof(b) === typeof(0)));
       } else {
         bytes = [];
       }
@@ -581,22 +581,22 @@ class Connect {
       ws = new WebSocket(url,proto);
       protostring = " (protocol: " + proto + ")"
     }
-    ws.onopen = function() {
+    ws.onopen = () => {
       log("connection established, " + url + protostring, "system");
     };
-    ws.onclose = function() {
+    ws.onclose = () => {
       log("connection closed, " + url + protostring, "system");
       if (document.getElementById('conbut1').value == "disconnect") {
         discogui();
       }
     };
-    ws.onmessage = function(msg) {
+    ws.onmessage = (msg) => {
       if (typeof(msg.data) == typeof('')) {
         log(msg.data, "received");
       }
       else {
         var fr = new FileReader();
-        fr.onload = function(e) {
+        fr.onload = (e) => {
           var buffer = e.target.result;
           blog(buffer, "received");
         }
@@ -604,7 +604,7 @@ class Connect {
       }
 
     };
-    ws.onerror = function() {
+    ws.onerror = () => {
       log('websocket error: ' + url + ' ' + protostring, "system");
     };
   }
@@ -707,7 +707,7 @@ function run(command, params) {
     log('invalid command: ' + command, 'error');
     return;
   }
-  var processor = function(param){return process(plugin, param);}
+  var processor = (param) => process(plugin, param);
   var processed = Array.prototype.map.call(params, processor);
   plugin.run(processed);
 }
@@ -719,7 +719,7 @@ function refreshclock() {
 }
 
 function currenttime() {
-  addzero = function(i) {
+  addzero = (i) => {
     if (i < 10) {
       return "0"+i;
     }
@@ -1106,7 +1106,7 @@ function init() {
 
   document.addEventListener('keydown', keypress);
   document.getElementById('sendbut1').addEventListener('click', send);
-  document.getElementById('menubut1').addEventListener('click', function(){menu.toggle()});
+  document.getElementById('menubut1').addEventListener('click', () => menu.toggle());
   document.getElementById('conbut1').addEventListener('click', guiconbut);
 }
 
