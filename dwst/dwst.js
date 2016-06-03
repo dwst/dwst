@@ -16,7 +16,7 @@ class Clear {
   }
 
   info() {
-    return 'clear the screen'
+    return 'clear the screen';
   }
 
   run(params) {
@@ -39,7 +39,7 @@ class Texts {
   }
 
   info() {
-    return 'list loaded texts'
+    return 'list loaded texts';
   }
 
   run(params) {
@@ -77,7 +77,7 @@ class Bins {
   }
 
   info() {
-    return 'list loaded binaries'
+    return 'list loaded binaries';
   }
 
   run(params) {
@@ -116,7 +116,7 @@ class Loadtext {
   }
 
   info() {
-    return 'load text data from a file'
+    return 'load text data from a file';
   }
 
   run(params) {
@@ -140,7 +140,7 @@ class Loadtext {
         log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsText(file, encoding);
-    }
+    };
     upload.click();
   }
 }
@@ -160,7 +160,7 @@ class Loadbin {
   }
 
   info() {
-    return 'load binary data from a file'
+    return 'load binary data from a file';
   }
 
   run(params) {
@@ -180,7 +180,7 @@ class Loadbin {
         log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
-    }
+    };
     upload.click();
   }
 }
@@ -201,7 +201,7 @@ class Interval {
   }
 
   info() {
-    return 'run a command periodically'
+    return 'run a command periodically';
   }
 
   run(params) {
@@ -231,7 +231,7 @@ class Interval {
         return;
       }
       silent(params.join(' '));
-    }
+    };
     if (intervalId !== null) {
       log('clearing old interval', 'system');
       clearInterval(intervalId);
@@ -256,7 +256,7 @@ class Spam {
   }
 
   info() {
-    return 'run a command multiple times in a row'
+    return 'run a command multiple times in a row';
   }
 
   run(params) {
@@ -275,9 +275,9 @@ class Spam {
       }
       var nextspam = () => {
         spam(limit, i + 1);
-      }
+      };
       if (isconnected()) {
-        setTimeout(nextspam, 0)
+        setTimeout(nextspam, 0);
       } else {
         log('spam failed, no connection', 'error');
       }
@@ -305,7 +305,7 @@ class Send {
   }
 
   info() {
-    return 'send textual data'
+    return 'send textual data';
   }
 
   process(instr, params, postfix) {
@@ -391,7 +391,7 @@ class Binary {
   }
 
   info() {
-    return 'send binary data'
+    return 'send binary data';
   }
 
   process(instr, params) {
@@ -515,7 +515,7 @@ class Help {
   }
 
   info() {
-    return 'get help'
+    return 'get help';
   }
 
   run(params) {
@@ -542,7 +542,7 @@ class Help {
         if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
         }
-        var cpad = Array(15 - c.length).join(' ')
+        var cpad = Array(15 - c.length).join(' ');
 
           available.push(c + cpad + info);
       }
@@ -566,7 +566,7 @@ class Connect {
   }
 
   info() {
-    return 'connect to a server'
+    return 'connect to a server';
   }
 
   run(params) {
@@ -579,7 +579,7 @@ class Connect {
     }
     else {
       ws = new WebSocket(url,proto);
-      protostring = `(protocol: ${proto})`
+      protostring = `(protocol: ${proto})`;
     }
     ws.onopen = () => {
       log(`connection established, ${url} ${protostring}`, 'system');
@@ -599,7 +599,7 @@ class Connect {
         fr.onload = (e) => {
           var buffer = e.target.result;
           blog(buffer, 'received');
-        }
+        };
         fr.readAsArrayBuffer(msg.data);
       }
 
@@ -621,7 +621,7 @@ class Disconnect {
   }
 
   info() {
-    return 'disconnect from a server'
+    return 'disconnect from a server';
   }
 
   run()
@@ -633,7 +633,7 @@ class Disconnect {
 }
 
 var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
-var commands = {}
+var commands = {};
 
 for (var i in plugins) {
   var constructor = plugins[i];
@@ -683,7 +683,7 @@ function process(plugin, param) {
   } else if (param.substr(0,2) === '\\[') {
     params.push(param.substr(1));
   } else if (param.substr(0,1) === '[') {
-    tmp = param.split(']')
+    tmp = param.split(']');
     call = tmp[0].split('[')[1];
     end = tmp[1];
     tmp2 = call.split('(').concat('');
@@ -779,7 +779,7 @@ function divissimo(l, n) {
 function hexdump(buffer) {
   function hexify(num) {
     var hex = num.toString(16);
-    var zero = hex.length < 2 ? '0' : ''
+    var zero = hex.length < 2 ? '0' : '';
     return zero + hex;
   }
   function charify(num) {
@@ -801,7 +801,7 @@ function hexdump(buffer) {
         hexes += hexify(byte);
       } else {
         chars += ' ';
-        hexes += '  '
+        hexes += '  ';
       }
       hexes += ' ';
       if (i === 7) {
@@ -856,10 +856,10 @@ function send() {
     var rep = head[1];
 
     var parts = str.split(find);
-    var complete = []
+    var complete = [];
     for (var i in parts) {
       var part = parts[i];
-      var loput = rm.slice(1)
+      var loput = rm.slice(1);
       var news = replacer(part, loput);
       complete.push(news);
     }
@@ -881,7 +881,7 @@ function send() {
 class Menu {
 
   isopen() {
-    return (document.getElementById('open').getAttribute('style') === null)
+    return (document.getElementById('open').getAttribute('style') === null);
   }
 
 
@@ -955,7 +955,7 @@ class ElementHistory {
   }
 
   getLast() {
-    return this.history[0]
+    return this.history[0];
   }
 
   addItem(item, edition) {
@@ -1068,7 +1068,7 @@ function parseParams() {
     if (query !== undefined) {
         var defs = query.split('&');
     }
-    var params = {}
+    var params = {};
     for (var i in defs) {
         var parts = defs[i].split('=');
         params[parts[0]] = parts[1];
@@ -1083,10 +1083,10 @@ function init() {
   var proto = params.proto;
 
   if (proto) {
-      document.getElementById('proto1').value = proto
+      document.getElementById('proto1').value = proto;
   }
   if (socket) {
-      document.getElementById('url1').value = socket
+      document.getElementById('url1').value = socket;
   }
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
@@ -1098,7 +1098,7 @@ function init() {
   loud('/help');
   if(connected === 'true')
   {
-    document.getElementById('conbut1').click()
+    document.getElementById('conbut1').click();
   }
   else
   {
