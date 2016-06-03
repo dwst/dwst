@@ -726,7 +726,8 @@ function currenttime() {
     return ''+i;
   };
   var date = new Date();
-  return time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
+  var time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
+  return time;
 
 }
 
