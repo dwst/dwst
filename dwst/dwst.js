@@ -365,7 +365,7 @@ class Send {
       mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
       return;
     }
-    log(msg, "sent");
+    log(msg, 'sent');
     ws.send(msg);
   }
 }
@@ -503,7 +503,7 @@ class Binary {
       mlog(['no connection', 'cannot send: ' + msg, 'connect first with /connect'], 'error');
       return;
     }
-    blog(out, "sent");
+    blog(out, 'sent');
     ws.send(out);
   }
 }
@@ -542,7 +542,7 @@ class Help {
         if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
         }
-        var cpad = Array(15 - c.length).join(" ")
+        var cpad = Array(15 - c.length).join(' ')
 
           available.push(c + cpad + info);
       }
@@ -579,33 +579,33 @@ class Connect {
     }
     else {
       ws = new WebSocket(url,proto);
-      protostring = " (protocol: " + proto + ")"
+      protostring = ' (protocol: ' + proto + ')'
     }
     ws.onopen = () => {
-      log("connection established, " + url + protostring, "system");
+      log('connection established, ' + url + protostring, 'system');
     };
     ws.onclose = () => {
-      log("connection closed, " + url + protostring, "system");
-      if (document.getElementById('conbut1').value === "disconnect") {
+      log('connection closed, ' + url + protostring, 'system');
+      if (document.getElementById('conbut1').value === 'disconnect') {
         discogui();
       }
     };
     ws.onmessage = (msg) => {
       if (typeof(msg.data) === typeof('')) {
-        log(msg.data, "received");
+        log(msg.data, 'received');
       }
       else {
         var fr = new FileReader();
         fr.onload = (e) => {
           var buffer = e.target.result;
-          blog(buffer, "received");
+          blog(buffer, 'received');
         }
         fr.readAsArrayBuffer(msg.data);
       }
 
     };
     ws.onerror = () => {
-      log('websocket error: ' + url + ' ' + protostring, "system");
+      log('websocket error: ' + url + ' ' + protostring, 'system');
     };
   }
 }
@@ -617,7 +617,7 @@ class Disconnect {
   }
 
   help() {
-    return ["Disconnects from the server. (usage: /disconnect)"];
+    return ['Disconnects from the server. (usage: /disconnect)'];
   }
 
   info() {
@@ -646,19 +646,19 @@ for (var i in plugins) {
 }
 
 function congui() {
-  document.getElementById('conbut1').value = "disconnect";
-  document.getElementById('url1').setAttribute("disabled", "disabled");
-  document.getElementById('proto1').setAttribute("disabled", "disabled");
+  document.getElementById('conbut1').value = 'disconnect';
+  document.getElementById('url1').setAttribute('disabled', 'disabled');
+  document.getElementById('proto1').setAttribute('disabled', 'disabled');
 }
 
 function discogui() {
-  document.getElementById('conbut1').value = "connect";
-  document.getElementById('url1').removeAttribute("disabled");
-  document.getElementById('proto1').removeAttribute("disabled");
+  document.getElementById('conbut1').value = 'connect';
+  document.getElementById('url1').removeAttribute('disabled');
+  document.getElementById('proto1').removeAttribute('disabled');
 }
 
 function guiconbut() {
-  if (document.getElementById('conbut1').value === "connect") {
+  if (document.getElementById('conbut1').value === 'connect') {
     guiconnect();
   } else {
     guidisconnect();
@@ -675,7 +675,7 @@ function process(plugin, param) {
   if (typeof(pro) === typeof(undefined)) {
     return param;
   }
-  var instruction = "default";
+  var instruction = 'default';
   var params = [];
   var end = '';
   if (param.substr(0,2) === '\\\\') {
@@ -721,12 +721,12 @@ function refreshclock() {
 function currenttime() {
   addzero = (i) => {
     if (i < 10) {
-      return "0"+i;
+      return '0'+i;
     }
-    return ""+i;
+    return ''+i;
   };
   var date = new Date();
-  return time = addzero(date.getHours()) +":"+ addzero(date.getMinutes())+'<span class="sec">:'+ addzero(date.getSeconds())+'</span>';
+  return time = addzero(date.getHours()) + ':' + addzero(date.getMinutes()) + '<span class="sec">:' + addzero(date.getSeconds()) + '</span>';
 
 }
 
@@ -754,7 +754,7 @@ function mlog(lines, type, binary) {
   var escaped = Array.prototype.map.call(lines, htmlescape);
   var time = currenttime();
   document.getElementById('ter1').innerHTML += '<tr class="logline"><td class="time">'+time+'</td><td class="direction '+type+'">'+type+':</td><td class="preserved' + binclass + '">'+escaped.join('<br />')+'</td></tr>';
-  var screen = document.getElementById("screen1");
+  var screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
 
@@ -835,7 +835,7 @@ function loud(line) {
 
 function send() {
   var raw = document.getElementById('msg1').value;
-  document.getElementById('msg1').value = "";
+  document.getElementById('msg1').value = '';
   if (raw.length < 1) {
     log('type /help to list available commands', 'system');
     return;
@@ -880,23 +880,23 @@ function send() {
 class Menu {
 
   isopen() {
-    return (document.getElementById('open').getAttribute("style") === null)
+    return (document.getElementById('open').getAttribute('style') === null)
   }
 
 
   hide() {
-    document.getElementById('open').setAttribute("style", "visibility: hidden;");
+    document.getElementById('open').setAttribute('style', 'visibility: hidden;');
     document.getElementById('msg1').focus();
-    document.getElementById('sendbut1').removeAttribute("disabled");
-    document.getElementById('menubut1').removeAttribute("class");
+    document.getElementById('sendbut1').removeAttribute('disabled');
+    document.getElementById('menubut1').removeAttribute('class');
   }
 
 
   show() {
-    document.getElementById('open').removeAttribute("style");
+    document.getElementById('open').removeAttribute('style');
     document.getElementById('url1').focus();
-    document.getElementById('sendbut1').setAttribute("disabled", "disabled");
-    document.getElementById('menubut1').setAttribute("class", "active");
+    document.getElementById('sendbut1').setAttribute('disabled', 'disabled');
+    document.getElementById('menubut1').setAttribute('class', 'active');
   }
 
 
@@ -935,15 +935,15 @@ class ElementHistory {
       return this.history[--(this.idx)];
     if (this.idx === 0) {
       (this.idx)--;
-      return "";
+      return '';
     }
 
-    return "";
+    return '';
   };
 
   getPrevious() {
     if (this.history.length === 0)
-      return "";
+      return '';
     if (this.idx + 1 < this.history.length)
       return this.history[++(this.idx)];
     return this.history[this.history.length - 1];
@@ -958,7 +958,7 @@ class ElementHistory {
   }
 
   addItem(item, edition) {
-    if (item !== "" && item !== this.getLast()) {
+    if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
         (this.idx)++;
@@ -1069,7 +1069,7 @@ function parseParams() {
     }
     var params = {}
     for (var i in defs) {
-        var parts = defs[i].split("=");
+        var parts = defs[i].split('=');
         params[parts[0]] = parts[1];
     }
     return params;
@@ -1088,14 +1088,14 @@ function init() {
       document.getElementById('url1').value = socket
   }
   refreshclock();
-  document.getElementById('clock1').removeAttribute("style");
+  document.getElementById('clock1').removeAttribute('style');
   setInterval( refreshclock, 500 );
-  if (("WebSocket" in window) === false) {
+  if (('WebSocket' in window) === false) {
     log('Your browser does not seem to support websockets.', 'error');
     return;
   }
   loud('/help');
-  if(connected === "true")
+  if(connected === 'true')
   {
     document.getElementById('conbut1').click()
   }
