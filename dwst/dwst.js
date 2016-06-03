@@ -940,7 +940,7 @@ class ElementHistory {
     }
 
     return '';
-  };
+  }
 
   getPrevious() {
     if (this.history.length === 0)
@@ -948,11 +948,11 @@ class ElementHistory {
     if (this.idx + 1 < this.history.length)
       return this.history[++(this.idx)];
     return this.history[this.history.length - 1];
-  };
+  }
 
   gotoBottom() {
     this.idx = -1;
-  };
+  }
 
   getLast() {
     return this.history[0]
@@ -965,15 +965,15 @@ class ElementHistory {
         (this.idx)++;
       }
     }
-  };
+  }
 
   removeBottom(item) {
     this.history.shift();
-  };
+  }
 
   getCurrent() {
     return this.history[this.idx];
-  };
+  }
 
 }
 
@@ -981,11 +981,11 @@ class History {
 
   addElement(ele) {
     this[ele.id] = new ElementHistory();
-  };
+  }
 
   hasElement(ele) {
     return this.hasOwnProperty(ele.id);
-  };
+  }
 
   getNext(ele) {
     if (! this.hasElement(ele))
@@ -995,7 +995,7 @@ class History {
       this[ele.id].addItem(ele.value, true);
 
     return this[ele.id].getNext();
-  };
+  }
 
   getPrevious(ele) {
     if (! this.hasElement(ele))
@@ -1005,7 +1005,7 @@ class History {
       this[ele.id].addItem(ele.value, true);
 
     return this[ele.id].getPrevious();
-  };
+  }
 
   select(ele) {
     if (! this.hasElement(ele))
@@ -1013,11 +1013,11 @@ class History {
 
     this[ele.id].addItem(ele.value);
     this[ele.id].gotoBottom();
-  };
+  }
 
   atBottom(ele) {
     return this[ele.id].idx === -1;
-  };
+  }
 }
 
 var hist = new History();
