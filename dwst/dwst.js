@@ -45,7 +45,7 @@ class Texts {
   run(params) {
     if (params.length === 1) {
       const variable = params[0];
-      text = texts[variable];
+      const text = texts[variable];
       if (typeof(text) !== typeof(undefined)) {
         log(text, 'system');
         return;
@@ -83,7 +83,7 @@ class Bins {
   run(params) {
     if (params.length === 1) {
       variable = params[0];
-      buffer = bins[variable];
+      let buffer = bins[variable];
       if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
         return;
@@ -324,8 +324,8 @@ class Send {
       if (params.length === 1){
         num = parseNum(params[0]);
       }
-      var str = '';
-      for (var i = 0; i < num; i++) {
+      let str = '';
+      for (let i = 0; i < num; i++) {
         str += randomchar();
       }
       out = str;      
@@ -350,8 +350,8 @@ class Send {
         start = parseNum(params[0]);
         end = parseNum(params[1]);
       }
-      var str = '';
-      for (var i = start; i <= end; i++) {
+      let str = '';
+      for (let i = start; i <= end; i++) {
         str += String.fromCharCode(i);
       }
       out = str;      
@@ -422,8 +422,8 @@ class Binary {
       if (params.length === 1) {
         num = parseNum(params[0]);
       }
-      var bytes = [];
-      for (var i = 0; i < num; i++) {
+      bytes = [];
+      for (let i = 0; i < num; i++) {
         bytes.push(randombyte());
       }
     }
@@ -437,13 +437,13 @@ class Binary {
         start = parseNum(params[0]);
         end = parseNum(params[1]);
       }
-      var bytes = [];
-      for (var i = start; i <= end; i++) {
+      bytes = [];
+      for (let i = start; i <= end; i++) {
         bytes.push(i);
       }
     }
     if (instr === 'bin') {
-      var variable = 'default';
+      let variable = 'default';
       if (params.length === 1) {
         variable = params[0];
       }
@@ -454,7 +454,7 @@ class Binary {
       return new Uint8Array(buffer);
     }
     if (instr === 'text') {
-      var variable = 'default';
+      let variable = 'default';
       if (params.length === 1) {
         variable = params[0];
       }
@@ -485,13 +485,13 @@ class Binary {
 
       var total = 0;
       for (var i in buffers) {
-        buffer = buffers[i];
+        let buffer = buffers[i];
         total += buffer.length;
       }
       var out = new Uint8Array(total);
       var offset = 0;
-      for (var i in buffers) {
-        buffer = buffers[i];
+      for (let i in buffers) {
+        let buffer = buffers[i];
         out.set(buffer, offset);
         offset += buffer.length;
       }
@@ -521,7 +521,7 @@ class Help {
   run(params) {
     for (var i in params) {
       var command = params[i];
-      var plugin = commands[command];
+      let plugin = commands[command];
       if (typeof(plugin) === typeof(undefined)) {
         log(`the command does not exist: ${command}`, 'error');
         return;
@@ -537,7 +537,7 @@ class Help {
     var available = [];
     for (var c in commands) {
       if (c.length > 1) {
-        var plugin = commands[c];
+        let plugin = commands[c];
         var info = '- ';
         if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
@@ -1066,13 +1066,14 @@ function isconnected() {
 
 function parseParams() {
     var query = window.location.href.split('?')[1];
+    let defs;
     if (query !== undefined) {
-        var defs = query.split('&');
+      defs = query.split('&');
     }
     var params = {};
     for (var i in defs) {
-        var parts = defs[i].split('=');
-        params[parts[0]] = parts[1];
+      var parts = defs[i].split('=');
+      params[parts[0]] = parts[1];
     }
     return params;
 }
