@@ -270,7 +270,7 @@ class Spam {
       }
       if (params.length < 1) {
         run('send', ['' + i]);
-      } else {    
+      } else {
         silent(params.join(' '));
       }
       var nextspam = () => {
@@ -328,7 +328,7 @@ class Send {
       for (let i = 0; i < num; i++) {
         str += randomchar();
       }
-      out = str;      
+      out = str;
     }
     if (instr === 'text') {
       var variable = 'default';
@@ -354,7 +354,7 @@ class Send {
       for (let i = start; i <= end; i++) {
         str += String.fromCharCode(i);
       }
-      out = str;      
+      out = str;
     }
     return out + postfix;
   }
@@ -807,7 +807,7 @@ function hexdump(buffer) {
       hexes += ' ';
       if (i === 7) {
         hexes += ' ';
-      } 
+      }
       offset += 1;
     }
     lines.push(hexes + '  |' + chars + '|');
@@ -872,7 +872,7 @@ function send() {
   if (almost[0] === '[') {
     final = '\\' + almost;
   } else {
-    final = almost; 
+    final = almost;
   }
   loud('/send ' + final);
   return ;
