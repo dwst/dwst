@@ -224,17 +224,31 @@ body
 {
   width: 3em;
 }
-.binary
-{
-  color: #888;
-}
-.dwst-mlog__link {
-  color: #888;
+.dwst-mlog__help-link {
+  color: #7a7;
+  font-style: italic;
   text-decoration: none;
 }
-.dwst-mlog__link:hover {
-  color: #eee;
+.dwst-mlog__help-link:hover {
+  color: #7f7;
   text-decoration: none;
+}
+.dwst-mlog__command-link {
+  color: #6ab;
+  text-decoration: none;
+}
+.dwst-mlog__command-link:hover {
+  color: #3ef;
+  text-decoration: none;
+}
+.dwst-mlog__hexline {
+  color: #888;
+}
+.dwst-mlog__strong {
+  font-weight: bold;
+}
+.dwst-mlog__syntax {
+  font-style: italic;
 }
 .dim {
   user-select: none;
