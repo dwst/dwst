@@ -15,6 +15,12 @@ class Clear {
     return ['usage: /clear'];
   }
 
+  examples() {
+    return [
+      '/clear',
+    ];
+  }
+
   info() {
     return 'clear the screen';
   }
@@ -31,10 +37,15 @@ class Texts {
   }
 
   help() {
-    return ['usage: /texts [name]',
-           'examples:',
-           '/texts',
-           '/texts default'
+    return [
+      'usage: /texts [name]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/texts',
+      '/texts default',
     ];
   }
 
@@ -69,10 +80,15 @@ class Bins {
   }
 
   help() {
-    return ['usage: /bins [name]',
-           'examples:',
-           '/bins',
-           '/bins default'
+    return [
+      'usage: /bins [name]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/bins',
+      '/bins default',
     ];
   }
 
@@ -107,11 +123,16 @@ class Loadtext {
   }
 
   help() {
-    return ['usage: /loadtext [variable] [encoding]',
-           'examples:',
-           '/loadtext',
-           '/loadtext default',
-           '/loadtext default utf-8'
+    return [
+      'usage: /loadtext [variable] [encoding]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/loadtext',
+      '/loadtext default',
+      '/loadtext default utf-8',
     ];
   }
 
@@ -152,10 +173,15 @@ class Loadbin {
   }
 
   help() {
-    return ['usage: /loadbin [variable]',
-           'examples:',
-           '/loadbin',
-           '/loadbin default'
+    return [
+      'usage: /loadbin [variable]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/loadbin',
+      '/loadbin default',
     ];
   }
 
@@ -192,11 +218,17 @@ class Interval {
   }
 
   help() {
-    return ['usage: /interval <interval> [command line...]','       /interval',
-           'examples:',
-           '/interval 1000',
-           '/interval 1000 /binary [random(10)]',
-           '/interval'
+    return [
+      'usage: /interval <interval> [command line...]',
+      '       /interval',
+    ];
+  }
+
+  examples() {
+    return [
+      '/interval 1000',
+      '/interval 1000 /binary [random(10)]',
+      '/interval',
     ];
   }
 
@@ -248,10 +280,15 @@ class Spam {
   }
 
   help() {
-    return ['usage: /spam <times> [command line...]',
-           'examples:',
-           '/spam 10',
-           '/spam 6 /binary [random(10)]'
+    return [
+      'usage: /spam <times> [command line...]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/spam 10',
+      '/spam 6 /binary [random(10)]',
     ];
   }
 
@@ -293,14 +330,19 @@ class Send {
   }
 
   help() {
-    return ['usage: /send [components...]',
-           'examples:',
-           '/send Hello\\ world!',
-           '/send rpc( [random(5)] )',
-           '/send [text]',
-           '/send \\["JSON","is","cool"]',
-           '/send [time] s\\ since\\ epoch',
-           '/send From\\ a\\ to\\ z:\\ [range(97,122)]'
+    return [
+      'usage: /send [components...]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/send Hello\\ world!',
+      '/send rpc( [random(5)] )',
+      '/send [text]',
+      '/send \\["JSON","is","cool"]',
+      '/send [time] s\\ since\\ epoch',
+      '/send From\\ a\\ to\\ z:\\ [range(97,122)]'
     ];
   }
 
@@ -377,16 +419,21 @@ class Binary {
   }
 
   help() {
-    return ['usage: /binary [components...]',
-           'examples:',
-           '/binary Hello\\ world!',
-           '/binary [random(16)]',
-           '/binary [text]',
-           '/binary [bin]',
-           '/binary \\["JSON","is","cool"]',
-           '/binary [range(0,0xff)]',
-           '/binary [hex(1234567890abcdef)]',
-           '/binary [hex(52)] [random(1)]\ lol'
+    return [
+      'usage: /binary [components...]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/binary Hello\\ world!',
+      '/binary [random(16)]',
+      '/binary [text]',
+      '/binary [bin]',
+      '/binary \\["JSON","is","cool"]',
+      '/binary [range(0,0xff)]',
+      '/binary [hex(1234567890abcdef)]',
+      '/binary [hex(52)] [random(1)]\ lol'
     ];
   }
 
@@ -531,7 +578,17 @@ class Help {
         log(`no help available for: ${command}`, 'system');
         return;
       }
-      mlog(plugin.help(), 'system');
+      const basic_help = plugin.help();
+      const examples_title = 'examples:';
+      const examples = plugin.examples().map(command => {
+        return [{
+          text: command,
+          type: 'command',
+          command: command,
+        }];
+      });
+      const help = basic_help.concat(examples_title).concat(examples);
+      mlog(help, 'system');
       return;
     }
     var available = [];
@@ -568,9 +625,14 @@ class Connect {
   }
 
   help() {
-    return ['Usage: /connect <ws-url> [protocol]',
-           'examples:',
-           '/connect ws://echo.websocket.org/'
+    return [
+      'Usage: /connect <ws-url> [protocol]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/connect ws://echo.websocket.org/',
     ];
   }
 
@@ -626,7 +688,15 @@ class Disconnect {
   }
 
   help() {
-    return ['Disconnects from the server. (usage: /disconnect)'];
+    return [
+      'Disconnects from the server. (usage: /disconnect)'
+    ];
+  }
+
+  examples() {
+    return [
+      '/disconnect'
+    ];
   }
 
   info() {
