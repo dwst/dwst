@@ -1008,12 +1008,12 @@ function send() {
 class Menu {
 
   isopen() {
-    return (document.getElementById('open').getAttribute('style') === null);
+    return (document.getElementById('dim1').getAttribute('style') === null);
   }
 
 
   hide() {
-    document.getElementById('open').setAttribute('style', 'visibility: hidden;');
+    document.getElementById('dim1').setAttribute('style', 'visibility: hidden;');
     document.getElementById('msg1').focus();
     document.getElementById('sendbut1').removeAttribute('disabled');
     document.getElementById('menubut1').removeAttribute('class');
@@ -1021,7 +1021,7 @@ class Menu {
 
 
   show() {
-    document.getElementById('open').removeAttribute('style');
+    document.getElementById('dim1').removeAttribute('style');
     document.getElementById('url1').focus();
     document.getElementById('sendbut1').setAttribute('disabled', 'disabled');
     document.getElementById('menubut1').setAttribute('class', 'active');
@@ -1236,6 +1236,8 @@ function init() {
   document.addEventListener('keydown', keypress);
   document.getElementById('sendbut1').addEventListener('click', send);
   document.getElementById('menubut1').addEventListener('click', () => menu.toggle());
+  document.getElementById('open1').addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('dim1').addEventListener('click', () => menu.hide());
   document.getElementById('conbut1').addEventListener('click', guiconbut);
 }
 

@@ -120,7 +120,7 @@ input[readonly="readonly"]
 
 }
 
-#open input[type="text"]
+.popup input[type="text"]
 {
   border: thin solid #000;
   width: 100%;
@@ -189,7 +189,7 @@ body
   cursor: text;
 }
 
-#open
+.popup
 {
   background-color: rgba(85, 68, 0, 0.8);
   color: #777;
@@ -235,4 +235,13 @@ body
 .dwst-mlog__link:hover {
   color: #eee;
   text-decoration: none;
+}
+.dim {
+  user-select: none;
+  background-color: rgba(0,0,0,0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
