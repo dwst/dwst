@@ -228,4 +228,11 @@ body
 {
   color: #888;
 }
-
+.dwst-mlog__link {
+  color: #888;
+  text-decoration: none;
+}
+.dwst-mlog__link:hover {
+  color: #eee;
+  text-decoration: none;
+}

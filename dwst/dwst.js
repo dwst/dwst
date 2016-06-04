@@ -778,6 +778,7 @@ function mlog(lines, type, binary) {
         if (typeof segment === typeof {}) {
           if (segment.type === 'command') {
             const link = document.createElement('a');
+            link.setAttribute('class', 'dwst-mlog__link');
             link.onclick = () => {
               loud(segment.command);
             };
