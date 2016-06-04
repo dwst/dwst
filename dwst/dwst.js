@@ -543,12 +543,21 @@ class Help {
           info += plugin.info();
         }
         var cpad = Array(15 - c.length).join(' ');
-
-          available.push(c + cpad + info);
+        let commandSegment = {
+          text: c,
+          type: 'command',
+          command: `/help ${c}`,
+        };
+        available.push([commandSegment, cpad, info]);
       }
     }
     available.sort();
-    mlog([`Dark WebSocket Terminal ${VERSION}`, 'Available commands:'].concat(available).concat(['for help on a command use: /help <command>']), 'system');
+    mlog([
+      `Dark WebSocket Terminal ${VERSION}`,
+      'Available commands:'
+    ].concat(available).concat([
+      'for help on a command use: /help <command>'
+    ]), 'system');
   }
 }
 
@@ -752,9 +761,55 @@ function mlog(lines, type, binary) {
   if (binary === true) {
     binclass = ' binary';
   }
-  var escaped = Array.prototype.map.call(lines, htmlescape);
+  var lineElements = Array.prototype.map.call(lines, rawLine => {
+    let line;
+    if (typeof rawLine === typeof '') {
+      line = [rawLine];
+    } else {
+      line = rawLine;
+    }
+    if (typeof line === typeof []) {
+      const htmlSegments = line.map(segment => {
+        if (typeof segment === typeof '') {
+          const textSpan = document.createElement('span');
+          textSpan.innerHTML = htmlescape(segment);
+          return textSpan;
+        }
+        if (typeof segment === typeof {}) {
+          if (segment.type === 'command') {
+            const link = document.createElement('a');
+            link.onclick = () => {
+              loud(segment.command);
+            };
+            link.setAttribute('href', '#');
+            link.setAttribute('title', segment.command);
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = htmlescape(segment.text);
+            link.appendChild(textSpan);
+            return link;
+          }
+        }
+        throw 'unknown segment type';
+      });
+      return htmlSegments;
+    }
+  });
   var time = currenttime();
-  document.getElementById('ter1').innerHTML += `<tr class="logline"><td class="time">${time}</td><td class="direction ${type}">${type}:</td><td class="preserved${binclass}">${escaped.join('<br />')}</td></tr>`;
+  const terminal1 = document.getElementById('ter1');
+  const logLine = document.createElement('tr');
+  logLine.setAttribute('class', 'logline');
+  logLine.innerHTML = `<td class="time">${time}</td><td class="direction ${type}">${type}:</td></tr>`;
+  const outputCell = document.createElement('td');
+  outputCell.setAttribute('class', `preserved${binclass}`);
+  lineElements.forEach(lineElement => {
+    lineElement.forEach(segmentElement => {
+      outputCell.appendChild(segmentElement);
+    });
+    const br = document.createElement('br');
+    outputCell.appendChild(br);
+  });
+  logLine.appendChild(outputCell);
+  terminal1.appendChild(logLine);
   var screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
