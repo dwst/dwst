@@ -4,6 +4,7 @@ var intervalId = null;
 var VERSION = '1.3.4';
 var bins = {};
 var texts = {};
+var historyManager;
 
 class Clear {
 
@@ -599,6 +600,55 @@ class Status {
   }
 
   run(params) {
+
+    const histories = historyManager.getAll();
+    var historyLineData = [];
+    for (var key in histories) {
+      if (histories.hasOwnProperty(key)) {
+        const history = histories[key];
+        const count = history.length;
+        if (count > 0) {
+          historyLineData.push([count, key]);
+        }
+      }
+    }
+
+    var historyLine = ['History '];
+    if (Object.keys(historyLineData).length < 1) {
+      historyLine.push('is empty');
+    } else {
+      historyLine.push('contains ');
+      historyLineData.sort((a, b) => {
+        return a[0] < b[0];
+      });
+      var remaining = Object.keys(historyLineData).length;
+      historyLineData.forEach(item => {
+        const [count, key] = item;
+        historyLine.push({
+          type: 'strong',
+          text: `${count}`,
+        });
+        const units = {
+          urls: 'urls',
+          commands: 'commands',
+          protocols: 'protocol definitions',
+        };
+        const unit = (count > 1) ? (
+          units[key]
+        ) : (
+          units[key].slice(0, -1) // remove plural s
+        );
+        historyLine.push(' ');
+        historyLine.push(unit);
+        remaining -= 1;
+        if (remaining > 1) {
+          historyLine.push(', ');
+        } else if (remaining === 1) {
+          historyLine.push(' and ');
+        }
+      });
+    }
+    historyLine.push('.');
     mlog([
       {
         type: 'strong',
@@ -606,7 +656,6 @@ class Status {
       },
       '',
       'Type text into the box below to send messages to the web socket server.',
-      '',
       [
         'Type ',
         {
@@ -615,6 +664,8 @@ class Status {
         },
         ' for a list of available commands.',
       ],
+      '',
+      historyLine,
       '',
     ], 'system');
   }
@@ -1368,13 +1419,28 @@ class HistoryManager {
       'proto1': 'protocols',
     };
     if (!mapping.hasOwnProperty(eleId)) {
-      throw 'unknown element ' + eleId;
+      return null;
     }
     return mapping[eleId];
   }
 
+  getAll() {
+    var all = {};
+    for (var key in this.histories) {
+      if (this.histories.hasOwnProperty(key)) {
+        const eHistory = this.histories[key];
+        const history = eHistory.getAll();
+        all[key] = history;
+      }
+    }
+    return all;
+  }
+
   getCreate(eleId) {
     const historyId = this.getHistoryId(eleId);
+    if (historyId === null) {
+      return null;
+    }
     if (! this.histories.hasOwnProperty(historyId)) {
       this.histories[historyId] = new ElementHistory();
     }
@@ -1382,8 +1448,11 @@ class HistoryManager {
   }
 
   addItem(eleId, value, edition) {
-    const historyId = this.getHistoryId(eleId);
     const eHistory = this.getCreate(eleId);
+    if (eHistory === null) {
+      return;
+    }
+    const historyId = this.getHistoryId(eleId);
     eHistory.addItem(value, edition, () => {
       const history = eHistory.getAll();
       this.save(historyId, history);
@@ -1392,6 +1461,9 @@ class HistoryManager {
 
   getNext(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return null;
+    }
 
     if (ele.value !== eHistory.getCurrent())
       this.addItem(ele.id, ele.value, true);
@@ -1401,6 +1473,9 @@ class HistoryManager {
 
   getPrevious(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return null;
+    }
 
     if (ele.value !== eHistory.getCurrent())
       this.addItem(ele.id, ele.value, true);
@@ -1410,6 +1485,9 @@ class HistoryManager {
 
   select(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return;
+    }
 
     this.addItem(ele.id, ele.value);
     eHistory.gotoBottom();
@@ -1417,34 +1495,13 @@ class HistoryManager {
 
   atBottom(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return null;
+    }
+
     return eHistory.idx === -1;
   }
 }
-
-var historyManager;
-
-chrome.storage.local.get(['history-commands', 'history-urls', 'history-procotols'], response => {
-  const save = (historyId, history) => {
-    const saveKey = `history-${historyId}`;
-    const saveState = JSON.stringify(history);
-    var setOperation = {};
-    setOperation[saveKey] = saveState;
-    console.log(setOperation);
-    chrome.storage.local.set(setOperation);
-  };
-
-  savedHistories = [];
-  for (var key in response) {
-    if (response.hasOwnProperty(key)) {
-      const saveState = response[key];
-      const history = JSON.parse(saveState);
-      const parts = key.split('-');
-      const historyId = parts[1];
-      savedHistories.push([historyId, history]);
-    }
-  }
-  historyManager = new HistoryManager(savedHistories, { save: save });
-});
 
 function keypress() {
   if (event.keyCode === 13) {
@@ -1538,6 +1595,31 @@ function init() {
   document.getElementById('conbut1').addEventListener('click', guiconbut);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function loadSaves(callBack) {
+  chrome.storage.local.get(['history-commands', 'history-urls', 'history-protocols'], response => {
+    const save = (historyId, history) => {
+      const saveKey = `history-${historyId}`;
+      const saveState = JSON.stringify(history);
+      var setOperation = {};
+      setOperation[saveKey] = saveState;
+      chrome.storage.local.set(setOperation);
+    };
+
+    savedHistories = [];
+    for (var key in response) {
+      if (response.hasOwnProperty(key)) {
+        const saveState = response[key];
+        const history = JSON.parse(saveState);
+        const parts = key.split('-');
+        const historyId = parts[1];
+        savedHistories.push([historyId, history]);
+      }
+    }
+    historyManager = new HistoryManager(savedHistories, { save: save });
+    callBack();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadSaves(init));
 
 
