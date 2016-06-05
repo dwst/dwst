@@ -1337,50 +1337,51 @@ class ElementHistory {
 
 }
 
-class History {
+class HistoryManager {
 
-  addElement(ele) {
-    this[ele.id] = new ElementHistory();
+  constructor() {
+    this.histories = {};
   }
 
-  hasElement(ele) {
-    return this.hasOwnProperty(ele.id);
+  getCreate(eleId) {
+    if (! this.histories.hasOwnProperty(eleId)) {
+      this.histories[eleId] = new ElementHistory();
+    }
+    return this.histories[eleId];
   }
 
   getNext(ele) {
-    if (! this.hasElement(ele))
-      this.addElement(ele);
+    const eHistory = this.getCreate(ele.id);
 
-    if (ele.value !== this[ele.id].getCurrent())
-      this[ele.id].addItem(ele.value, true);
+    if (ele.value !== eHistory.getCurrent())
+      eHistory.addItem(ele.value, true);
 
-    return this[ele.id].getNext();
+    return eHistory.getNext();
   }
 
   getPrevious(ele) {
-    if (! this.hasElement(ele))
-      this.addElement(ele);
+    const eHistory = this.getCreate(ele.id);
 
-    if (ele.value !== this[ele.id].getCurrent())
-      this[ele.id].addItem(ele.value, true);
+    if (ele.value !== eHistory.getCurrent())
+      eHistory.addItem(ele.value, true);
 
-    return this[ele.id].getPrevious();
+    return eHistory.getPrevious();
   }
 
   select(ele) {
-    if (! this.hasElement(ele))
-      this.addElement(ele);
+    const eHistory = this.getCreate(ele.id);
 
-    this[ele.id].addItem(ele.value);
-    this[ele.id].gotoBottom();
+    eHistory.addItem(ele.value);
+    eHistory.gotoBottom();
   }
 
   atBottom(ele) {
-    return this[ele.id].idx === -1;
+    const eHistory = this.getCreate(ele.id);
+    return eHistory.idx === -1;
   }
 }
 
-var hist = new History();
+var historyManager = new HistoryManager();
 
 function keypress() {
   if (event.keyCode === 13) {
@@ -1388,10 +1389,10 @@ function keypress() {
       if (isconnected()) {
         return true;
       }
-    hist.select(document.activeElement);
+    historyManager.select(document.activeElement);
       document.getElementById('conbut1').click();
     } else {
-    hist.select(document.activeElement);
+    historyManager.select(document.activeElement);
       document.getElementById('sendbut1').click();
     }
   } else if (event.keyIdentifier === 'U+001B') {
@@ -1404,11 +1405,11 @@ function keypress() {
     }
   } else if (event.keyCode === 38) { // up
     box = document.activeElement;
-    box.value = hist.getPrevious(box);
+    box.value = historyManager.getPrevious(box);
     return true;
   } else if (event.keyCode === 40) { // down
     box = document.activeElement;
-    box.value = hist.getNext(box);
+    box.value = historyManager.getNext(box);
     return true;
   }
 }
