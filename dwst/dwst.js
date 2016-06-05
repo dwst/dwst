@@ -4,6 +4,7 @@ var intervalId = null;
 var VERSION = '1.3.4';
 var bins = {};
 var texts = {};
+var historyManager;
 
 class Clear {
 
@@ -599,6 +600,7 @@ class Status {
   }
 
   run(params) {
+    const historyLine = historyManager.getSummary();
     mlog([
       {
         type: 'strong',
@@ -606,7 +608,6 @@ class Status {
       },
       '',
       'Type text into the box below to send messages to the web socket server.',
-      '',
       [
         'Type ',
         {
@@ -616,10 +617,64 @@ class Status {
         ' for a list of available commands.',
       ],
       '',
+      historyLine,
+      [
+        'Type ',
+        {
+          type: 'command',
+          text: '/forget everything',
+        },
+        ' to throw them away.',
+      ],
+      '',
     ], 'system');
   }
 
 }
+
+
+class Forget {
+
+  commands() {
+    return ['forget'];
+  }
+
+  usage() {
+    return [
+      '/forget <target>',
+    ];
+  }
+
+  examples() {
+    return [
+      '/forget commands',
+      '/forget urls',
+      '/forget protocols',
+      '/forget everything',
+    ];
+  }
+
+  info() {
+    return 'remove things from history';
+  }
+
+  run(params) {
+    const target = params[0];
+    if (target === 'everything') {
+      historyManager.forget();
+    } else if (target === 'commands' || target === 'urls' || target === 'protocols') {
+      historyManager.forget(target);
+    } else {
+      const historyLine = historyManager.getSummary();
+      mlog([`Invalid argument: ${target}`, historyLine], 'error');
+      return;
+    }
+    let historyLine = historyManager.getSummary();
+    mlog([`Successfully forgot ${target}!`, historyLine], 'system');
+  }
+
+}
+
 
 class Help {
 
@@ -852,7 +907,7 @@ class Disconnect {
   }
 }
 
-var plugins = [Connect, Disconnect, Status, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+var plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
 var commands = {};
 
 for (var i in plugins) {
@@ -1286,9 +1341,16 @@ function guiconnect() {
 
 class ElementHistory {
 
-  constructor() {
+  constructor(history = []) {
+    if (!Array.isArray(history)) {
+      throw 'invalid history saveState';
+    }
     this.idx = -1;
-    this.history = [];
+    this.history = history;
+  }
+
+  getAll() {
+    return this.history;
   }
 
   getNext() {
@@ -1318,13 +1380,14 @@ class ElementHistory {
     return this.history[0];
   }
 
-  addItem(item, edition) {
+  addItem(item, edition, callback) {
     if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
         (this.idx)++;
       }
     }
+    callback();
   }
 
   removeBottom(item) {
@@ -1339,49 +1402,182 @@ class ElementHistory {
 
 class HistoryManager {
 
-  constructor() {
+  constructor(savedHistories, options) {
+    this.saveIds = {
+      'msg1': 'commands',
+      'url1': 'urls',
+    };
+    if (typeof options === typeof {} && options.hasOwnProperty('save')) {
+      this.save = options.save;
+    } else {
+      this.save = () => {};
+    }
     this.histories = {};
+    savedHistories.forEach((historyObject) => {
+      const [historyId, history] = historyObject;
+      this.histories[historyId] = new ElementHistory(history);
+    });
+  }
+
+  getHistoryId(eleId) {
+    const mapping = {
+      'url1': 'urls',
+      'msg1': 'commands',
+      'proto1': 'protocols',
+    };
+    if (!mapping.hasOwnProperty(eleId)) {
+      return null;
+    }
+    return mapping[eleId];
+  }
+
+  getAll() {
+    var all = {};
+    for (var key in this.histories) {
+      if (this.histories.hasOwnProperty(key)) {
+        const eHistory = this.histories[key];
+        const history = eHistory.getAll();
+        all[key] = history;
+      }
+    }
+    return all;
+  }
+
+  getSummary() {
+    const histories = this.getAll();
+    var historyLineData = [];
+    for (var key in histories) {
+      if (histories.hasOwnProperty(key)) {
+        const history = histories[key];
+        const count = history.length;
+        if (count > 0) {
+          historyLineData.push([count, key]);
+        }
+      }
+    }
+
+    var historyLine = ['Persistent history '];
+    if (Object.keys(historyLineData).length < 1) {
+      historyLine.push('is empty');
+    } else {
+      historyLine.push('contains ');
+      historyLineData.sort((a, b) => {
+        return a[0] < b[0];
+      });
+      var remaining = Object.keys(historyLineData).length;
+      historyLineData.forEach(item => {
+        const [count, key] = item;
+        historyLine.push({
+          type: 'strong',
+          text: `${count}`,
+        });
+        const units = {
+          urls: 'urls',
+          commands: 'commands',
+          protocols: 'protocol definitions',
+        };
+        const unit = (count > 1) ? (
+          units[key]
+        ) : (
+          units[key].slice(0, -1) // remove plural s
+        );
+        historyLine.push(' ');
+        historyLine.push(unit);
+        remaining -= 1;
+        if (remaining > 1) {
+          historyLine.push(', ');
+        } else if (remaining === 1) {
+          historyLine.push(' and ');
+        }
+      });
+    }
+    historyLine.push('.');
+    return historyLine;
+  }
+
+  forget(historyId = null) {
+    var targets;
+    if (historyId === null) {
+      targets = Object.keys(this.histories);
+    } else {
+      if (!this.histories.hasOwnProperty(historyId)) {
+        return false;
+      }
+      targets = [historyId];
+    }
+    targets.forEach(target => {
+      delete this.histories[target];
+      this.save(target, []);
+    });
+    return true;
   }
 
   getCreate(eleId) {
-    if (! this.histories.hasOwnProperty(eleId)) {
-      this.histories[eleId] = new ElementHistory();
+    const historyId = this.getHistoryId(eleId);
+    if (historyId === null) {
+      return null;
     }
-    return this.histories[eleId];
+    if (! this.histories.hasOwnProperty(historyId)) {
+      this.histories[historyId] = new ElementHistory();
+    }
+    return this.histories[historyId];
+  }
+
+  addItem(eleId, value, edition) {
+    const eHistory = this.getCreate(eleId);
+    if (eHistory === null) {
+      return;
+    }
+    const historyId = this.getHistoryId(eleId);
+    eHistory.addItem(value, edition, () => {
+      const history = eHistory.getAll();
+      this.save(historyId, history);
+    });
   }
 
   getNext(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return null;
+    }
 
     if (ele.value !== eHistory.getCurrent())
-      eHistory.addItem(ele.value, true);
+      this.addItem(ele.id, ele.value, true);
 
     return eHistory.getNext();
   }
 
   getPrevious(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return null;
+    }
 
     if (ele.value !== eHistory.getCurrent())
-      eHistory.addItem(ele.value, true);
+      this.addItem(ele.id, ele.value, true);
 
     return eHistory.getPrevious();
   }
 
   select(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return;
+    }
 
-    eHistory.addItem(ele.value);
+    this.addItem(ele.id, ele.value);
     eHistory.gotoBottom();
   }
 
   atBottom(ele) {
     const eHistory = this.getCreate(ele.id);
+    if (eHistory === null) {
+      return null;
+    }
+
     return eHistory.idx === -1;
   }
 }
-
-var historyManager = new HistoryManager();
 
 function keypress() {
   if (event.keyCode === 13) {
@@ -1475,6 +1671,36 @@ function init() {
   document.getElementById('conbut1').addEventListener('click', guiconbut);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function loadSaves(callBack) {
+  chrome.storage.local.get(['history_commands', 'history_urls', 'history_protocols'], response => {
+    const save = (historyId, history) => {
+      const saveKey = `history_${historyId}`;
+      const saveState = JSON.stringify(history);
+      var setOperation = {};
+      setOperation[saveKey] = saveState;
+      chrome.storage.local.set(setOperation);
+    };
+
+    const saveStates = Object.assign({
+      history_commands: '[]',
+      history_urls: '[]',
+      history_protocols: '[]',
+    }, response);
+    savedHistories = [];
+    for (var key in saveStates) {
+      if (saveStates.hasOwnProperty(key)) {
+        const saveState = saveStates[key];
+        const history = JSON.parse(saveState);
+        const parts = key.split('_');
+        const historyId = parts[1];
+        savedHistories.push([historyId, history]);
+      }
+    }
+    historyManager = new HistoryManager(savedHistories, { save: save });
+    callBack();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadSaves(init));
 
 
