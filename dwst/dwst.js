@@ -11,8 +11,16 @@ class Clear {
     return ['clear'];
   }
 
-  help() {
-    return ['usage: /clear'];
+  usage() {
+    return [
+      '/clear',
+    ];
+  }
+
+  examples() {
+    return [
+      '/clear',
+    ];
   }
 
   info() {
@@ -30,11 +38,17 @@ class Texts {
     return ['texts'];
   }
 
-  help() {
-    return ['usage: /texts [name]',
-           'examples:',
-           '/texts',
-           '/texts default'
+  usage() {
+    return [
+      '/texts',
+      '/texts [name]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/texts',
+      '/texts default',
     ];
   }
 
@@ -68,11 +82,16 @@ class Bins {
     return ['bins'];
   }
 
-  help() {
-    return ['usage: /bins [name]',
-           'examples:',
-           '/bins',
-           '/bins default'
+  usage() {
+    return [
+      '/bins [name]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/bins',
+      '/bins default',
     ];
   }
 
@@ -106,12 +125,17 @@ class Loadtext {
     return ['loadtext'];
   }
 
-  help() {
-    return ['usage: /loadtext [variable] [encoding]',
-           'examples:',
-           '/loadtext',
-           '/loadtext default',
-           '/loadtext default utf-8'
+  usage() {
+    return [
+      '/loadtext [variable] [encoding]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/loadtext',
+      '/loadtext default',
+      '/loadtext default utf-8',
     ];
   }
 
@@ -151,11 +175,16 @@ class Loadbin {
     return ['loadbin'];
   }
 
-  help() {
-    return ['usage: /loadbin [variable]',
-           'examples:',
-           '/loadbin',
-           '/loadbin default'
+  usage() {
+    return [
+      '/loadbin [variable]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/loadbin',
+      '/loadbin default',
     ];
   }
 
@@ -191,17 +220,23 @@ class Interval {
     return ['interval'];
   }
 
-  help() {
-    return ['usage: /interval <interval> [command line...]','       /interval',
-           'examples:',
-           '/interval 1000',
-           '/interval 1000 /binary [random(10)]',
-           '/interval'
+  usage() {
+    return [
+      '/interval <interval> [command line...]',
+      '/interval',
+    ];
+  }
+
+  examples() {
+    return [
+      '/interval 1000',
+      '/interval 1000 /binary [random(10)]',
+      '/interval',
     ];
   }
 
   info() {
-    return 'run a command periodically';
+    return 'run an other command periodically';
   }
 
   run(params) {
@@ -247,11 +282,16 @@ class Spam {
     return ['spam'];
   }
 
-  help() {
-    return ['usage: /spam <times> [command line...]',
-           'examples:',
-           '/spam 10',
-           '/spam 6 /binary [random(10)]'
+  usage() {
+    return [
+      '/spam <times> [command line...]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/spam 10',
+      '/spam 6 /binary [random(10)]',
     ];
   }
 
@@ -292,15 +332,20 @@ class Send {
     return ['send','s',''];
   }
 
-  help() {
-    return ['usage: /send [components...]',
-           'examples:',
-           '/send Hello\\ world!',
-           '/send rpc( [random(5)] )',
-           '/send [text]',
-           '/send \\["JSON","is","cool"]',
-           '/send [time] s\\ since\\ epoch',
-           '/send From\\ a\\ to\\ z:\\ [range(97,122)]'
+  usage() {
+    return [
+      '/send [components...]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/send Hello\\ world!',
+      '/send rpc( [random(5)] )',
+      '/send [text]',
+      '/send \\["JSON","is","cool"]',
+      '/send [time] s\\ since\\ epoch',
+      '/send From\\ a\\ to\\ z:\\ [range(97,122)]'
     ];
   }
 
@@ -362,7 +407,16 @@ class Send {
   run(processed) {
     var msg = processed.join('');
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
-      mlog(['no connection', `cannot send: ${msg}`, 'connect first with /connect'], 'error');
+      const connectTip = [
+        'Use ',
+        {
+          type: 'dwstgg',
+          text: 'connect',
+          section: 'connect',
+        },
+        ' to form a connection and try again.',
+      ];
+      mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
       return;
     }
     log(msg, 'sent');
@@ -376,17 +430,22 @@ class Binary {
     return ['binary','b'];
   }
 
-  help() {
-    return ['usage: /binary [components...]',
-           'examples:',
-           '/binary Hello\\ world!',
-           '/binary [random(16)]',
-           '/binary [text]',
-           '/binary [bin]',
-           '/binary \\["JSON","is","cool"]',
-           '/binary [range(0,0xff)]',
-           '/binary [hex(1234567890abcdef)]',
-           '/binary [hex(52)] [random(1)]\ lol'
+  usage() {
+    return [
+      '/binary [components...]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/binary Hello\\ world!',
+      '/binary [random(16)]',
+      '/binary [text]',
+      '/binary [bin]',
+      '/binary \\["JSON","is","cool"]',
+      '/binary [range(0,0xff)]',
+      '/binary [hex(1234567890abcdef)]',
+      '/binary [hex(52)] [random(1)]\ lol'
     ];
   }
 
@@ -500,7 +559,16 @@ class Binary {
     var out = joinbufs(buffers).buffer;
     var msg = `<${out.byteLength}B of data> `;
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
-      mlog(['no connection', `cannot send: ${msg}`, 'connect first with /connect'], 'error');
+      const connectTip = [
+        'Use ',
+        {
+          type: 'dwstgg',
+          text: 'connect',
+          section: 'connect',
+        },
+        ' to form a connection and try again.',
+      ];
+      mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
       return;
     }
     blog(out, 'sent');
@@ -508,10 +576,70 @@ class Binary {
   }
 }
 
+class Status {
+
+  commands() {
+    return ['status'];
+  }
+
+  usage() {
+    return [
+      '/status',
+    ];
+  }
+
+  examples() {
+    return [
+      '/status',
+    ];
+  }
+
+  info() {
+    return 'find out current status';
+  }
+
+  run(params) {
+    mlog([
+      {
+        type: 'strong',
+        text: `Dark WebSocket Terminal ${VERSION}`,
+      },
+      '',
+      'Type text into the box below to send messages to the web socket server.',
+      '',
+      [
+        'Type ',
+        {
+          type: 'command',
+          text: '/help',
+        },
+        ' for a list of available commands.',
+      ],
+      '',
+    ], 'system');
+  }
+
+}
+
 class Help {
 
   commands() {
     return ['help'];
+  }
+
+  usage() {
+    return [
+      '/help',
+      '/help <command>',
+    ];
+  }
+
+  examples() {
+    return [
+      '/help',
+      '/help send',
+      '/help binary',
+    ];
   }
 
   info() {
@@ -526,29 +654,108 @@ class Help {
         log(`the command does not exist: ${command}`, 'error');
         return;
       }
-      if (typeof(plugin.help) === typeof(undefined))
+      if (typeof(plugin.usage) === typeof(undefined))
       {
         log(`no help available for: ${command}`, 'system');
         return;
       }
-      mlog(plugin.help(), 'system');
+      const bread_crumbs = [
+        {
+          type: 'dwstgg',
+          text: `DWSTGG`,
+        },
+        {
+          type: 'regular',
+          text: ` &raquo; `,
+          unsafe: true,
+        },
+        {
+          type: 'dwstgg',
+          text: `${command}`,
+          section: `${command}`,
+        },
+      ];
+      const info = plugin.info();
+      const title = [
+        {
+          type: 'strong',
+          text: `${command}`,
+        },
+        {
+          type: 'regular',
+          text: ' &ndash; ',
+          unsafe: true,
+        },
+        info,
+      ];
+      const usageItems = plugin.usage().map((usage, i) => {
+        return {
+          type: 'syntax',
+          text: usage,
+        };
+      });
+      const usage = formatList('Usage', usageItems);
+      const examplesItems = plugin.examples().map((command, i) => {
+        return {
+          type: 'command',
+          text: command,
+        };
+      });
+
+      const examplesTitle = (examplesItems.length < 2) ? (
+        'Example'
+      ) : (
+        'Examples'
+      );
+      const examples = formatList(examplesTitle, examplesItems);
+      const help = [bread_crumbs, '', title, ''].concat(usage).concat(['']).concat(examples).concat(['']);
+      mlog(help, 'system');
       return;
     }
     var available = [];
     for (var c in commands) {
       if (c.length > 1) {
         let plugin = commands[c];
-        var info = '- ';
+        var ndash = {
+          type: 'regular',
+          text: '&ndash;',
+          unsafe: true,
+        };
+        var info = '  ';
         if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
         }
         var cpad = Array(15 - c.length).join(' ');
-
-          available.push(c + cpad + info);
+        let commandSegment = {
+          type: 'dwstgg',
+          text: c,
+          section: c,
+        };
+        available.push([commandSegment, cpad, ndash, info]);
       }
     }
     available.sort();
-    mlog([`Dark WebSocket Terminal ${VERSION}`, 'Available commands:'].concat(available).concat(['for help on a command use: /help <command>']), 'system');
+
+    const commandsList = formatList('Commands', available);
+
+    mlog([
+      {
+        type: 'strong',
+        text: `DWST Guide to Galaxy`,
+      },
+      '',
+      [
+        'Type ',
+        {
+          type: 'syntax',
+          text: '/help <command>',
+        },
+        ' for instructions.',
+      ],
+      '',
+    ].concat(commandsList).concat([
+      '',
+    ]), 'system');
   }
 }
 
@@ -558,10 +765,15 @@ class Connect {
     return ['connect'];
   }
 
-  help() {
-    return ['Usage: /connect <ws-url> [protocol]',
-           'examples:',
-           '/connect ws://echo.websocket.org/'
+  usage() {
+    return [
+      '/connect <ws-url> [protocol]',
+    ];
+  }
+
+  examples() {
+    return [
+      '/connect ws://echo.websocket.org/',
     ];
   }
 
@@ -582,7 +794,7 @@ class Connect {
       protostring = `(protocol: ${proto})`;
     }
     ws.onopen = () => {
-      log(`connection established, ${url} ${protostring}`, 'system');
+      log(`Connection established to ${url} ${protostring}`, 'system');
     };
     ws.onclose = () => {
       log(`connection closed, ${url} ${protostring}`, 'system');
@@ -616,8 +828,16 @@ class Disconnect {
     return ['disconnect'];
   }
 
-  help() {
-    return ['Disconnects from the server. (usage: /disconnect)'];
+  usage() {
+    return [
+      '/disconnect'
+    ];
+  }
+
+  examples() {
+    return [
+      '/disconnect'
+    ];
   }
 
   info() {
@@ -632,7 +852,7 @@ class Disconnect {
   }
 }
 
-var plugins = [Connect, Disconnect, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+var plugins = [Connect, Disconnect, Status, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
 var commands = {};
 
 for (var i in plugins) {
@@ -704,7 +924,16 @@ function run(command, params) {
   }
   var plugin = commands[command];
   if (typeof(plugin) === typeof(undefined)) {
-    log(`invalid command: ${command}`, 'error');
+    const errorMessage = `invalid command: ${command}`;
+    const helpTip = [
+      'type ',
+      {
+        type: 'command',
+        text: '/help',
+      },
+      ' to list available commands',
+    ];
+    mlog([errorMessage, helpTip], 'error');
     return;
   }
   var processor = (param) => process(plugin, param);
@@ -747,14 +976,112 @@ function log(line, type) {
   mlog([line], type);
 }
 
-function mlog(lines, type, binary) {
-  binclass = '';
-  if (binary === true) {
-    binclass = ' binary';
-  }
-  var escaped = Array.prototype.map.call(lines, htmlescape);
+function mlog(lines, type) {
+  var lineElements = Array.prototype.map.call(lines, rawLine => {
+    let line;
+    if (typeof rawLine === typeof '') {
+      line = [rawLine];
+    } else if (typeof rawLine === typeof {} && !Array.isArray(rawLine)) {
+      line = [rawLine];
+    } else {
+      line = rawLine;
+    }
+    if (typeof line === typeof []) {
+      const htmlSegments = line.map(rawSegment => {
+        var segment;
+        if (typeof rawSegment === typeof '') {
+          segment = {
+            type: 'regular',
+            text: rawSegment,
+          };
+        } else {
+          segment = rawSegment;
+        }
+        if (typeof segment === typeof {}) {
+          const rawText = segment.text;
+          const safeText = ((segment.hasOwnProperty('unsafe') && segment.unsafe === true)) ? (
+            rawText
+          ) : (
+            htmlescape(rawText)
+          );
+
+          if (segment.type === 'regular') {
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = safeText;
+            return textSpan;
+          }
+          if (segment.type === 'dwstgg') {
+            const link = document.createElement('a');
+            link.setAttribute('class', 'dwst-mlog__help-link');
+            const command = segment.hasOwnProperty('section') ? (
+              `/help ${segment.section}`
+            ) : (
+              '/help'
+            );
+            link.onclick = () => {
+              loud(command);
+            };
+            link.setAttribute('href', '#');
+            link.setAttribute('title', command);
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = safeText;
+            link.appendChild(textSpan);
+            return link;
+          }
+          if (segment.type === 'command') {
+            const link = document.createElement('a');
+            link.setAttribute('class', 'dwst-mlog__command-link');
+            const command = rawText;
+            link.onclick = () => {
+              loud(command);
+            };
+            link.setAttribute('href', '#');
+            link.setAttribute('title', safeText);
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = safeText;
+            link.appendChild(textSpan);
+            return link;
+          }
+          if (segment.type === 'hexline') {
+            const textSpan = document.createElement('span');
+            textSpan.setAttribute('class', 'dwst-mlog__hexline');
+            textSpan.innerHTML = safeText;
+            return textSpan;
+          }
+          if (segment.type === 'strong') {
+            const textSpan = document.createElement('span');
+            textSpan.setAttribute('class', 'dwst-mlog__strong');
+            textSpan.innerHTML = safeText;
+            return textSpan;
+          }
+          if (segment.type === 'syntax') {
+            const textSpan = document.createElement('span');
+            textSpan.setAttribute('class', 'dwst-mlog__syntax');
+            textSpan.innerHTML = safeText;
+            return textSpan;
+          }
+        }
+        throw 'unknown segment type';
+      });
+      return htmlSegments;
+    }
+  });
   var time = currenttime();
-  document.getElementById('ter1').innerHTML += `<tr class="logline"><td class="time">${time}</td><td class="direction ${type}">${type}:</td><td class="preserved${binclass}">${escaped.join('<br />')}</td></tr>`;
+  const terminal1 = document.getElementById('ter1');
+  const logLine = document.createElement('tr');
+  logLine.setAttribute('class', 'logline');
+  logLine.innerHTML = `<td class="time">${time}</td><td class="direction ${type}">${type}:</td></tr>`;
+  const outputCell = document.createElement('td');
+  outputCell.setAttribute('class', 'preserved');
+  lineElements.forEach(lineElement => {
+    lineElement.forEach(segmentElement => {
+      outputCell.appendChild(segmentElement);
+    });
+    const br = document.createElement('br');
+    outputCell.appendChild(br);
+  });
+  logLine.appendChild(outputCell);
+  terminal1.appendChild(logLine);
   var screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
@@ -816,10 +1143,34 @@ function hexdump(buffer) {
   return lines;
 }
 
+function formatList(listTitle, lines) {
+  const titlePrefix = `${listTitle}: `;
+  const spacePrefix = new Array(titlePrefix.length + 1).join(' ');
+  return lines.map((line, i) => {
+    const prefix = (i === 0) ? (
+      titlePrefix
+    ) : (
+      spacePrefix
+    )
+    if (Array.isArray(line)) {
+      return [prefix].concat(line);
+    } else {
+      return [prefix, line];
+    }
+  });
+}
+
 function blog(buffer, type) {
-  msg = `<${buffer.byteLength}B of binary data>`;
-  hd = hexdump(buffer);
-  mlog([msg].concat(hd), type, true);
+  const msg = `<${buffer.byteLength}B of binary data>`;
+  const hd = hexdump(buffer);
+  const hexLines = hd.map(line => {
+    return {
+      type: 'hexline',
+      text: line,
+    };
+  }
+  );
+  mlog([msg].concat(hexLines), type);
 }
 
 function silent(line) {
@@ -839,7 +1190,15 @@ function send() {
   var raw = document.getElementById('msg1').value;
   document.getElementById('msg1').value = '';
   if (raw.length < 1) {
-    log('type /help to list available commands', 'system');
+    const helpTip = [
+      'type ',
+      {
+        type: 'command',
+        text: '/help',
+      },
+      ' to list available commands',
+    ];
+    log(helpTip, 'system');
     return;
   }
   if (raw[0] === '/') {
@@ -882,12 +1241,12 @@ function send() {
 class Menu {
 
   isopen() {
-    return (document.getElementById('open').getAttribute('style') === null);
+    return (document.getElementById('dim1').getAttribute('style') === null);
   }
 
 
   hide() {
-    document.getElementById('open').setAttribute('style', 'visibility: hidden;');
+    document.getElementById('dim1').setAttribute('style', 'visibility: hidden;');
     document.getElementById('msg1').focus();
     document.getElementById('sendbut1').removeAttribute('disabled');
     document.getElementById('menubut1').removeAttribute('class');
@@ -895,7 +1254,7 @@ class Menu {
 
 
   show() {
-    document.getElementById('open').removeAttribute('style');
+    document.getElementById('dim1').removeAttribute('style');
     document.getElementById('url1').focus();
     document.getElementById('sendbut1').setAttribute('disabled', 'disabled');
     document.getElementById('menubut1').setAttribute('class', 'active');
@@ -1097,7 +1456,7 @@ function init() {
     log('Your browser does not seem to support websockets.', 'error');
     return;
   }
-  loud('/help');
+  loud('/status');
   if(connected === 'true')
   {
     document.getElementById('conbut1').click();
@@ -1110,6 +1469,8 @@ function init() {
   document.addEventListener('keydown', keypress);
   document.getElementById('sendbut1').addEventListener('click', send);
   document.getElementById('menubut1').addEventListener('click', () => menu.toggle());
+  document.getElementById('open1').addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('dim1').addEventListener('click', () => menu.hide());
   document.getElementById('conbut1').addEventListener('click', guiconbut);
 }
 
