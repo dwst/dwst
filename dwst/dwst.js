@@ -1286,9 +1286,13 @@ function guiconnect() {
 
 class ElementHistory {
 
-  constructor() {
+  constructor(history = []) {
     this.idx = -1;
-    this.history = [];
+    this.history = history;
+  }
+
+  getAll() {
+    return this.history;
   }
 
   getNext() {
@@ -1318,13 +1322,14 @@ class ElementHistory {
     return this.history[0];
   }
 
-  addItem(item, edition) {
+  addItem(item, edition, callback) {
     if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
         (this.idx)++;
       }
     }
+    callback();
   }
 
   removeBottom(item) {
@@ -1339,22 +1344,57 @@ class ElementHistory {
 
 class HistoryManager {
 
-  constructor() {
+  constructor(savedHistories, options) {
+    this.saveIds = {
+      'msg1': 'commands',
+      'url1': 'urls',
+    };
+    if (typeof options === typeof {} && options.hasOwnProperty('save')) {
+      this.save = options.save;
+    } else {
+      this.save = () => {};
+    }
     this.histories = {};
+    savedHistories.forEach((historyObject) => {
+      const [historyId, history] = historyObject;
+      this.histories[historyId] = new ElementHistory(history);
+    });
+  }
+
+  getHistoryId(eleId) {
+    const mapping = {
+      'url1': 'urls',
+      'msg1': 'commands',
+      'proto1': 'protocols',
+    };
+    if (!mapping.hasOwnProperty(eleId)) {
+      throw 'unknown element ' + eleId;
+    }
+    return mapping[eleId];
   }
 
   getCreate(eleId) {
-    if (! this.histories.hasOwnProperty(eleId)) {
-      this.histories[eleId] = new ElementHistory();
+    const historyId = this.getHistoryId(eleId);
+    if (! this.histories.hasOwnProperty(historyId)) {
+      this.histories[historyId] = new ElementHistory();
     }
-    return this.histories[eleId];
+    return this.histories[historyId];
+  }
+
+  addItem(eleId, value, edition) {
+    const historyId = this.getHistoryId(eleId);
+    const eHistory = this.getCreate(eleId);
+    eHistory.addItem(value, edition, () => {
+      const history = eHistory.getAll();
+      this.save(historyId, history);
+    });
   }
 
   getNext(ele) {
     const eHistory = this.getCreate(ele.id);
 
     if (ele.value !== eHistory.getCurrent())
-      eHistory.addItem(ele.value, true);
+      this.addItem(ele.id, ele.value, true);
 
     return eHistory.getNext();
   }
@@ -1363,7 +1403,7 @@ class HistoryManager {
     const eHistory = this.getCreate(ele.id);
 
     if (ele.value !== eHistory.getCurrent())
-      eHistory.addItem(ele.value, true);
+      this.addItem(ele.id, ele.value, true);
 
     return eHistory.getPrevious();
   }
@@ -1371,7 +1411,7 @@ class HistoryManager {
   select(ele) {
     const eHistory = this.getCreate(ele.id);
 
-    eHistory.addItem(ele.value);
+    this.addItem(ele.id, ele.value);
     eHistory.gotoBottom();
   }
 
@@ -1381,7 +1421,30 @@ class HistoryManager {
   }
 }
 
-var historyManager = new HistoryManager();
+var historyManager;
+
+chrome.storage.local.get(['history-commands', 'history-urls', 'history-procotols'], response => {
+  const save = (historyId, history) => {
+    const saveKey = `history-${historyId}`;
+    const saveState = JSON.stringify(history);
+    var setOperation = {};
+    setOperation[saveKey] = saveState;
+    console.log(setOperation);
+    chrome.storage.local.set(setOperation);
+  };
+
+  savedHistories = [];
+  for (var key in response) {
+    if (response.hasOwnProperty(key)) {
+      const saveState = response[key];
+      const history = JSON.parse(saveState);
+      const parts = key.split('-');
+      const historyId = parts[1];
+      savedHistories.push([historyId, history]);
+    }
+  }
+  historyManager = new HistoryManager(savedHistories, { save: save });
+});
 
 function keypress() {
   if (event.keyCode === 13) {
