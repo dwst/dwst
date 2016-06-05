@@ -1151,7 +1151,7 @@ function formatList(listTitle, lines) {
       titlePrefix
     ) : (
       spacePrefix
-    )
+    );
     if (Array.isArray(line)) {
       return [prefix].concat(line);
     } else {
