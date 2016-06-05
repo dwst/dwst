@@ -600,55 +600,7 @@ class Status {
   }
 
   run(params) {
-
-    const histories = historyManager.getAll();
-    var historyLineData = [];
-    for (var key in histories) {
-      if (histories.hasOwnProperty(key)) {
-        const history = histories[key];
-        const count = history.length;
-        if (count > 0) {
-          historyLineData.push([count, key]);
-        }
-      }
-    }
-
-    var historyLine = ['History '];
-    if (Object.keys(historyLineData).length < 1) {
-      historyLine.push('is empty');
-    } else {
-      historyLine.push('contains ');
-      historyLineData.sort((a, b) => {
-        return a[0] < b[0];
-      });
-      var remaining = Object.keys(historyLineData).length;
-      historyLineData.forEach(item => {
-        const [count, key] = item;
-        historyLine.push({
-          type: 'strong',
-          text: `${count}`,
-        });
-        const units = {
-          urls: 'urls',
-          commands: 'commands',
-          protocols: 'protocol definitions',
-        };
-        const unit = (count > 1) ? (
-          units[key]
-        ) : (
-          units[key].slice(0, -1) // remove plural s
-        );
-        historyLine.push(' ');
-        historyLine.push(unit);
-        remaining -= 1;
-        if (remaining > 1) {
-          historyLine.push(', ');
-        } else if (remaining === 1) {
-          historyLine.push(' and ');
-        }
-      });
-    }
-    historyLine.push('.');
+    const historyLine = historyManager.getSummary();
     mlog([
       {
         type: 'strong',
@@ -666,11 +618,63 @@ class Status {
       ],
       '',
       historyLine,
+      [
+        'Type ',
+        {
+          type: 'command',
+          text: '/forget everything',
+        },
+        ' to throw them away.',
+      ],
       '',
     ], 'system');
   }
 
 }
+
+
+class Forget {
+
+  commands() {
+    return ['forget'];
+  }
+
+  usage() {
+    return [
+      '/forget <target>',
+    ];
+  }
+
+  examples() {
+    return [
+      '/forget commands',
+      '/forget urls',
+      '/forget protocols',
+      '/forget everything',
+    ];
+  }
+
+  info() {
+    return 'remove things from history';
+  }
+
+  run(params) {
+    const target = params[0];
+    if (target === 'everything') {
+      historyManager.forget();
+    } else if (target === 'commands' || target === 'urls' || target === 'protocols') {
+      historyManager.forget(target);
+    } else {
+      const historyLine = historyManager.getSummary();
+      mlog([`Invalid argument: ${target}`, historyLine], 'error');
+      return;
+    }
+    let historyLine = historyManager.getSummary();
+    mlog([`Successfully forgot ${target}!`, historyLine], 'system');
+  }
+
+}
+
 
 class Help {
 
@@ -903,7 +907,7 @@ class Disconnect {
   }
 }
 
-var plugins = [Connect, Disconnect, Status, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+var plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
 var commands = {};
 
 for (var i in plugins) {
@@ -1338,6 +1342,9 @@ function guiconnect() {
 class ElementHistory {
 
   constructor(history = []) {
+    if (!Array.isArray(history)) {
+      throw 'invalid history saveState';
+    }
     this.idx = -1;
     this.history = history;
   }
@@ -1434,6 +1441,75 @@ class HistoryManager {
       }
     }
     return all;
+  }
+
+  getSummary() {
+    const histories = this.getAll();
+    var historyLineData = [];
+    for (var key in histories) {
+      if (histories.hasOwnProperty(key)) {
+        const history = histories[key];
+        const count = history.length;
+        if (count > 0) {
+          historyLineData.push([count, key]);
+        }
+      }
+    }
+
+    var historyLine = ['Persistent history '];
+    if (Object.keys(historyLineData).length < 1) {
+      historyLine.push('is empty');
+    } else {
+      historyLine.push('contains ');
+      historyLineData.sort((a, b) => {
+        return a[0] < b[0];
+      });
+      var remaining = Object.keys(historyLineData).length;
+      historyLineData.forEach(item => {
+        const [count, key] = item;
+        historyLine.push({
+          type: 'strong',
+          text: `${count}`,
+        });
+        const units = {
+          urls: 'urls',
+          commands: 'commands',
+          protocols: 'protocol definitions',
+        };
+        const unit = (count > 1) ? (
+          units[key]
+        ) : (
+          units[key].slice(0, -1) // remove plural s
+        );
+        historyLine.push(' ');
+        historyLine.push(unit);
+        remaining -= 1;
+        if (remaining > 1) {
+          historyLine.push(', ');
+        } else if (remaining === 1) {
+          historyLine.push(' and ');
+        }
+      });
+    }
+    historyLine.push('.');
+    return historyLine;
+  }
+
+  forget(historyId = null) {
+    var targets;
+    if (historyId === null) {
+      targets = Object.keys(this.histories);
+    } else {
+      if (!this.histories.hasOwnProperty(historyId)) {
+        return false;
+      }
+      targets = [historyId];
+    }
+    targets.forEach(target => {
+      delete this.histories[target];
+      this.save(target, []);
+    });
+    return true;
   }
 
   getCreate(eleId) {
@@ -1596,21 +1672,26 @@ function init() {
 }
 
 function loadSaves(callBack) {
-  chrome.storage.local.get(['history-commands', 'history-urls', 'history-protocols'], response => {
+  chrome.storage.local.get(['history_commands', 'history_urls', 'history_protocols'], response => {
     const save = (historyId, history) => {
-      const saveKey = `history-${historyId}`;
+      const saveKey = `history_${historyId}`;
       const saveState = JSON.stringify(history);
       var setOperation = {};
       setOperation[saveKey] = saveState;
       chrome.storage.local.set(setOperation);
     };
 
+    const saveStates = Object.assign({
+      history_commands: '[]',
+      history_urls: '[]',
+      history_protocols: '[]',
+    }, response);
     savedHistories = [];
-    for (var key in response) {
-      if (response.hasOwnProperty(key)) {
-        const saveState = response[key];
+    for (var key in saveStates) {
+      if (saveStates.hasOwnProperty(key)) {
+        const saveState = saveStates[key];
         const history = JSON.parse(saveState);
-        const parts = key.split('-');
+        const parts = key.split('_');
         const historyId = parts[1];
         savedHistories.push([historyId, history]);
       }
