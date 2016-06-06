@@ -464,7 +464,7 @@ class Binary {
     function hexpairtobyte(hp) {
       const hex = hp.join('');
       if (hex.length !== 2) {
-        return;
+        return null;
       }
       return parseInt(hex, 16);
     }
@@ -531,7 +531,7 @@ class Binary {
         const nums = hex.split('');
         const pairs = divissimo(nums, 2);
         const tmp = pairs.map(hexpairtobyte);
-        bytes = tmp.filter(b => (typeof(b) === typeof(0)));
+        bytes = tmp.filter(b => (b !== null));
       } else {
         bytes = [];
       }
@@ -1036,85 +1036,86 @@ function mlog(lines, type) {
     } else {
       line = rawLine;
     }
-    if (typeof line === typeof []) {
-      const htmlSegments = line.map(rawSegment => {
-        let segment;
-        if (typeof rawSegment === typeof '') {
-          segment = {
-            type: 'regular',
-            text: rawSegment,
-          };
-        } else {
-          segment = rawSegment;
-        }
-        if (typeof segment === typeof {}) {
-          const rawText = segment.text;
-          const safeText = ((segment.hasOwnProperty('unsafe') && segment.unsafe === true)) ? (
-            rawText
-          ) : (
-            htmlescape(rawText)
-          );
-
-          if (segment.type === 'regular') {
-            const textSpan = document.createElement('span');
-            textSpan.innerHTML = safeText;
-            return textSpan;
-          }
-          if (segment.type === 'dwstgg') {
-            const link = document.createElement('a');
-            link.setAttribute('class', 'dwst-mlog__help-link');
-            const command = segment.hasOwnProperty('section') ? (
-              `/help ${segment.section}`
-            ) : (
-              '/help'
-            );
-            link.onclick = () => {
-              loud(command);
-            };
-            link.setAttribute('href', '#');
-            link.setAttribute('title', command);
-            const textSpan = document.createElement('span');
-            textSpan.innerHTML = safeText;
-            link.appendChild(textSpan);
-            return link;
-          }
-          if (segment.type === 'command') {
-            const link = document.createElement('a');
-            link.setAttribute('class', 'dwst-mlog__command-link');
-            const command = rawText;
-            link.onclick = () => {
-              loud(command);
-            };
-            link.setAttribute('href', '#');
-            link.setAttribute('title', safeText);
-            const textSpan = document.createElement('span');
-            textSpan.innerHTML = safeText;
-            link.appendChild(textSpan);
-            return link;
-          }
-          if (segment.type === 'hexline') {
-            const textSpan = document.createElement('span');
-            textSpan.setAttribute('class', 'dwst-mlog__hexline');
-            textSpan.innerHTML = safeText;
-            return textSpan;
-          }
-          if (segment.type === 'strong') {
-            const textSpan = document.createElement('span');
-            textSpan.setAttribute('class', 'dwst-mlog__strong');
-            textSpan.innerHTML = safeText;
-            return textSpan;
-          }
-          if (segment.type === 'syntax') {
-            const textSpan = document.createElement('span');
-            textSpan.setAttribute('class', 'dwst-mlog__syntax');
-            textSpan.innerHTML = safeText;
-            return textSpan;
-          }
-        }
-        throw 'unknown segment type';
-      });
-      return htmlSegments;
+    if (typeof line !== typeof []) {
+      throw 'error';
     }
+    const htmlSegments = line.map(rawSegment => {
+      let segment;
+      if (typeof rawSegment === typeof '') {
+        segment = {
+          type: 'regular',
+          text: rawSegment,
+        };
+      } else {
+        segment = rawSegment;
+      }
+      if (typeof segment === typeof {}) {
+        const rawText = segment.text;
+        const safeText = ((segment.hasOwnProperty('unsafe') && segment.unsafe === true)) ? (
+          rawText
+        ) : (
+          htmlescape(rawText)
+        );
+
+        if (segment.type === 'regular') {
+          const textSpan = document.createElement('span');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
+        if (segment.type === 'dwstgg') {
+          const link = document.createElement('a');
+          link.setAttribute('class', 'dwst-mlog__help-link');
+          const command = segment.hasOwnProperty('section') ? (
+            `/help ${segment.section}`
+          ) : (
+            '/help'
+          );
+          link.onclick = () => {
+            loud(command);
+          };
+          link.setAttribute('href', '#');
+          link.setAttribute('title', command);
+          const textSpan = document.createElement('span');
+          textSpan.innerHTML = safeText;
+          link.appendChild(textSpan);
+          return link;
+        }
+        if (segment.type === 'command') {
+          const link = document.createElement('a');
+          link.setAttribute('class', 'dwst-mlog__command-link');
+          const command = rawText;
+          link.onclick = () => {
+            loud(command);
+          };
+          link.setAttribute('href', '#');
+          link.setAttribute('title', safeText);
+          const textSpan = document.createElement('span');
+          textSpan.innerHTML = safeText;
+          link.appendChild(textSpan);
+          return link;
+        }
+        if (segment.type === 'hexline') {
+          const textSpan = document.createElement('span');
+          textSpan.setAttribute('class', 'dwst-mlog__hexline');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
+        if (segment.type === 'strong') {
+          const textSpan = document.createElement('span');
+          textSpan.setAttribute('class', 'dwst-mlog__strong');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
+        if (segment.type === 'syntax') {
+          const textSpan = document.createElement('span');
+          textSpan.setAttribute('class', 'dwst-mlog__syntax');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
+      }
+      throw 'unknown segment type';
+    });
+    return htmlSegments;
   });
   const time = currenttime();
   const terminal1 = document.getElementById('ter1');
@@ -1577,7 +1578,7 @@ function keypress() {
   if (event.keyCode === 13) {
     if (menu.isopen()) {
       if (isconnected()) {
-        return true;
+        return;
       }
     historyManager.select(document.activeElement);
       document.getElementById('conbut1').click();
@@ -1596,11 +1597,11 @@ function keypress() {
   } else if (event.keyCode === 38) { // up
     const box = document.activeElement;
     box.value = historyManager.getPrevious(box);
-    return true;
+    return;
   } else if (event.keyCode === 40) { // down
     const box = document.activeElement;
     box.value = historyManager.getNext(box);
-    return true;
+    return;
   }
 }
 
