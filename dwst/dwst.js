@@ -264,7 +264,7 @@ class Interval {
         return;
       }
       if (commandParts.length < 1) {
-        run('send', [String(count)]);
+        run('send', String(count));
         count += 1;
         return;
       }
@@ -312,7 +312,7 @@ class Spam {
         return;
       }
       if (commandParts.length < 1) {
-        run('send', [String(i)]);
+        run('send', String(i));
       } else {
         silent(commandParts.join(' '));
       }
@@ -974,10 +974,8 @@ function process(plugin, param) {
   return pro(instruction, params, end);
 }
 
-function run(command, params) {
-  if (typeof(params) === typeof(undefined)){
-    params = [];
-  }
+function run(command, ...params) {
+
   const plugin = commands[command];
   if (typeof(plugin) === typeof(undefined)) {
     const errorMessage = `invalid command: ${command}`;
@@ -1232,9 +1230,7 @@ function blog(buffer, type) {
 function silent(line) {
   const noslash = line.substring(1);
   const parts = noslash.split(' ');
-  const command = parts.shift();
-  const params = parts;
-  run(command, params);
+  run(...parts);
 }
 
 function loud(line) {
