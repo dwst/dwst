@@ -304,10 +304,7 @@ class Spam {
 
   run(timesStr, ...commandParts) {
     const times = parseNum(timesStr);
-    function spam(limit, i) {
-      if (typeof(i) === typeof(undefiend)) {
-        i = 0;
-      }
+    function spam(limit, i=0) {
       if (i === limit) {
         return;
       }
