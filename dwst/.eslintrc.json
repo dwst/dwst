@@ -10,6 +10,7 @@
   "rules": {
     "comma-dangle": [2, "always-multiline"],
     "eqeqeq": [2],
+    "radix": [2],
     "no-var": [2],
     "prefer-const": [2],
     "prefer-reflect": [2],
