@@ -1,9 +1,9 @@
 
+const VERSION = '1.3.4';
+const bins = {};
+const texts = {};
 let ws = {};
 let intervalId = null;
-let VERSION = '1.3.4';
-let bins = {};
-let texts = {};
 let historyManager;
 
 class Clear {
@@ -74,10 +74,10 @@ class Texts {
       ];
       mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
-    let strs = ['Loaded texts:'];
-    for (let i in texts) {
-      let name = i;
-      let text = texts[i];
+    const strs = ['Loaded texts:'];
+    for (const i in texts) {
+      const name = i;
+      const text = texts[i];
       strs.push(`"${name}": <${text.length}B of text data>`);
     }
     mlog(strs, 'system');
@@ -109,7 +109,7 @@ class Bins {
 
   run(variable=null) {
     if (variable !== null) {
-      let buffer = bins[variable];
+      const buffer = bins[variable];
       if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
         return;
@@ -125,10 +125,10 @@ class Bins {
       mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
       return;
     }
-    let strs = ['Loaded binaries:'];
-    for (let i in bins) {
-      let name = i;
-      let buffer = bins[i];
+    const strs = ['Loaded binaries:'];
+    for (const i in bins) {
+      const name = i;
+      const buffer = bins[i];
       strs.push(`"${name}": <${buffer.byteLength}B of binary data>`);
     }
     mlog(strs, 'system');
@@ -160,14 +160,14 @@ class Loadtext {
   }
 
   run(variable = 'default', encoding) {
-    let upload = document.getElementById('file1');
+    const upload = document.getElementById('file1');
     upload.onchange = () => {
-      let file = upload.files[0];
-      let ff = document.getElementById('fileframe');
+      const file = upload.files[0];
+      const ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = (e2) => {
-        let text = e2.target.result;
+        const text = e2.target.result;
         texts[variable] = text;
         log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
@@ -201,14 +201,14 @@ class Loadbin {
   }
 
   run(variable = 'default') {
-    let upload = document.getElementById('file1');
+    const upload = document.getElementById('file1');
     upload.onchange = () => {
-      let file = upload.files[0];
-      let ff = document.getElementById('fileframe');
+      const file = upload.files[0];
+      const ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = (e2) => {
-        let buffer = e2.target.result;
+        const buffer = e2.target.result;
         bins[variable] = buffer;
         log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
@@ -254,8 +254,8 @@ class Interval {
       return;
     }
     let count = 0;
-    let interval = parseNum(intervalStr);
-    let spammer = () => {
+    const interval = parseNum(intervalStr);
+    const spammer = () => {
       if (!isconnected()) {
         if (intervalId !== null) {
           log('interval failed, no connection', 'error');
@@ -303,7 +303,7 @@ class Spam {
   }
 
   run(timesStr, ...commandParts) {
-    let times = parseNum(timesStr);
+    const times = parseNum(timesStr);
     function spam(limit, i) {
       if (typeof(i) === typeof(undefiend)) {
         i = 0;
@@ -316,7 +316,7 @@ class Spam {
       } else {
         silent(commandParts.join(' '));
       }
-      let nextspam = () => {
+      const nextspam = () => {
         spam(limit, i + 1);
       };
       if (isconnected()) {
@@ -362,10 +362,10 @@ class Send {
       out = params[0];
     }
     if (instr === 'random') {
-      let randomchar = () => {
+      const randomchar = () => {
         let out = Math.floor(Math.random()* (0xffff + 1));
         out /= 2; // avoid risky characters
-        let char = String.fromCharCode(out);
+        const char = String.fromCharCode(out);
         return char;
       };
       let num = 16;
@@ -408,7 +408,7 @@ class Send {
   }
 
   run(...processed) {
-    let msg = processed.join('');
+    const msg = processed.join('');
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       const connectTip = [
         'Use ',
@@ -458,14 +458,14 @@ class Binary {
 
   process(instr, params) {
     function byteValue(x) {
-      let code = x.charCodeAt(0);
+      const code = x.charCodeAt(0);
       if (code !== (code & 0xff)) {
         return 0;
       }
       return code;
     }
     function hexpairtobyte(hp) {
-      let hex = hp.join('');
+      const hex = hp.join('');
       if (hex.length !== 2) {
         return;
       }
@@ -476,8 +476,8 @@ class Binary {
       bytes = Array.prototype.map.call(params[0], byteValue);
     }
     if (instr === 'random') {
-      let randombyte = () => {
-        let out = Math.floor(Math.random()* (0xff + 1));
+      const randombyte = () => {
+        const out = Math.floor(Math.random()* (0xff + 1));
         return out;
       };
       let num = 16;
@@ -520,7 +520,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      let text = texts[variable];
+      const text = texts[variable];
       if (typeof(text) !== typeof(undefined)) {
         bytes = Array.prototype.map.call(text, byteValue);
       } else {
@@ -529,10 +529,10 @@ class Binary {
     }
     if (instr === 'hex') {
       if (params.length === 1) {
-        let hex = params[0];
-        let nums = hex.split('');
-        let pairs = divissimo(nums, 2);
-        let tmp = Array.prototype.map.call(pairs, hexpairtobyte);
+        const hex = params[0];
+        const nums = hex.split('');
+        const pairs = divissimo(nums, 2);
+        const tmp = Array.prototype.map.call(pairs, hexpairtobyte);
         bytes = tmp.filter(b => (typeof(b) === typeof(0)));
       } else {
         bytes = [];
@@ -546,21 +546,21 @@ class Binary {
     function joinbufs(buffers) {
 
       let total = 0;
-      for (let i in buffers) {
-        let buffer = buffers[i];
+      for (const i in buffers) {
+        const buffer = buffers[i];
         total += buffer.length;
       }
-      let out = new Uint8Array(total);
+      const out = new Uint8Array(total);
       let offset = 0;
-      for (let i in buffers) {
-        let buffer = buffers[i];
+      for (const i in buffers) {
+        const buffer = buffers[i];
         out.set(buffer, offset);
         offset += buffer.length;
       }
       return out;
     }
-    let out = joinbufs(buffers).buffer;
-    let msg = `<${out.byteLength}B of data> `;
+    const out = joinbufs(buffers).buffer;
+    const msg = `<${out.byteLength}B of data> `;
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       const connectTip = [
         'Use ',
@@ -670,7 +670,7 @@ class Forget {
       mlog([`Invalid argument: ${target}`, historyLine], 'error');
       return;
     }
-    let historyLine = historyManager.getSummary();
+    const historyLine = historyManager.getSummary();
     mlog([`Successfully forgot ${target}!`, historyLine], 'system');
   }
 
@@ -704,7 +704,7 @@ class Help {
 
   run(command = null) {
     if (command !== null) {
-      let plugin = commands[command];
+      const plugin = commands[command];
       if (typeof(plugin) === typeof(undefined)) {
         log(`the command does not exist: ${command}`, 'error');
         return;
@@ -767,11 +767,11 @@ class Help {
       mlog(help, 'system');
       return;
     }
-    let available = [];
-    for (let c in commands) {
+    const available = [];
+    for (const c in commands) {
       if (c.length > 1) {
-        let plugin = commands[c];
-        let ndash = {
+        const plugin = commands[c];
+        const ndash = {
           type: 'regular',
           text: '&ndash;',
           unsafe: true,
@@ -780,8 +780,8 @@ class Help {
         if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
         }
-        let cpad = Array(15 - c.length).join(' ');
-        let commandSegment = {
+        const cpad = Array(15 - c.length).join(' ');
+        const commandSegment = {
           type: 'dwstgg',
           text: c,
           section: c,
@@ -860,9 +860,9 @@ class Connect {
         log(msg.data, 'received');
       }
       else {
-        let fr = new FileReader();
+        const fr = new FileReader();
         fr.onload = (e) => {
-          let buffer = e.target.result;
+          const buffer = e.target.result;
           blog(buffer, 'received');
         };
         fr.readAsArrayBuffer(msg.data);
@@ -905,15 +905,15 @@ class Disconnect {
   }
 }
 
-let plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
-let commands = {};
+const plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+const commands = {};
 
-for (let i in plugins) {
-  let constructor = plugins[i];
-  let plugin = new constructor();
-  let c = plugin.commands();
-  for (let j in c) {
-    let command = c[j];
+for (const i in plugins) {
+  const constructor = plugins[i];
+  const plugin = new constructor();
+  const c = plugin.commands();
+  for (const j in c) {
+    const command = c[j];
     commands[command] = plugin;
   }
 }
@@ -939,7 +939,7 @@ function guiconbut() {
 }
 
 function process(plugin, param) {
-  let pro = plugin.process;
+  const pro = plugin.process;
   if (param.substr(param.length - 2, 2) === '\\\\') {
     param = param.substr(0, param.length - 2) + '\\';
   } else if (param.substr(param.length - 1, 1) === '\\') {
@@ -956,12 +956,12 @@ function process(plugin, param) {
   } else if (param.substr(0,2) === '\\[') {
     params.push(param.substr(1));
   } else if (param.substr(0,1) === '[') {
-    let tmp = param.split(']');
-    let call = tmp[0].split('[')[1];
+    const tmp = param.split(']');
+    const call = tmp[0].split('[')[1];
     end = tmp[1];
-    let tmp2 = call.split('(').concat('');
+    const tmp2 = call.split('(').concat('');
     instruction = tmp2[0];
-    let pl = tmp2[1].split(')')[0];
+    const pl = tmp2[1].split(')')[0];
     if(pl.length > 0) {
       params = pl.split(',');
     }
@@ -975,7 +975,7 @@ function run(command, params) {
   if (typeof(params) === typeof(undefined)){
     params = [];
   }
-  let plugin = commands[command];
+  const plugin = commands[command];
   if (typeof(plugin) === typeof(undefined)) {
     const errorMessage = `invalid command: ${command}`;
     const helpTip = [
@@ -989,26 +989,26 @@ function run(command, params) {
     mlog([errorMessage, helpTip], 'error');
     return;
   }
-  let processor = (param) => process(plugin, param);
-  let processed = Array.prototype.map.call(params, processor);
+  const processor = (param) => process(plugin, param);
+  const processed = Array.prototype.map.call(params, processor);
   plugin.run(...processed);
 }
 
 
 function refreshclock() {
-  let time = currenttime();
+  const time = currenttime();
   document.getElementById('clock1').innerHTML = time;
 }
 
 function currenttime() {
-  let addzero = (i) => {
+  const addzero = (i) => {
     if (i < 10) {
       return '0'+i;
     }
     return ''+i;
   };
-  let date = new Date();
-  let time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
+  const date = new Date();
+  const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
   return time;
 
 }
@@ -1021,7 +1021,7 @@ function parseNum(str) {
   if (str.length > 2 && str.substr(0,2) === '0x') {
     return parseInt(str.substr(2), 16);
   }
-  let num = parseInt(str, 10);
+  const num = parseInt(str, 10);
   return num;
 }
 
@@ -1030,7 +1030,7 @@ function log(line, type) {
 }
 
 function mlog(lines, type) {
-  let lineElements = Array.prototype.map.call(lines, rawLine => {
+  const lineElements = Array.prototype.map.call(lines, rawLine => {
     let line;
     if (typeof rawLine === typeof '') {
       line = [rawLine];
@@ -1119,7 +1119,7 @@ function mlog(lines, type) {
       return htmlSegments;
     }
   });
-  let time = currenttime();
+  const time = currenttime();
   const terminal1 = document.getElementById('ter1');
   const logLine = document.createElement('tr');
   logLine.setAttribute('class', 'logline');
@@ -1135,16 +1135,16 @@ function mlog(lines, type) {
   });
   logLine.appendChild(outputCell);
   terminal1.appendChild(logLine);
-  let screen = document.getElementById('screen1');
+  const screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
 
 function divissimo(l, n) {
-  let chunks = [];
+  const chunks = [];
   let chunk = [];
   let i = 0;
-  for (let j in l) {
-    let b = l[j];
+  for (const j in l) {
+    const b = l[j];
     if (i >= n) {
       chunks.push(chunk);
       chunk = [];
@@ -1159,8 +1159,8 @@ function divissimo(l, n) {
 
 function hexdump(buffer) {
   function hexify(num) {
-    let hex = num.toString(16);
-    let zero = hex.length < 2 ? '0' : '';
+    const hex = num.toString(16);
+    const zero = hex.length < 2 ? '0' : '';
     return zero + hex;
   }
   function charify(num) {
@@ -1169,15 +1169,15 @@ function hexdump(buffer) {
     }
     return String.fromCharCode(num);
   }
-  let dv = new DataView(buffer);
+  const dv = new DataView(buffer);
   let offset = 0;
-  let lines = [];
+  const lines = [];
   while(offset < buffer.byteLength){
     let chars = '';
     let hexes = '';
     for (let i = 0; i < 16; i++) {
       if (offset < buffer.byteLength) {
-        let byte = dv.getUint8(offset);
+        const byte = dv.getUint8(offset);
         chars += charify(byte);
         hexes += hexify(byte);
       } else {
@@ -1227,10 +1227,10 @@ function blog(buffer, type) {
 }
 
 function silent(line) {
-  let noslash = line.substring(1);
-  let parts = noslash.split(' ');
-  let command = parts.shift();
-  let params = parts;
+  const noslash = line.substring(1);
+  const parts = noslash.split(' ');
+  const command = parts.shift();
+  const params = parts;
   run(command, params);
 }
 
@@ -1240,7 +1240,7 @@ function loud(line) {
 }
 
 function send() {
-  let raw = document.getElementById('msg1').value;
+  const raw = document.getElementById('msg1').value;
   document.getElementById('msg1').value = '';
   if (raw.length < 1) {
     const helpTip = [
@@ -1258,28 +1258,28 @@ function send() {
     loud(raw);
     return ;
   }
-  let replmap = [[' [','\\ \\['], [' ','\\ ']];
+  const replmap = [[' [','\\ \\['], [' ','\\ ']];
 
   function replacer(str, rm) {
     if (rm.length < 1) {
       return str;
     }
-    let head = rm[0];
-    let find = head[0];
-    let rep = head[1];
+    const head = rm[0];
+    const find = head[0];
+    const rep = head[1];
 
-    let parts = str.split(find);
-    let complete = [];
-    for (let i in parts) {
-      let part = parts[i];
-      let loput = rm.slice(1);
-      let news = replacer(part, loput);
+    const parts = str.split(find);
+    const complete = [];
+    for (const i in parts) {
+      const part = parts[i];
+      const loput = rm.slice(1);
+      const news = replacer(part, loput);
       complete.push(news);
     }
-    let out = complete.join(rep);
+    const out = complete.join(rep);
     return(out);
   }
-  let almost = replacer(raw, replmap);
+  const almost = replacer(raw, replmap);
   let final;
   if (almost[0] === '[') {
     final = '\\' + almost;
@@ -1323,7 +1323,7 @@ class Menu {
   }
 }
 
-let menu = new Menu();
+const menu = new Menu();
 
 function guidisconnect() {
   loud('/disconnect');
@@ -1332,8 +1332,8 @@ function guidisconnect() {
 
 function guiconnect() {
   menu.hide();
-  let url = document.getElementById('url1').value;
-  let proto = document.getElementById('proto1').value;
+  const url = document.getElementById('url1').value;
+  const proto = document.getElementById('proto1').value;
   loud(`/connect ${url} ${proto}`);
 }
 
@@ -1430,8 +1430,8 @@ class HistoryManager {
   }
 
   getAll() {
-    let all = {};
-    for (let key in this.histories) {
+    const all = {};
+    for (const key in this.histories) {
       if (this.histories.hasOwnProperty(key)) {
         const eHistory = this.histories[key];
         const history = eHistory.getAll();
@@ -1443,8 +1443,8 @@ class HistoryManager {
 
   getSummary() {
     const histories = this.getAll();
-    let historyLineData = [];
-    for (let key in histories) {
+    const historyLineData = [];
+    for (const key in histories) {
       if (histories.hasOwnProperty(key)) {
         const history = histories[key];
         const count = history.length;
@@ -1454,7 +1454,7 @@ class HistoryManager {
       }
     }
 
-    let historyLine = ['Persistent history '];
+    const historyLine = ['Persistent history '];
     if (Object.keys(historyLineData).length < 1) {
       historyLine.push('is empty');
     } else {
@@ -1598,11 +1598,11 @@ function keypress() {
       menu.toggle();
     }
   } else if (event.keyCode === 38) { // up
-    let box = document.activeElement;
+    const box = document.activeElement;
     box.value = historyManager.getPrevious(box);
     return true;
   } else if (event.keyCode === 40) { // down
-    let box = document.activeElement;
+    const box = document.activeElement;
     box.value = historyManager.getNext(box);
     return true;
   }
@@ -1619,24 +1619,24 @@ function isconnected() {
 }
 
 function parseParams() {
-    let query = window.location.href.split('?')[1];
+    const query = window.location.href.split('?')[1];
     let defs;
     if (query !== undefined) {
       defs = query.split('&');
     }
-    let params = {};
-    for (let i in defs) {
-      let parts = defs[i].split('=');
+    const params = {};
+    for (const i in defs) {
+      const parts = defs[i].split('=');
       params[parts[0]] = parts[1];
     }
     return params;
 }
 
 function init() {
-  let params = parseParams();
-  let connected = params.connected;
-  let socket = params.socket;
-  let proto = params.proto;
+  const params = parseParams();
+  const connected = params.connected;
+  const socket = params.socket;
+  const proto = params.proto;
 
   if (proto) {
       document.getElementById('proto1').value = proto;
@@ -1674,7 +1674,7 @@ function loadSaves(callBack) {
     const save = (historyId, history) => {
       const saveKey = `history_${historyId}`;
       const saveState = JSON.stringify(history);
-      let setOperation = {};
+      const setOperation = {};
       setOperation[saveKey] = saveState;
       chrome.storage.local.set(setOperation);
     };
@@ -1684,8 +1684,8 @@ function loadSaves(callBack) {
       history_urls: '[]',
       history_protocols: '[]',
     }, response);
-    let savedHistories = [];
-    for (let key in saveStates) {
+    const savedHistories = [];
+    for (const key in saveStates) {
       if (saveStates.hasOwnProperty(key)) {
         const saveState = saveStates[key];
         const history = JSON.parse(saveState);
