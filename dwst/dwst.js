@@ -715,7 +715,7 @@ class Help {
         log(`no help available for: ${command}`, 'system');
         return;
       }
-      const bread_crumbs = [
+      const breadCrumbs = [
         {
           type: 'dwstgg',
           text: `DWSTGG`,
@@ -764,7 +764,7 @@ class Help {
         'Examples'
       );
       const examples = formatList(examplesTitle, examplesItems);
-      const help = [bread_crumbs, '', title, ''].concat(usage).concat(['']).concat(examples).concat(['']);
+      const help = [breadCrumbs, '', title, ''].concat(usage).concat(['']).concat(examples).concat(['']);
       mlog(help, 'system');
       return;
     }
