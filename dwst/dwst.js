@@ -57,15 +57,22 @@ class Texts {
     return 'list loaded texts';
   }
 
-  run(params) {
-    if (params.length === 1) {
-      const variable = params[0];
+  run(variable=null) {
+    if (variable !== null) {
       const text = texts[variable];
       if (typeof(text) !== typeof(undefined)) {
         log(text, 'system');
         return;
       }
-      log(`text "${variable}" does not exist`, 'error');
+      const listTip = [
+        'List available texts by typing ',
+        {
+          type: 'command',
+          text: '/texts',
+        },
+        '.',
+      ];
+      mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
     var strs = ['Loaded texts:'];
     for (var i in texts) {
@@ -100,15 +107,23 @@ class Bins {
     return 'list loaded binaries';
   }
 
-  run(params) {
-    if (params.length === 1) {
-      let variable = params[0];
+  run(variable=null) {
+    if (variable !== null) {
       let buffer = bins[variable];
       if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
         return;
       }
-      log(`binary "${variable}" does not exist`, 'error');
+      const listTip = [
+        'List available binaries by typing ',
+        {
+          type: 'command',
+          text: '/bins',
+        },
+        '.',
+      ];
+      mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
+      return;
     }
     var strs = ['Loaded binaries:'];
     for (var i in bins) {
@@ -144,15 +159,7 @@ class Loadtext {
     return 'load text data from a file';
   }
 
-  run(params) {
-    var variable = 'default';
-    var encoding;
-    if (params.length > 0) {
-      variable = params[0];
-    }
-    if (params.length > 1) {
-      encoding = params[1];
-    }
+  run(variable = 'default', encoding) {
     var upload = document.getElementById('file1');
     upload.onchange = () => {
       var file = upload.files[0];
@@ -193,11 +200,7 @@ class Loadbin {
     return 'load binary data from a file';
   }
 
-  run(params) {
-    var variable = 'default';
-    if (params.length === 1) {
-      variable = params[0];
-    }
+  run(variable = 'default') {
     var upload = document.getElementById('file1');
     upload.onchange = () => {
       var file = upload.files[0];
@@ -240,8 +243,8 @@ class Interval {
     return 'run an other command periodically';
   }
 
-  run(params) {
-    if (params.length < 1) {
+  run(intervalStr=null, ...commandParts) {
+    if (intervalStr === null) {
       if (intervalId !== null) {
         clearInterval(intervalId);
         log('interval cleared', 'system');
@@ -251,8 +254,7 @@ class Interval {
       return;
     }
     var count = 0;
-    var first = params.shift();
-    var interval = parseNum(first);
+    var interval = parseNum(intervalStr);
     var spammer = () => {
       if (!isconnected()) {
         if (intervalId !== null) {
@@ -261,12 +263,12 @@ class Interval {
         }
         return;
       }
-      if (params.length < 1) {
+      if (commandParts.length < 1) {
         run('send', ['' + count]);
         count += 1;
         return;
       }
-      silent(params.join(' '));
+      silent(commandParts.join(' '));
     };
     if (intervalId !== null) {
       log('clearing old interval', 'system');
@@ -300,8 +302,8 @@ class Spam {
     return 'run a command multiple times in a row';
   }
 
-  run(params) {
-    var times = parseNum(params.shift());
+  run(timesStr, ...commandParts) {
+    var times = parseNum(timesStr);
     function spam(limit, i) {
       if (typeof(i) === typeof(undefiend)) {
         i = 0;
@@ -309,10 +311,10 @@ class Spam {
       if (i === limit) {
         return;
       }
-      if (params.length < 1) {
+      if (commandParts.length < 1) {
         run('send', ['' + i]);
       } else {
-        silent(params.join(' '));
+        silent(commandParts.join(' '));
       }
       var nextspam = () => {
         spam(limit, i + 1);
@@ -405,7 +407,7 @@ class Send {
     return out + postfix;
   }
 
-  run(processed) {
+  run(...processed) {
     var msg = processed.join('');
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       const connectTip = [
@@ -540,7 +542,7 @@ class Binary {
   }
 
 
-  run(buffers) {
+  run(...buffers) {
     function joinbufs(buffers) {
 
       var total = 0;
@@ -658,8 +660,7 @@ class Forget {
     return 'remove things from history';
   }
 
-  run(params) {
-    const target = params[0];
+  run(target) {
     if (target === 'everything') {
       historyManager.forget();
     } else if (target === 'commands' || target === 'urls' || target === 'protocols') {
@@ -701,9 +702,8 @@ class Help {
     return 'get help';
   }
 
-  run(params) {
-    for (var i in params) {
-      var command = params[i];
+  run(command = null) {
+    if (command !== null) {
       let plugin = commands[command];
       if (typeof(plugin) === typeof(undefined)) {
         log(`the command does not exist: ${command}`, 'error');
@@ -836,9 +836,7 @@ class Connect {
     return 'connect to a server';
   }
 
-  run(params) {
-    var url = params[0];
-    var proto = params[1];
+  run(url, proto) {
     var protostring = '';
       congui();
     if(proto === '') {
@@ -993,7 +991,7 @@ function run(command, params) {
   }
   var processor = (param) => process(plugin, param);
   var processed = Array.prototype.map.call(params, processor);
-  plugin.run(processed);
+  plugin.run(...processed);
 }
 
 
