@@ -102,7 +102,7 @@ class Bins {
 
   run(params) {
     if (params.length === 1) {
-      variable = params[0];
+      let variable = params[0];
       let buffer = bins[variable];
       if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
@@ -158,7 +158,7 @@ class Loadtext {
       var file = upload.files[0];
       var ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
-      reader = new FileReader();
+      let reader = new FileReader();
       reader.onload = (e2) => {
         var text = e2.target.result;
         texts[variable] = text;
@@ -203,7 +203,7 @@ class Loadbin {
       var file = upload.files[0];
       var ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
-      reader = new FileReader();
+      let reader = new FileReader();
       reader.onload = (e2) => {
         var buffer = e2.target.result;
         bins[variable] = buffer;
@@ -518,7 +518,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      text = texts[variable];
+      let text = texts[variable];
       if (typeof(text) !== typeof(undefined)) {
         bytes = Array.prototype.map.call(text, byteValue);
       } else {
@@ -530,7 +530,7 @@ class Binary {
         var hex = params[0];
         var nums = hex.split('');
         var pairs = divissimo(nums, 2);
-        tmp = Array.prototype.map.call(pairs, hexpairtobyte);
+        let tmp = Array.prototype.map.call(pairs, hexpairtobyte);
         bytes = tmp.filter(b => (typeof(b) === typeof(0)));
       } else {
         bytes = [];
@@ -958,12 +958,12 @@ function process(plugin, param) {
   } else if (param.substr(0,2) === '\\[') {
     params.push(param.substr(1));
   } else if (param.substr(0,1) === '[') {
-    tmp = param.split(']');
-    call = tmp[0].split('[')[1];
+    let tmp = param.split(']');
+    let call = tmp[0].split('[')[1];
     end = tmp[1];
-    tmp2 = call.split('(').concat('');
+    let tmp2 = call.split('(').concat('');
     instruction = tmp2[0];
-    pl = tmp2[1].split(')')[0];
+    let pl = tmp2[1].split(')')[0];
     if(pl.length > 0) {
       params = pl.split(',');
     }
@@ -1003,7 +1003,7 @@ function refreshclock() {
 }
 
 function currenttime() {
-  addzero = (i) => {
+  let addzero = (i) => {
     if (i < 10) {
       return '0'+i;
     }
@@ -1146,7 +1146,7 @@ function divissimo(l, n) {
   var chunk = [];
   var i = 0;
   for (var j in l) {
-    b = l[j];
+    let b = l[j];
     if (i >= n) {
       chunks.push(chunk);
       chunk = [];
@@ -1179,7 +1179,7 @@ function hexdump(buffer) {
     var hexes = '';
     for (var i = 0; i < 16; i++) {
       if (offset < buffer.byteLength) {
-        byte = dv.getUint8(offset);
+        let byte = dv.getUint8(offset);
         chars += charify(byte);
         hexes += hexify(byte);
       } else {
@@ -1325,7 +1325,7 @@ class Menu {
   }
 }
 
-menu = new Menu();
+var menu = new Menu();
 
 function guidisconnect() {
   loud('/disconnect');
@@ -1686,7 +1686,7 @@ function loadSaves(callBack) {
       history_urls: '[]',
       history_protocols: '[]',
     }, response);
-    savedHistories = [];
+    let savedHistories = [];
     for (var key in saveStates) {
       if (saveStates.hasOwnProperty(key)) {
         const saveState = saveStates[key];
