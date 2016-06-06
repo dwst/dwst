@@ -264,7 +264,7 @@ class Interval {
         return;
       }
       if (commandParts.length < 1) {
-        run('send', ['' + count]);
+        run('send', [String(count)]);
         count += 1;
         return;
       }
@@ -312,7 +312,7 @@ class Spam {
         return;
       }
       if (commandParts.length < 1) {
-        run('send', ['' + i]);
+        run('send', [String(i)]);
       } else {
         silent(commandParts.join(' '));
       }
@@ -386,7 +386,7 @@ class Send {
       out = texts[variable];
     }
     if (instr === 'time') {
-      out = '' + Math.round(new Date().getTime() / 1000);
+      out = String(Math.round(new Date().getTime() / 1000));
     }
     if (instr === 'range') {
       let start = 32;
@@ -941,11 +941,13 @@ function guiconbut() {
 
 function process(plugin, param) {
   const pro = plugin.process;
+  /* eslint-disable prefer-template */
   if (param.substr(param.length - 2, 2) === '\\\\') {
     param = param.substr(0, param.length - 2) + '\\';
   } else if (param.substr(param.length - 1, 1) === '\\') {
     param = param.substr(0, param.length - 1) + ' ';
   }
+  /* eslint-enable prefer-template */
   if (typeof(pro) === typeof(undefined)) {
     return param;
   }
@@ -1003,9 +1005,9 @@ function refreshclock() {
 function currenttime() {
   const addzero = (i) => {
     if (i < 10) {
-      return '0'+i;
+      return `0${i}`;
     }
-    return ''+i;
+    return String(i);
   };
   const date = new Date();
   const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
@@ -1190,7 +1192,8 @@ function hexdump(buffer) {
       }
       offset += 1;
     }
-    lines.push(hexes + '  |' + chars + '|');
+    const line = `${hexes}  |${chars}|`
+    lines.push(line);
 
   }
   return lines;
@@ -1282,11 +1285,12 @@ function send() {
   const almost = replacer(raw, replmap);
   let final;
   if (almost[0] === '[') {
-    final = '\\' + almost;
+    final = `\\${almost}`;
   } else {
     final = almost;
   }
-  loud('/send ' + final);
+  const command = `/send ${final}`;
+  loud(command);
   return ;
 }
 
