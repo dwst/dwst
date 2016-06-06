@@ -1205,9 +1205,8 @@ function formatList(listTitle, lines) {
     );
     if (Array.isArray(line)) {
       return [prefix].concat(line);
-    } else {
-      return [prefix, line];
     }
+    return [prefix, line];
   });
 }
 

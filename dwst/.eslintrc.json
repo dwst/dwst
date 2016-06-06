@@ -12,6 +12,7 @@
     "camelcase": [2, { "properties": "never" }],
     "prefer-template": [2],
     "no-lonely-if": [2],
+    "no-else-return": [2],
     "eqeqeq": [2],
     "radix": [2],
     "no-var": [2],
