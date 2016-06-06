@@ -473,7 +473,8 @@ class Binary {
     }
     let bytes = [];
     if (instr === 'default') {
-      bytes = Array.prototype.map.call(params[0], byteValue);
+      const text = params[0];
+      bytes = [...text].map(byteValue);
     }
     if (instr === 'random') {
       const randombyte = () => {
@@ -522,7 +523,7 @@ class Binary {
       }
       const text = texts[variable];
       if (typeof(text) !== typeof(undefined)) {
-        bytes = Array.prototype.map.call(text, byteValue);
+        bytes = [...text].map(byteValue);
       } else {
         bytes = [];
       }
@@ -532,7 +533,7 @@ class Binary {
         const hex = params[0];
         const nums = hex.split('');
         const pairs = divissimo(nums, 2);
-        const tmp = Array.prototype.map.call(pairs, hexpairtobyte);
+        const tmp = pairs.map(hexpairtobyte);
         bytes = tmp.filter(b => (typeof(b) === typeof(0)));
       } else {
         bytes = [];
@@ -989,8 +990,7 @@ function run(command, params) {
     mlog([errorMessage, helpTip], 'error');
     return;
   }
-  const processor = (param) => process(plugin, param);
-  const processed = Array.prototype.map.call(params, processor);
+  const processed = params.map(param => process(plugin, param));
   plugin.run(...processed);
 }
 
@@ -1030,7 +1030,7 @@ function log(line, type) {
 }
 
 function mlog(lines, type) {
-  const lineElements = Array.prototype.map.call(lines, rawLine => {
+  const lineElements = lines.map(rawLine => {
     let line;
     if (typeof rawLine === typeof '') {
       line = [rawLine];
@@ -1504,7 +1504,7 @@ class HistoryManager {
       targets = [historyId];
     }
     targets.forEach(target => {
-      delete this.histories[target];
+      Reflect.deleteProperty(this.histories, target)
       this.save(target, []);
     });
     return true;
