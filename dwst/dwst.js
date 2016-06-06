@@ -1346,10 +1346,11 @@ class ElementHistory {
 
   getNext() {
     if (this.idx > 0) {
-      return this.history[--(this.idx)];
+      this.idx -= 1;
+      return this.history[this.idx];
     }
     if (this.idx === 0) {
-      (this.idx)--;
+      this.idx -= 1;
       return '';
     }
 
@@ -1361,7 +1362,8 @@ class ElementHistory {
       return '';
     }
     if (this.idx + 1 < this.history.length) {
-      return this.history[++(this.idx)];
+      this.idx += 1;
+      return this.history[this.idx];
     }
     return this.history[this.history.length - 1];
   }
@@ -1378,7 +1380,7 @@ class ElementHistory {
     if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
-        (this.idx)++;
+        this.idx += 1;
       }
     }
     callback();

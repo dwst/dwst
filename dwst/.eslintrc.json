@@ -17,6 +17,7 @@
     "consistent-return": 2,
     "no-lonely-if": 2,
     "no-else-return": 2,
+    "no-plusplus": [2, { "allowForLoopAfterthoughts": true}],
     "eqeqeq": 2,
     "radix": 2,
     "no-var": 2,
