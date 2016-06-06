@@ -8,6 +8,7 @@
   },
   "extends": "eslint:recommended",
   "rules": {
-    "comma-dangle": [2, "always-multiline"]
+    "comma-dangle": [2, "always-multiline"],
+    "no-var": [2]
   }
 }

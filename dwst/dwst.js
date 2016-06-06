@@ -1,10 +1,10 @@
 
-var ws = {};
-var intervalId = null;
-var VERSION = '1.3.4';
-var bins = {};
-var texts = {};
-var historyManager;
+let ws = {};
+let intervalId = null;
+let VERSION = '1.3.4';
+let bins = {};
+let texts = {};
+let historyManager;
 
 class Clear {
 
@@ -74,10 +74,10 @@ class Texts {
       ];
       mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
-    var strs = ['Loaded texts:'];
-    for (var i in texts) {
-      var name = i;
-      var text = texts[i];
+    let strs = ['Loaded texts:'];
+    for (let i in texts) {
+      let name = i;
+      let text = texts[i];
       strs.push(`"${name}": <${text.length}B of text data>`);
     }
     mlog(strs, 'system');
@@ -125,10 +125,10 @@ class Bins {
       mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
       return;
     }
-    var strs = ['Loaded binaries:'];
-    for (var i in bins) {
-      var name = i;
-      var buffer = bins[i];
+    let strs = ['Loaded binaries:'];
+    for (let i in bins) {
+      let name = i;
+      let buffer = bins[i];
       strs.push(`"${name}": <${buffer.byteLength}B of binary data>`);
     }
     mlog(strs, 'system');
@@ -160,14 +160,14 @@ class Loadtext {
   }
 
   run(variable = 'default', encoding) {
-    var upload = document.getElementById('file1');
+    let upload = document.getElementById('file1');
     upload.onchange = () => {
-      var file = upload.files[0];
-      var ff = document.getElementById('fileframe');
+      let file = upload.files[0];
+      let ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
       let reader = new FileReader();
       reader.onload = (e2) => {
-        var text = e2.target.result;
+        let text = e2.target.result;
         texts[variable] = text;
         log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
@@ -201,14 +201,14 @@ class Loadbin {
   }
 
   run(variable = 'default') {
-    var upload = document.getElementById('file1');
+    let upload = document.getElementById('file1');
     upload.onchange = () => {
-      var file = upload.files[0];
-      var ff = document.getElementById('fileframe');
+      let file = upload.files[0];
+      let ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
       let reader = new FileReader();
       reader.onload = (e2) => {
-        var buffer = e2.target.result;
+        let buffer = e2.target.result;
         bins[variable] = buffer;
         log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
@@ -253,9 +253,9 @@ class Interval {
       }
       return;
     }
-    var count = 0;
-    var interval = parseNum(intervalStr);
-    var spammer = () => {
+    let count = 0;
+    let interval = parseNum(intervalStr);
+    let spammer = () => {
       if (!isconnected()) {
         if (intervalId !== null) {
           log('interval failed, no connection', 'error');
@@ -303,7 +303,7 @@ class Spam {
   }
 
   run(timesStr, ...commandParts) {
-    var times = parseNum(timesStr);
+    let times = parseNum(timesStr);
     function spam(limit, i) {
       if (typeof(i) === typeof(undefiend)) {
         i = 0;
@@ -316,7 +316,7 @@ class Spam {
       } else {
         silent(commandParts.join(' '));
       }
-      var nextspam = () => {
+      let nextspam = () => {
         spam(limit, i + 1);
       };
       if (isconnected()) {
@@ -357,18 +357,18 @@ class Send {
   }
 
   process(instr, params, postfix) {
-    var out;
+    let out;
     if (instr === 'default') {
       out = params[0];
     }
     if (instr === 'random') {
       let randomchar = () => {
-        var out = Math.floor(Math.random()* (0xffff + 1));
+        let out = Math.floor(Math.random()* (0xffff + 1));
         out /= 2; // avoid risky characters
-        var char = String.fromCharCode(out);
+        let char = String.fromCharCode(out);
         return char;
       };
-      var num = 16;
+      let num = 16;
       if (params.length === 1){
         num = parseNum(params[0]);
       }
@@ -379,7 +379,7 @@ class Send {
       out = str;
     }
     if (instr === 'text') {
-      var variable = 'default';
+      let variable = 'default';
       if (params.length === 1) {
         variable = params[0];
       }
@@ -389,8 +389,8 @@ class Send {
       out = '' + Math.round(new Date().getTime() / 1000);
     }
     if (instr === 'range') {
-      var start = 32;
-      var end = 126;
+      let start = 32;
+      let end = 126;
       if (params.length === 1){
         end = parseNum(params[0]);
       }
@@ -408,7 +408,7 @@ class Send {
   }
 
   run(...processed) {
-    var msg = processed.join('');
+    let msg = processed.join('');
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       const connectTip = [
         'Use ',
@@ -458,29 +458,29 @@ class Binary {
 
   process(instr, params) {
     function byteValue(x) {
-      var code = x.charCodeAt(0);
+      let code = x.charCodeAt(0);
       if (code !== (code & 0xff)) {
         return 0;
       }
       return code;
     }
     function hexpairtobyte(hp) {
-      hex = hp.join('');
+      let hex = hp.join('');
       if (hex.length !== 2) {
         return;
       }
       return parseInt(hex, 16);
     }
-    var bytes = [];
+    let bytes = [];
     if (instr === 'default') {
       bytes = Array.prototype.map.call(params[0], byteValue);
     }
     if (instr === 'random') {
       let randombyte = () => {
-        var out = Math.floor(Math.random()* (0xff + 1));
+        let out = Math.floor(Math.random()* (0xff + 1));
         return out;
       };
-      var num = 16;
+      let num = 16;
       if (params.length === 1) {
         num = parseNum(params[0]);
       }
@@ -490,8 +490,8 @@ class Binary {
       }
     }
     if (instr === 'range') {
-      var start = 0;
-      var end = 0xff;
+      let start = 0;
+      let end = 0xff;
       if (params.length === 1){
         end = parseNum(params[0]);
       }
@@ -509,7 +509,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      var buffer = bins[variable];
+      let buffer = bins[variable];
       if (typeof(buffer) === typeof(undefined)) {
         buffer = [];
       }
@@ -529,9 +529,9 @@ class Binary {
     }
     if (instr === 'hex') {
       if (params.length === 1) {
-        var hex = params[0];
-        var nums = hex.split('');
-        var pairs = divissimo(nums, 2);
+        let hex = params[0];
+        let nums = hex.split('');
+        let pairs = divissimo(nums, 2);
         let tmp = Array.prototype.map.call(pairs, hexpairtobyte);
         bytes = tmp.filter(b => (typeof(b) === typeof(0)));
       } else {
@@ -545,13 +545,13 @@ class Binary {
   run(...buffers) {
     function joinbufs(buffers) {
 
-      var total = 0;
-      for (var i in buffers) {
+      let total = 0;
+      for (let i in buffers) {
         let buffer = buffers[i];
         total += buffer.length;
       }
-      var out = new Uint8Array(total);
-      var offset = 0;
+      let out = new Uint8Array(total);
+      let offset = 0;
       for (let i in buffers) {
         let buffer = buffers[i];
         out.set(buffer, offset);
@@ -559,8 +559,8 @@ class Binary {
       }
       return out;
     }
-    var out = joinbufs(buffers).buffer;
-    var msg = `<${out.byteLength}B of data> `;
+    let out = joinbufs(buffers).buffer;
+    let msg = `<${out.byteLength}B of data> `;
     if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
       const connectTip = [
         'Use ',
@@ -767,20 +767,20 @@ class Help {
       mlog(help, 'system');
       return;
     }
-    var available = [];
-    for (var c in commands) {
+    let available = [];
+    for (let c in commands) {
       if (c.length > 1) {
         let plugin = commands[c];
-        var ndash = {
+        let ndash = {
           type: 'regular',
           text: '&ndash;',
           unsafe: true,
         };
-        var info = '  ';
+        let info = '  ';
         if (typeof(plugin.info) !== typeof(undefined)) {
           info += plugin.info();
         }
-        var cpad = Array(15 - c.length).join(' ');
+        let cpad = Array(15 - c.length).join(' ');
         let commandSegment = {
           type: 'dwstgg',
           text: c,
@@ -837,7 +837,7 @@ class Connect {
   }
 
   run(url, proto) {
-    var protostring = '';
+    let protostring = '';
       congui();
     if(proto === '') {
       ws = new WebSocket(url);
@@ -860,9 +860,9 @@ class Connect {
         log(msg.data, 'received');
       }
       else {
-        var fr = new FileReader();
+        let fr = new FileReader();
         fr.onload = (e) => {
-          var buffer = e.target.result;
+          let buffer = e.target.result;
           blog(buffer, 'received');
         };
         fr.readAsArrayBuffer(msg.data);
@@ -905,15 +905,15 @@ class Disconnect {
   }
 }
 
-var plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
-var commands = {};
+let plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+let commands = {};
 
-for (var i in plugins) {
-  var constructor = plugins[i];
-  var plugin = new constructor();
-  var c = plugin.commands();
-  for (var j in c) {
-    var command = c[j];
+for (let i in plugins) {
+  let constructor = plugins[i];
+  let plugin = new constructor();
+  let c = plugin.commands();
+  for (let j in c) {
+    let command = c[j];
     commands[command] = plugin;
   }
 }
@@ -939,7 +939,7 @@ function guiconbut() {
 }
 
 function process(plugin, param) {
-  var pro = plugin.process;
+  let pro = plugin.process;
   if (param.substr(param.length - 2, 2) === '\\\\') {
     param = param.substr(0, param.length - 2) + '\\';
   } else if (param.substr(param.length - 1, 1) === '\\') {
@@ -948,9 +948,9 @@ function process(plugin, param) {
   if (typeof(pro) === typeof(undefined)) {
     return param;
   }
-  var instruction = 'default';
-  var params = [];
-  var end = '';
+  let instruction = 'default';
+  let params = [];
+  let end = '';
   if (param.substr(0,2) === '\\\\') {
     params.push(param.substr(1));
   } else if (param.substr(0,2) === '\\[') {
@@ -975,7 +975,7 @@ function run(command, params) {
   if (typeof(params) === typeof(undefined)){
     params = [];
   }
-  var plugin = commands[command];
+  let plugin = commands[command];
   if (typeof(plugin) === typeof(undefined)) {
     const errorMessage = `invalid command: ${command}`;
     const helpTip = [
@@ -989,14 +989,14 @@ function run(command, params) {
     mlog([errorMessage, helpTip], 'error');
     return;
   }
-  var processor = (param) => process(plugin, param);
-  var processed = Array.prototype.map.call(params, processor);
+  let processor = (param) => process(plugin, param);
+  let processed = Array.prototype.map.call(params, processor);
   plugin.run(...processed);
 }
 
 
 function refreshclock() {
-  var time = currenttime();
+  let time = currenttime();
   document.getElementById('clock1').innerHTML = time;
 }
 
@@ -1007,8 +1007,8 @@ function currenttime() {
     }
     return ''+i;
   };
-  var date = new Date();
-  var time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
+  let date = new Date();
+  let time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>`;
   return time;
 
 }
@@ -1021,7 +1021,7 @@ function parseNum(str) {
   if (str.length > 2 && str.substr(0,2) === '0x') {
     return parseInt(str.substr(2), 16);
   }
-  var num = parseInt(str, 10);
+  let num = parseInt(str, 10);
   return num;
 }
 
@@ -1030,7 +1030,7 @@ function log(line, type) {
 }
 
 function mlog(lines, type) {
-  var lineElements = Array.prototype.map.call(lines, rawLine => {
+  let lineElements = Array.prototype.map.call(lines, rawLine => {
     let line;
     if (typeof rawLine === typeof '') {
       line = [rawLine];
@@ -1041,7 +1041,7 @@ function mlog(lines, type) {
     }
     if (typeof line === typeof []) {
       const htmlSegments = line.map(rawSegment => {
-        var segment;
+        let segment;
         if (typeof rawSegment === typeof '') {
           segment = {
             type: 'regular',
@@ -1119,7 +1119,7 @@ function mlog(lines, type) {
       return htmlSegments;
     }
   });
-  var time = currenttime();
+  let time = currenttime();
   const terminal1 = document.getElementById('ter1');
   const logLine = document.createElement('tr');
   logLine.setAttribute('class', 'logline');
@@ -1135,15 +1135,15 @@ function mlog(lines, type) {
   });
   logLine.appendChild(outputCell);
   terminal1.appendChild(logLine);
-  var screen = document.getElementById('screen1');
+  let screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
 
 function divissimo(l, n) {
-  var chunks = [];
-  var chunk = [];
-  var i = 0;
-  for (var j in l) {
+  let chunks = [];
+  let chunk = [];
+  let i = 0;
+  for (let j in l) {
     let b = l[j];
     if (i >= n) {
       chunks.push(chunk);
@@ -1159,8 +1159,8 @@ function divissimo(l, n) {
 
 function hexdump(buffer) {
   function hexify(num) {
-    var hex = num.toString(16);
-    var zero = hex.length < 2 ? '0' : '';
+    let hex = num.toString(16);
+    let zero = hex.length < 2 ? '0' : '';
     return zero + hex;
   }
   function charify(num) {
@@ -1169,13 +1169,13 @@ function hexdump(buffer) {
     }
     return String.fromCharCode(num);
   }
-  var dv = new DataView(buffer);
-  var offset = 0;
-  var lines = [];
+  let dv = new DataView(buffer);
+  let offset = 0;
+  let lines = [];
   while(offset < buffer.byteLength){
-    var chars = '';
-    var hexes = '';
-    for (var i = 0; i < 16; i++) {
+    let chars = '';
+    let hexes = '';
+    for (let i = 0; i < 16; i++) {
       if (offset < buffer.byteLength) {
         let byte = dv.getUint8(offset);
         chars += charify(byte);
@@ -1227,10 +1227,10 @@ function blog(buffer, type) {
 }
 
 function silent(line) {
-  var noslash = line.substring(1);
-  var parts = noslash.split(' ');
-  var command = parts.shift();
-  var params = parts;
+  let noslash = line.substring(1);
+  let parts = noslash.split(' ');
+  let command = parts.shift();
+  let params = parts;
   run(command, params);
 }
 
@@ -1240,7 +1240,7 @@ function loud(line) {
 }
 
 function send() {
-  var raw = document.getElementById('msg1').value;
+  let raw = document.getElementById('msg1').value;
   document.getElementById('msg1').value = '';
   if (raw.length < 1) {
     const helpTip = [
@@ -1258,29 +1258,29 @@ function send() {
     loud(raw);
     return ;
   }
-  var replmap = [[' [','\\ \\['], [' ','\\ ']];
+  let replmap = [[' [','\\ \\['], [' ','\\ ']];
 
   function replacer(str, rm) {
     if (rm.length < 1) {
       return str;
     }
-    var head = rm[0];
-    var find = head[0];
-    var rep = head[1];
+    let head = rm[0];
+    let find = head[0];
+    let rep = head[1];
 
-    var parts = str.split(find);
-    var complete = [];
-    for (var i in parts) {
-      var part = parts[i];
-      var loput = rm.slice(1);
-      var news = replacer(part, loput);
+    let parts = str.split(find);
+    let complete = [];
+    for (let i in parts) {
+      let part = parts[i];
+      let loput = rm.slice(1);
+      let news = replacer(part, loput);
       complete.push(news);
     }
-    var out = complete.join(rep);
+    let out = complete.join(rep);
     return(out);
   }
-  var almost = replacer(raw, replmap);
-  var final;
+  let almost = replacer(raw, replmap);
+  let final;
   if (almost[0] === '[') {
     final = '\\' + almost;
   } else {
@@ -1323,7 +1323,7 @@ class Menu {
   }
 }
 
-var menu = new Menu();
+let menu = new Menu();
 
 function guidisconnect() {
   loud('/disconnect');
@@ -1332,8 +1332,8 @@ function guidisconnect() {
 
 function guiconnect() {
   menu.hide();
-  var url = document.getElementById('url1').value;
-  var proto = document.getElementById('proto1').value;
+  let url = document.getElementById('url1').value;
+  let proto = document.getElementById('proto1').value;
   loud(`/connect ${url} ${proto}`);
 }
 
@@ -1430,8 +1430,8 @@ class HistoryManager {
   }
 
   getAll() {
-    var all = {};
-    for (var key in this.histories) {
+    let all = {};
+    for (let key in this.histories) {
       if (this.histories.hasOwnProperty(key)) {
         const eHistory = this.histories[key];
         const history = eHistory.getAll();
@@ -1443,8 +1443,8 @@ class HistoryManager {
 
   getSummary() {
     const histories = this.getAll();
-    var historyLineData = [];
-    for (var key in histories) {
+    let historyLineData = [];
+    for (let key in histories) {
       if (histories.hasOwnProperty(key)) {
         const history = histories[key];
         const count = history.length;
@@ -1454,7 +1454,7 @@ class HistoryManager {
       }
     }
 
-    var historyLine = ['Persistent history '];
+    let historyLine = ['Persistent history '];
     if (Object.keys(historyLineData).length < 1) {
       historyLine.push('is empty');
     } else {
@@ -1462,7 +1462,7 @@ class HistoryManager {
       historyLineData.sort((a, b) => {
         return a[0] < b[0];
       });
-      var remaining = Object.keys(historyLineData).length;
+      let remaining = Object.keys(historyLineData).length;
       historyLineData.forEach(item => {
         const [count, key] = item;
         historyLine.push({
@@ -1494,7 +1494,7 @@ class HistoryManager {
   }
 
   forget(historyId = null) {
-    var targets;
+    let targets;
     if (historyId === null) {
       targets = Object.keys(this.histories);
     } else {
@@ -1619,24 +1619,24 @@ function isconnected() {
 }
 
 function parseParams() {
-    var query = window.location.href.split('?')[1];
+    let query = window.location.href.split('?')[1];
     let defs;
     if (query !== undefined) {
       defs = query.split('&');
     }
-    var params = {};
-    for (var i in defs) {
-      var parts = defs[i].split('=');
+    let params = {};
+    for (let i in defs) {
+      let parts = defs[i].split('=');
       params[parts[0]] = parts[1];
     }
     return params;
 }
 
 function init() {
-  var params = parseParams();
-  var connected = params.connected;
-  var socket = params.socket;
-  var proto = params.proto;
+  let params = parseParams();
+  let connected = params.connected;
+  let socket = params.socket;
+  let proto = params.proto;
 
   if (proto) {
       document.getElementById('proto1').value = proto;
@@ -1674,7 +1674,7 @@ function loadSaves(callBack) {
     const save = (historyId, history) => {
       const saveKey = `history_${historyId}`;
       const saveState = JSON.stringify(history);
-      var setOperation = {};
+      let setOperation = {};
       setOperation[saveKey] = saveState;
       chrome.storage.local.set(setOperation);
     };
@@ -1685,7 +1685,7 @@ function loadSaves(callBack) {
       history_protocols: '[]',
     }, response);
     let savedHistories = [];
-    for (var key in saveStates) {
+    for (let key in saveStates) {
       if (saveStates.hasOwnProperty(key)) {
         const saveState = saveStates[key];
         const history = JSON.parse(saveState);
