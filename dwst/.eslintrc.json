@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "globals": {
+    "chrome": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "comma-dangle": [2, "always-multiline"]
+  }
+}

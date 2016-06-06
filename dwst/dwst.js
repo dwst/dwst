@@ -28,7 +28,7 @@ class Clear {
     return 'clear the screen';
   }
 
-  run(params) {
+  run() {
     document.getElementById('ter1').innerHTML = '';
   }
 }
@@ -154,7 +154,7 @@ class Loadtext {
       encoding = params[1];
     }
     var upload = document.getElementById('file1');
-    upload.onchange = (e) => {
+    upload.onchange = () => {
       var file = upload.files[0];
       var ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
@@ -199,7 +199,7 @@ class Loadbin {
       variable = params[0];
     }
     var upload = document.getElementById('file1');
-    upload.onchange = (e) => {
+    upload.onchange = () => {
       var file = upload.files[0];
       var ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
@@ -346,7 +346,7 @@ class Send {
       '/send [text]',
       '/send \\["JSON","is","cool"]',
       '/send [time] s\\ since\\ epoch',
-      '/send From\\ a\\ to\\ z:\\ [range(97,122)]'
+      '/send From\\ a\\ to\\ z:\\ [range(97,122)]',
     ];
   }
 
@@ -446,7 +446,7 @@ class Binary {
       '/binary \\["JSON","is","cool"]',
       '/binary [range(0,0xff)]',
       '/binary [hex(1234567890abcdef)]',
-      '/binary [hex(52)] [random(1)]\ lol'
+      '/binary [hex(52)] [random(1)]\ lol',
     ];
   }
 
@@ -599,7 +599,7 @@ class Status {
     return 'find out current status';
   }
 
-  run(params) {
+  run() {
     const historyLine = historyManager.getSummary();
     mlog([
       {
@@ -743,14 +743,14 @@ class Help {
         },
         info,
       ];
-      const usageItems = plugin.usage().map((usage, i) => {
+      const usageItems = plugin.usage().map((usage) => {
         return {
           type: 'syntax',
           text: usage,
         };
       });
       const usage = formatList('Usage', usageItems);
-      const examplesItems = plugin.examples().map((command, i) => {
+      const examplesItems = plugin.examples().map((command) => {
         return {
           type: 'command',
           text: command,
@@ -885,13 +885,13 @@ class Disconnect {
 
   usage() {
     return [
-      '/disconnect'
+      '/disconnect',
     ];
   }
 
   examples() {
     return [
-      '/disconnect'
+      '/disconnect',
     ];
   }
 
@@ -1390,7 +1390,7 @@ class ElementHistory {
     callback();
   }
 
-  removeBottom(item) {
+  removeBottom() {
     this.history.shift();
   }
 
@@ -1600,11 +1600,11 @@ function keypress() {
       menu.toggle();
     }
   } else if (event.keyCode === 38) { // up
-    box = document.activeElement;
+    let box = document.activeElement;
     box.value = historyManager.getPrevious(box);
     return true;
   } else if (event.keyCode === 40) { // down
-    box = document.activeElement;
+    let box = document.activeElement;
     box.value = historyManager.getNext(box);
     return true;
   }
