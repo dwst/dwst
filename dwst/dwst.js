@@ -836,7 +836,7 @@ class Connect {
 
   run(url, proto) {
     let protostring = '';
-      congui();
+    congui();
     if(proto === '') {
       ws = new WebSocket(url);
     }
@@ -1580,10 +1580,10 @@ function keypress() {
       if (isconnected()) {
         return;
       }
-    historyManager.select(document.activeElement);
+      historyManager.select(document.activeElement);
       document.getElementById('conbut1').click();
     } else {
-    historyManager.select(document.activeElement);
+      historyManager.select(document.activeElement);
       document.getElementById('sendbut1').click();
     }
   } else if (event.keyIdentifier === 'U+001B') {
@@ -1616,17 +1616,17 @@ function isconnected() {
 }
 
 function parseParams() {
-    const query = window.location.href.split('?')[1];
-    let defs;
-    if (query !== undefined) {
-      defs = query.split('&');
-    }
-    const params = {};
-    for (const i in defs) {
-      const parts = defs[i].split('=');
-      params[parts[0]] = parts[1];
-    }
-    return params;
+  const query = window.location.href.split('?')[1];
+  let defs;
+  if (query !== undefined) {
+    defs = query.split('&');
+  }
+  const params = {};
+  for (const i in defs) {
+    const parts = defs[i].split('=');
+    params[parts[0]] = parts[1];
+  }
+  return params;
 }
 
 function init() {
@@ -1636,10 +1636,10 @@ function init() {
   const proto = params.proto;
 
   if (proto) {
-      document.getElementById('proto1').value = proto;
+    document.getElementById('proto1').value = proto;
   }
   if (socket) {
-      document.getElementById('url1').value = socket;
+    document.getElementById('url1').value = socket;
   }
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
