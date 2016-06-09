@@ -6,7 +6,7 @@ const jsonlint = require('gulp-jsonlint');
 const eslint = require('gulp-eslint');
 
 gulp.task('jsonlint', () => {
-  gulp.src('**/*.json')
+  return gulp.src(['**/*.json','!node_modules/**'])
     .pipe(jsonlint())
     .pipe(jsonlint.failOnError())
 });
