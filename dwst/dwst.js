@@ -1,7 +1,7 @@
 
 const VERSION = '1.3.4';
-const bins = {};
-const texts = {};
+const bins = new Map();
+const texts = new Map();
 let ws = {};
 let intervalId = null;
 let historyManager;
@@ -59,7 +59,7 @@ class Texts {
 
   run(variable=null) {
     if (variable !== null) {
-      const text = texts[variable];
+      const text = texts.get(variable);
       if (typeof(text) !== typeof(undefined)) {
         log(text, 'system');
         return;
@@ -74,12 +74,10 @@ class Texts {
       ];
       mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
-    const strs = ['Loaded texts:'];
-    for (const i in texts) {
-      const name = i;
-      const text = texts[i];
-      strs.push(`"${name}": <${text.length}B of text data>`);
-    }
+    const listing = [...texts.entries()].map(([name, text]) => {
+      return `"${name}": <${text.length}B of text data>`
+    });
+    const strs = ['Loaded texts:'].concat(listing);
     mlog(strs, 'system');
   }
 }
@@ -109,7 +107,7 @@ class Bins {
 
   run(variable=null) {
     if (variable !== null) {
-      const buffer = bins[variable];
+      const buffer = bins.get(variable);
       if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
         return;
@@ -125,12 +123,10 @@ class Bins {
       mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
       return;
     }
-    const strs = ['Loaded binaries:'];
-    for (const i in bins) {
-      const name = i;
-      const buffer = bins[i];
-      strs.push(`"${name}": <${buffer.byteLength}B of binary data>`);
-    }
+    const listing = [...bins.entries()].map(([name, buffer]) => {
+      return `"${name}": <${buffer.byteLength}B of binary data>`
+    });
+    const strs = ['Loaded binaries:'].concat(listing);
     mlog(strs, 'system');
   }
 }
@@ -168,7 +164,7 @@ class Loadtext {
       const reader = new FileReader();
       reader.onload = (e2) => {
         const text = e2.target.result;
-        texts[variable] = text;
+        texts.set(variable, text);
         log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsText(file, encoding);
@@ -209,7 +205,7 @@ class Loadbin {
       const reader = new FileReader();
       reader.onload = (e2) => {
         const buffer = e2.target.result;
-        bins[variable] = buffer;
+        bins.set(variable, buffer);
         log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
@@ -380,7 +376,7 @@ class Send {
       if (params.length === 1) {
         variable = params[0];
       }
-      out = texts[variable];
+      out = texts.get(variable);
     }
     if (instr === 'time') {
       out = String(Math.round(new Date().getTime() / 1000));
@@ -507,7 +503,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      let buffer = bins[variable];
+      let buffer = bins.get(variable);
       if (typeof(buffer) === typeof(undefined)) {
         buffer = [];
       }
@@ -518,7 +514,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      const text = texts[variable];
+      const text = texts.get(variable);
       if (typeof(text) !== typeof(undefined)) {
         bytes = [...text].map(byteValue);
       } else {
@@ -702,7 +698,7 @@ class Help {
 
   run(command = null) {
     if (command !== null) {
-      const plugin = commands[command];
+      const plugin = commands.get(command);
       if (typeof(plugin) === typeof(undefined)) {
         log(`the command does not exist: ${command}`, 'error');
         return;
@@ -765,9 +761,8 @@ class Help {
       return;
     }
     const available = [];
-    for (const c in commands) {
+    for (const [c, plugin] of commands.entries()) {
       if (c.length > 1) {
-        const plugin = commands[c];
         const ndash = {
           type: 'regular',
           text: '&ndash;',
@@ -900,7 +895,7 @@ class Disconnect {
 }
 
 const plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
-const commands = {};
+const commands = new Map();
 
 for (const i in plugins) {
   const constructor = plugins[i];
@@ -908,7 +903,7 @@ for (const i in plugins) {
   const c = plugin.commands();
   for (const j in c) {
     const command = c[j];
-    commands[command] = plugin;
+    commands.set(command, plugin);
   }
 }
 
@@ -969,7 +964,7 @@ function process(plugin, param) {
 
 function run(command, ...params) {
 
-  const plugin = commands[command];
+  const plugin = commands.get(command);
   if (typeof(plugin) === typeof(undefined)) {
     const errorMessage = `invalid command: ${command}`;
     const helpTip = [
