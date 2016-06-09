@@ -1618,32 +1618,8 @@ function isconnected() {
   return false;
 }
 
-function parseParams() {
-  const query = window.location.href.split('?')[1];
-  let defs;
-  if (query !== undefined) {
-    defs = query.split('&');
-  }
-  const params = {};
-  for (const i in defs) {
-    const parts = defs[i].split('=');
-    params[parts[0]] = parts[1];
-  }
-  return params;
-}
-
 function init() {
-  const params = parseParams();
-  const connected = params.connected;
-  const socket = params.socket;
-  const proto = params.proto;
 
-  if (proto) {
-    document.getElementById('proto1').value = proto;
-  }
-  if (socket) {
-    document.getElementById('url1').value = socket;
-  }
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
   setInterval( refreshclock, 500 );
@@ -1652,11 +1628,8 @@ function init() {
     return;
   }
   loud('/status');
-  if(connected === 'true') {
-    document.getElementById('conbut1').click();
-  } else {
-    menu.show();
-  }
+
+  menu.show();
 
   document.addEventListener('keydown', keypress);
   document.getElementById('sendbut1').addEventListener('click', send);
