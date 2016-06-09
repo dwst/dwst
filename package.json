@@ -1,0 +1,42 @@
+{
+  "name": "dwst",
+  "version": "1.3.4",
+  "description": "Dark WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server.",
+  "main": "dwst/dwst.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyberixae/dwst.git"
+  },
+  "keywords": [
+    "websocket"
+  ],
+  "author": {
+    "name": "Toni Ruottu",
+    "email": "toni.ruottu@iki.fi",
+    "url": "https://github.com/cyberixae/"
+  },
+  "contributors": [
+    {
+      "name": "William Orr",
+      "email": "will@worrbase.com",
+      "url": "https://github.com/worr"
+    }
+  ],
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/cyberixae/dwst/issues"
+  },
+  "homepage": "https://github.com/cyberixae/dwst#readme",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0",
+    "gulp-jsonlint": "^1.1.2"
+  }
+}

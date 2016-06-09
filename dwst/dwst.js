@@ -707,8 +707,7 @@ class Help {
         log(`the command does not exist: ${command}`, 'error');
         return;
       }
-      if (typeof(plugin.usage) === typeof(undefined))
-      {
+      if (typeof(plugin.usage) === typeof(undefined)) {
         log(`no help available for: ${command}`, 'system');
         return;
       }
@@ -839,8 +838,7 @@ class Connect {
     congui();
     if(proto === '') {
       ws = new WebSocket(url);
-    }
-    else {
+    } else {
       ws = new WebSocket(url,proto);
       protostring = `(protocol: ${proto})`;
     }
@@ -856,8 +854,7 @@ class Connect {
     ws.onmessage = (msg) => {
       if (typeof(msg.data) === typeof('')) {
         log(msg.data, 'received');
-      }
-      else {
+      } else {
         const fr = new FileReader();
         fr.onload = (e) => {
           const buffer = e.target.result;
@@ -895,8 +892,7 @@ class Disconnect {
     return 'disconnect from a server';
   }
 
-  run()
-  {
+  run() {
     discogui();
     ws.close();
     document.getElementById('url1').focus();
@@ -1349,10 +1345,12 @@ class ElementHistory {
   }
 
   getNext() {
-    if (this.idx > 0)
-      return this.history[--(this.idx)];
+    if (this.idx > 0) {
+      this.idx -= 1;
+      return this.history[this.idx];
+    }
     if (this.idx === 0) {
-      (this.idx)--;
+      this.idx -= 1;
       return '';
     }
 
@@ -1360,10 +1358,13 @@ class ElementHistory {
   }
 
   getPrevious() {
-    if (this.history.length === 0)
+    if (this.history.length === 0) {
       return '';
-    if (this.idx + 1 < this.history.length)
-      return this.history[++(this.idx)];
+    }
+    if (this.idx + 1 < this.history.length) {
+      this.idx += 1;
+      return this.history[this.idx];
+    }
     return this.history[this.history.length - 1];
   }
 
@@ -1379,7 +1380,7 @@ class ElementHistory {
     if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
-        (this.idx)++;
+        this.idx += 1;
       }
     }
     callback();
@@ -1536,8 +1537,9 @@ class HistoryManager {
       return null;
     }
 
-    if (ele.value !== eHistory.getCurrent())
+    if (ele.value !== eHistory.getCurrent()) {
       this.addItem(ele.id, ele.value, true);
+    }
 
     return eHistory.getNext();
   }
@@ -1548,8 +1550,9 @@ class HistoryManager {
       return null;
     }
 
-    if (ele.value !== eHistory.getCurrent())
+    if (ele.value !== eHistory.getCurrent()) {
       this.addItem(ele.id, ele.value, true);
+    }
 
     return eHistory.getPrevious();
   }
@@ -1649,12 +1652,9 @@ function init() {
     return;
   }
   loud('/status');
-  if(connected === 'true')
-  {
+  if(connected === 'true') {
     document.getElementById('conbut1').click();
-  }
-  else
-  {
+  } else {
     menu.show();
   }
 
