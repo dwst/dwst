@@ -1623,10 +1623,6 @@ function init() {
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
   setInterval( refreshclock, 500 );
-  if (('WebSocket' in window) === false) {
-    log('Your browser does not seem to support websockets.', 'error');
-    return;
-  }
   loud('/status');
 
   menu.show();
