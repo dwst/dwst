@@ -698,7 +698,7 @@ class Help {
 
   run(command = null) {
     if (command !== null) {
-      const plugin = commands[command];
+      const plugin = commands.get(command);
       if (typeof(plugin) === typeof(undefined)) {
         log(`the command does not exist: ${command}`, 'error');
         return;
@@ -761,9 +761,8 @@ class Help {
       return;
     }
     const available = [];
-    for (const c in commands) {
+    for (const [c, plugin] of commands.entries()) {
       if (c.length > 1) {
-        const plugin = commands[c];
         const ndash = {
           type: 'regular',
           text: '&ndash;',
@@ -896,7 +895,7 @@ class Disconnect {
 }
 
 const plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
-const commands = {};
+const commands = new Map();
 
 for (const i in plugins) {
   const constructor = plugins[i];
@@ -904,7 +903,7 @@ for (const i in plugins) {
   const c = plugin.commands();
   for (const j in c) {
     const command = c[j];
-    commands[command] = plugin;
+    commands.set(command, plugin);
   }
 }
 
@@ -965,7 +964,7 @@ function process(plugin, param) {
 
 function run(command, ...params) {
 
-  const plugin = commands[command];
+  const plugin = commands.get(command);
   if (typeof(plugin) === typeof(undefined)) {
     const errorMessage = `invalid command: ${command}`;
     const helpTip = [
