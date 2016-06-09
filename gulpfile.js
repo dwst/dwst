@@ -1,6 +1,9 @@
-var gulp = require('gulp');
-var jsonlint = require('gulp-jsonlint');
-var eslint = require('gulp-eslint');
+
+/* global require */
+
+const gulp = require('gulp');
+const jsonlint = require('gulp-jsonlint');
+const eslint = require('gulp-eslint');
 
 gulp.task('jsonlint', () => {
   gulp.src('**/*.json')
@@ -9,10 +12,10 @@ gulp.task('jsonlint', () => {
 });
 
 gulp.task('eslint', () => {
-    return gulp.src(['**/*.js','!node_modules/**'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
+  return gulp.src(['**/*.js','!node_modules/**'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 gulp.task('validate', ['jsonlint', 'eslint']);
