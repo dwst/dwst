@@ -707,8 +707,7 @@ class Help {
         log(`the command does not exist: ${command}`, 'error');
         return;
       }
-      if (typeof(plugin.usage) === typeof(undefined))
-      {
+      if (typeof(plugin.usage) === typeof(undefined)) {
         log(`no help available for: ${command}`, 'system');
         return;
       }
@@ -839,8 +838,7 @@ class Connect {
     congui();
     if(proto === '') {
       ws = new WebSocket(url);
-    }
-    else {
+    } else {
       ws = new WebSocket(url,proto);
       protostring = `(protocol: ${proto})`;
     }
@@ -856,8 +854,7 @@ class Connect {
     ws.onmessage = (msg) => {
       if (typeof(msg.data) === typeof('')) {
         log(msg.data, 'received');
-      }
-      else {
+      } else {
         const fr = new FileReader();
         fr.onload = (e) => {
           const buffer = e.target.result;
@@ -895,8 +892,7 @@ class Disconnect {
     return 'disconnect from a server';
   }
 
-  run()
-  {
+  run() {
     discogui();
     ws.close();
     document.getElementById('url1').focus();
@@ -1654,12 +1650,9 @@ function init() {
     return;
   }
   loud('/status');
-  if(connected === 'true')
-  {
+  if(connected === 'true') {
     document.getElementById('conbut1').click();
-  }
-  else
-  {
+  } else {
     menu.show();
   }
 

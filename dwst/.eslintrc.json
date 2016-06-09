@@ -21,6 +21,7 @@
     "radix": 2,
     "no-var": 2,
     "curly": 2,
+    "brace-style": 2,
     "prefer-const": 2,
     "prefer-reflect": 2,
     "no-console": 2
