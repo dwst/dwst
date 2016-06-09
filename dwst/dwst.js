@@ -1349,8 +1349,9 @@ class ElementHistory {
   }
 
   getNext() {
-    if (this.idx > 0)
+    if (this.idx > 0) {
       return this.history[--(this.idx)];
+    }
     if (this.idx === 0) {
       (this.idx)--;
       return '';
@@ -1360,10 +1361,12 @@ class ElementHistory {
   }
 
   getPrevious() {
-    if (this.history.length === 0)
+    if (this.history.length === 0) {
       return '';
-    if (this.idx + 1 < this.history.length)
+    }
+    if (this.idx + 1 < this.history.length) {
       return this.history[++(this.idx)];
+    }
     return this.history[this.history.length - 1];
   }
 
@@ -1536,8 +1539,9 @@ class HistoryManager {
       return null;
     }
 
-    if (ele.value !== eHistory.getCurrent())
+    if (ele.value !== eHistory.getCurrent()) {
       this.addItem(ele.id, ele.value, true);
+    }
 
     return eHistory.getNext();
   }
@@ -1548,8 +1552,9 @@ class HistoryManager {
       return null;
     }
 
-    if (ele.value !== eHistory.getCurrent())
+    if (ele.value !== eHistory.getCurrent()) {
       this.addItem(ele.id, ele.value, true);
+    }
 
     return eHistory.getPrevious();
   }
