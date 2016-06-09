@@ -9,19 +9,19 @@
   "extends": "eslint:recommended",
   "rules": {
     "indent": [2, 2],
-    "eol-last": [2],
-    "no-trailing-spaces": [2],
+    "eol-last": 2,
+    "no-trailing-spaces": 2,
     "comma-dangle": [2, "always-multiline"],
     "camelcase": [2, { "properties": "never" }],
-    "prefer-template": [2],
-    "consistent-return": [2],
-    "no-lonely-if": [2],
-    "no-else-return": [2],
-    "eqeqeq": [2],
-    "radix": [2],
-    "no-var": [2],
-    "prefer-const": [2],
-    "prefer-reflect": [2],
-    "no-console": [2]
+    "prefer-template": 2,
+    "consistent-return": 2,
+    "no-lonely-if": 2,
+    "no-else-return": 2,
+    "eqeqeq": 2,
+    "radix": 2,
+    "no-var": 2,
+    "prefer-const": 2,
+    "prefer-reflect": 2,
+    "no-console": 2
   }
 }
