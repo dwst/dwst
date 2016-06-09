@@ -1,7 +1,7 @@
 
 const VERSION = '1.3.4';
-const bins = {};
-const texts = {};
+const bins = new Map();
+const texts = new Map();
 let ws = {};
 let intervalId = null;
 let historyManager;
@@ -59,7 +59,7 @@ class Texts {
 
   run(variable=null) {
     if (variable !== null) {
-      const text = texts[variable];
+      const text = texts.get(variable);
       if (typeof(text) !== typeof(undefined)) {
         log(text, 'system');
         return;
@@ -74,12 +74,10 @@ class Texts {
       ];
       mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
-    const strs = ['Loaded texts:'];
-    for (const i in texts) {
-      const name = i;
-      const text = texts[i];
-      strs.push(`"${name}": <${text.length}B of text data>`);
-    }
+    const listing = [...texts.entries()].map(([name, text]) => {
+      return `"${name}": <${text.length}B of text data>`
+    });
+    const strs = ['Loaded texts:'].concat(listing);
     mlog(strs, 'system');
   }
 }
@@ -109,7 +107,7 @@ class Bins {
 
   run(variable=null) {
     if (variable !== null) {
-      const buffer = bins[variable];
+      const buffer = bins.get(variable);
       if (typeof(buffer) !== typeof(undefined)) {
         blog(buffer, 'system');
         return;
@@ -125,12 +123,10 @@ class Bins {
       mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
       return;
     }
-    const strs = ['Loaded binaries:'];
-    for (const i in bins) {
-      const name = i;
-      const buffer = bins[i];
-      strs.push(`"${name}": <${buffer.byteLength}B of binary data>`);
-    }
+    const listing = [...bins.entries()].map(([name, buffer]) => {
+      return `"${name}": <${buffer.byteLength}B of binary data>`
+    });
+    const strs = ['Loaded binaries:'].concat(listing);
     mlog(strs, 'system');
   }
 }
@@ -168,7 +164,7 @@ class Loadtext {
       const reader = new FileReader();
       reader.onload = (e2) => {
         const text = e2.target.result;
-        texts[variable] = text;
+        texts.set(variable, text);
         log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsText(file, encoding);
@@ -209,7 +205,7 @@ class Loadbin {
       const reader = new FileReader();
       reader.onload = (e2) => {
         const buffer = e2.target.result;
-        bins[variable] = buffer;
+        bins.set(variable, buffer);
         log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
@@ -380,7 +376,7 @@ class Send {
       if (params.length === 1) {
         variable = params[0];
       }
-      out = texts[variable];
+      out = texts.get(variable);
     }
     if (instr === 'time') {
       out = String(Math.round(new Date().getTime() / 1000));
@@ -507,7 +503,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      let buffer = bins[variable];
+      let buffer = bins.get(variable);
       if (typeof(buffer) === typeof(undefined)) {
         buffer = [];
       }
@@ -518,7 +514,7 @@ class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      const text = texts[variable];
+      const text = texts.get(variable);
       if (typeof(text) !== typeof(undefined)) {
         bytes = [...text].map(byteValue);
       } else {
