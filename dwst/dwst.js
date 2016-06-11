@@ -3,6 +3,7 @@ const VERSION = '1.3.4';
 const bins = new Map();
 const texts = new Map();
 let ws = {};
+let sessionStartTime = null;
 let intervalId = null;
 let historyManager;
 
@@ -828,20 +829,71 @@ class Connect {
     return 'connect to a server';
   }
 
-  run(url, proto) {
-    let protostring = '';
+  run(url, ...protocolStringParts) {
+    const protocolString = protocolStringParts.join('');
     congui();
-    if(proto === '') {
+    const proto = (protocolString === '') ? (
+      []
+    ) : (
+      protocolString.split(',')
+    );
+    if(proto.length < 1) {
       ws = new WebSocket(url);
     } else {
-      ws = new WebSocket(url,proto);
-      protostring = `(protocol: ${proto})`;
+      ws = new WebSocket(url, proto);
     }
+    const protoFormatted = proto.join(', ');
+    const negotiation = (proto.length < 1) ? (
+      ['No subprotocol negotiation.']
+    ) : (
+      [`Accepted subprotocols: ${protoFormatted}`]
+    );
+    mlog([`Connecting to ${ws.url}`].concat(negotiation), 'system');
     ws.onopen = () => {
-      log(`Connection established to ${url} ${protostring}`, 'system');
+      sessionStartTime = (new Date()).getUTCMilliseconds();
+      const selected = (ws.protocol.length < 1) ? (
+        []
+      ) : (
+        [`Selected subprotocol: ${ws.protocol}`]
+      );
+      mlog([`Connection established.`].concat(selected), 'system');
     };
-    ws.onclose = () => {
-      log(`connection closed, ${url} ${protostring}`, 'system');
+    ws.onclose = (e) => {
+      const meanings = {
+        1000: 'Normal Closure',
+        1001: 'Going Away',
+        1002: 'Protocol error',
+        1003: 'Unsupported Data',
+        1005: 'No Status Rcvd',
+        1006: 'Abnormal Closure',
+        1007: 'Invalid frame payload data',
+        1008: 'Policy Violation',
+        1009: 'Message Too Big',
+        1010: 'Mandatory Ext.',
+        1011: 'Internal Server Error',
+        1015: 'TLS handshake',
+      };
+      const code = (meanings.hasOwnProperty(e.code)) ? (
+        `${e.code} (${meanings[e.code]})`
+      ) : (
+        `${e.code}`
+      );
+      const reason = (e.reason.length < 1) ? (
+        []
+      ) : (
+        [`Close reason: ${e.reason}`]
+      );
+      const sessionLengthString = (() => {
+        if (typeof sessionStartTime !== typeof 123) {
+          return [];
+        }
+        const currentTime = (new Date()).getUTCMilliseconds();
+        const sessionLength = currentTime - sessionStartTime;
+        return [`Session length: ${sessionLength}ms`];
+      }) ();
+      sessionStartTime = null;
+      mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
+
       if (document.getElementById('conbut1').value === 'disconnect') {
         discogui();
       }
@@ -860,7 +912,7 @@ class Connect {
 
     };
     ws.onerror = () => {
-      log(`websocket error: ${url} ${protostring}`, 'system');
+      log(`WebSocket error.`, 'error');
     };
   }
 }
@@ -889,6 +941,8 @@ class Disconnect {
 
   run() {
     discogui();
+    const subprotocol = []
+    mlog([`Closing connection to ${ws.url}`].concat(subprotocol), 'system');
     ws.close();
     document.getElementById('url1').focus();
   }
@@ -1322,7 +1376,14 @@ function guiconnect() {
   menu.hide();
   const url = document.getElementById('url1').value;
   const proto = document.getElementById('proto1').value;
-  loud(`/connect ${url} ${proto}`);
+  if (proto === '') {
+    loud(`/connect ${url}`);
+  } else {
+    const dirtyNames = proto.split(',');
+    const protocolNames = dirtyNames.map(dirty => dirty.trim());
+    const protocols = protocolNames.join(',')
+    loud(`/connect ${url} ${protocols}`);
+  }
 }
 
 class ElementHistory {
