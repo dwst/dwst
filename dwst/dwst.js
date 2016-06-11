@@ -7,6 +7,20 @@ let sessionStartTime = null;
 let intervalId = null;
 let historyManager;
 
+function range(a, b=null) {
+  let start;
+  let stop;
+  if (b === null) {
+    start = 0;
+    stop = a;
+  } else {
+    start = a;
+    stop = b;
+  }
+  const length = stop - start;
+  return Array(length).fill().map((_, i) => start + i);
+}
+
 class Clear {
 
   commands() {
@@ -829,24 +843,40 @@ class Connect {
     return 'connect to a server';
   }
 
-  run(url, ...protocolStringParts) {
-    const protocolString = protocolStringParts.join('');
+  run(url, protocolString='') {
     congui();
-    const proto = (protocolString === '') ? (
+    const protoCandidates = (protocolString === '') ? (
       []
     ) : (
       protocolString.split(',')
     );
-    if(proto.length < 1) {
+    const protocols = protoCandidates.filter(protocolName => {
+
+      // https://tools.ietf.org/html/rfc6455#page-17
+
+      const basicAlphabet = range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
+      const httpSeparators = new Set([...'()<>@,;:\\"/[]?={} \t']);
+      const validProtocolChars = new Set( basicAlphabet.filter(character => !httpSeparators.has(character)));
+      const usedChars = [...protocolName];
+      const invalidCharsSet = new Set(usedChars.filter(character => !validProtocolChars.has(character)));
+      const invalidChars = [...invalidCharsSet];
+      if (invalidChars.length > 0) {
+        const invalidCharsString = invalidChars.map(character => `"${character}"`).join(', ');
+        mlog([`Skipped invalid protocol candidate "${protocolName}".`, `The following characters are not allowed: ${invalidCharsString}`], 'warning');
+        return false;
+      }
+      return true;
+    });
+    if(protocols.length < 1) {
       ws = new WebSocket(url);
     } else {
-      ws = new WebSocket(url, proto);
+      ws = new WebSocket(url, protocols);
     }
-    const protoFormatted = proto.join(', ');
-    const negotiation = (proto.length < 1) ? (
-      ['No subprotocol negotiation.']
+    const protoFormatted = protocols.join(', ');
+    const negotiation = (protocols.length < 1) ? (
+      ['No protocol negotiation.']
     ) : (
-      [`Accepted subprotocols: ${protoFormatted}`]
+      [`Accepted protocols: ${protoFormatted}`]
     );
     mlog([`Connecting to ${ws.url}`].concat(negotiation), 'system');
     ws.onopen = () => {
@@ -854,7 +884,7 @@ class Connect {
       const selected = (ws.protocol.length < 1) ? (
         []
       ) : (
-        [`Selected subprotocol: ${ws.protocol}`]
+        [`Selected protocol: ${ws.protocol}`]
       );
       mlog([`Connection established.`].concat(selected), 'system');
     };
@@ -941,8 +971,8 @@ class Disconnect {
 
   run() {
     discogui();
-    const subprotocol = []
-    mlog([`Closing connection to ${ws.url}`].concat(subprotocol), 'system');
+    const protocol = []
+    mlog([`Closing connection to ${ws.url}`].concat(protocol), 'system');
     ws.close();
     document.getElementById('url1').focus();
   }

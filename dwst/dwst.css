@@ -41,6 +41,11 @@ h1 a
   color: #f00;
 }
 
+.warning
+{
+  color: #dd0;
+}
+
 .system
 {
   color: #7f7;
