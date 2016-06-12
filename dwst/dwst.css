@@ -5,12 +5,6 @@ body
   height: 100%;
   background-color: #540;
 }
-h1 a
-{
-  padding: 0;
-  color: #000;
-  font-family: serif;
-}
 .button
 {
   width: 3em;
@@ -61,49 +55,6 @@ h1 a
   color: #777;
 }
 
-.label
-{
-  width: 1em;
-}
-
-.protofield
-{
-  width: 15%;
-}
-
-h1 a
-{
-  color: #aaa;
-  font-family: sans-serif;
-  text-decoration: none;
-
-}
-
-h1
-{
-  text-align: center;
-}
-.footer
-{
-  margin-top: 4em;
-  text-align: center;
-  font-size: 0.6em;
-  font-family: sans-serif;
-  color: #ddd;
-  padding: 1em;
-}
-
-.footer a
-{
-  color: #ddf;
-}
-.footer img
-{
-  width: 5em;
-  height: 1.8em;
-  padding-right: 1em;
-}
-
 table.terminal
 {
   background-color: #000;
@@ -118,18 +69,6 @@ input[type="text"]
   border: thin solid #f00;
 }
 
-input[readonly="readonly"]
-{
-  background-color: #555;
-  color: #ddd;
-
-}
-
-.popup input[type="text"]
-{
-  border: thin solid #000;
-  width: 100%;
-}
 .bar2 input[type="text"]
 {
   border: thin solid #000;
@@ -194,19 +133,6 @@ body
   cursor: text;
 }
 
-.popup
-{
-  background-color: rgba(85, 68, 0, 0.8);
-  color: #777;
-  border-radius: 15px;
-  position: absolute;
-  margin: 10%;
-  width: 80%;
-  border: medium solid #777;
-  text-align: center;
-  font-family: sans-serif;
-  font-size: 0.8em;
-}
 .bar2
 {
   position: absolute;
@@ -214,20 +140,6 @@ body
   left: 0;
   width: 100%;
   height: 24pt;
-}
-.panel
-{
-  border: medium solid #540;
-  border-radius: 5px;
-  padding: 1em;
-  margin: auto 10%;
-  width: 80%;
-  background-color: #320;
-  text-align: right;
-}
-.panel .label
-{
-  width: 3em;
 }
 .dwst-mlog__help-link {
   color: #7a7;
@@ -254,13 +166,4 @@ body
 }
 .dwst-mlog__syntax {
   font-style: italic;
-}
-.dim {
-  user-select: none;
-  background-color: rgba(0,0,0,0.6);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
