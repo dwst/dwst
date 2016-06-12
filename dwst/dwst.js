@@ -652,28 +652,23 @@ class Forget {
 
   usage() {
     return [
-      '/forget <target>',
+      '/forget everything',
     ];
   }
 
   examples() {
     return [
-      '/forget commands',
-      '/forget urls',
-      '/forget protocols',
       '/forget everything',
     ];
   }
 
   info() {
-    return 'remove things from history';
+    return 'empty history';
   }
 
   run(target) {
     if (target === 'everything') {
       historyManager.forget();
-    } else if (target === 'commands' || target === 'urls' || target === 'protocols') {
-      historyManager.forget(target);
     } else {
       const historyLine = historyManager.getSummary();
       mlog([`Invalid argument: ${target}`, historyLine], 'error');
@@ -844,7 +839,6 @@ class Connect {
   }
 
   run(url, protocolString='') {
-    congui();
     const protoCandidates = (protocolString === '') ? (
       []
     ) : (
@@ -923,10 +917,6 @@ class Connect {
       }) ();
       sessionStartTime = null;
       mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
-
-      if (document.getElementById('conbut1').value === 'disconnect') {
-        discogui();
-      }
     };
     ws.onmessage = (msg) => {
       if (typeof(msg.data) === typeof('')) {
@@ -970,11 +960,9 @@ class Disconnect {
   }
 
   run() {
-    discogui();
     const protocol = []
     mlog([`Closing connection to ${ws.url}`].concat(protocol), 'system');
     ws.close();
-    document.getElementById('url1').focus();
   }
 }
 
@@ -988,26 +976,6 @@ for (const i in plugins) {
   for (const j in c) {
     const command = c[j];
     commands.set(command, plugin);
-  }
-}
-
-function congui() {
-  document.getElementById('conbut1').value = 'disconnect';
-  document.getElementById('url1').setAttribute('disabled', 'disabled');
-  document.getElementById('proto1').setAttribute('disabled', 'disabled');
-}
-
-function discogui() {
-  document.getElementById('conbut1').value = 'connect';
-  document.getElementById('url1').removeAttribute('disabled');
-  document.getElementById('proto1').removeAttribute('disabled');
-}
-
-function guiconbut() {
-  if (document.getElementById('conbut1').value === 'connect') {
-    guiconnect();
-  } else {
-    guidisconnect();
   }
 }
 
@@ -1362,60 +1330,6 @@ function send() {
   return ;
 }
 
-
-class Menu {
-
-  isopen() {
-    return (document.getElementById('dim1').getAttribute('style') === null);
-  }
-
-
-  hide() {
-    document.getElementById('dim1').setAttribute('style', 'visibility: hidden;');
-    document.getElementById('msg1').focus();
-    document.getElementById('sendbut1').removeAttribute('disabled');
-    document.getElementById('menubut1').removeAttribute('class');
-  }
-
-
-  show() {
-    document.getElementById('dim1').removeAttribute('style');
-    document.getElementById('url1').focus();
-    document.getElementById('sendbut1').setAttribute('disabled', 'disabled');
-    document.getElementById('menubut1').setAttribute('class', 'active');
-  }
-
-
-  toggle() {
-    if (this.isopen()) {
-      menu.hide();
-    } else {
-      menu.show();
-    }
-  }
-}
-
-const menu = new Menu();
-
-function guidisconnect() {
-  loud('/disconnect');
-
-}
-
-function guiconnect() {
-  menu.hide();
-  const url = document.getElementById('url1').value;
-  const proto = document.getElementById('proto1').value;
-  if (proto === '') {
-    loud(`/connect ${url}`);
-  } else {
-    const dirtyNames = proto.split(',');
-    const protocolNames = dirtyNames.map(dirty => dirty.trim());
-    const protocols = protocolNames.join(',')
-    loud(`/connect ${url} ${protocols}`);
-  }
-}
-
 class ElementHistory {
 
   constructor(history = []) {
@@ -1463,6 +1377,9 @@ class ElementHistory {
   }
 
   addItem(item, edition, callback) {
+    if (typeof item !== typeof '') {
+      throw 'invalid type';
+    }
     if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
       if (edition) {
@@ -1480,216 +1397,110 @@ class ElementHistory {
     return this.history[this.idx];
   }
 
+  findConnect() {
+    for (const command of this.history) {
+      if (command.startsWith('/connect ')) {
+        return command;
+      }
+    }
+    return null;
+  }
+
 }
 
 class HistoryManager {
 
-  constructor(savedHistories, options) {
-    this.saveIds = {
-      'msg1': 'commands',
-      'url1': 'urls',
-    };
-    if (typeof options === typeof {} && options.hasOwnProperty('save')) {
-      this.save = options.save;
-    } else {
-      this.save = () => {};
-    }
-    this.histories = {};
-    savedHistories.forEach((historyObject) => {
-      const [historyId, history] = historyObject;
-      this.histories[historyId] = new ElementHistory(history);
-    });
-  }
-
-  getHistoryId(eleId) {
-    const mapping = {
-      'url1': 'urls',
-      'msg1': 'commands',
-      'proto1': 'protocols',
-    };
-    if (!mapping.hasOwnProperty(eleId)) {
-      return null;
-    }
-    return mapping[eleId];
-  }
-
-  getAll() {
-    const all = {};
-    for (const key in this.histories) {
-      if (this.histories.hasOwnProperty(key)) {
-        const eHistory = this.histories[key];
-        const history = eHistory.getAll();
-        all[key] = history;
-      }
-    }
-    return all;
+  constructor(savedHistory, options) {
+    this.save = options.save;
+    this.history = new ElementHistory(savedHistory);
   }
 
   getSummary() {
-    const histories = this.getAll();
-    const historyLineData = [];
-    for (const key in histories) {
-      if (histories.hasOwnProperty(key)) {
-        const history = histories[key];
-        const count = history.length;
-        if (count > 0) {
-          historyLineData.push([count, key]);
-        }
-      }
-    }
-
+    const history = this.history.getAll();
     const historyLine = ['Persistent history '];
-    if (Object.keys(historyLineData).length < 1) {
-      historyLine.push('is empty');
+    if (history.length < 1) {
+      historyLine.push('is empty.');
     } else {
       historyLine.push('contains ');
-      historyLineData.sort((a, b) => {
-        return a[0] < b[0];
+      historyLine.push({
+        type: 'strong',
+        text: `${history.length}`,
       });
-      let remaining = Object.keys(historyLineData).length;
-      historyLineData.forEach(item => {
-        const [count, key] = item;
-        historyLine.push({
-          type: 'strong',
-          text: `${count}`,
-        });
-        const units = {
-          urls: 'urls',
-          commands: 'commands',
-          protocols: 'protocol definitions',
-        };
-        const unit = (count > 1) ? (
-          units[key]
-        ) : (
-          units[key].slice(0, -1) // remove plural s
-        );
-        historyLine.push(' ');
-        historyLine.push(unit);
-        remaining -= 1;
-        if (remaining > 1) {
-          historyLine.push(', ');
-        } else if (remaining === 1) {
-          historyLine.push(' and ');
-        }
-      });
+      historyLine.push(' commands.');
     }
-    historyLine.push('.');
     return historyLine;
   }
 
-  forget(historyId = null) {
-    let targets;
-    if (historyId === null) {
-      targets = Object.keys(this.histories);
-    } else {
-      if (!this.histories.hasOwnProperty(historyId)) {
-        return false;
-      }
-      targets = [historyId];
-    }
-    targets.forEach(target => {
-      Reflect.deleteProperty(this.histories, target)
-      this.save(target, []);
-    });
-    return true;
+  forget() {
+    const emptyHistory = [];
+    this.history = new ElementHistory(emptyHistory, {save: this.save});
+    this.save(emptyHistory);
   }
 
-  getCreate(eleId) {
-    const historyId = this.getHistoryId(eleId);
-    if (historyId === null) {
-      return null;
-    }
-    if (! this.histories.hasOwnProperty(historyId)) {
-      this.histories[historyId] = new ElementHistory();
-    }
-    return this.histories[historyId];
-  }
-
-  addItem(eleId, value, edition) {
-    const eHistory = this.getCreate(eleId);
-    if (eHistory === null) {
-      return;
-    }
-    const historyId = this.getHistoryId(eleId);
-    eHistory.addItem(value, edition, () => {
-      const history = eHistory.getAll();
-      this.save(historyId, history);
+  addItem(value, edition) {
+    this.history.addItem(value, edition, () => {
+      const history = this.history.getAll();
+      this.save(history);
     });
   }
 
-  getNext(ele) {
-    const eHistory = this.getCreate(ele.id);
-    if (eHistory === null) {
-      return null;
+  getNext(value) {
+    if (value !== this.history.getCurrent()) {
+      this.addItem(value, true);
     }
-
-    if (ele.value !== eHistory.getCurrent()) {
-      this.addItem(ele.id, ele.value, true);
-    }
-
-    return eHistory.getNext();
+    return this.history.getNext();
   }
 
-  getPrevious(ele) {
-    const eHistory = this.getCreate(ele.id);
-    if (eHistory === null) {
-      return null;
+  getPrevious(value) {
+    if (value !== this.history.getCurrent()) {
+      this.addItem(value, true);
     }
-
-    if (ele.value !== eHistory.getCurrent()) {
-      this.addItem(ele.id, ele.value, true);
-    }
-
-    return eHistory.getPrevious();
+    return this.history.getPrevious();
   }
 
-  select(ele) {
-    const eHistory = this.getCreate(ele.id);
-    if (eHistory === null) {
-      return;
-    }
-
-    this.addItem(ele.id, ele.value);
-    eHistory.gotoBottom();
+  select(value) {
+    this.addItem(value);
+    this.history.gotoBottom();
   }
 
-  atBottom(ele) {
-    const eHistory = this.getCreate(ele.id);
-    if (eHistory === null) {
-      return null;
-    }
+  atBottom() {
+    return this.history.idx === -1;
+  }
 
-    return eHistory.idx === -1;
+  findConnect() {
+    return this.history.findConnect();
   }
 }
 
-function keypress() {
-  if (event.keyCode === 13) {
-    if (menu.isopen()) {
-      if (isconnected()) {
-        return;
+function globalKeyPress() {
+  const msg1 = document.getElementById('msg1');
+  if (event.keyIdentifier === 'U+001B') {
+    if (typeof ws.readyState !== typeof undefined && ws.readyState < 2) { // OPEN or CONNECTING
+      loud('/disconnect');
+    } else if (msg1.value === '') {
+      const connect = historyManager.findConnect();
+      if (connect !== null) {
+        msg1.value = connect;
+      } else {
+        msg1.value = '/connect ws://echo.websocket.org/';
       }
-      historyManager.select(document.activeElement);
-      document.getElementById('conbut1').click();
     } else {
-      historyManager.select(document.activeElement);
-      document.getElementById('sendbut1').click();
+      historyManager.select(msg1.value);
+      msg1.value = '';
     }
-  } else if (event.keyIdentifier === 'U+001B') {
-    if (typeof(ws.readyState) === typeof(undefined)) {
-      menu.toggle();
-    } else if (ws.readyState < 2) { // OPEN or CONNECTING
-      guidisconnect();
-    } else {
-      menu.toggle();
-    }
+  }
+}
+
+function msgKeyPress() {
+  const msg1 = document.getElementById('msg1');
+  if (event.keyCode === 13) {
+    historyManager.select(msg1.value);
+    document.getElementById('sendbut1').click();
   } else if (event.keyCode === 38) { // up
-    const box = document.activeElement;
-    box.value = historyManager.getPrevious(box);
+    msg1.value = historyManager.getPrevious(msg1.value);
     return;
   } else if (event.keyCode === 40) { // down
-    const box = document.activeElement;
-    box.value = historyManager.getNext(box);
+    msg1.value = historyManager.getNext(msg1.value);
     return;
   }
 }
@@ -1711,46 +1522,35 @@ function init() {
   setInterval( refreshclock, 500 );
   loud('/status');
 
-  menu.show();
-
-  document.addEventListener('keydown', keypress);
+  document.addEventListener('keydown', globalKeyPress);
+  document.getElementById('msg1').addEventListener('keydown', msgKeyPress);
   document.getElementById('sendbut1').addEventListener('click', send);
-  document.getElementById('menubut1').addEventListener('click', () => menu.toggle());
-  document.getElementById('open1').addEventListener('click', (e) => e.stopPropagation());
-  document.getElementById('dim1').addEventListener('click', () => menu.hide());
-  document.getElementById('conbut1').addEventListener('click', guiconbut);
+  document.getElementById('menubut1').addEventListener('click', () => {
+    loud('/status')
+  });
+  document.getElementById('msg1').focus();
 }
 
 function loadSaves(callBack) {
-  chrome.storage.local.get(['history_commands', 'history_urls', 'history_protocols'], response => {
-    const save = (historyId, history) => {
-      const saveKey = `history_${historyId}`;
+  const HISTORY_KEY = `history`;
+  chrome.storage.local.get(HISTORY_KEY, response => {
+    const save = (history) => {
       const saveState = JSON.stringify(history);
-      const setOperation = {};
-      setOperation[saveKey] = saveState;
+      const setOperation = {
+        [HISTORY_KEY]: saveState,
+      };
       chrome.storage.local.set(setOperation);
     };
 
     const saveStates = Object.assign({
-      history_commands: '[]',
-      history_urls: '[]',
-      history_protocols: '[]',
+      [HISTORY_KEY]: '[]',
     }, response);
-    const savedHistories = [];
-    for (const key in saveStates) {
-      if (saveStates.hasOwnProperty(key)) {
-        const saveState = saveStates[key];
-        const history = JSON.parse(saveState);
-        const parts = key.split('_');
-        const historyId = parts[1];
-        savedHistories.push([historyId, history]);
-      }
-    }
-    historyManager = new HistoryManager(savedHistories, { save: save });
+    const saveState = saveStates[HISTORY_KEY];
+    const history = JSON.parse(saveState);
+    historyManager = new HistoryManager(history, { save: save });
     callBack();
   });
 }
 
 document.addEventListener('DOMContentLoaded', loadSaves(init));
-
 
