@@ -206,3 +206,22 @@ body
   width: 100%;
   padding-right: 0.2em;
 }
+
+::-webkit-scrollbar {
+  height: 14px;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #150010;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #302;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #302;
+}
+::-webkit-scrollbar-corner {
+  background: #201;
+}
