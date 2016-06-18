@@ -612,6 +612,26 @@ class Status {
   }
 
   run() {
+    const SPLASH = [
+      //'   .        ..        ..        ..        ..        ..        .',
+      "                                                               ",
+      "                                                               ",
+      "                                                               ",
+      "           `ggg.                                               ",
+      "             ggg                                               ",
+      "              gg.                                              ",
+      "               gg                                 ggg'         ",
+      "               gg                                 gg           ",
+      "           ,ggg g.  ggg       ggg.   .gggggg.     g            ",
+      "         ,gg  `ggg ggg         ggg. gg      `g.  gg            ",
+      "         gg     gg.g'           `gg gg.       `gggggg'         ",
+      "         gg     ggg'             gg. 'gggggg.  ,g              ",
+      "         ll.     ll.     ,l.      ll       `ll l.              ",
+      "          ll.   llll.   ,lll.   ,ll l`     ,ll ll.             ",
+      "           `lllll' `lllll' `lllll'  `lllllll'   lll.           ",
+      "                                                               ",
+    ];
+
     const CONNECTION_LIST_CAP = 3;
     const historyLength = historyManager.getHistoryLength();
     const historySummary = historyManager.getSummary();
@@ -663,6 +683,7 @@ class Status {
       ]);
     })();
     const about = [
+      '',
       {
         type: 'strong',
         text: `Dark WebSocket Terminal ${VERSION}`,
@@ -703,6 +724,9 @@ class Status {
       ],
     ];
     const sections = [
+      [''],
+      SPLASH,
+      [''],
       about,
       maybeBeginnerInfo,
       helpReminder,
