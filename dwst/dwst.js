@@ -1,5 +1,6 @@
 
 const VERSION = '1.3.4';
+const ECHO_SERVER_URL = 'ws://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
 let ws = {};
@@ -611,34 +612,104 @@ class Status {
   }
 
   run() {
-    const historyLine = historyManager.getSummary();
-    mlog([
+    const CONNECTION_LIST_CAP = 3;
+    const historyLength = historyManager.getHistoryLength();
+    const historySummary = historyManager.getSummary();
+    const maybeTooManyConnectCommands =  historyManager.getConnectCommands(CONNECTION_LIST_CAP + 1);
+    const connectCommands = maybeTooManyConnectCommands.slice(0, CONNECTION_LIST_CAP);
+    const connectionsLines = connectCommands.map(command => {
+      return {
+        type: 'command',
+        text: command,
+      }
+    });
+    const tooManyWarning = (() => {
+      if (maybeTooManyConnectCommands.length > CONNECTION_LIST_CAP) {
+        return [`(more than ${CONNECTION_LIST_CAP} in total, hiding some)`];
+      }
+      return [];
+    })();
+    const historySection = (() => {
+      if (historyLength < 1) {
+        return [];
+      }
+      if (connectCommands.length < 1) {
+        return [
+          '',
+          historySummary.concat(['.']),
+        ];
+      }
+      return [
+        '',
+        historySummary.concat([
+          ', including the following ',
+          {
+            type: 'dwstgg',
+            text: 'connect',
+            section: 'connect',
+          },
+          ' commands',
+        ]),
+      ].concat(connectionsLines).concat(tooManyWarning).concat([
+        '',
+        [
+          'Type ',
+          {
+            type: 'strong',
+            text: '/forget everything',
+          },
+          ' to remove all stored history',
+        ],
+      ]);
+    })();
+    const about = [
       {
         type: 'strong',
         text: `Dark WebSocket Terminal ${VERSION}`,
       },
+    ];
+    const beginnerInfo = [
       '',
-      'Type text into the box below to send messages to the web socket server.',
+      [
+        '1. Connect to a server (type ',
+        {
+          type: 'command',
+          text: `/connect ${ECHO_SERVER_URL}`,
+        },
+        ' for example)',
+      ],
+      [
+        '2. Type text into the box below to send messages',
+      ],
+      [
+        '3. Disconnect by hitting the Escape key on your keyboard',
+      ],
+    ];
+    const maybeBeginnerInfo = (() => {
+      if (historyLength < 1) {
+        return beginnerInfo;
+      }
+      return [];
+    })();
+    const helpReminder = [
+      '',
       [
         'Type ',
         {
           type: 'command',
           text: '/help',
         },
-        ' for a list of available commands.',
+        ' to see the full range of available commands',
       ],
-      '',
-      historyLine,
-      [
-        'Type ',
-        {
-          type: 'command',
-          text: '/forget everything',
-        },
-        ' to throw them away.',
-      ],
-      '',
-    ], 'system');
+    ];
+    const sections = [
+      about,
+      maybeBeginnerInfo,
+      helpReminder,
+      historySection,
+      [''],
+    ];
+    mlog([].concat(...sections), 'system');
   }
 
 }
@@ -670,11 +741,11 @@ class Forget {
     if (target === 'everything') {
       historyManager.forget();
     } else {
-      const historyLine = historyManager.getSummary();
+      const historyLine = historyManager.getSummary().concat(['.']);
       mlog([`Invalid argument: ${target}`, historyLine], 'error');
       return;
     }
-    const historyLine = historyManager.getSummary();
+    const historyLine = historyManager.getSummary().concat(['.']);
     mlog([`Successfully forgot ${target}!`, historyLine], 'system');
   }
 
@@ -1342,6 +1413,10 @@ class ElementHistory {
     this.history = history;
   }
 
+  get length() {
+    return this.history.length;
+  }
+
   getAll() {
     return this.history;
   }
@@ -1399,13 +1474,19 @@ class ElementHistory {
     return this.history[this.idx];
   }
 
-  findConnect() {
+  getConnectCommands(cap) {
+    const commands = [];
+    const commandsSet = new Set();
     for (const command of this.history) {
-      if (command.startsWith('/connect ')) {
-        return command;
+      if (command.startsWith('/connect ') && !commandsSet.has(command)) {
+        commands.push(command);
+        commandsSet.add(command);
+      }
+      if (commands.length >= cap) {
+        return commands
       }
     }
-    return null;
+    return commands;
   }
 
 }
@@ -1417,18 +1498,26 @@ class HistoryManager {
     this.history = new ElementHistory(savedHistory);
   }
 
+  getHistoryLength() {
+    return this.history.length;
+  }
+
   getSummary() {
     const history = this.history.getAll();
-    const historyLine = ['Persistent history '];
+    const historyLine = ['History '];
     if (history.length < 1) {
-      historyLine.push('is empty.');
+      historyLine.push('is empty');
     } else {
       historyLine.push('contains ');
       historyLine.push({
         type: 'strong',
         text: `${history.length}`,
       });
-      historyLine.push(' commands.');
+      if (history.length === 1) {
+        historyLine.push(' command');
+      } else {
+        historyLine.push(' commands');
+      }
     }
     return historyLine;
   }
@@ -1469,8 +1558,8 @@ class HistoryManager {
     return this.history.idx === -1;
   }
 
-  findConnect() {
-    return this.history.findConnect();
+  getConnectCommands(cap) {
+    return this.history.getConnectCommands(cap);
   }
 }
 
@@ -1480,11 +1569,11 @@ function globalKeyPress() {
     if (typeof ws.readyState !== typeof undefined && ws.readyState < 2) { // OPEN or CONNECTING
       loud('/disconnect');
     } else if (msg1.value === '') {
-      const connect = historyManager.findConnect();
-      if (connect !== null) {
-        msg1.value = connect;
+      const connects = historyManager.getConnectCommands(1);
+      if (connects.length < 1) {
+        msg1.value = `/connect ${ECHO_SERVER_URL}`;
       } else {
-        msg1.value = '/connect ws://echo.websocket.org/';
+        msg1.value = connects[0];
       }
     } else {
       historyManager.select(msg1.value);
