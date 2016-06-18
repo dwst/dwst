@@ -7,7 +7,8 @@ body
 }
 .button
 {
-  width: 3em;
+  width: auto;
+  padding: 0 1em 0 0;
 }
 .direction
 {
@@ -71,8 +72,13 @@ input[type="text"]
 
 .bar2 input[type="text"]
 {
-  border: thin solid #000;
+  background-color: #111;
+  border-width: 0;
   width: 100%;
+  outline: none;
+}
+.bar2 input[type="text"]:active {
+  border-width: 0;
 }
 
 .consolebar input[type="button"]
@@ -166,4 +172,37 @@ body
 }
 .dwst-mlog__syntax {
   font-style: italic;
+}
+.color-pink {
+  color: #936;
+}
+.color-purple {
+  color: #614;
+
+}
+.splash-button {
+  position: relative;
+  top: -3px;
+  height: 26px;
+  width: 48px;
+  background-image: url('minilogo.png');
+}
+.splash-button:hover {
+  background-image: url('minilogo-hover.png');
+  cursor: pointer;
+}
+.send-button {
+  position: relative;
+  top: 0;
+  height: 26px;
+  width: 26px;
+  background-image: url('return.png');
+}
+.send-button:hover {
+  background-image: url('return-hover.png');
+  cursor: pointer;
+}
+.input-holder {
+  width: 100%;
+  padding-right: 0.2em;
 }

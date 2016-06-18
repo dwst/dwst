@@ -614,22 +614,22 @@ class Status {
   run() {
     const SPLASH = [
       //'   .        ..        ..        ..        ..        ..        .',
-      "                                                               ",
-      "                                                               ",
-      "                                                               ",
-      "           `ggg.                                               ",
-      "             ggg                                               ",
-      "              gg.                                              ",
-      "               gg                                 ggg'         ",
-      "               gg                                 gg           ",
-      "           ,ggg g.  ggg       ggg.   .gggggg.     g            ",
-      "         ,gg  `ggg ggg         ggg. gg      `g.  gg            ",
-      "         gg     gg.g'           `gg gg.       `gggggg'         ",
-      "         gg     ggg'             gg. 'gggggg.  ,g              ",
-      "         ll.     ll.     ,l.      ll       `ll l.              ",
-      "          ll.   llll.   ,lll.   ,ll l`     ,ll ll.             ",
-      "           `lllll' `lllll' `lllll'  `lllllll'   lll.           ",
-      "                                                               ",
+      { type: 'regular', color: 'pink',   text: "                                                               " },
+      { type: 'regular', color: 'pink',   text: "                                                               " },
+      { type: 'regular', color: 'pink',   text: "                                                               " },
+      { type: 'regular', color: 'pink',   text: "           `ggg.                                               " },
+      { type: 'regular', color: 'pink',   text: "             ggg                                               " },
+      { type: 'regular', color: 'pink',   text: "              gg.                                              " },
+      { type: 'regular', color: 'pink',   text: "               gg                                 ggg'         " },
+      { type: 'regular', color: 'pink',   text: "               gg                                 gg           " },
+      { type: 'regular', color: 'pink',   text: "           ,ggg g.  ggg       ggg.   .gggggg.     g            " },
+      { type: 'regular', color: 'pink',   text: "         ,gg  `ggg ggg         ggg. gg      `g.  gg            " },
+      { type: 'regular', color: 'pink',   text: "         gg     gg.g'           `gg gg.       `gggggg'         " },
+      { type: 'regular', color: 'pink',   text: "         gg     ggg'             gg. 'gggggg.  ,g              " },
+      { type: 'regular', color: 'purple', text: "         ll.     ll.     ,l.      ll       `ll l.              " },
+      { type: 'regular', color: 'purple', text: "          ll.   llll.   ,lll.   ,ll l`     ,ll ll.             " },
+      { type: 'regular', color: 'purple', text: "           `lllll' `lllll' `lllll'  `lllllll'   lll.           " },
+      { type: 'regular', color: 'purple', text: "                                                               " },
     ];
 
     const CONNECTION_LIST_CAP = 3;
@@ -684,10 +684,13 @@ class Status {
     })();
     const about = [
       '',
-      {
-        type: 'strong',
-        text: `Dark WebSocket Terminal ${VERSION}`,
-      },
+      [
+        'Dark WebSocket Terminal ',
+        {
+          type: 'strong',
+          text: `${VERSION}`,
+        },
+      ],
     ];
     const beginnerInfo = [
       '',
@@ -1197,6 +1200,9 @@ function mlog(lines, type) {
 
         if (segment.type === 'regular') {
           const textSpan = document.createElement('span');
+          if (segment.hasOwnProperty('color')) {
+            textSpan.setAttribute('class', `color-${segment.color}`);
+          }
           textSpan.innerHTML = safeText;
           return textSpan;
         }
