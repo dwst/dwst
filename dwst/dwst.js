@@ -1128,6 +1128,7 @@ function mlog(lines, type) {
           link.setAttribute('class', 'dwst-mlog__command-link');
           const command = rawText;
           link.onclick = () => {
+            historyManager.select(command);
             loud(command);
           };
           link.setAttribute('href', '#');
@@ -1280,6 +1281,7 @@ function loud(line) {
 
 function send() {
   const raw = document.getElementById('msg1').value;
+  historyManager.select(raw);
   document.getElementById('msg1').value = '';
   if (raw.length < 1) {
     const helpTip = [
@@ -1494,8 +1496,7 @@ function globalKeyPress() {
 function msgKeyPress() {
   const msg1 = document.getElementById('msg1');
   if (event.keyCode === 13) {
-    historyManager.select(msg1.value);
-    document.getElementById('sendbut1').click();
+    send()
   } else if (event.keyCode === 38) { // up
     msg1.value = historyManager.getPrevious(msg1.value);
     return;
