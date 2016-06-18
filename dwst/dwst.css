@@ -142,12 +142,12 @@ body
   height: 24pt;
 }
 .dwst-mlog__help-link {
-  color: #7a7;
+  color: #888;
   font-style: italic;
   text-decoration: none;
 }
 .dwst-mlog__help-link:hover {
-  color: #7f7;
+  color: #ff0;
   text-decoration: none;
 }
 .dwst-mlog__command-link {
