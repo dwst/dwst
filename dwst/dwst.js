@@ -589,26 +589,26 @@ class Binary {
   }
 }
 
-class Status {
+class Splash {
 
   commands() {
-    return ['status'];
+    return ['splash'];
   }
 
   usage() {
     return [
-      '/status',
+      '/splash',
     ];
   }
 
   examples() {
     return [
-      '/status',
+      '/splash',
     ];
   }
 
   info() {
-    return 'find out current status';
+    return 'revisit welcome screen';
   }
 
   run() {
@@ -1064,7 +1064,7 @@ class Disconnect {
   }
 }
 
-const plugins = [Connect, Disconnect, Status, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+const plugins = [Connect, Disconnect, Splash, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
 const commands = new Map();
 
 for (const i in plugins) {
@@ -1640,13 +1640,13 @@ function init() {
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
   setInterval( refreshclock, 500 );
-  loud('/status');
+  loud('/splash');
 
   document.addEventListener('keydown', globalKeyPress);
   document.getElementById('msg1').addEventListener('keydown', msgKeyPress);
   document.getElementById('sendbut1').addEventListener('click', send);
   document.getElementById('menubut1').addEventListener('click', () => {
-    loud('/status')
+    loud('/splash')
   });
   document.getElementById('msg1').focus();
 }
