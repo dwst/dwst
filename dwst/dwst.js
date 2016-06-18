@@ -612,6 +612,24 @@ class Status {
   }
 
   run() {
+    const SPLASH = [
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+'         .         .         .         ::         .         .         .         ',
+    ];
+
     const CONNECTION_LIST_CAP = 3;
     const historyLength = historyManager.getHistoryLength();
     const historySummary = historyManager.getSummary();
@@ -703,6 +721,7 @@ class Status {
       ],
     ];
     const sections = [
+      SPLASH,
       about,
       maybeBeginnerInfo,
       helpReminder,
