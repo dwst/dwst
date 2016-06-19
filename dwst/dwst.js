@@ -368,7 +368,7 @@ class Interval {
     let count = 0;
     const interval = parseNum(intervalStr);
     const spammer = () => {
-      if (!connection.isOpen()) {
+      if (connection === null || !connection.isOpen()) {
         if (intervalId !== null) {
           log('interval failed, no connection', 'error');
           run('interval');
@@ -428,7 +428,7 @@ class Spam {
       const nextspam = () => {
         spam(limit, i + 1);
       };
-      if (connection.isOpen()) {
+      if (connection !== null && connection.isOpen()) {
         setTimeout(nextspam, 0);
       } else {
         log('spam failed, no connection', 'error');
@@ -1101,7 +1101,6 @@ class Disconnect {
     const protocol = []
     mlog([`Closing connection to ${connection.url}`].concat(protocol), 'system');
     connection.close();
-    connection = null;
   }
 }
 
