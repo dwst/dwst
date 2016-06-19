@@ -347,6 +347,7 @@ class Send {
   usage() {
     return [
       '/send [components...]',
+      '/s [components...]',
     ];
   }
 
@@ -358,6 +359,7 @@ class Send {
       '/send \\["JSON","is","cool"]',
       '/send [time] s\\ since\\ epoch',
       '/send From\\ a\\ to\\ z:\\ [range(97,122)]',
+      '/s Available\\ now\\ with\\ 60%\\ less\\ typing!',
     ];
   }
 
@@ -445,6 +447,7 @@ class Binary {
   usage() {
     return [
       '/binary [components...]',
+      '/b [components...]',
     ];
   }
 
@@ -458,6 +461,7 @@ class Binary {
       '/binary [range(0,0xff)]',
       '/binary [hex(1234567890abcdef)]',
       '/binary [hex(52)] [random(1)]\ lol',
+      '/b Available\\ now\\ with\\ ~71.43%\\ less\\ typing!',
     ];
   }
 
