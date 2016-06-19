@@ -3,8 +3,7 @@ const VERSION = '1.3.4';
 const ECHO_SERVER_URL = 'ws://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
-let ws = {};
-let sessionStartTime = null;
+let connection = null;
 let intervalId = null;
 let historyManager;
 
@@ -20,6 +19,107 @@ function range(a, b=null) {
   }
   const length = stop - start;
   return Array(length).fill().map((_, i) => start + i);
+}
+
+class Connection {
+
+  constructor(url, protocols=[]) {
+    this.sessionStartTime = null;
+    if(protocols.length < 1) {
+      this.ws = new WebSocket(url);
+    } else {
+      this.ws = new WebSocket(url, protocols);
+    }
+    this.ws.onopen = () => {
+      this.sessionStartTime = (new Date()).getTime();
+      const selected = (this.ws.protocol.length < 1) ? (
+        []
+      ) : (
+        [`Selected protocol: ${this.ws.protocol}`]
+      );
+      mlog([`Connection established.`].concat(selected), 'system');
+    };
+    this.ws.onclose = (e) => {
+      const meanings = {
+        1000: 'Normal Closure',
+        1001: 'Going Away',
+        1002: 'Protocol error',
+        1003: 'Unsupported Data',
+        1005: 'No Status Rcvd',
+        1006: 'Abnormal Closure',
+        1007: 'Invalid frame payload data',
+        1008: 'Policy Violation',
+        1009: 'Message Too Big',
+        1010: 'Mandatory Ext.',
+        1011: 'Internal Server Error',
+        1015: 'TLS handshake',
+      };
+      const code = (meanings.hasOwnProperty(e.code)) ? (
+        `${e.code} (${meanings[e.code]})`
+      ) : (
+        `${e.code}`
+      );
+      const reason = (e.reason.length < 1) ? (
+        []
+      ) : (
+        [`Close reason: ${e.reason}`]
+      );
+      const sessionLengthString = (() => {
+        if (this.sessionStartTime === null) {
+          return [];
+        }
+        const currentTime = (new Date()).getTime();
+        const sessionLength = currentTime - this.sessionStartTime;
+        return [`Session length: ${sessionLength}ms`];
+      }) ();
+      mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
+    };
+    this.ws.onmessage = (msg) => {
+      if (typeof(msg.data) === typeof('')) {
+        log(msg.data, 'received');
+      } else {
+        const fr = new FileReader();
+        fr.onload = (e) => {
+          const buffer = e.target.result;
+          blog(buffer, 'received');
+        };
+        fr.readAsArrayBuffer(msg.data);
+      }
+
+    };
+    this.ws.onerror = () => {
+      log(`WebSocket error.`, 'error');
+    };
+  }
+
+  get url() {
+    return this.ws.url;
+  }
+
+  send(...params) {
+    this.ws.send(...params);
+  }
+
+  close() {
+    this.ws.close();
+  }
+
+  isConnecting() {
+    return this.ws.readyState === 0;
+  }
+
+  isOpen() {
+    return this.ws.readyState === 1;
+  }
+
+  isClosing() {
+    return this.ws.readyState === 2;
+  }
+
+  isClosed() {
+    return this.ws.readyState === 3;
+  }
+
 }
 
 class Clear {
@@ -268,7 +368,7 @@ class Interval {
     let count = 0;
     const interval = parseNum(intervalStr);
     const spammer = () => {
-      if (!isconnected()) {
+      if (!connection.isOpen()) {
         if (intervalId !== null) {
           log('interval failed, no connection', 'error');
           run('interval');
@@ -328,7 +428,7 @@ class Spam {
       const nextspam = () => {
         spam(limit, i + 1);
       };
-      if (isconnected()) {
+      if (connection.isOpen()) {
         setTimeout(nextspam, 0);
       } else {
         log('spam failed, no connection', 'error');
@@ -420,7 +520,7 @@ class Send {
 
   run(...processed) {
     const msg = processed.join('');
-    if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
+    if (connection === null || connection.isClosing() || connection.isClosed()) {
       const connectTip = [
         'Use ',
         {
@@ -434,7 +534,7 @@ class Send {
       return;
     }
     log(msg, 'sent');
-    ws.send(msg);
+    connection.send(msg);
   }
 }
 
@@ -575,7 +675,7 @@ class Binary {
     }
     const out = joinbufs(buffers).buffer;
     const msg = `<${out.byteLength}B of data> `;
-    if (typeof(ws.readyState) === typeof(undefined) || ws.readyState > 1) { //CLOSING or CLOSED
+    if (connection === null || connection.isClosing() || connection.isClosed()) {
       const connectTip = [
         'Use ',
         {
@@ -589,7 +689,7 @@ class Binary {
       return;
     }
     blog(out, 'sent');
-    ws.send(out);
+    connection.send(out);
   }
 }
 
@@ -964,79 +1064,14 @@ class Connect {
       }
       return true;
     });
-    if(protocols.length < 1) {
-      ws = new WebSocket(url);
-    } else {
-      ws = new WebSocket(url, protocols);
-    }
+    connection = new Connection(url, protocols);
     const protoFormatted = protocols.join(', ');
     const negotiation = (protocols.length < 1) ? (
       ['No protocol negotiation.']
     ) : (
       [`Accepted protocols: ${protoFormatted}`]
     );
-    mlog([`Connecting to ${ws.url}`].concat(negotiation), 'system');
-    ws.onopen = () => {
-      sessionStartTime = (new Date()).getUTCMilliseconds();
-      const selected = (ws.protocol.length < 1) ? (
-        []
-      ) : (
-        [`Selected protocol: ${ws.protocol}`]
-      );
-      mlog([`Connection established.`].concat(selected), 'system');
-    };
-    ws.onclose = (e) => {
-      const meanings = {
-        1000: 'Normal Closure',
-        1001: 'Going Away',
-        1002: 'Protocol error',
-        1003: 'Unsupported Data',
-        1005: 'No Status Rcvd',
-        1006: 'Abnormal Closure',
-        1007: 'Invalid frame payload data',
-        1008: 'Policy Violation',
-        1009: 'Message Too Big',
-        1010: 'Mandatory Ext.',
-        1011: 'Internal Server Error',
-        1015: 'TLS handshake',
-      };
-      const code = (meanings.hasOwnProperty(e.code)) ? (
-        `${e.code} (${meanings[e.code]})`
-      ) : (
-        `${e.code}`
-      );
-      const reason = (e.reason.length < 1) ? (
-        []
-      ) : (
-        [`Close reason: ${e.reason}`]
-      );
-      const sessionLengthString = (() => {
-        if (typeof sessionStartTime !== typeof 123) {
-          return [];
-        }
-        const currentTime = (new Date()).getUTCMilliseconds();
-        const sessionLength = currentTime - sessionStartTime;
-        return [`Session length: ${sessionLength}ms`];
-      }) ();
-      sessionStartTime = null;
-      mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
-    };
-    ws.onmessage = (msg) => {
-      if (typeof(msg.data) === typeof('')) {
-        log(msg.data, 'received');
-      } else {
-        const fr = new FileReader();
-        fr.onload = (e) => {
-          const buffer = e.target.result;
-          blog(buffer, 'received');
-        };
-        fr.readAsArrayBuffer(msg.data);
-      }
-
-    };
-    ws.onerror = () => {
-      log(`WebSocket error.`, 'error');
-    };
+    mlog([`Connecting to ${connection.url}`].concat(negotiation), 'system');
   }
 }
 
@@ -1064,8 +1099,9 @@ class Disconnect {
 
   run() {
     const protocol = []
-    mlog([`Closing connection to ${ws.url}`].concat(protocol), 'system');
-    ws.close();
+    mlog([`Closing connection to ${connection.url}`].concat(protocol), 'system');
+    connection.close();
+    connection = null;
   }
 }
 
@@ -1601,7 +1637,7 @@ class HistoryManager {
 function globalKeyPress() {
   const msg1 = document.getElementById('msg1');
   if (event.keyIdentifier === 'U+001B') {
-    if (typeof ws.readyState !== typeof undefined && ws.readyState < 2) { // OPEN or CONNECTING
+    if (connection !== null && (connection.isOpen() || connection.isConnecting())) {
       loud('/disconnect');
     } else if (msg1.value === '') {
       const connects = historyManager.getConnectCommands(1);
@@ -1628,16 +1664,6 @@ function msgKeyPress() {
     msg1.value = historyManager.getNext(msg1.value);
     return;
   }
-}
-
-function isconnected() {
-  if (typeof(ws.readyState) === typeof(undefined)) {
-    return false;
-  }
-  if (ws.readyState === 1) {
-    return true;
-  }
-  return false;
 }
 
 function init() {
