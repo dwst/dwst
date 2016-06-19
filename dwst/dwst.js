@@ -926,13 +926,14 @@ class Connect {
 
   usage() {
     return [
-      '/connect <ws-url> [protocol]',
+      '/connect <ws-url> [protocol1[,protocol2[,...[,protocolN]]]]',
     ];
   }
 
   examples() {
     return [
       '/connect ws://echo.websocket.org/',
+      '/connect ws://127.0.0.1:1234/ p1.example.com,p2.example.com',
     ];
   }
 
