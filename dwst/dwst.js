@@ -1,5 +1,5 @@
 
-const VERSION = '1.3.4';
+const VERSION = '1.4.1';
 const ECHO_SERVER_URL = 'ws://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
