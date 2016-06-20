@@ -1,66 +1,19 @@
 
+:root {
+  --dwst-dark-pink: #936;
+}
+
 body
 {
+  font-family: monospace;
   font-size: 10pt;
   height: 100%;
-  background-color: #540;
+  background-color: #000;
 }
 .button
 {
   width: auto;
   padding: 0 1em 0 0;
-}
-.direction
-{
-  width: 3em;
-  text-align: right;
-}
-
-.sent
-{
-  color: #77c;
-}
-
-.received
-{
-  color: #c77;
-}
-
-.command
-{
-  color: #3ef;
-}
-
-.error
-{
-  color: #f00;
-}
-
-.warning
-{
-  color: #dd0;
-}
-
-.system
-{
-  color: #7f7;
-}
-
-.time
-{
-  width: 3em;
-}
-
-.sec
-{
-  color: #777;
-}
-
-table.terminal
-{
-  background-color: #000;
-  color: #ccc;
-  font-family: monospace;
 }
 input[type="text"]
 {
@@ -91,12 +44,8 @@ body
 {
   margin: 0;
 }
-.logline td
-{
-  vertical-align: top;
-}
 .preserved {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .consolebar
@@ -115,6 +64,11 @@ body
   color: #ddd;
 }
 
+.sec
+{
+  color: #777;
+}
+
 .consolebar .leftpad
 {
   padding-left: 1em;
@@ -123,20 +77,6 @@ body
 .consolebar .rightpad
 {
   padding-right: 1em;
-}
-
-#screen1
-{
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 24pt;
-  background-color: #000;
-  overflow: auto;
-  vertical-align: top;
-  -webkit-user-select: text;
-  cursor: text;
 }
 
 .bar2
@@ -172,13 +112,6 @@ body
 }
 .dwst-mlog__syntax {
   font-style: italic;
-}
-.color-pink {
-  color: #936;
-}
-.color-purple {
-  color: #614;
-
 }
 .splash-button {
   position: relative;
@@ -224,4 +157,104 @@ body
 }
 ::-webkit-scrollbar-corner {
   background: #201;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 24pt;
+  background-color: #030303;
+  width: 100ch;
+}
+
+#screen1
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 24pt;
+  overflow: auto;
+  overflow-y: scroll;
+  vertical-align: top;
+  -webkit-user-select: text;
+  cursor: text;
+}
+
+.terminal
+{
+  min-height: 100%;
+/*
+  background-color: #030303;
+*/
+  color: #ccc;
+  font-family: monospace;
+}
+
+/* clean ********************************************************************/
+
+
+.dwst-logline {
+  padding: 0 1ch 0 0;
+}
+
+.dwst-logline__item {
+  display: table-cell;
+  padding: 0 0 0 1ch;
+  vertical-align: top;
+}
+
+.dwst-direction {
+ box-sizing: content-box;
+ width: 9ch; /* len('received:') */
+ text-align: right;
+}
+
+.dwst-direction--sent
+{
+  color: #77c;
+}
+
+.dwst-direction--received
+{
+  color: #c77;
+}
+
+.dwst-direction--command
+{
+  color: #3ef;
+}
+
+.dwst-direction--error
+{
+  color: #f00;
+}
+
+.dwst-direction--warning
+{
+  color: #dd0;
+}
+
+.dwst-direction--system
+{
+  color: #7f7;
+}
+
+.dwst-gfx {
+  overflow: hidden;
+  max-width: 100ch;
+}
+.dwst-gfx__line {
+  margin: 0 auto;
+}
+.dwst-gfx__element {
+  white-space: pre;
+}
+.dwst-gfx__element--color-1 {
+  color: var(--dwst-dark-pink);
+}
+.dwst-gfx__element--color-2 {
+  color: #614;
 }

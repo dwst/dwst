@@ -717,25 +717,73 @@ class Splash {
 
   run() {
     const SPLASH = [
-      //'   .        ..        ..        ..        ..        ..        .',
-      { type: 'regular', color: 'pink',   text: "                                                               " },
-      { type: 'regular', color: 'pink',   text: "                                                               " },
-      { type: 'regular', color: 'pink',   text: "                                                               " },
-      { type: 'regular', color: 'pink',   text: "           `ggg.                                               " },
-      { type: 'regular', color: 'pink',   text: "             ggg                                               " },
-      { type: 'regular', color: 'pink',   text: "              gg.                                              " },
-      { type: 'regular', color: 'pink',   text: "               gg                                 ggg'         " },
-      { type: 'regular', color: 'pink',   text: "               gg                                 gg           " },
-      { type: 'regular', color: 'pink',   text: "           ,ggg g.  ggg       ggg.   .gggggg.     g            " },
-      { type: 'regular', color: 'pink',   text: "         ,gg  `ggg ggg         ggg. gg      `g.  gg            " },
-      { type: 'regular', color: 'pink',   text: "         gg     gg.g'           `gg gg.       `gggggg'         " },
-      { type: 'regular', color: 'pink',   text: "         gg     ggg'             gg. 'gggggg.  ,g              " },
-      { type: 'regular', color: 'purple', text: "         ll.     ll.     ,l.      ll       `ll l.              " },
-      { type: 'regular', color: 'purple', text: "          ll.   llll.   ,lll.   ,ll l`     ,ll ll.             " },
-      { type: 'regular', color: 'purple', text: "           `lllll' `lllll' `lllll'  `lllllll'   lll.           " },
-      { type: 'regular', color: 'purple', text: "                                                               " },
+      [
+        //".        ..        ..        ..        ..        ..        ..        ..        ..        ..        .",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                              `ggg.                                                                 ",
+        "                                ggg                                                                 ",
+        "                                 gg.                                                                ",
+        "                                  gg                                 ggg'                           ",
+        "                                  gg                                 gg                             ",
+        "                              ,ggg g.  ggg       ggg.   .gggggg.     g                              ",
+        "                            ,gg  `ggg ggg         ggg. gg      `g.  gg                              ",
+        "                            gg     gg.g'           `gg gg.       `gggggg'                           ",
+        "                            gg     ggg'             gg. 'gggggg.  ,g                                ",
+        "                            ll.     ll.     ,l.      ll       `ll l.                                ",
+        "                             ll.   llll.   ,lll.   ,ll l`     ,ll ll.                               ",
+        "                              `lllll' `lllll' `lllll'  `lllllll'   lll.                             ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+      ],
+      [
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                              11111                                                                 ",
+        "                                111                                                                 ",
+        "                                 111                                                                ",
+        "                                  11                                 1111                           ",
+        "                                  11                                 11                             ",
+        "                              1111 11  111       1111   11111111     1                              ",
+        "                            111  1111 111         1111 11      111  11                              ",
+        "                            11     11111           111 111       11111111                           ",
+        "                            11     1111             111 11111111  11                                ",
+        "                            222     222     222      22       222 22                                ",
+        "                             222   22222   22222   222 22     222 222                               ",
+        "                              2222222 2222222 2222222  222222222   2222                             ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+        "                                                                                                    ",
+      ],
     ];
-
+    /*
+    const xmasColors = [
+      "                                                                                                    ",
+      "                                                                                                    ",
+      "                                                                                                    ",
+      "                                                                                                    ",
+      "                               xxxx                                                                 ",
+      "                                111                                                                 ",
+      "                                 11x                                                                ",
+      "                                  11                                 xxxx                           ",
+      "                                  11                                 11                             ",
+      "                              xxx1 11  xxx       xxxx   xxxxxxxx     1                              ",
+      "                            xx1  1111 111         111x x1      1xx  x1                              ",
+      "                            11     11111           111 111       1xx11111                           ",
+      "                            11     1111             11x 11111111  11                                ",
+      "                            222     222     222      22       222 22                                ",
+      "                             222   22222   22222   222 22     222 222                               ",
+      "                              2222222 2222222 2222222  222222222   2222                             ",
+      "                                                                                                    ",
+      "                                                                                                    ",
+      "                                                                                                    ",
+    ];
+    */
     const CONNECTION_LIST_CAP = 3;
     const historyLength = historyManager.getHistoryLength();
     const historySummary = historyManager.getSummary();
@@ -787,7 +835,6 @@ class Splash {
       ]);
     })();
     const about = [
-      '',
       [
         'Dark WebSocket Terminal ',
         {
@@ -831,15 +878,13 @@ class Splash {
       ],
     ];
     const sections = [
-      [''],
-      SPLASH,
-      [''],
       about,
       maybeBeginnerInfo,
       helpReminder,
       historySection,
       [''],
     ];
+    gfx(...SPLASH);
     mlog([].concat(...sections), 'system');
   }
 
@@ -1240,9 +1285,6 @@ function mlog(lines, type) {
 
         if (segment.type === 'regular') {
           const textSpan = document.createElement('span');
-          if (segment.hasOwnProperty('color')) {
-            textSpan.setAttribute('class', `color-${segment.color}`);
-          }
           textSpan.innerHTML = safeText;
           return textSpan;
         }
@@ -1304,11 +1346,11 @@ function mlog(lines, type) {
   });
   const time = currenttime();
   const terminal1 = document.getElementById('ter1');
-  const logLine = document.createElement('tr');
-  logLine.setAttribute('class', 'logline');
-  logLine.innerHTML = `<td class="time">${time}</td><td class="direction ${type}">${type}:</td></tr>`;
-  const outputCell = document.createElement('td');
-  outputCell.setAttribute('class', 'preserved');
+  const logLine = document.createElement('div');
+  logLine.setAttribute('class', 'dwst-logline');
+  logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item dwst-direction dwst-direction--${type}">${type}:</span>`;
+  const outputCell = document.createElement('span');
+  outputCell.setAttribute('class', 'dwst-logline__item dwst-logline__item--main preserved');
   lineElements.forEach(lineElement => {
     lineElement.forEach(segmentElement => {
       outputCell.appendChild(segmentElement);
@@ -1318,6 +1360,29 @@ function mlog(lines, type) {
   });
   logLine.appendChild(outputCell);
   terminal1.appendChild(logLine);
+  const screen = document.getElementById('screen1');
+  screen.scrollTop = screen.scrollHeight;
+}
+
+function gfx(lines, colors) {
+
+  const gfxContainer = document.createElement('div');
+  gfxContainer.setAttribute('class', 'dwst-gfx');
+  lines.forEach((line, li) => {
+    const logLine = document.createElement('div');
+    logLine.setAttribute('class', 'dwst-gfx__line');
+    [...line].forEach((chr, ci) => {
+      const color = colors[li][ci];
+      const outputCell = document.createElement('span');
+      outputCell.setAttribute('class', `dwst-gfx__element dwst-gfx__element--color-${color}`);
+      outputCell.innerHTML = chr;
+      logLine.appendChild(outputCell);
+    });
+    gfxContainer.appendChild(logLine);
+  });
+
+  const terminal1 = document.getElementById('ter1');
+  terminal1.appendChild(gfxContainer);
   const screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
@@ -1670,7 +1735,7 @@ function init() {
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
   setInterval( refreshclock, 500 );
-  loud('/splash');
+  silent('/splash');
 
   document.addEventListener('keydown', globalKeyPress);
   document.getElementById('msg1').addEventListener('keydown', msgKeyPress);
