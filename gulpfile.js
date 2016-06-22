@@ -1,3 +1,4 @@
+'use strict';
 
 /* global require */
 
@@ -11,7 +12,7 @@ const clean = require('gulp-clean');
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
     .pipe(jsonlint())
-    .pipe(jsonlint.failOnError())
+    .pipe(jsonlint.failOnError());
 });
 
 gulp.task('eslint', () => {
@@ -24,7 +25,7 @@ gulp.task('eslint', () => {
 gulp.task('htmlhint', () => {
   gulp.src(['**/*.html', '!node_modules/**'])
     .pipe(htmlhint())
-    .pipe(htmlhint.failReporter())
+    .pipe(htmlhint.failReporter());
 });
 
 gulp.task('validate', ['jsonlint', 'eslint', 'htmlhint']);
