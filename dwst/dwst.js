@@ -1,3 +1,4 @@
+'use strict';
 
 const VERSION = '1.4.1';
 const ECHO_SERVER_URL = 'ws://echo.websocket.org/';
@@ -7,7 +8,7 @@ let connection = null;
 let intervalId = null;
 let historyManager;
 
-function range(a, b=null) {
+function range(a, b = null) {
   let start;
   let stop;
   if (b === null) {
@@ -23,23 +24,24 @@ function range(a, b=null) {
 
 class Connection {
 
-  constructor(url, protocols=[]) {
+  constructor(url, protocols = []) {
     this.sessionStartTime = null;
-    if(protocols.length < 1) {
+    if (protocols.length < 1) {
       this.ws = new WebSocket(url);
     } else {
       this.ws = new WebSocket(url, protocols);
     }
-    this.ws.onopen = () => {
+    this.ws.onopen = function () {
       this.sessionStartTime = (new Date()).getTime();
-      const selected = (this.ws.protocol.length < 1) ? (
-        []
-      ) : (
-        [`Selected protocol: ${this.ws.protocol}`]
-      );
-      mlog([`Connection established.`].concat(selected), 'system');
+      const selected = (() => {
+        if (this.ws.protocol.length < 1) {
+          return [];
+        }
+        return [`Selected protocol: ${this.ws.protocol}`];
+      })();
+      mlog(['Connection established.'].concat(selected), 'system');
     };
-    this.ws.onclose = (e) => {
+    this.ws.onclose = function (e) {
       const meanings = {
         1000: 'Normal Closure',
         1001: 'Going Away',
@@ -54,16 +56,18 @@ class Connection {
         1011: 'Internal Server Error',
         1015: 'TLS handshake',
       };
-      const code = (meanings.hasOwnProperty(e.code)) ? (
-        `${e.code} (${meanings[e.code]})`
-      ) : (
-        `${e.code}`
-      );
-      const reason = (e.reason.length < 1) ? (
-        []
-      ) : (
-        [`Close reason: ${e.reason}`]
-      );
+      const code = (() => {
+        if (meanings.hasOwnProperty(e.code)) {
+          return `${e.code} (${meanings[e.code]})`;
+        }
+        return `${e.code}`;
+      })();
+      const reason = (() => {
+        if (e.reason.length < 1) {
+          return [];
+        }
+        return [`Close reason: ${e.reason}`];
+      })();
       const sessionLengthString = (() => {
         if (this.sessionStartTime === null) {
           return [];
@@ -71,15 +75,15 @@ class Connection {
         const currentTime = (new Date()).getTime();
         const sessionLength = currentTime - this.sessionStartTime;
         return [`Session length: ${sessionLength}ms`];
-      }) ();
+      })();
       mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
     };
-    this.ws.onmessage = (msg) => {
-      if (typeof(msg.data) === typeof('')) {
+    this.ws.onmessage = function (msg) {
+      if (typeof msg.data === 'string') {
         log(msg.data, 'received');
       } else {
         const fr = new FileReader();
-        fr.onload = (e) => {
+        fr.onload = function (e) {
           const buffer = e.target.result;
           blog(buffer, 'received');
         };
@@ -88,7 +92,7 @@ class Connection {
 
     };
     this.ws.onerror = () => {
-      log(`WebSocket error.`, 'error');
+      log('WebSocket error.', 'error');
     };
   }
 
@@ -173,10 +177,10 @@ class Texts {
     return 'list loaded texts';
   }
 
-  run(variable=null) {
+  run(variable = null) {
     if (variable !== null) {
       const text = texts.get(variable);
-      if (typeof(text) !== typeof(undefined)) {
+      if (typeof text  !== 'undefined') {
         log(text, 'system');
         return;
       }
@@ -191,7 +195,7 @@ class Texts {
       mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
     const listing = [...texts.entries()].map(([name, text]) => {
-      return `"${name}": <${text.length}B of text data>`
+      return `"${name}": <${text.length}B of text data>`;
     });
     const strs = ['Loaded texts:'].concat(listing);
     mlog(strs, 'system');
@@ -221,10 +225,10 @@ class Bins {
     return 'list loaded binaries';
   }
 
-  run(variable=null) {
+  run(variable = null) {
     if (variable !== null) {
       const buffer = bins.get(variable);
-      if (typeof(buffer) !== typeof(undefined)) {
+      if (typeof buffer !== 'undefined') {
         blog(buffer, 'system');
         return;
       }
@@ -240,7 +244,7 @@ class Bins {
       return;
     }
     const listing = [...bins.entries()].map(([name, buffer]) => {
-      return `"${name}": <${buffer.byteLength}B of binary data>`
+      return `"${name}": <${buffer.byteLength}B of binary data>`;
     });
     const strs = ['Loaded binaries:'].concat(listing);
     mlog(strs, 'system');
@@ -278,7 +282,7 @@ class Loadtext {
       const ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
       const reader = new FileReader();
-      reader.onload = (e2) => {
+      reader.onload = function (e2) {
         const text = e2.target.result;
         texts.set(variable, text);
         log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
@@ -319,7 +323,7 @@ class Loadbin {
       const ff = document.getElementById('fileframe');
       ff.innerHTML = ff.innerHTML;
       const reader = new FileReader();
-      reader.onload = (e2) => {
+      reader.onload = function (e2) {
         const buffer = e2.target.result;
         bins.set(variable, buffer);
         log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
@@ -355,13 +359,13 @@ class Interval {
     return 'run an other command periodically';
   }
 
-  run(intervalStr=null, ...commandParts) {
+  run(intervalStr = null, ...commandParts) {
     if (intervalStr === null) {
-      if (intervalId !== null) {
+      if (intervalId === null) {
+        log('no interval to clear', 'error');
+      } else {
         clearInterval(intervalId);
         log('interval cleared', 'system');
-      } else {
-        log('no interval to clear', 'error');
       }
       return;
     }
@@ -416,7 +420,7 @@ class Spam {
 
   run(timesStr, ...commandParts) {
     const times = parseNum(timesStr);
-    function spam(limit, i=0) {
+    function spam(limit, i = 0) {
       if (i === limit) {
         return;
       }
@@ -441,7 +445,7 @@ class Spam {
 class Send {
 
   commands() {
-    return ['send','s',''];
+    return ['send', 's', ''];
   }
 
   usage() {
@@ -474,13 +478,13 @@ class Send {
     }
     if (instr === 'random') {
       const randomchar = () => {
-        let out = Math.floor(Math.random()* (0xffff + 1));
+        out = Math.floor(Math.random() * (0xffff + 1));
         out /= 2; // avoid risky characters
         const char = String.fromCharCode(out);
         return char;
       };
       let num = 16;
-      if (params.length === 1){
+      if (params.length === 1) {
         num = parseNum(params[0]);
       }
       let str = '';
@@ -502,10 +506,10 @@ class Send {
     if (instr === 'range') {
       let start = 32;
       let end = 126;
-      if (params.length === 1){
+      if (params.length === 1) {
         end = parseNum(params[0]);
       }
-      if (params.length === 2){
+      if (params.length === 2) {
         start = parseNum(params[0]);
         end = parseNum(params[1]);
       }
@@ -541,7 +545,7 @@ class Send {
 class Binary {
 
   commands() {
-    return ['binary','b'];
+    return ['binary', 'b'];
   }
 
   usage() {
@@ -560,7 +564,7 @@ class Binary {
       '/binary \\["JSON","is","cool"]',
       '/binary [range(0,0xff)]',
       '/binary [hex(1234567890abcdef)]',
-      '/binary [hex(52)] [random(1)]\ lol',
+      '/binary [hex(52)] [random(1)] lol',
       '/b Available\\ now\\ with\\ ~71.43%\\ less\\ typing!',
     ];
   }
@@ -572,7 +576,7 @@ class Binary {
   process(instr, params) {
     function byteValue(x) {
       const code = x.charCodeAt(0);
-      if (code !== (code & 0xff)) {
+      if (code !== (code & 0xff)) { // eslint-disable-line no-bitwise
         return 0;
       }
       return code;
@@ -591,7 +595,7 @@ class Binary {
     }
     if (instr === 'random') {
       const randombyte = () => {
-        const out = Math.floor(Math.random()* (0xff + 1));
+        const out = Math.floor(Math.random() * (0xff + 1));
         return out;
       };
       let num = 16;
@@ -606,10 +610,10 @@ class Binary {
     if (instr === 'range') {
       let start = 0;
       let end = 0xff;
-      if (params.length === 1){
+      if (params.length === 1) {
         end = parseNum(params[0]);
       }
-      if (params.length === 2){
+      if (params.length === 2) {
         start = parseNum(params[0]);
         end = parseNum(params[1]);
       }
@@ -624,7 +628,7 @@ class Binary {
         variable = params[0];
       }
       let buffer = bins.get(variable);
-      if (typeof(buffer) === typeof(undefined)) {
+      if (typeof buffer === 'undefined') {
         buffer = [];
       }
       return new Uint8Array(buffer);
@@ -635,10 +639,10 @@ class Binary {
         variable = params[0];
       }
       const text = texts.get(variable);
-      if (typeof(text) !== typeof(undefined)) {
-        bytes = [...text].map(byteValue);
-      } else {
+      if (typeof text === 'undefined') {
         bytes = [];
+      } else {
+        bytes = [...text].map(byteValue);
       }
     }
     if (instr === 'hex') {
@@ -657,17 +661,15 @@ class Binary {
 
 
   run(...buffers) {
-    function joinbufs(buffers) {
+    function joinbufs(buffersToJoin) {
 
       let total = 0;
-      for (const i in buffers) {
-        const buffer = buffers[i];
+      for (const buffer of buffersToJoin) {
         total += buffer.length;
       }
       const out = new Uint8Array(total);
       let offset = 0;
-      for (const i in buffers) {
-        const buffer = buffers[i];
+      for (const buffer of buffersToJoin) {
         out.set(buffer, offset);
         offset += buffer.length;
       }
@@ -716,9 +718,12 @@ class Splash {
   }
 
   run() {
+
+    /* eslint-disable quotes,object-property-newline */
+
     const SPLASH = [
       [
-        //".        ..        ..        ..        ..        ..        ..        ..        ..        ..        .",
+        // ".        ..        ..        ..        ..        ..        ..        ..        ..        ..        .",
         "                                                                                                    ",
         "                                                                                                    ",
         "                                                                                                    ",
@@ -784,6 +789,9 @@ class Splash {
       "                                                                                                    ",
     ];
     */
+
+    /* eslint-enable quotes,object-property-newline */
+
     const CONNECTION_LIST_CAP = 3;
     const historyLength = historyManager.getHistoryLength();
     const historySummary = historyManager.getSummary();
@@ -793,7 +801,7 @@ class Splash {
       return {
         type: 'command',
         text: command,
-      }
+      };
     });
     const tooManyWarning = (() => {
       if (maybeTooManyConnectCommands.length > CONNECTION_LIST_CAP) {
@@ -956,22 +964,22 @@ class Help {
   run(command = null) {
     if (command !== null) {
       const plugin = commands.get(command);
-      if (typeof(plugin) === typeof(undefined)) {
+      if (typeof plugin === 'undefined') {
         log(`the command does not exist: ${command}`, 'error');
         return;
       }
-      if (typeof(plugin.usage) === typeof(undefined)) {
+      if (typeof plugin.usage === 'undefined') {
         log(`no help available for: ${command}`, 'system');
         return;
       }
       const breadCrumbs = [
         {
           type: 'dwstgg',
-          text: `DWSTGG`,
+          text: 'DWSTGG',
         },
         {
           type: 'regular',
-          text: ` &raquo; `,
+          text: ' &raquo; ',
           unsafe: true,
         },
         {
@@ -993,32 +1001,33 @@ class Help {
         },
         info,
       ];
-      const usageItems = plugin.usage().map((usage) => {
+      const usageItems = plugin.usage().map(usage => {
         return {
           type: 'syntax',
           text: usage,
         };
       });
       const usage = formatList('Usage', usageItems);
-      const examplesItems = plugin.examples().map((command) => {
+      const examplesItems = plugin.examples().map(exampleCommand => {
         return {
           type: 'command',
-          text: command,
+          text: exampleCommand,
         };
       });
 
-      const examplesTitle = (examplesItems.length < 2) ? (
-        'Example'
-      ) : (
-        'Examples'
-      );
+      const examplesTitle = (() => {
+        if (examplesItems.length < 2) {
+          return 'Example';
+        }
+        return 'Examples';
+      })();
       const examples = formatList(examplesTitle, examplesItems);
       const help = [breadCrumbs, '', title, ''].concat(usage).concat(['']).concat(examples).concat(['']);
       mlog(help, 'system');
       return;
     }
     const available = [];
-    for (const [c, plugin] of commands.entries()) {
+    commands.entries().forEach(([c, plugin]) => {
       if (c.length > 1) {
         const ndash = {
           type: 'regular',
@@ -1026,7 +1035,7 @@ class Help {
           unsafe: true,
         };
         let info = '  ';
-        if (typeof(plugin.info) !== typeof(undefined)) {
+        if (typeof plugin.info !== 'undefined') {
           info += plugin.info();
         }
         const cpad = Array(15 - c.length).join(' ');
@@ -1037,7 +1046,7 @@ class Help {
         };
         available.push([commandSegment, cpad, ndash, info]);
       }
-    }
+    });
     available.sort();
 
     const commandsList = formatList('Commands', available);
@@ -1045,7 +1054,7 @@ class Help {
     mlog([
       {
         type: 'strong',
-        text: `DWST Guide to Galaxy`,
+        text: 'DWST Guide to Galaxy',
       },
       '',
       [
@@ -1086,19 +1095,20 @@ class Connect {
     return 'connect to a server';
   }
 
-  run(url, protocolString='') {
-    const protoCandidates = (protocolString === '') ? (
-      []
-    ) : (
-      protocolString.split(',')
-    );
+  run(url, protocolString = '') {
+    const protoCandidates = (() => {
+      if (protocolString === '') {
+        return [];
+      }
+      return protocolString.split(',');
+    })();
     const protocols = protoCandidates.filter(protocolName => {
 
       // https://tools.ietf.org/html/rfc6455#page-17
 
       const basicAlphabet = range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
       const httpSeparators = new Set([...'()<>@,;:\\"/[]?={} \t']);
-      const validProtocolChars = new Set( basicAlphabet.filter(character => !httpSeparators.has(character)));
+      const validProtocolChars = new Set(basicAlphabet.filter(character => !httpSeparators.has(character)));
       const usedChars = [...protocolName];
       const invalidCharsSet = new Set(usedChars.filter(character => !validProtocolChars.has(character)));
       const invalidChars = [...invalidCharsSet];
@@ -1111,11 +1121,12 @@ class Connect {
     });
     connection = new Connection(url, protocols);
     const protoFormatted = protocols.join(', ');
-    const negotiation = (protocols.length < 1) ? (
-      ['No protocol negotiation.']
-    ) : (
-      [`Accepted protocols: ${protoFormatted}`]
-    );
+    const negotiation = (() => {
+      if (protocols.length < 1) {
+        return ['No protocol negotiation.'];
+      }
+      return [`Accepted protocols: ${protoFormatted}`];
+    })();
     mlog([`Connecting to ${connection.url}`].concat(negotiation), 'system');
   }
 }
@@ -1143,7 +1154,7 @@ class Disconnect {
   }
 
   run() {
-    const protocol = []
+    const protocol = [];
     mlog([`Closing connection to ${connection.url}`].concat(protocol), 'system');
     connection.close();
   }
@@ -1152,18 +1163,16 @@ class Disconnect {
 const plugins = [Connect, Disconnect, Splash, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
 const commands = new Map();
 
-for (const i in plugins) {
-  const constructor = plugins[i];
-  const plugin = new constructor();
-  const c = plugin.commands();
-  for (const j in c) {
-    const command = c[j];
+for (const Constructor of plugins) {
+  const plugin = new Constructor();
+  for (const command of plugin.commands()) {
     commands.set(command, plugin);
   }
 }
 
-function process(plugin, param) {
+function process(plugin, rawParam) {
   const pro = plugin.process;
+  let param = rawParam;
   /* eslint-disable prefer-template */
   if (param.substr(param.length - 2, 2) === '\\\\') {
     param = param.substr(0, param.length - 2) + '\\';
@@ -1171,24 +1180,24 @@ function process(plugin, param) {
     param = param.substr(0, param.length - 1) + ' ';
   }
   /* eslint-enable prefer-template */
-  if (typeof(pro) === typeof(undefined)) {
+  if (typeof pro === 'undefined') {
     return param;
   }
   let instruction = 'default';
   let params = [];
   let end = '';
-  if (param.substr(0,2) === '\\\\') {
+  if (param.substr(0, 2) === '\\\\') {
     params.push(param.substr(1));
-  } else if (param.substr(0,2) === '\\[') {
+  } else if (param.substr(0, 2) === '\\[') {
     params.push(param.substr(1));
-  } else if (param.substr(0,1) === '[') {
+  } else if (param.substr(0, 1) === '[') {
     const tmp = param.split(']');
     const call = tmp[0].split('[')[1];
     end = tmp[1];
     const tmp2 = call.split('(').concat('');
     instruction = tmp2[0];
     const pl = tmp2[1].split(')')[0];
-    if(pl.length > 0) {
+    if (pl.length > 0) {
       params = pl.split(',');
     }
   } else {
@@ -1200,7 +1209,7 @@ function process(plugin, param) {
 function run(command, ...params) {
 
   const plugin = commands.get(command);
-  if (typeof(plugin) === typeof(undefined)) {
+  if (typeof plugin === 'undefined') {
     const errorMessage = `invalid command: ${command}`;
     const helpTip = [
       'type ',
@@ -1224,7 +1233,7 @@ function refreshclock() {
 }
 
 function currenttime() {
-  const addzero = (i) => {
+  const addzero = function (i) {
     if (i < 10) {
       return `0${i}`;
     }
@@ -1241,7 +1250,7 @@ function htmlescape(line) {
 }
 
 function parseNum(str) {
-  if (str.length > 2 && str.substr(0,2) === '0x') {
+  if (str.length > 2 && str.substr(0, 2) === '0x') {
     return parseInt(str.substr(2), 16);
   }
   const num = parseInt(str, 10);
@@ -1255,19 +1264,19 @@ function log(line, type) {
 function mlog(lines, type) {
   const lineElements = lines.map(rawLine => {
     let line;
-    if (typeof rawLine === typeof '') {
+    if (typeof rawLine === 'string') {
       line = [rawLine];
-    } else if (typeof rawLine === typeof {} && !Array.isArray(rawLine)) {
+    } else if (typeof rawLine === 'object' && !Array.isArray(rawLine)) {
       line = [rawLine];
     } else {
       line = rawLine;
     }
-    if (typeof line !== typeof []) {
-      throw 'error';
+    if (!Array.isArray(line)) {
+      throw new Error('error');
     }
     const htmlSegments = line.map(rawSegment => {
       let segment;
-      if (typeof rawSegment === typeof '') {
+      if (typeof rawSegment === 'string') {
         segment = {
           type: 'regular',
           text: rawSegment,
@@ -1275,13 +1284,14 @@ function mlog(lines, type) {
       } else {
         segment = rawSegment;
       }
-      if (typeof segment === typeof {}) {
+      if (typeof segment === 'object') {
         const rawText = segment.text;
-        const safeText = ((segment.hasOwnProperty('unsafe') && segment.unsafe === true)) ? (
-          rawText
-        ) : (
-          htmlescape(rawText)
-        );
+        const safeText = (() => {
+          if (segment.hasOwnProperty('unsafe') && segment.unsafe === true) {
+            return rawText;
+          }
+          return htmlescape(rawText);
+        })();
 
         if (segment.type === 'regular') {
           const textSpan = document.createElement('span');
@@ -1291,11 +1301,12 @@ function mlog(lines, type) {
         if (segment.type === 'dwstgg') {
           const link = document.createElement('a');
           link.setAttribute('class', 'dwst-mlog__help-link');
-          const command = segment.hasOwnProperty('section') ? (
-            `/help ${segment.section}`
-          ) : (
-            '/help'
-          );
+          const command = (() => {
+            if (segment.hasOwnProperty('section')) {
+              return `/help ${segment.section}`;
+            }
+            return '/help';
+          })();
           link.onclick = () => {
             loud(command);
           };
@@ -1340,7 +1351,7 @@ function mlog(lines, type) {
           return textSpan;
         }
       }
-      throw 'unknown segment type';
+      throw new Error('unknown segment type');
     });
     return htmlSegments;
   });
@@ -1391,8 +1402,7 @@ function divissimo(l, n) {
   const chunks = [];
   let chunk = [];
   let i = 0;
-  for (const j in l) {
-    const b = l[j];
+  for (const b of l) {
     if (i >= n) {
       chunks.push(chunk);
       chunk = [];
@@ -1408,8 +1418,10 @@ function divissimo(l, n) {
 function hexdump(buffer) {
   function hexify(num) {
     const hex = num.toString(16);
-    const zero = hex.length < 2 ? '0' : '';
-    return zero + hex;
+    if (hex.length < 2) {
+      return `0${hex}`;
+    }
+    return hex;
   }
   function charify(num) {
     if (num > 0x7e || num < 0x20) { // non-printable
@@ -1420,7 +1432,7 @@ function hexdump(buffer) {
   const dv = new DataView(buffer);
   let offset = 0;
   const lines = [];
-  while(offset < buffer.byteLength){
+  while (offset < buffer.byteLength) {
     let chars = '';
     let hexes = '';
     for (let i = 0; i < 16; i++) {
@@ -1438,7 +1450,7 @@ function hexdump(buffer) {
       }
       offset += 1;
     }
-    const line = `${hexes}  |${chars}|`
+    const line = `${hexes}  |${chars}|`;
     lines.push(line);
 
   }
@@ -1449,11 +1461,12 @@ function formatList(listTitle, lines) {
   const titlePrefix = `${listTitle}: `;
   const spacePrefix = new Array(titlePrefix.length + 1).join(' ');
   return lines.map((line, i) => {
-    const prefix = (i === 0) ? (
-      titlePrefix
-    ) : (
-      spacePrefix
-    );
+    const prefix = (() => {
+      if (i === 0) {
+        return titlePrefix;
+      }
+      return spacePrefix;
+    })();
     if (Array.isArray(line)) {
       return [prefix].concat(line);
     }
@@ -1503,9 +1516,12 @@ function send() {
   }
   if (raw[0] === '/') {
     loud(raw);
-    return ;
+    return;
   }
-  const replmap = [[' [','\\ \\['], [' ','\\ ']];
+  const replmap = [
+    [' [', '\\ \\['],
+    [' ', '\\ '],
+  ];
 
   function replacer(str, rm) {
     if (rm.length < 1) {
@@ -1517,14 +1533,13 @@ function send() {
 
     const parts = str.split(find);
     const complete = [];
-    for (const i in parts) {
-      const part = parts[i];
+    for (const part of parts) {
       const loput = rm.slice(1);
       const news = replacer(part, loput);
       complete.push(news);
     }
     const out = complete.join(rep);
-    return(out);
+    return out;
   }
   const almost = replacer(raw, replmap);
   let final;
@@ -1535,14 +1550,14 @@ function send() {
   }
   const command = `/send ${final}`;
   loud(command);
-  return ;
+  return;
 }
 
 class ElementHistory {
 
   constructor(history = []) {
     if (!Array.isArray(history)) {
-      throw 'invalid history saveState';
+      throw new Error('invalid history saveState');
     }
     this.idx = -1;
     this.history = history;
@@ -1589,8 +1604,8 @@ class ElementHistory {
   }
 
   addItem(item, edition, callback) {
-    if (typeof item !== typeof '') {
-      throw 'invalid type';
+    if (typeof item !== 'string') {
+      throw new Error('invalid type');
     }
     if (item !== '' && item !== this.getLast()) {
       this.history.unshift(item);
@@ -1610,18 +1625,18 @@ class ElementHistory {
   }
 
   getConnectCommands(cap) {
-    const commands = [];
+    const uniqueCommands = [];
     const commandsSet = new Set();
     for (const command of this.history) {
       if (command.startsWith('/connect ') && !commandsSet.has(command)) {
-        commands.push(command);
+        uniqueCommands.push(command);
         commandsSet.add(command);
       }
-      if (commands.length >= cap) {
-        return commands
+      if (uniqueCommands.length >= cap) {
+        return uniqueCommands;
       }
     }
-    return commands;
+    return uniqueCommands;
   }
 
 }
@@ -1720,7 +1735,7 @@ function globalKeyPress() {
 function msgKeyPress() {
   const msg1 = document.getElementById('msg1');
   if (event.keyCode === 13) {
-    send()
+    send();
   } else if (event.keyCode === 38) { // up
     msg1.value = historyManager.getPrevious(msg1.value);
     return;
@@ -1734,22 +1749,22 @@ function init() {
 
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
-  setInterval( refreshclock, 500 );
+  setInterval(refreshclock, 500);
   silent('/splash');
 
   document.addEventListener('keydown', globalKeyPress);
   document.getElementById('msg1').addEventListener('keydown', msgKeyPress);
   document.getElementById('sendbut1').addEventListener('click', send);
   document.getElementById('menubut1').addEventListener('click', () => {
-    loud('/splash')
+    loud('/splash');
   });
   document.getElementById('msg1').focus();
 }
 
 function loadSaves(callBack) {
-  const HISTORY_KEY = `history`;
+  const HISTORY_KEY = 'history';
   chrome.storage.local.get(HISTORY_KEY, response => {
-    const save = (history) => {
+    const save = function (history) {
       const saveState = JSON.stringify(history);
       const setOperation = {
         [HISTORY_KEY]: saveState,
@@ -1762,7 +1777,7 @@ function loadSaves(callBack) {
     }, response);
     const saveState = saveStates[HISTORY_KEY];
     const history = JSON.parse(saveState);
-    historyManager = new HistoryManager(history, { save: save });
+    historyManager = new HistoryManager(history, {save});
     callBack();
   });
 }
