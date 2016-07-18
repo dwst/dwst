@@ -1036,7 +1036,7 @@ class Help {
       return;
     }
     const available = [];
-    commands.entries().forEach(([c, plugin]) => {
+    [...commands.entries()].forEach(([c, plugin]) => {
       if (c.length > 1) {
         const ndash = {
           type: 'regular',
