@@ -26,74 +26,83 @@ class Connection {
 
   constructor(url, protocols = []) {
     this.sessionStartTime = null;
-    if (protocols.length < 1) {
-      this.ws = new WebSocket(url);
-    } else {
-      this.ws = new WebSocket(url, protocols);
-    }
-    this.ws.onopen = function () {
-      this.sessionStartTime = (new Date()).getTime();
-      const selected = (() => {
-        if (this.ws.protocol.length < 1) {
-          return [];
-        }
-        return [`Selected protocol: ${this.ws.protocol}`];
-      })();
-      mlog(['Connection established.'].concat(selected), 'system');
-    };
-    this.ws.onclose = function (e) {
-      const meanings = {
-        1000: 'Normal Closure',
-        1001: 'Going Away',
-        1002: 'Protocol error',
-        1003: 'Unsupported Data',
-        1005: 'No Status Rcvd',
-        1006: 'Abnormal Closure',
-        1007: 'Invalid frame payload data',
-        1008: 'Policy Violation',
-        1009: 'Message Too Big',
-        1010: 'Mandatory Ext.',
-        1011: 'Internal Server Error',
-        1015: 'TLS handshake',
-      };
-      const code = (() => {
-        if (meanings.hasOwnProperty(e.code)) {
-          return `${e.code} (${meanings[e.code]})`;
-        }
-        return `${e.code}`;
-      })();
-      const reason = (() => {
-        if (e.reason.length < 1) {
-          return [];
-        }
-        return [`Close reason: ${e.reason}`];
-      })();
-      const sessionLengthString = (() => {
-        if (this.sessionStartTime === null) {
-          return [];
-        }
-        const currentTime = (new Date()).getTime();
-        const sessionLength = currentTime - this.sessionStartTime;
-        return [`Session length: ${sessionLength}ms`];
-      })();
-      mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
-    };
-    this.ws.onmessage = function (msg) {
-      if (typeof msg.data === 'string') {
-        log(msg.data, 'received');
-      } else {
-        const fr = new FileReader();
-        fr.onload = function (e) {
-          const buffer = e.target.result;
-          blog(buffer, 'received');
-        };
-        fr.readAsArrayBuffer(msg.data);
+    this.ws = (() => {
+      if (protocols.length < 1) {
+        return new WebSocket(url);
       }
+      return new WebSocket(url, protocols);
+    })();
+    this.ws.onopen = this._onopen.bind(this);
+    this.ws.onclose = this._onclose.bind(this);
+    this.ws.onmessage = this._onmessage.bind(this);
+    this.ws.onerror = this._onerror.bind(this);
+  }
 
+  _onopen() {
+    this.sessionStartTime = (new Date()).getTime();
+    const selected = (() => {
+      if (this.ws.protocol.length < 1) {
+        return [];
+      }
+      return [`Selected protocol: ${this.ws.protocol}`];
+    })();
+    mlog(['Connection established.'].concat(selected), 'system');
+  }
+
+  _onclose(e) {
+    const meanings = {
+      1000: 'Normal Closure',
+      1001: 'Going Away',
+      1002: 'Protocol error',
+      1003: 'Unsupported Data',
+      1005: 'No Status Rcvd',
+      1006: 'Abnormal Closure',
+      1007: 'Invalid frame payload data',
+      1008: 'Policy Violation',
+      1009: 'Message Too Big',
+      1010: 'Mandatory Ext.',
+      1011: 'Internal Server Error',
+      1015: 'TLS handshake',
     };
-    this.ws.onerror = () => {
-      log('WebSocket error.', 'error');
-    };
+    const code = (() => {
+      if (meanings.hasOwnProperty(e.code)) {
+        return `${e.code} (${meanings[e.code]})`;
+      }
+      return `${e.code}`;
+    })();
+    const reason = (() => {
+      if (e.reason.length < 1) {
+        return [];
+      }
+      return [`Close reason: ${e.reason}`];
+    })();
+    const sessionLengthString = (() => {
+      if (this.sessionStartTime === null) {
+        return [];
+      }
+      const currentTime = (new Date()).getTime();
+      const sessionLength = currentTime - this.sessionStartTime;
+      return [`Session length: ${sessionLength}ms`];
+    })();
+    mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
+  }
+
+  _onmessage(msg) {
+    if (typeof msg.data === 'string') {
+      log(msg.data, 'received');
+    } else {
+      const fr = new FileReader();
+      fr.onload = function (e) {
+        const buffer = e.target.result;
+        blog(buffer, 'received');
+      };
+      fr.readAsArrayBuffer(msg.data);
+    }
+
+  }
+
+  _onerror() {
+    log('WebSocket error.', 'error');
   }
 
   get url() {
