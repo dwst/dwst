@@ -8,6 +8,7 @@ const eslint = require('gulp-eslint');
 const htmlhint = require('gulp-htmlhint');
 const zip = require('gulp-zip');
 const clean = require('gulp-clean');
+const browserSync = require('browser-sync').create();
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
@@ -44,3 +45,13 @@ gulp.task('build', ['clean'], () => {
 });
 
 gulp.task('default', ['build']);
+
+gulp.task('browser-sync', () => {
+  browserSync.init({
+    server: {
+      baseDir: 'dwst',
+    },
+  });
+});
+
+gulp.task('dev', ['browser-sync']);
