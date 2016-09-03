@@ -1,6 +1,6 @@
 {
   "name": "dwst",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "Dark WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server.",
   "main": "dwst/dwst.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cyberixae/dwst.git"
+    "url": "https://github.com/dwst2/dwst2.git"
   },
   "keywords": [
     "websocket"
@@ -27,9 +27,9 @@
   ],
   "license": "CC0-1.0",
   "bugs": {
-    "url": "https://github.com/cyberixae/dwst/issues"
+    "url": "https://github.com/dwst2/dwst2/issues"
   },
-  "homepage": "https://github.com/cyberixae/dwst#readme",
+  "homepage": "https://github.com/dwst2/dwst2#readme",
   "engines": {
     "node": "*"
   },
