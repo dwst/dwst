@@ -1754,8 +1754,22 @@ function msgKeyPress() {
   }
 }
 
-function init() {
+function loadSaves() {
+  const HISTORY_KEY = 'history';
+  const response = localStorage.getItem(HISTORY_KEY);
+  const save = function (history) {
+    const saveState = JSON.stringify(history);
+    localStorage.setItem(HISTORY_KEY, saveState);
+  };
+  let history = [];
+  if (response !== null) {
+    history = JSON.parse(response);
+  }
+  historyManager = new HistoryManager(history, {save});
+}
 
+function init() {
+  loadSaves();
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
   setInterval(refreshclock, 500);
@@ -1770,26 +1784,4 @@ function init() {
   document.getElementById('msg1').focus();
 }
 
-function loadSaves(callBack) {
-  const HISTORY_KEY = 'history';
-  chrome.storage.local.get(HISTORY_KEY, response => {
-    const save = function (history) {
-      const saveState = JSON.stringify(history);
-      const setOperation = {
-        [HISTORY_KEY]: saveState,
-      };
-      chrome.storage.local.set(setOperation);
-    };
-
-    const saveStates = Object.assign({
-      [HISTORY_KEY]: '[]',
-    }, response);
-    const saveState = saveStates[HISTORY_KEY];
-    const history = JSON.parse(saveState);
-    historyManager = new HistoryManager(history, {save});
-    callBack();
-  });
-}
-
-document.addEventListener('DOMContentLoaded', loadSaves(init));
-
+document.addEventListener('DOMContentLoaded', init);

@@ -35,11 +35,11 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "browser-sync": "^2.14.3",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-eslint": "^2.0.0",
     "gulp-htmlhint": "^0.3.1",
-    "gulp-jsonlint": "^1.1.2",
-    "gulp-zip": "^3.2.0"
+    "gulp-jsonlint": "^1.1.2"
   }
 }

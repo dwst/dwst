@@ -6,8 +6,7 @@ const gulp = require('gulp');
 const jsonlint = require('gulp-jsonlint');
 const eslint = require('gulp-eslint');
 const htmlhint = require('gulp-htmlhint');
-const zip = require('gulp-zip');
-const clean = require('gulp-clean');
+const browserSync = require('browser-sync').create();
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
@@ -32,15 +31,14 @@ gulp.task('validate', ['jsonlint', 'eslint', 'htmlhint']);
 
 gulp.task('test', ['validate']);
 
-gulp.task('clean', () => {
-  return gulp.src('build', {read: false})
-    .pipe(clean());
+gulp.task('default');
+
+gulp.task('browser-sync', () => {
+  browserSync.init({
+    server: {
+      baseDir: 'dwst',
+    },
+  });
 });
 
-gulp.task('build', ['clean'], () => {
-  return gulp.src('dwst/*')
-    .pipe(zip('dwst.zip'))
-    .pipe(gulp.dest('build'));
-});
-
-gulp.task('default', ['build']);
+gulp.task('dev', ['browser-sync']);
