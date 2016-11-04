@@ -1248,10 +1248,17 @@ function currenttime() {
     }
     return String(i);
   };
+  const addzeroinMillis = function (i) {
+    if (i < 10) {
+      return `00${i}`;
+    }
+    if (i < 100) {
+      return `0${i}`;
+    }
+    return String(i);
+  };
   const date = new Date();
-  const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span>:${addzero(date.getMilliseconds())}`;
-  return time;
-
+  const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span><span class="sec">:${addzeroinMillis(date.getMilliseconds())}</span>`;
 }
 
 function htmlescape(line) {
