@@ -1259,6 +1259,7 @@ function currenttime() {
   };
   const date = new Date();
   const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="sec">:${addzero(date.getSeconds())}</span><span class="sec">:${addzeroinMillis(date.getMilliseconds())}</span>`;
+  return time;
 }
 
 function htmlescape(line) {
