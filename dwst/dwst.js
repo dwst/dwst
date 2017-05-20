@@ -1725,7 +1725,7 @@ class HistoryManager {
 
 function globalKeyPress() {
   const msg1 = document.getElementById('msg1');
-  if (event.keyIdentifier === 'U+001B') {
+  if (event.key === 'Escape') {
     if (connection !== null && (connection.isOpen() || connection.isConnecting())) {
       loud('/disconnect');
     } else if (msg1.value === '') {
