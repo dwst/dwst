@@ -881,7 +881,7 @@ class Splash {
       ],
     ];
     const maybeBeginnerInfo = (() => {
-      if (historyLength < 1) {
+      if (connectCommands.length < 1) {
         return beginnerInfo;
       }
       return [];
