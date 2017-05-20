@@ -1723,7 +1723,7 @@ class HistoryManager {
   }
 }
 
-function globalKeyPress() {
+function globalKeyPress(event) {
   const msg1 = document.getElementById('msg1');
   if (event.key === 'Escape') {
     if (connection !== null && (connection.isOpen() || connection.isConnecting())) {
@@ -1742,7 +1742,7 @@ function globalKeyPress() {
   }
 }
 
-function msgKeyPress() {
+function msgKeyPress(event) {
   const msg1 = document.getElementById('msg1');
   if (event.keyCode === 13) {
     send();
