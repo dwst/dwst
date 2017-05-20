@@ -822,10 +822,20 @@ class Splash {
       if (historyLength < 1) {
         return [];
       }
+      const forgetAdvertisement = [
+        'Type ',
+        {
+          type: 'strong',
+          text: '/forget everything',
+        },
+        ' to remove all stored history',
+      ];
       if (connectCommands.length < 1) {
         return [
           '',
           historySummary.concat(['.']),
+          '',
+          forgetAdvertisement,
         ];
       }
       return [
@@ -841,14 +851,7 @@ class Splash {
         ]),
       ].concat(connectionsLines).concat(tooManyWarning).concat([
         '',
-        [
-          'Type ',
-          {
-            type: 'strong',
-            text: '/forget everything',
-          },
-          ' to remove all stored history',
-        ],
+        forgetAdvertisement,
       ]);
     })();
     const about = [
