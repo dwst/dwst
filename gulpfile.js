@@ -37,6 +37,7 @@ gulp.task('browser-sync', () => {
   browserSync.init({
     server: {
       baseDir: 'dwst',
+      index: 'dwst.html',
     },
   });
 });
