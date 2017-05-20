@@ -1723,9 +1723,9 @@ class HistoryManager {
   }
 }
 
-function globalKeyPress() {
+function globalKeyPress(event) {
   const msg1 = document.getElementById('msg1');
-  if (event.keyIdentifier === 'U+001B') {
+  if (event.key === 'Escape') {
     if (connection !== null && (connection.isOpen() || connection.isConnecting())) {
       loud('/disconnect');
     } else if (msg1.value === '') {
@@ -1742,7 +1742,7 @@ function globalKeyPress() {
   }
 }
 
-function msgKeyPress() {
+function msgKeyPress(event) {
   const msg1 = document.getElementById('msg1');
   if (event.keyCode === 13) {
     send();
