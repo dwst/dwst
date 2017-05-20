@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '2.0.0';
-const ECHO_SERVER_URL = 'ws://echo.websocket.org/';
+const ECHO_SERVER_URL = 'wss://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
 let connection = null;
@@ -1095,6 +1095,7 @@ class Connect {
 
   examples() {
     return [
+      '/connect wss://echo.websocket.org/',
       '/connect ws://echo.websocket.org/',
       '/connect ws://127.0.0.1:1234/ p1.example.com,p2.example.com',
     ];
