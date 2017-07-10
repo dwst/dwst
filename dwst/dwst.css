@@ -6,10 +6,16 @@
 body
 {
   font-family: monospace;
-  font-size: 10pt;
+  font-size: 4vw;
   height: 100%;
   background-color: #000;
 }
+@media only screen and (min-width: 400px) {
+  body {
+    font-size: 10pt;
+  }
+}
+
 .button
 {
   width: auto;
@@ -112,6 +118,7 @@ body
   text-decoration: none;
 }
 .dwst-mlog__hexline {
+  display: inline-block;
   color: #888;
 }
 .dwst-mlog__strong {
@@ -225,7 +232,7 @@ body
 }
 
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 750px) {
 
  .dwst-direction {
   width: 9ch; /* len('received:') */
@@ -284,4 +291,54 @@ body
 }
 .dwst-gfx__element--color-2 {
   color: #614;
+}
+
+
+.dwst-bytegrid {
+  font-family: monospace;
+  display: grid;
+  grid-template-columns: 13ch 13ch 5ch 5ch;
+}
+.dwst-bytegrid_item {
+  white-space: nowrap;
+}
+.dwst-bytegrid_item:nth-child(3) {
+  grid-column: 2;
+  grid-row: 1;
+}
+.dwst-bytegrid_item:nth-child(7) {
+  grid-column: 2;
+  grid-row: 2;
+}
+.dwst-bytegrid_item:nth-child(2):before {
+  content: '|';
+}
+.dwst-bytegrid_item:nth-child(4):after {
+  content: '|';
+}
+.dwst-bytegrid_item:nth-child(6):before {
+  content: '|';
+}
+.dwst-bytegrid_item:nth-child(8):after {
+  content: '|';
+}
+
+@media only screen and (min-width: 600px) {
+  .dwst-bytegrid {
+    grid-template-columns: 12ch 13ch 12ch 14ch 5ch 4ch 4ch 5ch;
+  }
+  .dwst-bytegrid_item:nth-child(5) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .dwst-bytegrid_item:nth-child(7) {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .dwst-bytegrid_item:nth-child(4):after {
+    content: '';
+  }
+  .dwst-bytegrid_item:nth-child(6):before {
+    content: '';
+  }
 }
