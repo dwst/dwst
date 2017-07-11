@@ -1,0 +1,14 @@
+{
+  "name": "Dark WebSocket Terminal",
+  "short_name": "WS Terminal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#222",
+  "description": "Provides netcat like functionality for conversing with a WebSocket server.",
+  "icons": [{
+    "src": "icon_128.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }],
+  "related_applications": false
+}
