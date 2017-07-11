@@ -167,6 +167,7 @@ body
   bottom: 24pt;
   background-color: #030303;
   width: 100ch;
+  max-width: 100%;
 }
 
 #screen1
