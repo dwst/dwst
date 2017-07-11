@@ -1372,7 +1372,7 @@ function mlog(lines, type) {
   const terminal1 = document.getElementById('ter1');
   const logLine = document.createElement('div');
   logLine.setAttribute('class', 'dwst-logline');
-  logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item dwst-direction dwst-direction--${type}">${type}:</span>`;
+  logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item"><span class="dwst-direction dwst-direction--${type}">${type}:</span></span>`;
   const outputCell = document.createElement('span');
   outputCell.setAttribute('class', 'dwst-logline__item dwst-logline__item--main preserved');
   lineElements.forEach(lineElement => {

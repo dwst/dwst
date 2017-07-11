@@ -207,9 +207,28 @@ body
 }
 
 .dwst-direction {
- box-sizing: content-box;
- width: 9ch; /* len('received:') */
- text-align: right;
+ width: 1ch;
+ display: block;
+ overflow: hidden;
+}
+
+.dwst-logline .time {
+  display: none;
+}
+
+
+@media screen and (min-width: 500px) {
+
+ .dwst-direction {
+  width: 9ch; /* len('received:') */
+  box-sizing: content-box;
+  text-align: right;
+ }
+
+ .dwst-logline .time {
+  display: table-cell;
+ }
+
 }
 
 .dwst-direction--sent
