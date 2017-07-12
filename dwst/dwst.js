@@ -1414,8 +1414,8 @@ function mlog(lines, type) {
 
 function gfx(lines, colors) {
 
-  const gfxContainer = document.createElement('div');
-  gfxContainer.setAttribute('class', 'dwst-gfx');
+  const gfxContent = document.createElement('div');
+  gfxContent.setAttribute('class', 'dwst-gfx__content');
   lines.forEach((line, li) => {
     const logLine = document.createElement('div');
     logLine.setAttribute('class', 'dwst-gfx__line');
@@ -1426,8 +1426,12 @@ function gfx(lines, colors) {
       outputCell.innerHTML = chr;
       logLine.appendChild(outputCell);
     });
-    gfxContainer.appendChild(logLine);
+    gfxContent.appendChild(logLine);
   });
+
+  const gfxContainer = document.createElement('div');
+  gfxContainer.setAttribute('class', 'dwst-gfx');
+  gfxContainer.appendChild(gfxContent);
 
   const terminal1 = document.getElementById('ter1');
   terminal1.appendChild(gfxContainer);
