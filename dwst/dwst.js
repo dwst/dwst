@@ -1039,29 +1039,20 @@ class Help {
       return;
     }
     const available = [];
-    [...commands.entries()].forEach(([c, plugin]) => {
+    [...commands.keys()].sort().forEach(c => {
       if (c.length > 1) {
-        const ndash = {
-          type: 'regular',
-          text: '&ndash;',
-          unsafe: true,
-        };
-        let info = '  ';
-        if (typeof plugin.info !== 'undefined') {
-          info += plugin.info();
-        }
-        const cpad = Array(15 - c.length).join(' ');
         const commandSegment = {
           type: 'dwstgg',
           text: c,
           section: c,
+          spacing: true,
         };
-        available.push([commandSegment, cpad, ndash, info]);
+        available.push(commandSegment);
       }
     });
     available.sort();
 
-    const commandsList = formatList('Commands', available);
+    const commandsList = [flatList('Commands', available)];
 
     mlog([
       {
@@ -1312,8 +1303,14 @@ function mlog(lines, type) {
           return textSpan;
         }
         if (segment.type === 'dwstgg') {
+          const linkWrapper = document.createElement('span');
+          linkWrapper.setAttribute('class', 'dwst-mlog__help-link-wrapper');
           const link = document.createElement('a');
-          link.setAttribute('class', 'dwst-mlog__help-link');
+          const classes = ['dwst-mlog__help-link'];
+          if (segment.spacing === true) {
+            classes.push('dwst-mlog__help-link--spacing');
+          }
+          link.setAttribute('class', classes.join(' '));
           const command = (() => {
             if (segment.hasOwnProperty('section')) {
               return `/help ${segment.section}`;
@@ -1328,7 +1325,12 @@ function mlog(lines, type) {
           const textSpan = document.createElement('span');
           textSpan.innerHTML = safeText;
           link.appendChild(textSpan);
-          return link;
+          linkWrapper.appendChild(link);
+          if (segment.hasOwnProperty('afterText')) {
+            const afterTextNode = document.createTextNode(segment.afterText);
+            linkWrapper.appendChild(afterTextNode);
+          }
+          return linkWrapper;
         }
         if (segment.type === 'command') {
           const link = document.createElement('a');
@@ -1485,6 +1487,22 @@ function formatList(listTitle, lines) {
     }
     return [prefix, line];
   });
+}
+
+function flatList(listTitle, values) {
+  const segments = [];
+  segments.push(listTitle);
+  segments.push(': ');
+  values.forEach(value => {
+    value.afterText = ',';
+    segments.push(value);
+    segments.push(' ');
+  });
+  segments.pop();  // remove extra space
+  const last = segments.pop();
+  Reflect.deleteProperty(last, 'afterText');
+  segments.push(last);
+  return segments;
 }
 
 function blog(buffer, type) {
