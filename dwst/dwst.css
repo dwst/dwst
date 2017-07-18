@@ -227,7 +227,7 @@ body
   left: 0;
   right: 0;
   bottom: 24pt;
-  overflow: auto;
+  overflow: hidden;
   overflow-y: scroll;
   vertical-align: top;
   -webkit-user-select: text;
@@ -250,18 +250,23 @@ body
 .dwst-logline {
   padding: 0 0 0 1ch;
   display: grid;
-  grid-template-columns: 1ch auto;
+  grid-template-columns: 1ch calc(100% - 2ch);
   grid-column-gap: 1ch;
 }
+
 .dwst-logline__item {
   vertical-align: top;
+}
+.dwst-logline__item--main {
+  word-wrap: break-word;
+  hyphens: none;
 }
 
 
 @media screen and (min-width: 750px) {
 
   .dwst-logline {
-    grid-template-columns: 8ch 10ch auto;
+    grid-template-columns: 8ch 10ch calc(100% - 8ch - 10ch - 2 * 1ch);
   }
 
 }
