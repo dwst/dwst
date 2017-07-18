@@ -4,6 +4,7 @@ const VERSION = '2.0.1';
 const ECHO_SERVER_URL = 'wss://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
+let resizePending = false;
 let connection = null;
 let intervalId = null;
 let historyManager;
@@ -1437,6 +1438,8 @@ function gfx(lines, colors) {
   terminal1.appendChild(gfxContainer);
   const screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
+
+  updateGfxPositions();
 }
 
 function divissimo(l, n) {
@@ -1819,12 +1822,47 @@ function loadSaves() {
   historyManager = new HistoryManager(history, {save});
 }
 
+function updateGfxPositions() {
+  // Updating gfx positions with this method disables basic centering
+  // and aligns the text in the gfx section with the text in log lines.
+  const MAX_MAXCHARS = 110;
+  Reflect.apply(Array.prototype.forEach, document.getElementsByClassName('dwst-gfx'), [maxDiv => {
+    const ref = maxDiv.getElementsByClassName('dwst-gfx__line')[0];
+    const refTextWidth = ref.offsetWidth;
+    const refTextLength = ref.textContent.length;
+    const refWidth = refTextWidth / refTextLength;
+    const windowWidth = window.innerWidth;
+    const maxFit = Math.floor(windowWidth / refWidth);
+    let leftMargin = 0;
+    if (maxFit < MAX_MAXCHARS) {
+      const invisible = MAX_MAXCHARS - maxFit;
+      const invisibleLeft = Math.floor(invisible / 2);
+      leftMargin -= invisibleLeft;
+    }
+    const field = maxDiv.getElementsByClassName('dwst-gfx__content')[0];
+    field.setAttribute('style', `transform: initial; margin-left: ${leftMargin}ch;`);
+  }]);
+}
+
+function throttledUpdateGfxPositions() {
+  if (resizePending !== true) {
+    resizePending = true;
+    setTimeout(() => {
+      resizePending = false;
+      updateGfxPositions();
+    }, 100);
+  }
+}
+
+
 function init() {
   loadSaves();
   refreshclock();
   document.getElementById('clock1').removeAttribute('style');
   setInterval(refreshclock, 500);
   silent('/splash');
+
+  window.addEventListener('resize', throttledUpdateGfxPositions);
 
   document.addEventListener('keydown', globalKeyPress);
   document.getElementById('msg1').addEventListener('keydown', msgKeyPress);
@@ -1833,6 +1871,7 @@ function init() {
     loud('/splash');
   });
   document.getElementById('msg1').focus();
+
 }
 
 document.addEventListener('DOMContentLoaded', init);
