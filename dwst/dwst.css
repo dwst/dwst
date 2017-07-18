@@ -235,7 +235,7 @@ body
 @media screen and (min-width: 750px) {
 
  .dwst-direction {
-  width: 9ch; /* len('received:') */
+  width: 10ch; /* len(' received:') */
   box-sizing: content-box;
   text-align: right;
  }
