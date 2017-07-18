@@ -1348,9 +1348,31 @@ function mlog(lines, type) {
           return link;
         }
         if (segment.type === 'hexline') {
+          const hexChunks = divissimo(segment.hexes, 4);
+          const textChunks = divissimo(rawText, 4);
+
+          const byteGrid = document.createElement('div');
+          byteGrid.setAttribute('class', 'dwst-bytegrid');
+
+          hexChunks.forEach((hexChunk, i) => {
+            const textChunk = textChunks[i];
+
+            const hexContent = htmlescape(hexChunk.join(' '));
+            const hexItem = document.createElement('div');
+            hexItem.setAttribute('class', 'dwst-bytegrid_item');
+            hexItem.innerHTML = hexContent;
+            byteGrid.appendChild(hexItem);
+
+            const textContent = htmlescape(textChunk.join(''));
+            const textItem = document.createElement('div');
+            textItem.setAttribute('class', 'dwst-bytegrid_item');
+            textItem.innerHTML = textContent;
+            byteGrid.appendChild(textItem);
+          });
+
           const textSpan = document.createElement('span');
           textSpan.setAttribute('class', 'dwst-mlog__hexline');
-          textSpan.innerHTML = safeText;
+          textSpan.appendChild(byteGrid);
           return textSpan;
         }
         if (segment.type === 'strong') {
@@ -1448,25 +1470,22 @@ function hexdump(buffer) {
   let offset = 0;
   const lines = [];
   while (offset < buffer.byteLength) {
-    let chars = '';
-    let hexes = '';
+    let text = '';
+    const hexes = [];
     for (let i = 0; i < 16; i++) {
       if (offset < buffer.byteLength) {
-        const byte = dv.getUint8(offset);
-        chars += charify(byte);
-        hexes += hexify(byte);
-      } else {
-        chars += ' ';
-        hexes += '  ';
-      }
-      hexes += ' ';
-      if (i === 7) {
-        hexes += ' ';
+        const oneByte = dv.getUint8(offset);
+        const asChar = charify(oneByte);
+        const asHex = hexify(oneByte);
+        text += asChar;
+        hexes.push(asHex);
       }
       offset += 1;
     }
-    const line = `${hexes}  |${chars}|`;
-    lines.push(line);
+    lines.push({
+      text,
+      hexes,
+    });
 
   }
   return lines;
@@ -1511,7 +1530,8 @@ function blog(buffer, type) {
   const hexLines = hd.map(line => {
     return {
       type: 'hexline',
-      text: line,
+      text: line.text,
+      hexes: line.hexes,
     };
   }
   );
