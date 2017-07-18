@@ -732,70 +732,70 @@ class Splash {
 
     const SPLASH = [
       [
-        // ".        ..        ..        ..        ..        ..        ..        ..        ..        ..        .",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                              `ggg.                                                                 ",
-        "                                ggg                                                                 ",
-        "                                 gg.                                                                ",
-        "                                  gg                                 ggg'                           ",
-        "                                  gg                                 gg                             ",
-        "                              ,ggg g.  ggg       ggg.   .gggggg.     g                              ",
-        "                            ,gg  `ggg ggg         ggg. gg      `g.  gg                              ",
-        "                            gg     gg.g'           `gg gg.       `gggggg'                           ",
-        "                            gg     ggg'             gg. 'gggggg.  ,g                                ",
-        "                            ll.     ll.     ,l.      ll       `ll l.                                ",
-        "                             ll.   llll.   ,lll.   ,ll l`     ,ll ll.                               ",
-        "                              `lllll' `lllll' `lllll'  `lllllll'   lll.                             ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                                                    ",
+        // ".        ..        ..        ..        ..        ..        ..        ..        ..        ..        ..        .",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                   `ggg.                                                                      ",
+        "                                     ggg                                                                      ",
+        "                                      gg.                                                                     ",
+        "                                       gg                                 ggg'                                ",
+        "                                       gg                                 gg                                  ",
+        "                                   ,ggg g.  ggg       ggg.   .gggggg.     g                                   ",
+        "                                 ,gg  `ggg ggg         ggg. gg      `g.  gg                                   ",
+        "                                 gg     gg.g'           `gg gg.       `gggggg'                                ",
+        "                                 gg     ggg'             gg. 'gggggg.  ,g                                     ",
+        "                                 ll.     ll.     ,l.      ll       `ll l.                                     ",
+        "                                  ll.   llll.   ,lll.   ,ll l`     ,ll ll.                                    ",
+        "                                   `lllll' `lllll' `lllll'  `lllllll'   lll.                                  ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                                                                                              ",
       ],
       [
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                              11111                                                                 ",
-        "                                111                                                                 ",
-        "                                 111                                                                ",
-        "                                  11                                 1111                           ",
-        "                                  11                                 11                             ",
-        "                              1111 11  111       1111   11111111     1                              ",
-        "                            111  1111 111         1111 11      111  11                              ",
-        "                            11     11111           111 111       11111111                           ",
-        "                            11     1111             111 11111111  11                                ",
-        "                            222     222     222      22       222 22                                ",
-        "                             222   22222   22222   222 22     222 222                               ",
-        "                              2222222 2222222 2222222  222222222   2222                             ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                                                    ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                   11111                                                                      ",
+        "                                     111                                                                      ",
+        "                                      111                                                                     ",
+        "                                       11                                 1111                                ",
+        "                                       11                                 11                                  ",
+        "                                   1111 11  111       1111   11111111     1                                   ",
+        "                                 111  1111 111         1111 11      111  11                                   ",
+        "                                 11     11111           111 111       11111111                                ",
+        "                                 11     1111             111 11111111  11                                     ",
+        "                                 222     222     222      22       222 22                                     ",
+        "                                  222   22222   22222   222 22     222 222                                    ",
+        "                                   2222222 2222222 2222222  222222222   2222                                  ",
+        "                                                                                                              ",
+        "                                                                                                              ",
+        "                                                                                                              ",
       ],
     ];
     /*
     const xmasColors = [
-      "                                                                                                    ",
-      "                                                                                                    ",
-      "                                                                                                    ",
-      "                                                                                                    ",
-      "                               xxxx                                                                 ",
-      "                                111                                                                 ",
-      "                                 11x                                                                ",
-      "                                  11                                 xxxx                           ",
-      "                                  11                                 11                             ",
-      "                              xxx1 11  xxx       xxxx   xxxxxxxx     1                              ",
-      "                            xx1  1111 111         111x x1      1xx  x1                              ",
-      "                            11     11111           111 111       1xx11111                           ",
-      "                            11     1111             11x 11111111  11                                ",
-      "                            222     222     222      22       222 22                                ",
-      "                             222   22222   22222   222 22     222 222                               ",
-      "                              2222222 2222222 2222222  222222222   2222                             ",
-      "                                                                                                    ",
-      "                                                                                                    ",
-      "                                                                                                    ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                    xxxx                                                                      ",
+      "                                     111                                                                      ",
+      "                                      11x                                                                     ",
+      "                                       11                                 xxxx                                ",
+      "                                       11                                 11                                  ",
+      "                                   xxx1 11  xxx       xxxx   xxxxxxxx     1                                   ",
+      "                                 xx1  1111 111         111x x1      1xx  x1                                   ",
+      "                                 11     11111           111 111       1xx11111                                ",
+      "                                 11     1111             11x 11111111  11                                     ",
+      "                                 222     222     222      22       222 22                                     ",
+      "                                  222   22222   22222   222 22     222 222                                    ",
+      "                                   2222222 2222222 2222222  222222222   2222                                  ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
     ];
     */
 
@@ -1396,7 +1396,7 @@ function mlog(lines, type) {
   const terminal1 = document.getElementById('ter1');
   const logLine = document.createElement('div');
   logLine.setAttribute('class', 'dwst-logline');
-  logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item"><span class="dwst-direction dwst-direction--${type}">${type}:</span></span>`;
+  logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item dwst-direction dwst-direction--${type}">${type}:</span>`;
   const outputCell = document.createElement('span');
   outputCell.setAttribute('class', 'dwst-logline__item dwst-logline__item--main preserved');
   lineElements.forEach(lineElement => {
@@ -1551,6 +1551,11 @@ function loud(line) {
 
 function send() {
   const raw = document.getElementById('msg1').value;
+  if (raw === '/idkfa') {
+    // dwst debugger
+    document.documentElement.className += ' dwst-debug';
+    return;
+  }
   historyManager.select(raw);
   document.getElementById('msg1').value = '';
   if (raw.length < 1) {

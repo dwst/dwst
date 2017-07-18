@@ -8,9 +8,9 @@ body
   font-family: monospace;
   font-size: 4vw;
   height: 100%;
-  background-color: #000;
+  background-color: #030303;
 }
-@media only screen and (min-width: 400px) {
+@media only screen and (min-width: 500px) {
   body {
     font-size: 10pt;
   }
@@ -173,15 +173,51 @@ body
   background: #201;
 }
 
-.background {
+.dwst-background {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 24pt;
-  background-color: #030303;
-  width: 100ch;
+  width: 42ch;
   max-width: 100%;
+}
+@media only screen and (min-width: 600px) {
+  .dwst-background {
+    width: 74ch;
+  }
+}
+@media screen and (min-width: 750px) {
+  .dwst-background {
+    width: 110ch;
+  }
+}
+.dwst-debug .dwst-background {
+  background-color: #431303;
+}
+
+
+.dwst-background__content-area {
+  position: absolute;
+  top: 0;
+  left: 2ch;
+  right: 0;
+  bottom: 0;
+  width: 38ch;
+  max-width: 100%;
+}
+@media only screen and (min-width: 600px) {
+  .dwst-background__content-area {
+    width: 70ch;
+  }
+}
+@media screen and (min-width: 750px) {
+  .dwst-background__content-area {
+    left: 20ch;
+  }
+}
+.dwst-debug .dwst-background__content-area {
+  background-color: #131303;
 }
 
 #screen1
@@ -212,38 +248,36 @@ body
 
 
 .dwst-logline {
-  padding: 0 1ch 0 0;
-}
-
-.dwst-logline__item {
-  display: table-cell;
   padding: 0 0 0 1ch;
+  display: grid;
+  grid-template-columns: 1ch auto;
+  grid-column-gap: 1ch;
+}
+.dwst-logline__item {
   vertical-align: top;
-}
-
-.dwst-direction {
- width: 1ch;
- display: block;
- overflow: hidden;
-}
-
-.dwst-logline .time {
-  display: none;
 }
 
 
 @media screen and (min-width: 750px) {
 
- .dwst-direction {
-  width: 10ch; /* len(' received:') */
-  box-sizing: content-box;
+  .dwst-logline {
+    grid-template-columns: 8ch 10ch auto;
+  }
+
+}
+
+.dwst-logline__item.time {
+  display: none;
+}
+@media screen and (min-width: 750px) {
+  .dwst-logline__item.time {
+    display: initial;
+  }
+}
+
+.dwst-direction {
+  overflow: hidden;
   text-align: right;
- }
-
- .dwst-logline .time {
-  display: table-cell;
- }
-
 }
 
 .dwst-direction--sent
@@ -278,7 +312,7 @@ body
 
 .dwst-gfx {
   overflow: hidden;
-  max-width: 100ch;
+  max-width: 110ch;
 }
 .dwst-gfx__line {
   margin: 0 auto;
@@ -325,7 +359,7 @@ body
 
 @media only screen and (min-width: 600px) {
   .dwst-bytegrid {
-    grid-template-columns: 12ch 13ch 12ch 14ch 5ch 4ch 4ch 5ch;
+    grid-template-columns: 12ch 13ch 12ch 13ch 5ch 4ch 4ch 5ch;
   }
   .dwst-bytegrid_item:nth-child(5) {
     grid-column: 3;
