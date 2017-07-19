@@ -343,47 +343,71 @@ body
   display: grid;
   grid-template-columns: 13ch 13ch 5ch 5ch;
 }
-.dwst-bytegrid_item {
-  white-space: nowrap;
+.dwst-bytegrid__item {
+  white-space: pre;
 }
-.dwst-bytegrid_item:nth-child(3) {
+.dwst-bytegrid__item:nth-child(3) {
   grid-column: 2;
   grid-row: 1;
 }
-.dwst-bytegrid_item:nth-child(7) {
+.dwst-bytegrid__item:nth-child(7) {
   grid-column: 2;
   grid-row: 2;
 }
-.dwst-bytegrid_item:nth-child(2):before {
+.dwst-bytegrid__item:nth-child(2):before {
   content: '|';
 }
-.dwst-bytegrid_item:nth-child(4):after {
+.dwst-bytegrid__item:nth-child(4):after {
   content: '|';
 }
-.dwst-bytegrid_item:nth-child(6):before {
+.dwst-bytegrid__item:nth-child(6):before {
   content: '|';
 }
-.dwst-bytegrid_item:nth-child(8):after {
+.dwst-bytegrid__item:nth-child(8):after {
   content: '|';
+}
+.dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(5) {
+  display: none;
+}
+.dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(6) {
+  display: none;
+}
+.dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(7) {
+  display: none;
+}
+.dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(8) {
+  display: none;
 }
 
 @media only screen and (min-width: 600px) {
   .dwst-bytegrid {
     grid-template-columns: 12ch 13ch 12ch 13ch 5ch 4ch 4ch 5ch;
   }
-  .dwst-bytegrid_item:nth-child(5) {
+  .dwst-bytegrid__item:nth-child(5) {
     grid-column: 3;
     grid-row: 1;
   }
-  .dwst-bytegrid_item:nth-child(7) {
+  .dwst-bytegrid__item:nth-child(7) {
     grid-column: 4;
     grid-row: 1;
   }
-  .dwst-bytegrid_item:nth-child(4):after {
+  .dwst-bytegrid__item:nth-child(4):after {
     content: '';
   }
-  .dwst-bytegrid_item:nth-child(6):before {
+  .dwst-bytegrid__item:nth-child(6):before {
     content: '';
+  }
+  .dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(5) {
+    display: initial;
+  }
+  .dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(6) {
+    display: initial;
+  }
+  .dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(7) {
+    display: initial;
+  }
+  .dwst-bytegrid--less-than-three .dwst-bytegrid__item:nth-child(8) {
+    display: initial;
   }
 }
 
