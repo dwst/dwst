@@ -1432,6 +1432,7 @@ function gfx(lines, colors) {
 
   const gfxContainer = document.createElement('div');
   gfxContainer.setAttribute('class', 'dwst-gfx');
+  gfxContainer.setAttribute('aria-hidden', 'true');
   gfxContainer.appendChild(gfxContent);
 
   const terminal1 = document.getElementById('ter1');
