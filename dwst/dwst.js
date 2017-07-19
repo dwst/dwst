@@ -1,6 +1,6 @@
 'use strict';
 
-const VERSION = '2.1.0';
+const VERSION = '2.1.1';
 const ECHO_SERVER_URL = 'wss://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
