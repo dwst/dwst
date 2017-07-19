@@ -1051,7 +1051,6 @@ class Help {
         available.push(commandSegment);
       }
     });
-    available.sort();
 
     const commandsList = [flatList('Commands', available)];
 
