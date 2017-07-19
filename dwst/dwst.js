@@ -1353,20 +1353,27 @@ function mlog(lines, type) {
           const textChunks = divissimo(rawText, 4);
 
           const byteGrid = document.createElement('div');
-          byteGrid.setAttribute('class', 'dwst-bytegrid');
+          const byteGridClasses = ['dwst-bytegrid'];
+          if (hexChunks.length < 3) {
+            byteGridClasses.push('dwst-bytegrid--less-than-three');
+          }
+          byteGrid.setAttribute('class', byteGridClasses.join(' '));
 
-          hexChunks.forEach((hexChunk, i) => {
-            const textChunk = textChunks[i];
+          const chunksWanted = 4;
+          const chunkLength = 4;
+          [...Array(chunksWanted).keys()].forEach(i => {
+            const [hexChunk = []] = [hexChunks[i]];
+            const [textChunk = []] = [textChunks[i]];
 
             const hexContent = htmlescape(hexChunk.join(' '));
             const hexItem = document.createElement('div');
-            hexItem.setAttribute('class', 'dwst-bytegrid_item');
+            hexItem.setAttribute('class', 'dwst-bytegrid__item');
             hexItem.innerHTML = hexContent;
             byteGrid.appendChild(hexItem);
 
-            const textContent = htmlescape(textChunk.join(''));
+            const textContent = htmlescape(textChunk.join('').padEnd(chunkLength));
             const textItem = document.createElement('div');
-            textItem.setAttribute('class', 'dwst-bytegrid_item');
+            textItem.setAttribute('class', 'dwst-bytegrid__item');
             textItem.innerHTML = textContent;
             byteGrid.appendChild(textItem);
           });
