@@ -8,7 +8,7 @@ body
   font-family: monospace;
   font-size: 3.9vw;
   height: 100%;
-  background-color: #030303;
+  background-color: #000;
 }
 @media only screen and (min-width: 500px) {
   body {
@@ -237,11 +237,13 @@ body
 .terminal
 {
   min-height: 100%;
-/*
   background-color: #030303;
-*/
   color: #ccc;
   font-family: monospace;
+}
+
+.dwst-debug .terminal {
+  background-color: transparent;
 }
 
 /* clean ********************************************************************/
