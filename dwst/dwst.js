@@ -1843,7 +1843,7 @@ function updateGfxPositions() {
     let leftMargin = 0;
     if (maxFit < MAX_MAXCHARS) {
       const invisible = MAX_MAXCHARS - maxFit;
-      const invisibleLeft = Math.floor(invisible / 2);
+      const invisibleLeft = Math.round(invisible / 2);
       leftMargin -= invisibleLeft;
     }
     const field = maxDiv.getElementsByClassName('dwst-gfx__content')[0];
