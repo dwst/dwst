@@ -4,6 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#222",
+  "theme_color": "#222",
   "description": "Provides netcat like functionality for conversing with a WebSocket server.",
   "icons": [{
     "src": "icon_128.png",
