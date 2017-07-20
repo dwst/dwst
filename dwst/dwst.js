@@ -438,7 +438,7 @@ class Spam {
   }
 
   info() {
-    return 'run a command multiple times in a row';
+    return 'run a command multiple times';
   }
 
   run(timesStr, ...commandParts) {
@@ -870,10 +870,9 @@ class Splash {
     })();
     const about = [
       [
-        'Dark WebSocket Terminal ',
         {
-          type: 'strong',
-          text: `${VERSION}`,
+          type: 'h1',
+          text: `Dark WebSocket Terminal ${VERSION}`,
         },
       ],
     ];
@@ -1017,7 +1016,7 @@ class Help {
       const info = plugin.info();
       const title = [
         {
-          type: 'strong',
+          type: 'h1',
           text: `${command}`,
         },
         {
@@ -1027,28 +1026,28 @@ class Help {
         },
         info,
       ];
-      const usageItems = plugin.usage().map(usage => {
+      const usage = plugin.usage().map(usageExample => {
         return {
           type: 'syntax',
-          text: usage,
+          text: usageExample,
         };
       });
-      const usage = formatList('Usage', usageItems);
-      const examplesItems = plugin.examples().map(exampleCommand => {
+      const examples = plugin.examples().map(exampleCommand => {
         return {
           type: 'command',
           text: exampleCommand,
         };
       });
 
-      const examplesTitle = (() => {
-        if (examplesItems.length < 2) {
-          return 'Example';
-        }
-        return 'Examples';
-      })();
-      const examples = formatList(examplesTitle, examplesItems);
-      const help = [breadCrumbs, '', title, ''].concat(usage).concat(['']).concat(examples).concat(['']);
+      const headSynopsis = {
+        type: 'h2',
+        text: 'Syntax',
+      };
+      const headExamples = {
+        type: 'h2',
+        text: 'Examples',
+      };
+      const help = [breadCrumbs, '', title, '', headSynopsis].concat(usage).concat(['', headExamples]).concat(examples).concat(['']);
       mlog(help, 'system');
       return;
     }
@@ -1065,24 +1064,37 @@ class Help {
       }
     });
 
-    const commandsList = [flatList('Commands', available)];
+    const commandsList = [flatList(available)];
 
     mlog([
       {
-        type: 'strong',
+        type: 'h1',
         text: 'DWST Guide to Galaxy',
       },
       '',
+      [
+        {
+          type: 'strong',
+          text: 'DWSTGG',
+        },
+        ' is here to help you get the most out of Dark WebSocket Terminal',
+      ],
+      '',
+      {
+        type: 'h2',
+        text: 'Commands',
+      },
+      'See list of available commands below',
+      '',
+    ].concat(commandsList).concat([
       [
         'Type ',
         {
           type: 'syntax',
           text: '/help <command>',
         },
-        ' for instructions.',
+        ' for instructions',
       ],
-      '',
-    ].concat(commandsList).concat([
       '',
     ]), 'system');
   }
@@ -1096,7 +1108,7 @@ class Connect {
 
   usage() {
     return [
-      '/connect <ws-url> [protocol1[,protocol2[,...[,protocolN]]]]',
+      '/connect <ws-url> [p1[,p2[,...]]]',
     ];
   }
 
@@ -1104,7 +1116,7 @@ class Connect {
     return [
       '/connect wss://echo.websocket.org/',
       '/connect ws://echo.websocket.org/',
-      '/connect ws://127.0.0.1:1234/ p1.example.com,p2.example.com',
+      '/connect ws://127.0.0.1:1234/ protocol1.example.com,protocol2.example.com',
     ];
   }
 
@@ -1401,6 +1413,18 @@ function mlog(lines, type) {
           textSpan.innerHTML = safeText;
           return textSpan;
         }
+        if (segment.type === 'h1') {
+          const textSpan = document.createElement('span');
+          textSpan.setAttribute('class', 'dwst-mlog__h1');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
+        if (segment.type === 'h2') {
+          const textSpan = document.createElement('span');
+          textSpan.setAttribute('class', 'dwst-mlog__h2');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
         if (segment.type === 'syntax') {
           const textSpan = document.createElement('span');
           textSpan.setAttribute('class', 'dwst-mlog__syntax');
@@ -1518,27 +1542,8 @@ function hexdump(buffer) {
   return lines;
 }
 
-function formatList(listTitle, lines) {
-  const titlePrefix = `${listTitle}: `;
-  const spacePrefix = new Array(titlePrefix.length + 1).join(' ');
-  return lines.map((line, i) => {
-    const prefix = (() => {
-      if (i === 0) {
-        return titlePrefix;
-      }
-      return spacePrefix;
-    })();
-    if (Array.isArray(line)) {
-      return [prefix].concat(line);
-    }
-    return [prefix, line];
-  });
-}
-
-function flatList(listTitle, values) {
+function flatList(values) {
   const segments = [];
-  segments.push(listTitle);
-  segments.push(': ');
   values.forEach(value => {
     value.afterText = ',';
     segments.push(value);
