@@ -125,6 +125,9 @@ body
 .dwst-mlog__command-link {
   color: #6ab;
   text-decoration: none;
+  text-indent: -2ch;
+  margin-left: 2ch;
+  display: inline-block;
 }
 .dwst-mlog__command-link:hover {
   color: #3ef;
@@ -137,8 +140,19 @@ body
 .dwst-mlog__strong {
   font-weight: bold;
 }
+.dwst-mlog__h1 {
+  color: #fff;
+  font-weight: bold;
+}
+.dwst-mlog__h2 {
+  color: #fff;
+  text-transform: uppercase;
+}
 .dwst-mlog__syntax {
   font-style: italic;
+  text-indent: -2ch;
+  margin-left: 2ch;
+  display: inline-block;
 }
 .splash-button {
   position: relative;
