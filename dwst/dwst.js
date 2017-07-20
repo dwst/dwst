@@ -1,5 +1,18 @@
 'use strict';
 
+/*
+Dark WebSocket Terminal
+
+CC0, http://creativecommons.org/publicdomain/zero/1.0/
+
+To the extent possible under law, Dark WebSocket Terminal developers have waived all copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+Dark WebSocket Terminal developers:
+Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010-2017
+William Orr <will@worrbase.com>, US 2012
+
+*/
+
 const VERSION = '2.1.1';
 const ECHO_SERVER_URL = 'wss://echo.websocket.org/';
 const bins = new Map();
