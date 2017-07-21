@@ -291,6 +291,9 @@ body
   grid-template-columns: 1ch calc(100% - 2ch);
   grid-column-gap: 1ch;
 }
+.dwst-logline--command {
+  margin-top: 1ch;
+}
 
 .dwst-logline__item {
   vertical-align: top;
