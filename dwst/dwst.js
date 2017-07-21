@@ -769,6 +769,8 @@ class Splash {
 
   run() {
 
+    clearLog();
+
     /* eslint-disable quotes,object-property-newline */
 
     const SPLASH = [
@@ -1370,6 +1372,9 @@ class Help {
   }
 
   run(parameter = null) {
+
+    clearLog();
+
     if (parameter === null) {
       this._mainHelp();
       return;
