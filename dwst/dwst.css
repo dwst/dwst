@@ -106,7 +106,7 @@ body
   width: 100%;
   height: 24pt;
 }
-.dwst-mlog__help-link-wrapper {
+.dwst-mlog__help-link-wrapper--nowrap {
   white-space: nowrap;
 }
 .dwst-mlog__help-link {
@@ -136,6 +136,9 @@ body
 .dwst-mlog__hexline {
   display: inline-block;
   color: #888;
+}
+.dwst-mlog__code {
+  color: #d52;
 }
 .dwst-mlog__strong {
   font-weight: bold;
@@ -275,9 +278,8 @@ body
 
 /* clean ********************************************************************/
 
-
 .dwst-logline {
-  padding: 0 0 0 1ch;
+  padding: 0 1ch;
   display: grid;
   grid-template-columns: 1ch calc(100% - 2ch);
   grid-column-gap: 1ch;
