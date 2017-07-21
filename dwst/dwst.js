@@ -149,6 +149,33 @@ class Connection {
 
 }
 
+class Reset {
+
+  commands() {
+    return ['reset'];
+  }
+
+  usage() {
+    return [
+      '/reset',
+    ];
+  }
+
+  examples() {
+    return [
+      '/reset',
+    ];
+  }
+
+  info() {
+    return 'reset the message buffer';
+  }
+
+  run() {
+    document.getElementById('ter1').innerHTML = '';
+  }
+}
+
 class Clear {
 
   commands() {
@@ -172,7 +199,7 @@ class Clear {
   }
 
   run() {
-    document.getElementById('ter1').innerHTML = '';
+    clearLog();
   }
 }
 
@@ -1464,7 +1491,23 @@ class Disconnect {
   }
 }
 
-const plugins = [Connect, Disconnect, Splash, Forget, Help, Send, Spam, Interval, Binary, Loadbin, Bins, Clear, Loadtext, Texts];
+const plugins = [
+  Binary,
+  Bins,
+  Clear,
+  Connect,
+  Disconnect,
+  Forget,
+  Help,
+  Interval,
+  Loadbin,
+  Loadtext,
+  Reset,
+  Send,
+  Spam,
+  Splash,
+  Texts,
+];
 const commands = new Map();
 
 for (const Constructor of plugins) {
@@ -1737,6 +1780,20 @@ function mlog(lines, type) {
   });
   logLine.appendChild(outputCell);
   terminal1.appendChild(logLine);
+  const screen = document.getElementById('screen1');
+  screen.scrollTop = screen.scrollHeight;
+  scrollLog();
+}
+
+function clearLog() {
+  const terminal1 = document.getElementById('ter1');
+  const logClear = document.createElement('div');
+  logClear.setAttribute('class', 'dwst-logclear');
+  terminal1.appendChild(logClear);
+  scrollLog();
+}
+
+function scrollLog() {
   const screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
 }
