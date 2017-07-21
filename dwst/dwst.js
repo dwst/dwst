@@ -1413,6 +1413,25 @@ class Connect {
       return [`Accepted protocols: ${protoFormatted}`];
     })();
     mlog([`Connecting to ${connection.url}`].concat(negotiation), 'system');
+    if (document.origin.startsWith('https://') && url.startsWith('ws://')) {
+      const secureUrl = `wss://${url.slice('ws://'.length)}`;
+      mlog([
+        [
+          'Attempting unprotected connection from a secure origin. ',
+          'See ',
+          {
+            type: 'dwstgg',
+            text: 'unprotected',
+            section: '#unprotected',
+          },
+          ' for details. Consider using ',
+          {
+            type: 'command',
+            text: `/connect ${secureUrl} ${protocolString}`,
+          },
+        ],
+      ], 'warning');
+    }
   }
 }
 
