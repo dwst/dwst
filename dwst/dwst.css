@@ -14,6 +14,8 @@ William Orr <will@worrbase.com>, US 2012
 
 :root {
   --dwst-dark-pink: #936;
+
+  --bar-height: 24pt;
 }
 
 body
@@ -72,7 +74,7 @@ body
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 24pt;
+  height: var(--bar-height);
   background-color: #222;
 }
 
@@ -277,6 +279,11 @@ body
 }
 
 /* clean ********************************************************************/
+
+.dwst-logclear {
+  float: left;
+  height: calc(100vh - var(--bar-height))
+}
 
 .dwst-logline {
   padding: 0 1ch;
