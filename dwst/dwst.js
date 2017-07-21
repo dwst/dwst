@@ -1436,15 +1436,6 @@ class Connect {
       }
       return true;
     });
-    connection = new Connection(url, protocols);
-    const protoFormatted = protocols.join(', ');
-    const negotiation = (() => {
-      if (protocols.length < 1) {
-        return ['No protocol negotiation.'];
-      }
-      return [`Accepted protocols: ${protoFormatted}`];
-    })();
-    mlog([`Connecting to ${connection.url}`].concat(negotiation), 'system');
     if (document.origin.startsWith('https://') && url.startsWith('ws://')) {
       const secureUrl = `wss://${url.slice('ws://'.length)}`;
       mlog([
@@ -1464,6 +1455,15 @@ class Connect {
         ],
       ], 'warning');
     }
+    connection = new Connection(url, protocols);
+    const protoFormatted = protocols.join(', ');
+    const negotiation = (() => {
+      if (protocols.length < 1) {
+        return ['No protocol negotiation.'];
+      }
+      return [`Accepted protocols: ${protoFormatted}`];
+    })();
+    mlog([`Connecting to ${connection.url}`].concat(negotiation), 'system');
   }
 }
 
