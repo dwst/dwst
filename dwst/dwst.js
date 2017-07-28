@@ -13,7 +13,7 @@ William Orr <will@worrbase.com>, US 2012
 
 */
 
-const VERSION = '2.2.2';
+const VERSION = '2.2.3';
 const ECHO_SERVER_URL = 'wss://echo.websocket.org/';
 const bins = new Map();
 const texts = new Map();
