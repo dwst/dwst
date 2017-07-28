@@ -1015,6 +1015,30 @@ class Help {
     return 'get help';
   }
 
+  _createBreadCrumbs(section = null) {
+    const root = [
+      {
+        type: 'dwstgg',
+        text: 'DWSTGG',
+      },
+    ];
+    if (section === null) {
+      return root;
+    }
+    return root.concat([
+      {
+        type: 'regular',
+        text: ' &raquo; ',
+        unsafe: true,
+      },
+      {
+        type: 'dwstgg',
+        text: `${section}`,
+        section: `${section}`,
+      },
+    ]);
+  }
+
   _mainHelp() {
     const available = [];
     [...commands.keys()].sort().forEach(c => {
@@ -1033,6 +1057,8 @@ class Help {
     const commandsList = [flatList(available)];
 
     mlog([
+      this._createBreadCrumbs(),
+      '',
       {
         type: 'h1',
         text: 'DWST Guide to Galaxy',
@@ -1094,25 +1120,6 @@ class Help {
       ],
       '',
     ]), 'system');
-  }
-
-  _createBreadCrumbs(section) {
-    return [
-      {
-        type: 'dwstgg',
-        text: 'DWSTGG',
-      },
-      {
-        type: 'regular',
-        text: ' &raquo; ',
-        unsafe: true,
-      },
-      {
-        type: 'dwstgg',
-        text: `${section}`,
-        section: `${section}`,
-      },
-    ];
   }
 
   _helpPage(page) {
