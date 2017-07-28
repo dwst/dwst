@@ -99,6 +99,7 @@ class Connection {
       return [`Session length: ${sessionLength}ms`];
     })();
     mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
+    connection = null;
   }
 
   _onmessage(msg) {
@@ -121,6 +122,27 @@ class Connection {
 
   get url() {
     return this.ws.url;
+  }
+
+  get verb() {
+    const readyState = this.ws.readyState;
+    if (readyState === 0) {
+      return 'connecting';
+    }
+    if (readyState === 1) {
+      return 'connected';
+    }
+    if (readyState === 2) {
+      return 'closing connection';
+    }
+    if (readyState === 3) {
+      return 'hanging on an already closed connection';
+    }
+    throw new Error('Unkown readyState');
+  }
+
+  get protocol() {
+    return this.ws.protocol;
   }
 
   send(...params) {
@@ -897,6 +919,45 @@ class Splash {
         forgetAdvertisement,
       ]);
     })();
+    const statusSection = (() => {
+      if (connection === null) {
+        return [];
+      }
+      const connectionStatus = [
+        'Currently ',
+        connection.verb,
+        ' to ',
+        connection.url,
+      ];
+      const maybeProtocolStatus = (() => {
+        const protocol = connection.protocol;
+        if (protocol.length < 1) {
+          return [];
+        }
+        return [
+          [
+            'Selected protocol: ',
+            protocol,
+          ],
+        ];
+      })();
+      const disconnectInstructions = [
+        'Type ',
+        {
+          type: 'command',
+          text: '/disconnect',
+        },
+        ' to end the connection',
+      ];
+      return ([
+        '',
+        connectionStatus,
+      ]).concat(maybeProtocolStatus).concat([
+        '',
+        disconnectInstructions,
+        '',
+      ]);
+    })();
     const about = [
       [
         {
@@ -939,11 +1000,17 @@ class Splash {
         ' to see the full range of available commands',
       ],
     ];
+    const statusOrHistory = (() => {
+      if (statusSection.length < 1) {
+        return historySection;
+      }
+      return statusSection;
+    })();
     const sections = [
       about,
       maybeBeginnerInfo,
       helpReminder,
-      historySection,
+      statusOrHistory,
       [''],
     ];
     gfx(...SPLASH);
