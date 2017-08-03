@@ -191,6 +191,9 @@ class Connection {
   }
 
   send(...params) {
+    if (this.ws.readyState !== 1) {
+      log(`Attempting to send data while ${this.verb}`, 'warning');
+    }
     this.ws.send(...params);
   }
 
