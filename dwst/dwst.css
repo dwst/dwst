@@ -13,9 +13,43 @@ William Orr <will@worrbase.com>, US 2012
 */
 
 :root {
-  --dwst-dark-pink: #936;
+
+  --dwst-color-black: #030303;
+  --dwst-color-black--af: #000;
+  --dwst-color-white: #fffefd;
+  --dwst-color-white--af: #fff;
+
+  --dwst-color-blue: #27b;
+  --dwst-color-blue--light: #77c;
+  --dwst-color-cyan: #6ab;
+  --dwst-color-cyan--light: #3ef;
+  --dwst-color-green: #464;
+  --dwst-color-green--light: #7f7;
+  --dwst-color-pink: #d6a;
+  --dwst-color-pink--light: #f8c;
+  --dwst-color-purple: #614;
+  --dwst-color-purple--light: #936;
+  --dwst-color-red: #f00;
+  --dwst-color-red--light: #c77;
+  --dwst-color-yellow: #ffa;
+  --dwst-color-yellow--light: #ff0;
+  --dwst-color-gray: #888786;
+  --dwst-color-gray--light: #cccbca;
+
+  --dwst-color-gray-1: #111;
+  --dwst-color-gray-2: #222;
+  --dwst-color-gray-4: #444;
+  --dwst-color-gray-7: #777;
+  --dwst-color-gray-d: #ddd;
+
+  --dwst-color-purplified-black: #150010;
+  --dwst-color-purplified-gray: #302;
+
+  --dwst-color-debug-brown: #131303;
+  --dwst-color-debug-orange: #431303;
 
   --dwst-bar-height: 24pt;
+
 }
 
 body
@@ -23,7 +57,7 @@ body
   font-family: monospace;
   font-size: 3.9vw;
   height: 100%;
-  background-color: #000;
+  background-color: var(--dwst-color-black--af);
 }
 @media only screen and (min-width: 500px) {
   body {
@@ -38,15 +72,15 @@ body
 }
 input[type="text"]
 {
-  background-color: #444;
-  color: #fff;
+  background-color: var(--dwst-color-gray-4);
+  color: var(--dwst-color-white);
   font-family: monospace;
-  border: thin solid #f00;
+  border: thin solid var(--dwst-color-red);
 }
 
 .bar2 input[type="text"]
 {
-  background-color: #111;
+  background-color: var(--dwst-color-gray-1);
   border-width: 0;
   width: 100%;
   outline: none;
@@ -75,19 +109,19 @@ body
   bottom: 0;
   width: 100%;
   height: var(--dwst-bar-height);
-  background-color: #222;
+  background-color: var(--dwst-color-gray-2);
 }
 
 .consolebar .time
 {
   font-family: monospace;
   width: 1em;
-  color: #ddd;
+  color: var(--dwst-color-gray-d);
 }
 
 .sec
 {
-  color: #777;
+  color:  var(--dwst-color-gray-7);
 }
 
 .consolebar .leftpad
@@ -112,7 +146,7 @@ body
   white-space: nowrap;
 }
 .dwst-mlog__help-link {
-  color: #888;
+  color: var(--dwst-color-gray);
   font-style: italic;
   text-decoration: none;
 }
@@ -121,36 +155,36 @@ body
   padding-bottom: 1ch;
 }
 .dwst-mlog__help-link:hover {
-  color: #ff0;
+  color: var(--dwst-color-yellow--light);
   text-decoration: none;
 }
 .dwst-mlog__command-link {
-  color: #6ab;
+  color: var(--dwst-color-cyan);
   text-decoration: none;
   text-indent: -2ch;
   margin-left: 2ch;
   display: inline-block;
 }
 .dwst-mlog__command-link:hover {
-  color: #3ef;
+  color: var(--dwst-color-cyan--light);
   text-decoration: none;
 }
 .dwst-mlog__hexline {
   display: inline-block;
-  color: #888;
+  color: var(--dwst-color-gray);
 }
 .dwst-mlog__code {
-  color: #d52;
+  color: var(--dwst-color-pink);
 }
 .dwst-mlog__strong {
   font-weight: bold;
 }
 .dwst-mlog__h1 {
-  color: #fff;
+  color: var(--dwst-color-white);
   font-weight: bold;
 }
 .dwst-mlog__h2 {
-  color: #fff;
+  color: var(--dwst-color-white);
   text-transform: uppercase;
 }
 .dwst-mlog__syntax {
@@ -192,17 +226,15 @@ body
 }
 
 ::-webkit-scrollbar-track {
-  background: #150010;
+  background: var(--dwst-color-purplified-black);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #302;
+  background: var(--dwst-color-purplified-gray);
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:window-inactive {
-  background: #302;
-}
-::-webkit-scrollbar-corner {
-  background: #201;
+  background: var(--dwst-color-wtf2);
 }
 
 .dwst-background {
@@ -225,7 +257,7 @@ body
   }
 }
 .dwst-debug .dwst-background {
-  background-color: #431303;
+  background-color: var(--dwst-color-debug-orange);
 }
 
 
@@ -249,7 +281,7 @@ body
   }
 }
 .dwst-debug .dwst-background__content-area {
-  background-color: #131303;
+  background-color: var(--dwst-color-debug-brown);
 }
 
 #screen1
@@ -269,8 +301,8 @@ body
 .terminal
 {
   min-height: 100%;
-  background-color: #030303;
-  color: #ccc;
+  background-color: var(--dwst-color-black);
+  color: var(--dwst-color-gray--light);
   font-family: monospace;
 }
 
@@ -328,32 +360,32 @@ body
 
 .dwst-direction--sent
 {
-  color: #77c;
+  color: var(--dwst-color-blue--light);
 }
 
 .dwst-direction--received
 {
-  color: #c77;
+  color: var(--dwst-color-red--light);
 }
 
 .dwst-direction--command
 {
-  color: #3ef;
+  color: var(--dwst-color-cyan--light);
 }
 
 .dwst-direction--error
 {
-  color: #f00;
+  color: var(--dwst-color-red);
 }
 
 .dwst-direction--warning
 {
-  color: #ffa;
+  color: var(--dwst-color-yellow);
 }
 
 .dwst-direction--system
 {
-  color: #7f7;
+  color: var(--dwst-color-green--light);
 }
 
 .dwst-gfx__content {
@@ -369,13 +401,68 @@ body
 .dwst-gfx__element {
   white-space: pre;
 }
+
+.dwst-gfx__element--color-0 {
+  color: var(--dwst-color-black--af);
+}
 .dwst-gfx__element--color-1 {
-  color: var(--dwst-dark-pink);
+  color: var(--dwst-color-blue);
 }
 .dwst-gfx__element--color-2 {
-  color: #614;
+  color: var(--dwst-color-green);
+}
+.dwst-gfx__element--color-3 {
+  color: var(--dwst-color-cyan);
+}
+.dwst-gfx__element--color-4 {
+  color: var(--dwst-color-red);
+}
+.dwst-gfx__element--color-5 {
+  color: var(--dwst-color-purple);
+}
+.dwst-gfx__element--color-6 {
+  color: var(--dwst-color-yellow);
+}
+.dwst-gfx__element--color-7 {
+  color: var(--dwst-color-white);
+}
+.dwst-gfx__element--color-8 {
+  color: var(--dwst-color-gray);
+}
+.dwst-gfx__element--color-9 {
+  color: var(--dwst-color-pink);
 }
 
+.dwst-gfx__element--color-a {
+  color: var(--dwst-color-black);
+}
+.dwst-gfx__element--color-b {
+  color: var(--dwst-color-blue--light);
+}
+.dwst-gfx__element--color-c {
+  color: var(--dwst-color-green--light);
+}
+.dwst-gfx__element--color-d {
+  color: var(--dwst-color-cyan--light);
+}
+.dwst-gfx__element--color-e {
+  color: var(--dwst-color-red--light);
+}
+.dwst-gfx__element--color-f {
+  color: var(--dwst-color-purple--light);
+}
+.dwst-gfx__element--color-g {
+  color: var(--dwst-color-yellow--light);
+}
+.dwst-gfx__element--color-h {
+  color: var(--dwst-color-white--af);
+}
+.dwst-gfx__element--color-i {
+  color: var(--dwst-color-gray--light);
+}
+.dwst-gfx__element--color-j {
+  color: var(--dwst-color-pink--light);
+}
 
 .dwst-bytegrid {
   font-family: monospace;
