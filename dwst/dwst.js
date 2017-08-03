@@ -36,15 +36,60 @@ function range(a, b = null) {
   return Array(length).fill().map((_, i) => start + i);
 }
 
+class FakeSocket {
+  constructor(url) {
+    this.url = url;
+    this.protocol = '';
+    this.readyState = 1;
+    this._path = url.split('//').pop();
+    window.setTimeout(() => {
+      this.onopen();
+    }, 0);
+  }
+
+  send(message) {
+    if (this._path === 'echo') {
+      const data = (() => {
+        if (typeof message === 'string') {
+          return message;
+        }
+        if (message instanceof ArrayBuffer) {
+          return new Blob([new Uint8Array(message)]);
+        }
+        throw new Error('Unexpected message type');
+      })();
+      window.setTimeout(() => {
+        this.onmessage({
+          data,
+        });
+      }, 0);
+    }
+  }
+
+  close() {
+    this.readyState = 3;
+    this.onclose({
+      code: 1000,
+      reason: '',
+    });
+  }
+}
+
 class Connection {
 
   constructor(url, protocols = []) {
     this.sessionStartTime = null;
     this.ws = (() => {
+      const SocketConstructor = (() => {
+        if (url.startsWith('dwst://')) {
+          return FakeSocket;
+        }
+        return WebSocket;
+      })();
       if (protocols.length < 1) {
-        return new WebSocket(url);
+        return new SocketConstructor(url);
       }
-      return new WebSocket(url, protocols);
+      return new SocketConstructor(url, protocols);
     })();
     this.ws.onopen = this._onopen.bind(this);
     this.ws.onclose = this._onclose.bind(this);
