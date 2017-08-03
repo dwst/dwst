@@ -15,7 +15,7 @@ William Orr <will@worrbase.com>, US 2012
 :root {
   --dwst-dark-pink: #936;
 
-  --bar-height: 24pt;
+  --dwst-bar-height: 24pt;
 }
 
 body
@@ -74,7 +74,7 @@ body
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: var(--bar-height);
+  height: var(--dwst-bar-height);
   background-color: #222;
 }
 
@@ -106,7 +106,7 @@ body
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 24pt;
+  height: var(--dwst-bar-height);
 }
 .dwst-mlog__help-link-wrapper--nowrap {
   white-space: nowrap;
@@ -210,7 +210,7 @@ body
   top: 0;
   left: 0;
   right: 0;
-  bottom: 24pt;
+  bottom: var(--dwst-bar-height);
   width: 42ch;
   max-width: 100%;
 }
@@ -258,7 +258,7 @@ body
   top: 0;
   left: 0;
   right: 0;
-  bottom: 24pt;
+  bottom: var(--dwst-bar-height);
   overflow: hidden;
   overflow-y: scroll;
   vertical-align: top;
@@ -282,7 +282,7 @@ body
 
 .dwst-logclear {
   float: left;
-  height: calc(100vh - var(--bar-height))
+  height: calc(100vh - var(--dwst-bar-height))
 }
 
 .dwst-logline {
