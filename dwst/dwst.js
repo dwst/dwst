@@ -1,5 +1,7 @@
 'use strict';
 
+import Clear from './plugins/clear.js';
+
 /*
 Dark WebSocket Terminal
 
@@ -243,33 +245,6 @@ class Reset {
 
   run() {
     document.getElementById('ter1').innerHTML = '';
-  }
-}
-
-class Clear {
-
-  commands() {
-    return ['clear'];
-  }
-
-  usage() {
-    return [
-      '/clear',
-    ];
-  }
-
-  examples() {
-    return [
-      '/clear',
-    ];
-  }
-
-  info() {
-    return 'clear the screen';
-  }
-
-  run() {
-    clearLog();
   }
 }
 
@@ -1766,7 +1741,9 @@ const plugins = [
 const commands = new Map();
 
 for (const Constructor of plugins) {
-  const plugin = new Constructor();
+  const plugin = new Constructor({
+    clearLog,
+  });
   for (const command of plugin.commands()) {
     commands.set(command, plugin);
   }
