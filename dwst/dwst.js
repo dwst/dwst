@@ -1003,7 +1003,6 @@ class Splash {
       ]).concat(maybeProtocolStatus).concat([
         '',
         disconnectInstructions,
-        '',
       ]);
     })();
     const about = [
@@ -1054,12 +1053,52 @@ class Splash {
       }
       return statusSection;
     })();
+    const linkSection = [
+      [
+        {
+          type: 'link',
+          text: 'GitHub',
+          url: 'https://github.com/dwst/dwst',
+        },
+        {
+          type: 'regular',
+          text: ' &bull; ',
+          unsafe: true,
+        },
+        {
+          type: 'link',
+          text: 'chat',
+          url: 'https://gitter.im/dwst/dwst',
+        },
+        {
+          type: 'regular',
+          text: ' &bull; ',
+          unsafe: true,
+        },
+        {
+          type: 'link',
+          text: 'rfc6455',
+          url: 'https://tools.ietf.org/html/rfc6455',
+        },
+        {
+          type: 'regular',
+          text: ' &bull; ',
+          unsafe: true,
+        },
+        {
+          type: 'link',
+          text: 'protocols',
+          url: 'https://www.iana.org/assignments/websocket/websocket.xhtml',
+        },
+      ],
+    ];
     const sections = [
       about,
       maybeBeginnerInfo,
       helpReminder,
       statusOrHistory,
       [''],
+      linkSection,
     ];
     gfx(...SPLASH);
     mlog([].concat(...sections), 'system');
@@ -1883,6 +1922,14 @@ function mlog(lines, type) {
         if (segment.type === 'syntax') {
           const textSpan = document.createElement('span');
           textSpan.setAttribute('class', 'dwst-mlog__syntax');
+          textSpan.innerHTML = safeText;
+          return textSpan;
+        }
+        if (segment.type === 'link') {
+          const textSpan = document.createElement('a');
+          textSpan.setAttribute('href', segment.url);
+          textSpan.setAttribute('target', '_blank');
+          textSpan.setAttribute('class', 'dwst-mlog__link');
           textSpan.innerHTML = safeText;
           return textSpan;
         }

@@ -187,6 +187,12 @@ body
   color: var(--dwst-color-white);
   text-transform: uppercase;
 }
+.dwst-mlog__link {
+  color: var(--dwst-color-blue);
+}
+.dwst-mlog__link:hover {
+  color: var(--dwst-color-pink--light);
+}
 .dwst-mlog__syntax {
   font-style: italic;
   text-indent: -2ch;
