@@ -915,7 +915,6 @@ class Splash {
     /* eslint-enable quotes,object-property-newline */
 
     const CONNECTION_LIST_CAP = 3;
-    const historyLength = historyManager.getHistoryLength();
     const historySummary = historyManager.getSummary();
     const maybeTooManyConnectCommands =  historyManager.getConnectCommands(CONNECTION_LIST_CAP + 1);
     const connectCommands = maybeTooManyConnectCommands.slice(0, CONNECTION_LIST_CAP);
@@ -931,41 +930,31 @@ class Splash {
       }
       return [];
     })();
-    const historySection = (() => {
-      if (historyLength < 1) {
-        return [];
-      }
-      const forgetAdvertisement = [
+    const historySection = ([
+      historySummary.concat([
+        ', including ',
+        {
+          type: 'dwstgg',
+          text: 'connect',
+          section: 'connect',
+        },
+        ' commands',
+      ]),
+    ]).concat(
+      connectionsLines,
+    ).concat(
+      tooManyWarning,
+    ).concat([
+      '',
+      [
         'Type ',
         {
           type: 'strong',
           text: '/forget everything',
         },
         ' to remove all stored history',
-      ];
-      if (connectCommands.length < 1) {
-        return [
-          '',
-          historySummary.concat(['.']),
-          '',
-          forgetAdvertisement,
-        ];
-      }
-      return [
-        historySummary.concat([
-          ', including the following ',
-          {
-            type: 'dwstgg',
-            text: 'connect',
-            section: 'connect',
-          },
-          ' commands',
-        ]),
-      ].concat(connectionsLines).concat(tooManyWarning).concat([
-        '',
-        forgetAdvertisement,
-      ]);
-    })();
+      ],
+    ]);
     const statusSection = (() => {
       if (connection === null) {
         return [];
