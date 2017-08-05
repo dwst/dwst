@@ -944,17 +944,7 @@ class Splash {
       connectionsLines,
     ).concat(
       tooManyWarning,
-    ).concat([
-      '',
-      [
-        'Type ',
-        {
-          type: 'strong',
-          text: '/forget everything',
-        },
-        ' to remove all stored history',
-      ],
-    ]);
+    );
     const statusSection = (() => {
       if (connection === null) {
         return [];
@@ -1031,6 +1021,17 @@ class Splash {
         ' to see the full range of available commands',
       ],
     ];
+    const privacyReminder = [
+      [
+        {
+          type: 'dwstgg',
+          text: 'Check',
+          section: '#privacy',
+          warning: true,
+        },
+        ' privacy and tracking info',
+      ],
+    ];
     const linkSection = [
       [
         {
@@ -1088,6 +1089,8 @@ class Splash {
           [''],
           historySection,
           [''],
+          privacyReminder,
+          [''],
           helpReminder,
           [''],
           linkSection,
@@ -1097,6 +1100,8 @@ class Splash {
         about,
         [''],
         beginnerInfo,
+        [''],
+        privacyReminder,
         [''],
         helpReminder,
         [''],
@@ -1889,6 +1894,9 @@ function mlog(lines, type) {
           const classes = ['dwst-mlog__help-link'];
           if (segment.spacing === true) {
             classes.push('dwst-mlog__help-link--spacing');
+          }
+          if (segment.warning === true) {
+            classes.push('dwst-mlog__help-link--warning');
           }
           link.setAttribute('class', classes.join(' '));
           const command = (() => {

@@ -154,6 +154,11 @@ body
   display: inline-block;
   padding-bottom: 1ch;
 }
+.dwst-mlog__help-link--warning {
+  color: var(--dwst-color-white);
+  font-style: normal;
+  text-decoration: underline;
+}
 .dwst-mlog__help-link:hover {
   color: var(--dwst-color-yellow--light);
   text-decoration: none;
