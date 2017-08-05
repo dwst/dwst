@@ -952,7 +952,6 @@ class Splash {
         ];
       }
       return [
-        '',
         historySummary.concat([
           ', including the following ',
           {
@@ -998,7 +997,6 @@ class Splash {
         ' to end the connection',
       ];
       return ([
-        '',
         connectionStatus,
       ]).concat(maybeProtocolStatus).concat([
         '',
@@ -1014,7 +1012,6 @@ class Splash {
       ],
     ];
     const beginnerInfo = [
-      '',
       [
         '1. Connect to a server (type ',
         {
@@ -1030,14 +1027,7 @@ class Splash {
         '3. Disconnect by hitting the Escape key on your keyboard',
       ],
     ];
-    const maybeBeginnerInfo = (() => {
-      if (connectCommands.length < 1) {
-        return beginnerInfo;
-      }
-      return [];
-    })();
     const helpReminder = [
-      '',
       [
         'Type ',
         {
@@ -1047,12 +1037,6 @@ class Splash {
         ' to see the full range of available commands',
       ],
     ];
-    const statusOrHistory = (() => {
-      if (statusSection.length < 1) {
-        return historySection;
-      }
-      return statusSection;
-    })();
     const linkSection = [
       [
         {
@@ -1092,14 +1076,39 @@ class Splash {
         },
       ],
     ];
-    const sections = [
-      about,
-      maybeBeginnerInfo,
-      helpReminder,
-      statusOrHistory,
-      [''],
-      linkSection,
-    ];
+    const sections = (() => {
+      if (connection !== null) {
+        return [
+          about,
+          [''],
+          statusSection,
+          [''],
+          helpReminder,
+          [''],
+          linkSection,
+        ];
+      }
+      if (connectCommands.length > 0) {
+        return [
+          about,
+          [''],
+          historySection,
+          [''],
+          helpReminder,
+          [''],
+          linkSection,
+        ];
+      }
+      return [
+        about,
+        [''],
+        beginnerInfo,
+        [''],
+        helpReminder,
+        [''],
+        linkSection,
+      ];
+    })();
     gfx(...SPLASH);
     mlog([].concat(...sections), 'system');
   }
