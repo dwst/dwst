@@ -2090,8 +2090,7 @@ function blog(buffer, type) {
       text: line.text,
       hexes: line.hexes,
     };
-  }
-  );
+  });
   mlog([msg].concat(hexLines), type);
 }
 
