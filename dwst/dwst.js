@@ -1002,18 +1002,17 @@ class Splash {
     ];
     const beginnerInfo = [
       [
-        '1. Connect to a server (type ',
+        '1. Create a test connection by typing ',
         {
           type: 'command',
           text: `/connect ${ECHO_SERVER_URL}`,
         },
-        ' for example)',
       ],
       [
-        '2. Type text into the box below to send messages',
+        '2. Type messages into the text input',
       ],
       [
-        '3. Disconnect by hitting the Escape key on your keyboard',
+        '3. Click on DWST logo if you get lost',
       ],
     ];
     const helpReminder = [
