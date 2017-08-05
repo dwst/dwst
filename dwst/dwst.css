@@ -177,6 +177,7 @@ body
   color: var(--dwst-color-pink);
 }
 .dwst-mlog__strong {
+  color: var(--dwst-color-pink);
   font-weight: bold;
 }
 .dwst-mlog__h1 {
