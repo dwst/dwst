@@ -963,7 +963,10 @@ class Splash {
         'Currently ',
         connection.verb,
         ' to ',
-        connection.url,
+        {
+          type: 'strong',
+          text: connection.url,
+        },
       ];
       const maybeProtocolStatus = (() => {
         const protocol = connection.protocol;
@@ -973,7 +976,10 @@ class Splash {
         return [
           [
             'Selected protocol: ',
-            protocol,
+            {
+              type: 'strong',
+              text: protocol,
+            },
           ],
         ];
       })();
@@ -1215,13 +1221,7 @@ class Help {
         text: 'DWST Guide to Galaxy',
       },
       '',
-      [
-        {
-          type: 'strong',
-          text: 'DWSTGG',
-        },
-        ' is here to help you get the most out of Dark WebSocket Terminal',
-      ],
+      'DWSTGG is here to help you get the most out of Dark WebSocket Terminal',
       '',
       {
         type: 'h2',
