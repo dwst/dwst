@@ -1232,16 +1232,16 @@ class Help {
         '- Working with ',
         {
           type: 'dwstgg',
-          text: 'unprotected',
+          text: '#unprotected',
           section: '#unprotected',
         },
-        ' WebSockets',
+        ' sockets',
       ],
       [
         '- Running the ',
         {
           type: 'dwstgg',
-          text: 'development',
+          text: '#development',
           section: '#development',
         },
         ' server',
@@ -1297,7 +1297,7 @@ class Help {
           'Chrome lets you temporarily bypass the security feature that prevents you from connecting to ',
           {
             type: 'dwstgg',
-            text: 'unprotected',
+            text: '#unprotected',
             section: '#unprotected',
           },
           ' WebSockets.',
@@ -1340,7 +1340,7 @@ class Help {
           'Firefox lets you disable the security feature that prevents you from connecting to ',
           {
             type: 'dwstgg',
-            text: 'unprotected',
+            text: '#unprotected',
             section: '#unprotected',
           },
           ' WebSockets.',
@@ -1389,7 +1389,7 @@ class Help {
           'This is useful if you wish to customise DWST on source code level but can also be used to access ',
           {
             type: 'dwstgg',
-            text: 'unprotected',
+            text: '#unprotected',
             section: '#unprotected',
           },
           ' WebSockets.',
@@ -1436,7 +1436,7 @@ class Help {
           'You can work around the problem by setting up the DWST ',
           {
             type: 'dwstgg',
-            text: 'development',
+            text: '#development',
             section: '#development',
           },
           ' server on your local work station.',
@@ -1453,13 +1453,13 @@ class Help {
           'Nevertheless we have instructions for ',
           {
             type: 'dwstgg',
-            text: 'Chrome',
+            text: '#Chrome',
             section: '#chrome',
           },
           ' and ',
           {
             type: 'dwstgg',
-            text: 'Firefox',
+            text: '#Firefox',
             section: '#firefox',
           },
           '.',
@@ -1602,7 +1602,7 @@ class Connect {
           'See ',
           {
             type: 'dwstgg',
-            text: 'unprotected',
+            text: '#unprotected',
             section: '#unprotected',
           },
           ' for details. Consider using ',
