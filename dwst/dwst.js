@@ -1646,6 +1646,20 @@ class Connect {
   }
 
   run(url, protocolString = '') {
+    if (connection !== null) {
+      mlog([
+        'Already connected to a server',
+        [
+          'Type ',
+          {
+            type: 'command',
+            text: '/disconnect',
+          },
+          ' to end the conection',
+        ],
+      ], 'error');
+      return;
+    }
     const protoCandidates = (() => {
       if (protocolString === '') {
         return [];
@@ -1723,6 +1737,9 @@ class Disconnect {
   }
 
   run() {
+    if (connection === null) {
+      log('No connection to disconnect', 'warning');
+    }
     const protocol = [];
     mlog([`Closing connection to ${connection.url}`].concat(protocol), 'system');
     connection.close();
