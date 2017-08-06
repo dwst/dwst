@@ -1066,7 +1066,7 @@ class Splash {
         },
         {
           type: 'link',
-          text: 'protocols',
+          text: 'iana',
           url: 'https://www.iana.org/assignments/websocket/websocket.xhtml',
         },
       ],
