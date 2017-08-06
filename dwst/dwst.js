@@ -2004,6 +2004,7 @@ function mlog(lines, type) {
           const textSpan = document.createElement('a');
           textSpan.setAttribute('href', segment.url);
           textSpan.setAttribute('target', '_blank');
+          textSpan.setAttribute('rel', 'noopener');
           textSpan.setAttribute('class', 'dwst-mlog__link');
           textSpan.innerHTML = safeText;
           return textSpan;
