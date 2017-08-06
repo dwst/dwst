@@ -1646,6 +1646,20 @@ class Connect {
   }
 
   run(url, protocolString = '') {
+    if (connection !== null) {
+      mlog([
+        'Already connected to a server',
+        [
+          'Type ',
+          {
+            type: 'command',
+            text: '/disconnect',
+          },
+          ' to end the conection',
+        ]
+      ], 'error');
+      return;
+    }
     const protoCandidates = (() => {
       if (protocolString === '') {
         return [];
