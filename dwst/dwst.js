@@ -2055,13 +2055,43 @@ function clearLog() {
 }
 
 function addLogLine(logLine) {
-  const screen = document.getElementById('screen1');
   const terminal = document.getElementById('ter1');
-  const wasAtBottom = (screen.scrollTop === (screen.scrollHeight - screen.offsetHeight));
+  const userWasScrolling = isUserScrolling();
   terminal.appendChild(logLine);
-  if (wasAtBottom) {
-    screen.scrollTop = screen.scrollHeight;
+  if (userWasScrolling) {
+    return;
   }
+  scrollLog();
+}
+
+function scrollLog() {
+  const screen = document.getElementById('screen1');
+  screen.scrollTop = screen.scrollHeight;
+}
+
+function isUserScrolling() {
+  const screen = document.getElementById('screen1');
+  return (screen.scrollTop !== (screen.scrollHeight - screen.offsetHeight));
+}
+
+function scrollNotificationUpdate() {
+  if (isUserScrolling()) {
+    showScrollNotification();
+    return;
+  }
+  hideScrollNotification();
+}
+
+function showScrollNotification() {
+  [...document.getElementsByClassName('js-scroll-notification')].forEach(sn => {
+    sn.removeAttribute('style');
+  });
+}
+
+function hideScrollNotification() {
+  [...document.getElementsByClassName('js-scroll-notification')].forEach(sn => {
+    sn.setAttribute('style', 'display: none;');
+  });
 }
 
 function gfx(lines, colors) {
@@ -2499,6 +2529,10 @@ function init() {
   document.getElementById('menubut1').addEventListener('click', () => {
     loud('/splash');
   });
+  [...document.getElementsByClassName('js-auto-scroll-button')].forEach(asb => {
+    asb.addEventListener('click', scrollLog);
+  });
+  setInterval(scrollNotificationUpdate, 100);
   document.getElementById('msg1').focus();
 
 }
