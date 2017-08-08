@@ -2032,7 +2032,6 @@ function mlog(lines, type) {
     return htmlSegments;
   });
   const time = currenttime();
-  const terminal1 = document.getElementById('ter1');
   const logLine = document.createElement('div');
   logLine.setAttribute('class', `dwst-logline dwst-logline--${type}`);
   logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item dwst-direction dwst-direction--${type}">${type}:</span>`;
@@ -2046,23 +2045,23 @@ function mlog(lines, type) {
     outputCell.appendChild(br);
   });
   logLine.appendChild(outputCell);
-  terminal1.appendChild(logLine);
-  const screen = document.getElementById('screen1');
-  screen.scrollTop = screen.scrollHeight;
-  scrollLog();
+  addLogLine(logLine);
 }
 
 function clearLog() {
-  const terminal1 = document.getElementById('ter1');
   const logClear = document.createElement('div');
   logClear.setAttribute('class', 'dwst-logclear');
-  terminal1.appendChild(logClear);
-  scrollLog();
+  addLogLine(logClear);
 }
 
-function scrollLog() {
+function addLogLine(logLine) {
   const screen = document.getElementById('screen1');
-  screen.scrollTop = screen.scrollHeight;
+  const terminal = document.getElementById('ter1');
+  const wasAtBottom = (screen.scrollTop === (screen.scrollHeight - screen.offsetHeight));
+  terminal.appendChild(logLine);
+  if (wasAtBottom) {
+    screen.scrollTop = screen.scrollHeight;
+  }
 }
 
 function gfx(lines, colors) {
@@ -2087,10 +2086,7 @@ function gfx(lines, colors) {
   gfxContainer.setAttribute('aria-hidden', 'true');
   gfxContainer.appendChild(gfxContent);
 
-  const terminal1 = document.getElementById('ter1');
-  terminal1.appendChild(gfxContainer);
-  const screen = document.getElementById('screen1');
-  screen.scrollTop = screen.scrollHeight;
+  addLogLine(gfxContainer);
 
   updateGfxPositions();
 }
