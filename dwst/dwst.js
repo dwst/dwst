@@ -2067,6 +2067,7 @@ function addLogLine(logLine) {
 function scrollLog() {
   const screen = document.getElementById('screen1');
   screen.scrollTop = screen.scrollHeight;
+  hideScrollNotification();
 }
 
 function isUserScrolling() {
@@ -2528,11 +2529,12 @@ function init() {
   document.getElementById('sendbut1').addEventListener('click', send);
   document.getElementById('menubut1').addEventListener('click', () => {
     loud('/splash');
+    scrollLog();
   });
   [...document.getElementsByClassName('js-auto-scroll-button')].forEach(asb => {
     asb.addEventListener('click', scrollLog);
   });
-  setInterval(scrollNotificationUpdate, 100);
+  setInterval(scrollNotificationUpdate, 1000);
   document.getElementById('msg1').focus();
 
 }
