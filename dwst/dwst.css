@@ -28,6 +28,7 @@ William Orr <will@worrbase.com>, US 2012
   --dwst-color-pink: #d6a;
   --dwst-color-pink--light: #f8c;
   --dwst-color-purple: #614;
+  --dwst-color-purple--transparent: rgba(102, 17, 68, 0.5);
   --dwst-color-purple--light: #936;
   --dwst-color-red: #f00;
   --dwst-color-red--light: #c77;
@@ -560,4 +561,20 @@ body
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+.dwst-notification {
+  position: absolute;
+  bottom: calc(var(--dwst-bar-height));
+  left: 0;
+  right: 0;
+  height: var(--dwst-bar-height);
+  line-height: var(--dwst-bar-height);
+  text-align: center;
+  background-color: var(--dwst-color-purple--transparent);
+  color: #fff;
+}
+
+.dwst-notification__link {
+  color: #fff;
 }
