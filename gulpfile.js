@@ -2,6 +2,7 @@
 
 /* global require */
 
+const path = require('path');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
 const jsonlint = require('gulp-jsonlint');
@@ -14,6 +15,7 @@ const webpack2 = require('webpack');
 const fse = require('fs-extra');
 const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
+const rename = require('gulp-rename');
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '.htmlhintrc', '!node_modules/**'])
@@ -48,10 +50,17 @@ gulp.task('browser-sync', () => {
     server: {
       baseDir: 'dwst',
       index: 'dwst.html',
+      routes: {
+        '/build': 'build',
+      },
     },
   });
-  gulp.watch('dwst/**/*.css', ['sync-css']);
-  gulp.watch(['dwst/**/*', '!dwst/**/*.css']).on('change', browserSync.reload);
+  gulp.watch('dwst/manifest.json', ['build-manifest', 'sync-manifest']);
+  gulp.watch('dwst/dwst.html', ['build-html', 'sync-html']);
+  gulp.watch('dwst/**/*.png', ['build-images', 'sync-images']);
+  gulp.watch('dwst/**/*.ico', ['build-images', 'sync-images']);
+  gulp.watch('dwst/**/*.js', ['build-js', 'sync-js']);
+  gulp.watch('dwst/**/*.css', ['build-css', 'sync-css']);
 });
 
 gulp.task('dev', ['browser-sync']);
@@ -61,12 +70,26 @@ gulp.task('clean', () => {
     .pipe(clean());
 });
 
+gulp.task('sync-css', () => {
+  return gulp.src('dwst/**/*.css')
+    .pipe(browserSync.stream());
+});
+
 gulp.task('build-css', () => {
   return gulp.src('dwst/dwst.css')
     .pipe(postcss([
       atImport(),
     ]))
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('build/'))
+    .pipe(rename(p => {
+      p.dirname = path.join('build', p.dirname);
+    }))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('sync-js', () => {
+  return gulp.src('dwst/**/*.js')
+    .pipe(browserSync.stream());
 });
 
 gulp.task('build-js', () => {
@@ -76,22 +99,53 @@ gulp.task('build-js', () => {
         filename: 'dwst.js',
       },
     }, webpack2))
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('build/'))
+    .pipe(rename(p => {
+      p.dirname = path.join('build', p.dirname);
+    }))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('sync-html', () => {
+  return gulp.src('dwst/**/*.html')
+    .pipe(browserSync.stream());
 });
 
 gulp.task('build-html', () => {
   return gulp.src('dwst/dwst.html')
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('build/'))
+    .pipe(rename(p => {
+      p.dirname = path.join('build', p.dirname);
+    }))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('sync-images', () => {
+  return gulp.src(['dwst/**/*.png', 'dwst/**/*.ico'])
+    .pipe(browserSync.stream());
 });
 
 gulp.task('build-images', () => {
   return gulp.src(['dwst/**/*.png', 'dwst/**/*.ico'])
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('build/'))
+    .pipe(rename(p => {
+      p.dirname = path.join('build', p.dirname);
+    }))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('sync-manifest', () => {
+  return gulp.src('dwst/manifest.json')
+    .pipe(browserSync.stream());
 });
 
 gulp.task('build-manifest', () => {
   return gulp.src('dwst/manifest.json')
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('build/'))
+    .pipe(rename(p => {
+      p.dirname = path.join('build', p.dirname);
+    }))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('build-assets', ['build-js', 'build-css', 'build-html', 'build-images', 'build-manifest']);
