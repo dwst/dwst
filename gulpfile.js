@@ -38,6 +38,9 @@ gulp.task('browser-sync', () => {
     server: {
       baseDir: 'dwst',
       index: 'dwst.html',
+      routes: {
+        '/build': 'build',
+      },
     },
   });
 });
