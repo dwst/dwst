@@ -9,7 +9,8 @@ const eslint = require('gulp-eslint');
 const htmlhint = require('gulp-htmlhint');
 const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
-const webpack = require('gulp-webpack');
+const webpackStream = require('webpack-stream');
+const webpack2 = require('webpack');
 const fse = require('fs-extra');
 
 gulp.task('jsonlint', () => {
@@ -61,11 +62,11 @@ gulp.task('build-css', () => {
 
 gulp.task('build-js', () => {
   return gulp.src('dwst/dwst.js')
-    .pipe(webpack({
+    .pipe(webpackStream({
       output: {
         filename: 'dwst.js',
       },
-    }))
+    }, webpack2))
     .pipe(gulp.dest('build/'));
 });
 
