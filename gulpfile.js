@@ -12,6 +12,8 @@ const clean = require('gulp-clean');
 const webpackStream = require('webpack-stream');
 const webpack2 = require('webpack');
 const fse = require('fs-extra');
+const replace = require('gulp-replace');
+
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
@@ -70,12 +72,18 @@ gulp.task('build-js', () => {
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('build-static', () => {
-  return gulp.src(['dwst/**/*.html', 'dwst/**/*.json', 'dwst/**/*.png', 'dwst/**/*.ico'])
+gulp.task('build-html', () => {
+  return gulp.src('dwst/**/*.html')
+    .pipe(replace('<script type="module"', '<script'))
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('build-assets', ['build-static', 'build-js', 'build-css']);
+gulp.task('build-static', () => {
+  return gulp.src(['dwst/**/*.json', 'dwst/**/*.png', 'dwst/**/*.ico'])
+    .pipe(gulp.dest('build/'));
+});
+
+gulp.task('build-assets', ['build-static', 'build-js', 'build-css', 'build-html']);
 
 gulp.task('create-symlinks', () => {
   fse.ensureLinkSync('build/dwst.html', 'build/index.html');
