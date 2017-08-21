@@ -53,15 +53,27 @@ gulp.task('clean', () => {
       .pipe(clean());
 });
 
-gulp.task('build-assets', () => {
-  return gulp.src('dwst/**/*')
+gulp.task('build-css', () => {
+  return gulp.src('dwst/**/*.css')
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('build-symlinks', () => {
+gulp.task('build-js', () => {
+  return gulp.src('dwst/**/*.js')
+    .pipe(gulp.dest('build/'));
+});
+
+gulp.task('build-static', () => {
+  return gulp.src(['dwst/**/*.html', 'dwst/**/*.json', 'dwst/**/*.png', 'dwst/**/*.ico'])
+    .pipe(gulp.dest('build/'));
+});
+
+gulp.task('build-assets', ['build-static', 'build-js', 'build-css']);
+
+gulp.task('create-symlinks', () => {
   fse.ensureLinkSync('build/dwst.html', 'build/index.html');
 });
 
-gulp.task('build', gulpSequence('clean', 'build-assets', 'build-symlinks'));
+gulp.task('build', gulpSequence('clean', 'build-assets', 'create-symlinks'));
 
 gulp.task('default', ['build']);
