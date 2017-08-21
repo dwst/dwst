@@ -941,9 +941,9 @@ class Splash {
         ' commands',
       ]),
     ]).concat(
-      connectionsLines,
+      connectionsLines
     ).concat(
-      tooManyWarning,
+      tooManyWarning
     );
     const statusSection = (() => {
       if (connection === null) {

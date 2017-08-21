@@ -3,10 +3,13 @@
 /* global require */
 
 const gulp = require('gulp');
+const gulpSequence = require('gulp-sequence');
 const jsonlint = require('gulp-jsonlint');
 const eslint = require('gulp-eslint');
 const htmlhint = require('gulp-htmlhint');
 const browserSync = require('browser-sync').create();
+const clean = require('gulp-clean');
+const fse = require('fs-extra');
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
@@ -31,8 +34,6 @@ gulp.task('validate', ['jsonlint', 'eslint', 'htmlhint']);
 
 gulp.task('test', ['validate']);
 
-gulp.task('default');
-
 gulp.task('browser-sync', () => {
   browserSync.init({
     server: {
@@ -46,3 +47,21 @@ gulp.task('browser-sync', () => {
 });
 
 gulp.task('dev', ['browser-sync']);
+
+gulp.task('clean', () => {
+  return gulp.src('build/', {read: false})
+      .pipe(clean());
+});
+
+gulp.task('build-assets', () => {
+  return gulp.src('dwst/**/*')
+    .pipe(gulp.dest('build/'));
+});
+
+gulp.task('build-symlinks', () => {
+  fse.ensureLinkSync('build/dwst.html', 'build/index.html');
+});
+
+gulp.task('build', gulpSequence('clean', 'build-assets', 'build-symlinks'));
+
+gulp.task('default', ['build']);
