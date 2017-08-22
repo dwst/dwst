@@ -1,4 +1,5 @@
 
+import utils from './utils.js'
 import currenttime from './currenttime.js';
 
 export default class Terminal {
@@ -10,6 +11,45 @@ export default class Terminal {
 
   _htmlescape(line) {
     return line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  _hexdump(buffer) {
+    function hexify(num) {
+      const hex = num.toString(16);
+      if (hex.length < 2) {
+        return `0${hex}`;
+      }
+      return hex;
+    }
+    function charify(num) {
+      if (num > 0x7e || num < 0x20) { // non-printable
+        return '.';
+      }
+      return String.fromCharCode(num);
+    }
+    const dv = new DataView(buffer);
+    let offset = 0;
+    const lines = [];
+    while (offset < buffer.byteLength) {
+      let text = '';
+      const hexes = [];
+      for (let i = 0; i < 16; i++) {
+        if (offset < buffer.byteLength) {
+          const oneByte = dv.getUint8(offset);
+          const asChar = charify(oneByte);
+          const asHex = hexify(oneByte);
+          text += asChar;
+          hexes.push(asHex);
+        }
+        offset += 1;
+      }
+      lines.push({
+        text,
+        hexes,
+      });
+  
+    }
+    return lines;
   }
 
   isUserScrolling() {
@@ -25,7 +65,7 @@ export default class Terminal {
 
   scrollNotificationUpdate() {
     if (this.isUserScrolling()) {
-      showScrollNotification();
+      this.showScrollNotification();
       return;
     }
     this.hideScrollNotification();
@@ -207,8 +247,8 @@ export default class Terminal {
             return link;
           }
           if (segment.type === 'hexline') {
-            const hexChunks = divissimo(segment.hexes, 4);
-            const textChunks = divissimo(rawText, 4);
+            const hexChunks = utils.divissimo(segment.hexes, 4);
+            const textChunks = utils.divissimo(rawText, 4);
   
             const byteGrid = document.createElement('div');
             const byteGridClasses = ['dwst-bytegrid'];
@@ -305,6 +345,20 @@ export default class Terminal {
   log(line, type) {
     this.mlog([line], type);
   }
+
+  blog(buffer, type) {
+    const msg = `<${buffer.byteLength}B of binary data>`;
+    const hd = this._hexdump(buffer);
+    const hexLines = hd.map(line => {
+      return {
+        type: 'hexline',
+        text: line.text,
+        hexes: line.hexes,
+      };
+    });
+    this.mlog([msg].concat(hexLines), type);
+  }
+
 }
 
 

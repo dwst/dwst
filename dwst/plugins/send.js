@@ -46,7 +46,7 @@ export default class Send {
       };
       let num = 16;
       if (params.length === 1) {
-        num = parseNum(params[0]);
+        num = utils.parseNum(params[0]);
       }
       let str = '';
       for (let i = 0; i < num; i++) {
@@ -68,11 +68,11 @@ export default class Send {
       let start = 32;
       let end = 126;
       if (params.length === 1) {
-        end = parseNum(params[0]);
+        end = utils.parseNum(params[0]);
       }
       if (params.length === 2) {
-        start = parseNum(params[0]);
-        end = parseNum(params[1]);
+        start = utils.parseNum(params[0]);
+        end = utils.parseNum(params[1]);
       }
       let str = '';
       for (let i = start; i <= end; i++) {

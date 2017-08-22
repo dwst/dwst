@@ -1,4 +1,5 @@
 
+import utils from '../utils.js'
 import Connection from '../connection.js';
 
 export default class Connect {
@@ -54,7 +55,7 @@ export default class Connect {
 
       // https://tools.ietf.org/html/rfc6455#page-17
 
-      const basicAlphabet = range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
+      const basicAlphabet = utils.range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
       const httpSeparators = new Set([...'()<>@,;:\\"/[]?={} \t']);
       const validProtocolChars = new Set(basicAlphabet.filter(character => !httpSeparators.has(character)));
       const usedChars = [...protocolName];

@@ -145,20 +145,6 @@ class PluginInterface {
 
 const pluginInterface = new PluginInterface(terminal);
 
-function range(a, b = null) {
-  let start;
-  let stop;
-  if (b === null) {
-    start = 0;
-    stop = a;
-  } else {
-    start = a;
-    stop = b;
-  }
-  const length = stop - start;
-  return Array(length).fill().map((_, i) => start + i);
-}
-
 const plugins = [
   Binary,
   Bins,
@@ -233,7 +219,7 @@ function run(command, ...params) {
       },
       ' to list available commands',
     ];
-    mlog([errorMessage, helpTip], 'error');
+    terminal.mlog([errorMessage, helpTip], 'error');
     return;
   }
   const processed = params.map(param => process(plugin, param));
@@ -243,96 +229,6 @@ function run(command, ...params) {
 function refreshclock() {
   const time = currenttime();
   document.getElementById('clock1').innerHTML = time;
-}
-
-function parseNum(str) {
-  if (str.length > 2 && str.substr(0, 2) === '0x') {
-    return parseInt(str.substr(2), 16);
-  }
-  const num = parseInt(str, 10);
-  return num;
-}
-function divissimo(l, n) {
-  const chunks = [];
-  let chunk = [];
-  let i = 0;
-  for (const b of l) {
-    if (i >= n) {
-      chunks.push(chunk);
-      chunk = [];
-      i = 0;
-    }
-    chunk.push(b);
-    i += 1;
-  }
-  chunks.push(chunk);
-  return chunks;
-}
-
-function hexdump(buffer) {
-  function hexify(num) {
-    const hex = num.toString(16);
-    if (hex.length < 2) {
-      return `0${hex}`;
-    }
-    return hex;
-  }
-  function charify(num) {
-    if (num > 0x7e || num < 0x20) { // non-printable
-      return '.';
-    }
-    return String.fromCharCode(num);
-  }
-  const dv = new DataView(buffer);
-  let offset = 0;
-  const lines = [];
-  while (offset < buffer.byteLength) {
-    let text = '';
-    const hexes = [];
-    for (let i = 0; i < 16; i++) {
-      if (offset < buffer.byteLength) {
-        const oneByte = dv.getUint8(offset);
-        const asChar = charify(oneByte);
-        const asHex = hexify(oneByte);
-        text += asChar;
-        hexes.push(asHex);
-      }
-      offset += 1;
-    }
-    lines.push({
-      text,
-      hexes,
-    });
-
-  }
-  return lines;
-}
-
-function flatList(values) {
-  const segments = [];
-  values.forEach(value => {
-    value.afterText = ',';
-    segments.push(value);
-    segments.push(' ');
-  });
-  segments.pop();  // remove extra space
-  const last = segments.pop();
-  Reflect.deleteProperty(last, 'afterText');
-  segments.push(last);
-  return segments;
-}
-
-function blog(buffer, type) {
-  const msg = `<${buffer.byteLength}B of binary data>`;
-  const hd = hexdump(buffer);
-  const hexLines = hd.map(line => {
-    return {
-      type: 'hexline',
-      text: line.text,
-      hexes: line.hexes,
-    };
-  });
-  mlog([msg].concat(hexLines), type);
 }
 
 function silent(line) {
@@ -364,7 +260,7 @@ function send() {
       },
       ' to list available commands',
     ];
-    log(helpTip, 'system');
+    terminal.log(helpTip, 'system');
     return;
   }
   if (raw[0] === '/') {

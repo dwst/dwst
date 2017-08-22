@@ -1,3 +1,4 @@
+import utils from '../utils.js'
 
 export default class Binary {
 
@@ -61,7 +62,7 @@ export default class Binary {
       };
       let num = 16;
       if (params.length === 1) {
-        num = parseNum(params[0]);
+        num = utils.parseNum(params[0]);
       }
       bytes = [];
       for (let i = 0; i < num; i++) {
@@ -72,11 +73,11 @@ export default class Binary {
       let start = 0;
       let end = 0xff;
       if (params.length === 1) {
-        end = parseNum(params[0]);
+        end = utils.parseNum(params[0]);
       }
       if (params.length === 2) {
-        start = parseNum(params[0]);
-        end = parseNum(params[1]);
+        start = utils.parseNum(params[0]);
+        end = utils.parseNum(params[1]);
       }
       bytes = [];
       for (let i = start; i <= end; i++) {
@@ -110,7 +111,7 @@ export default class Binary {
       if (params.length === 1) {
         const hex = params[0];
         const nums = hex.split('');
-        const pairs = divissimo(nums, 2);
+        const pairs = utils.divissimo(nums, 2);
         const tmp = pairs.map(hexpairtobyte);
         bytes = tmp.filter(b => (b !== null));
       } else {
@@ -138,7 +139,7 @@ export default class Binary {
     }
     const out = joinbufs(buffers).buffer;
     const msg = `<${out.byteLength}B of data> `;
-    if (connection === null || connection.isClosing() || connection.isClosed()) {
+    if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [
         'Use ',
         {
@@ -151,8 +152,8 @@ export default class Binary {
       mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
       return;
     }
-    blog(out, 'sent');
-    connection.send(out);
+    this._dwst.terminal.blog(out, 'sent');
+    this._dwst.connection.send(out);
   }
 }
 

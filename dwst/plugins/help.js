@@ -1,4 +1,18 @@
 
+function flatList(values) {
+  const segments = [];
+  values.forEach(value => {
+    value.afterText = ',';
+    segments.push(value);
+    segments.push(' ');
+  });
+  segments.pop();  // remove extra space
+  const last = segments.pop();
+  Reflect.deleteProperty(last, 'afterText');
+  segments.push(last);
+  return segments;
+}
+
 export default class Help {
 
   constructor(dwst) {
@@ -54,7 +68,7 @@ export default class Help {
 
   _mainHelp() {
     const available = [];
-    [...commands.keys()].sort().forEach(c => {
+    [...this._dwst.commands.keys()].sort().forEach(c => {
       if (c.length > 1) {
         const commandSegment = {
           type: 'dwstgg',
@@ -69,7 +83,7 @@ export default class Help {
 
     const commandsList = [flatList(available)];
 
-    mlog([
+    this._dwst.terminal.mlog([
       this._createBreadCrumbs(),
       '',
       {
@@ -150,7 +164,7 @@ export default class Help {
     ];
 
     if (page === '#chrome') {
-      mlog(([
+      this._dwst.terminal.mlog(([
         this._createBreadCrumbs(page),
         '',
         {
@@ -193,7 +207,7 @@ export default class Help {
       return;
     }
     if (page === '#firefox') {
-      mlog(([
+      this._dwst.terminal.mlog(([
         this._createBreadCrumbs(page),
         '',
         {
@@ -238,7 +252,7 @@ export default class Help {
           text: c,
         };
       });
-      mlog(([
+      this._dwst.terminal.mlog(([
         this._createBreadCrumbs(page),
         '',
         {
@@ -264,7 +278,7 @@ export default class Help {
       return;
     }
     if (page === '#unprotected') {
-      mlog([
+      this._dwst.terminal.mlog([
         this._createBreadCrumbs(page),
         '',
         {
@@ -371,7 +385,7 @@ export default class Help {
         'This describes how we do things today. ',
         'Check this page again sometime for possible updates on privacy and tracking considerations.',
       ];
-      mlog(([
+      this._dwst.terminal.mlog(([
         this._createBreadCrumbs(page),
         '',
         {
@@ -391,17 +405,17 @@ export default class Help {
       return;
     }
 
-    log(`Unkown help page: ${page}`, 'error');
+    this._dwst.terminal.log(`Unkown help page: ${page}`, 'error');
   }
 
   _commandHelp(command) {
     const plugin = this._dwst.commands.get(command);
     if (typeof plugin === 'undefined') {
-      log(`the command does not exist: ${command}`, 'error');
+      this._dwst.terminal.log(`the command does not exist: ${command}`, 'error');
       return;
     }
     if (typeof plugin.usage === 'undefined') {
-      log(`no help available for: ${command}`, 'system');
+      this._dwst.terminal.log(`no help available for: ${command}`, 'system');
       return;
     }
     const usage = plugin.usage().map(usageExample => {
