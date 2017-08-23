@@ -63,13 +63,13 @@ gulp.task('build-css', () => {
 });
 
 gulp.task('build-js', () => {
-  return gulp.src('dwst/dwst.js')
+  return gulp.src('dwst/scripts/dwst.js')
     .pipe(webpackStream({
       output: {
         filename: 'dwst.js',
       },
     }, webpack2))
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('build/scripts/'));
 });
 
 gulp.task('build-html', () => {
