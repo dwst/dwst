@@ -211,10 +211,10 @@ body
   top: -3px;
   height: 26px;
   width: 48px;
-  background-image: url('images/minilogo.png');
+  background-image: url('../images/minilogo.png');
 }
 .splash-button:hover {
-  background-image: url('images/minilogo-hover.png');
+  background-image: url('../images/minilogo-hover.png');
   cursor: pointer;
 }
 .send-button {
@@ -222,10 +222,10 @@ body
   top: 0;
   height: 26px;
   width: 26px;
-  background-image: url('images/return.png');
+  background-image: url('../images/return.png');
 }
 .send-button:hover {
-  background-image: url('images/return-hover.png');
+  background-image: url('../images/return-hover.png');
   cursor: pointer;
 }
 .input-holder {
