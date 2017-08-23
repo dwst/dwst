@@ -73,17 +73,24 @@ gulp.task('build-js', () => {
 });
 
 gulp.task('build-html', () => {
+  // We bundle javascript with webpack for production builds
+  // So we should be fine without the module system
   return gulp.src('dwst/**/*.html')
     .pipe(replace('<script type="module"', '<script'))
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('build-static', () => {
-  return gulp.src(['dwst/**/*.json', 'dwst/**/*.png', 'dwst/**/*.ico'])
+gulp.task('build-images', () => {
+  return gulp.src(['dwst/images/*.png', 'dwst/images/*.ico'])
+    .pipe(gulp.dest('build/images/'));
+});
+
+gulp.task('build-manifest', () => {
+  return gulp.src('dwst/manifest.json')
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('build-assets', ['build-static', 'build-js', 'build-css', 'build-html']);
+gulp.task('build-assets', ['build-js', 'build-css', 'build-html', 'build-images', 'build-manifest']);
 
 gulp.task('create-symlinks', () => {
   fse.ensureLinkSync('build/dwst.html', 'build/index.html');
