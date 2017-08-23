@@ -13,7 +13,8 @@ const webpackStream = require('webpack-stream');
 const webpack2 = require('webpack');
 const fse = require('fs-extra');
 const replace = require('gulp-replace');
-
+const postcss = require('gulp-postcss');
+const atImport = require("postcss-import")
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
@@ -58,8 +59,11 @@ gulp.task('clean', () => {
 });
 
 gulp.task('build-css', () => {
-  return gulp.src('dwst/**/*.css')
-    .pipe(gulp.dest('build/'));
+  return gulp.src('dwst/styles/dwst.css')
+    .pipe(postcss([
+      atImport(),
+    ]))
+    .pipe(gulp.dest('build/styles/'));
 });
 
 gulp.task('build-js', () => {
