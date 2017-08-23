@@ -348,6 +348,15 @@ function loadSaves() {
   pluginInterface.historyManager = new HistoryManager(history, {save});
 }
 
+function throttledUpdateGfxPositions() {
+  if (resizePending !== true) {
+    resizePending = true;
+    setTimeout(() => {
+      resizePending = false;
+      terminal.updateGfxPositions();
+    }, 100);
+  }
+}
 
 function init() {
   loadSaves();
@@ -356,7 +365,7 @@ function init() {
   setInterval(refreshclock, 500);
   silent('/splash');
 
-  window.addEventListener('resize', terminal.throttledUpdateGfxPositions);
+  window.addEventListener('resize', throttledUpdateGfxPositions);
 
   document.addEventListener('keydown', globalKeyPress);
   document.getElementById('msg1').addEventListener('keydown', msgKeyPress);

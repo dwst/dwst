@@ -104,16 +104,6 @@ export default class Terminal {
       field.setAttribute('style', `transform: initial; margin-left: ${leftMargin}ch;`);
     }]);
   }
-  
-  throttledUpdateGfxPositions() {
-    if (resizePending !== true) {
-      resizePending = true;
-      setTimeout(() => {
-        resizePending = false;
-        this.updateGfxPositions();
-      }, 100);
-    }
-  }
 
   addLogLine(logLine) {
     const terminal = document.getElementById(this._elementId);
