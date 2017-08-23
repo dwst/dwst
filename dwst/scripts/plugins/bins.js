@@ -28,9 +28,9 @@ export default class Bins {
 
   run(variable = null) {
     if (variable !== null) {
-      const buffer = bins.get(variable);
+      const buffer = this._dwst.bins.get(variable);
       if (typeof buffer !== 'undefined') {
-        blog(buffer, 'system');
+        this._dwst.blog(buffer, 'system');
         return;
       }
       const listTip = [
@@ -41,13 +41,13 @@ export default class Bins {
         },
         '.',
       ];
-      mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
+      this._dwst.mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
       return;
     }
-    const listing = [...bins.entries()].map(([name, buffer]) => {
+    const listing = [...this._dwst.bins.entries()].map(([name, buffer]) => {
       return `"${name}": <${buffer.byteLength}B of binary data>`;
     });
     const strs = ['Loaded binaries:'].concat(listing);
-    mlog(strs, 'system');
+    this._dwst.mlog(strs, 'system');
   }
 }

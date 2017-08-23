@@ -1,5 +1,5 @@
 
-import utils from './utils.js'
+import utils from './utils.js';
 import currenttime from './currenttime.js';
 
 export default class Terminal {
@@ -47,7 +47,7 @@ export default class Terminal {
         text,
         hexes,
       });
-  
+
     }
     return lines;
   }
@@ -70,13 +70,13 @@ export default class Terminal {
     }
     this.hideScrollNotification();
   }
-  
+
   showScrollNotification() {
     [...document.getElementsByClassName('js-scroll-notification')].forEach(sn => {
       sn.removeAttribute('style');
     });
   }
-  
+
   hideScrollNotification() {
     [...document.getElementsByClassName('js-scroll-notification')].forEach(sn => {
       sn.setAttribute('style', 'display: none;');
@@ -179,7 +179,7 @@ export default class Terminal {
             }
             return this._htmlescape(rawText);
           })();
-  
+
           if (segment.type === 'regular') {
             const textSpan = document.createElement('span');
             textSpan.innerHTML = safeText;
@@ -239,33 +239,33 @@ export default class Terminal {
           if (segment.type === 'hexline') {
             const hexChunks = utils.divissimo(segment.hexes, 4);
             const textChunks = utils.divissimo(rawText, 4);
-  
+
             const byteGrid = document.createElement('div');
             const byteGridClasses = ['dwst-bytegrid'];
             if (hexChunks.length < 3) {
               byteGridClasses.push('dwst-bytegrid--less-than-three');
             }
             byteGrid.setAttribute('class', byteGridClasses.join(' '));
-  
+
             const chunksWanted = 4;
             const chunkLength = 4;
             [...Array(chunksWanted).keys()].forEach(i => {
               const [hexChunk = []] = [hexChunks[i]];
               const [textChunk = []] = [textChunks[i]];
-  
+
               const hexContent = this._htmlescape(hexChunk.join(' '));
               const hexItem = document.createElement('div');
               hexItem.setAttribute('class', 'dwst-bytegrid__item');
               hexItem.innerHTML = hexContent;
               byteGrid.appendChild(hexItem);
-  
+
               const textContent = this._htmlescape(textChunk.join('').padEnd(chunkLength));
               const textItem = document.createElement('div');
               textItem.setAttribute('class', 'dwst-bytegrid__item');
               textItem.innerHTML = textContent;
               byteGrid.appendChild(textItem);
             });
-  
+
             const textSpan = document.createElement('span');
             textSpan.setAttribute('class', 'dwst-mlog__hexline');
             textSpan.appendChild(byteGrid);
@@ -331,7 +331,7 @@ export default class Terminal {
     logLine.appendChild(outputCell);
     this.addLogLine(logLine);
   }
-  
+
   log(line, type) {
     this.mlog([line], type);
   }

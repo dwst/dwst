@@ -1,4 +1,3 @@
-'use strict';
 
 import currenttime from './currenttime.js';
 import HistoryManager from './history_manager.js';
@@ -35,12 +34,13 @@ William Orr <will@worrbase.com>, US 2012
 
 */
 
-const bins = new Map();
-const texts = new Map();
 let resizePending = false;
-let intervalId = null;
 
 const controller = {
+
+  silent,
+  run,
+
   onHelpLinkClick: command => {
     loud(command);
   },
@@ -122,28 +122,22 @@ const controller = {
 
 const terminal = new Terminal('ter1', controller);
 
-class PluginInterface {
+const pluginInterface = {
 
-  constructor(terminal) {
-    this.terminal = terminal;
-    this.controller = controller;
-    this.historyManager = null;
-    this.connection = null;
-    this.commands = null
-  }
+  VERSION: '2.2.6',
+  ECHO_SERVER_URL: 'wss://echo.websocket.org/',
 
-  get VERSION() {
-    return '2.2.6';
-  }
+  terminal,
+  controller,
+  historyManager: null,
+  connection: null,
+  commands: null,
+  bins: new Map(),
+  texts: new Map(),
+  intervalId: null,
 
-  get ECHO_SERVER_URL() {
-    return 'wss://echo.websocket.org/';
-  }
+};
 
-
-}
-
-const pluginInterface = new PluginInterface(terminal);
 
 const plugins = [
   Binary,
@@ -310,7 +304,7 @@ function globalKeyPress(event) {
     } else if (msg1.value === '') {
       const connects = pluginInterface.historyManager.getConnectCommands(1);
       if (connects.length < 1) {
-        msg1.value = `/connect ${ECHO_SERVER_URL}`;
+        msg1.value = `/connect ${pluginInterface.ECHO_SERVER_URL}`;
       } else {
         msg1.value = connects[0];
       }

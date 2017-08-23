@@ -1,4 +1,3 @@
-'use strict';
 
 /* global require */
 
@@ -14,7 +13,7 @@ const webpack2 = require('webpack');
 const fse = require('fs-extra');
 const replace = require('gulp-replace');
 const postcss = require('gulp-postcss');
-const atImport = require("postcss-import")
+const atImport = require('postcss-import');
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '!node_modules/**'])
@@ -55,7 +54,7 @@ gulp.task('dev', ['browser-sync']);
 
 gulp.task('clean', () => {
   return gulp.src('build/', {read: false})
-      .pipe(clean());
+    .pipe(clean());
 });
 
 gulp.task('build-css', () => {

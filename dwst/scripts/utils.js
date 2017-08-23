@@ -1,7 +1,7 @@
 
 export default {
 
-  parseNum: (str) => {
+  parseNum: str => {
     if (str.length > 2 && str.substr(0, 2) === '0x') {
       return parseInt(str.substr(2), 16);
     }
@@ -40,4 +40,4 @@ export default {
     return Array(length).fill().map((_, i) => start + i);
   },
 
-}
+};

@@ -35,8 +35,8 @@ export default class Loadbin {
       const reader = new FileReader();
       reader.onload = function (e2) {
         const buffer = e2.target.result;
-        bins.set(variable, buffer);
-        log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
+        this._dwst.bins.set(variable, buffer);
+        this._dwst.terminal.log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
     };

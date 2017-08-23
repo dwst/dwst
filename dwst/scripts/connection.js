@@ -112,7 +112,7 @@ export default class Connection {
 
   send(...params) {
     if (this.ws.readyState !== 1) {
-      onSendWhileConnecting(this.verb)
+      this._controller.onSendWhileConnecting(this.verb);
     }
     this.ws.send(...params);
   }

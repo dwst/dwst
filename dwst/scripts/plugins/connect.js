@@ -1,5 +1,5 @@
 
-import utils from '../utils.js'
+import utils from '../utils.js';
 import Connection from '../connection.js';
 
 export default class Connect {

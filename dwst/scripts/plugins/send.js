@@ -1,3 +1,4 @@
+import utils from '../utils.js';
 
 export default class Send {
 
@@ -59,7 +60,7 @@ export default class Send {
       if (params.length === 1) {
         variable = params[0];
       }
-      out = texts.get(variable);
+      out = this._dwst.texts.get(variable);
     }
     if (instr === 'time') {
       out = String(Math.round(new Date().getTime() / 1000));
@@ -95,7 +96,7 @@ export default class Send {
         },
         ' to form a connection and try again.',
       ];
-      mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
+      this._dwst.terminal.mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
       return;
     }
     this._dwst.terminal.log(msg, 'sent');

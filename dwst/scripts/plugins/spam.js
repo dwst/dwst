@@ -1,4 +1,6 @@
 
+import utils from '../utils.js';
+
 export default class Spam {
 
   constructor(dwst) {
@@ -27,25 +29,25 @@ export default class Spam {
   }
 
   run(timesStr, ...commandParts) {
-    const times = parseNum(timesStr);
-    function spam(limit, i = 0) {
+    const times = utils.parseNum(timesStr);
+    const spam = (limit, i = 0) => {
       if (i === limit) {
         return;
       }
       if (commandParts.length < 1) {
-        run('send', String(i));
+        this._dwst.controller.run('send', String(i));
       } else {
-        silent(commandParts.join(' '));
+        this._dwst.controller.silent(commandParts.join(' '));
       }
       const nextspam = () => {
         spam(limit, i + 1);
       };
-      if (connection !== null && connection.isOpen()) {
+      if (this._dwst.connection !== null && this._dwst.connection.isOpen()) {
         setTimeout(nextspam, 0);
       } else {
-        log('spam failed, no connection', 'error');
+        this._dwst.terminal.log('spam failed, no connection', 'error');
       }
-    }
+    };
     spam(times);
   }
 }

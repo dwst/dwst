@@ -36,8 +36,8 @@ export default class Loadtext {
       const reader = new FileReader();
       reader.onload = function (e2) {
         const text = e2.target.result;
-        texts.set(variable, text);
-        log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
+        this._dwst.texts.set(variable, text);
+        this._dwst.terminal.log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsText(file, encoding);
     };

@@ -1,4 +1,4 @@
-import utils from '../utils.js'
+import utils from '../utils.js';
 
 export default class Binary {
 
@@ -89,7 +89,7 @@ export default class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      let buffer = bins.get(variable);
+      let buffer = this._dwst.bins.get(variable);
       if (typeof buffer === 'undefined') {
         buffer = [];
       }
@@ -100,7 +100,7 @@ export default class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      const text = texts.get(variable);
+      const text = this._dwst.texts.get(variable);
       if (typeof text === 'undefined') {
         bytes = [];
       } else {
@@ -149,7 +149,7 @@ export default class Binary {
         },
         ' to form a connection and try again.',
       ];
-      mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
+      this._dwst.terminal.mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
       return;
     }
     this._dwst.terminal.blog(out, 'sent');

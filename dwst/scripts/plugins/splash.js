@@ -129,9 +129,9 @@ export default class Splash {
         ' commands',
       ]),
     ]).concat(
-      connectionsLines
+      connectionsLines,
     ).concat(
-      tooManyWarning
+      tooManyWarning,
     );
     const statusSection = (() => {
       if (this._dwst.connection === null) {

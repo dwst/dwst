@@ -29,9 +29,9 @@ export default class Texts {
 
   run(variable = null) {
     if (variable !== null) {
-      const text = texts.get(variable);
+      const text = this._dwst.texts.get(variable);
       if (typeof text  !== 'undefined') {
-        log(text, 'system');
+        this._dwst.terminal.log(text, 'system');
         return;
       }
       const listTip = [
@@ -42,13 +42,13 @@ export default class Texts {
         },
         '.',
       ];
-      mlog([`Text "${variable}" does not exist.`, listTip], 'error');
+      this._dwst.terminal.mlog([`Text "${variable}" does not exist.`, listTip], 'error');
     }
-    const listing = [...texts.entries()].map(([name, text]) => {
+    const listing = [...this._dwst.texts.entries()].map(([name, text]) => {
       return `"${name}": <${text.length}B of text data>`;
     });
     const strs = ['Loaded texts:'].concat(listing);
-    mlog(strs, 'system');
+    this._dwst.terminal.mlog(strs, 'system');
   }
 }
 
