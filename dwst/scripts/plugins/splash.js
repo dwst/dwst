@@ -189,7 +189,7 @@ export default class Splash {
         '1. Create a test connection by typing ',
         {
           type: 'command',
-          text: `/connect ${this._ECHO_SERVER_URL}`,
+          text: `/connect ${this._dwst.ECHO_SERVER_URL}`,
         },
       ],
       [

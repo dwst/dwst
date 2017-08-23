@@ -132,11 +132,11 @@ class PluginInterface {
     this.commands = null
   }
 
-  static get VERSION() {
+  get VERSION() {
     return '2.2.6';
   }
 
-  static get ECHO_SERVER_URL() {
+  get ECHO_SERVER_URL() {
     return 'wss://echo.websocket.org/';
   }
 
