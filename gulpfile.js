@@ -30,21 +30,21 @@ const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
 
 gulp.task('jsonlint', () => {
-  return gulp.src(['**/*.json', '!node_modules/**'])
+  return gulp.src(['**/*.json', '.htmlhintrc', '!node_modules/**'])
     .pipe(jsonlint())
     .pipe(jsonlint.failOnError());
 });
 
 gulp.task('eslint', () => {
-  return gulp.src(['**/*.js', '!node_modules/**'])
+  return gulp.src(['**/*.js', '!node_modules/**', '!build/**'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
 
 gulp.task('htmlhint', () => {
-  gulp.src(['**/*.html', '!node_modules/**'])
-    .pipe(htmlhint())
+  gulp.src(['**/*.html', '!node_modules/**', '!build/**'])
+    .pipe(htmlhint('.htmlhintrc'))
     .pipe(htmlhint.failReporter());
 });
 
