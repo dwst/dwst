@@ -13,48 +13,48 @@ William Orr <will@worrbase.com>, US 2012
 -->
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src; img-src 'self' https://www.google-analytics.com; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; connect-src *;" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#222" />
-<link rel="manifest" href="/manifest.json" />
-<title>Dark WebSocket Terminal</title>
-<script src="dwst.js" charset="UTF-8"></script>
-<link rel="stylesheet" type="text/css" href="dwst.css" />
-<link rel="icon" type="image/x-icon" href="favicon.ico" />
-<link rel="icon" type="image/png" href="favicon.png" />
-<script>
-  if (self.origin.startsWith('https://dwst.github.io')) {
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-103558597-1', 'auto');
-    ga('send', 'pageview');
-  }
-</script>
+  <meta http-equiv="Content-Security-Policy" content="default-src; img-src 'self' https://www.google-analytics.com; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; connect-src *;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#222" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>Dark WebSocket Terminal</title>
+  <link rel="stylesheet" type="text/css" href="dwst.css" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
-<div class="dwst-background">
-  <div class="dwst-background__content-area"></div>
-</div>
-<div id="screen1" class="screen">
-<div id="ter1" class="terminal">
-</div>
-</div>
-<div class="dwst-notification js-scroll-notification" style="display: none;">
-  <a href="#" class="dwst-notification__link js-auto-scroll-button">scroll to bottom</a>
-</div>
-<div class="bar2">
-<table class="consolebar"><tr>
-<td id="clock1" style="color: transparent;" class="time rightpad leftpad">00:00:00</td>
-<td class="input-holder"><label for="msg1" class="dwst-hide">command prompt</label><input id="msg1" type="text" value=""></td>
-<td class="button rightpad"><div class="send-button" id="sendbut1" type="button" value="send"></div></td>
-<td class="button rightpad"><div class="splash-button" id="menubut1" type="button" value="menu"></div></td>
-</tr></table>
-</div>
-<div id="fileframe" style="visibility: hidden;">
-<input id="file1" type="file"/>
-</div>
+  <div class="dwst-background">
+    <div class="dwst-background__content-area"></div>
+  </div>
+  <div id="screen1" class="screen">
+    <div id="ter1" class="terminal">
+    </div>
+  </div>
+  <div class="dwst-notification js-scroll-notification" style="display: none;">
+    <a href="#" class="dwst-notification__link js-auto-scroll-button">scroll to bottom</a>
+  </div>
+  <div class="bar2">
+    <table class="consolebar"><tr>
+      <td id="clock1" style="color: transparent;" class="time rightpad leftpad">00:00:00</td>
+      <td class="input-holder"><label for="msg1" class="dwst-hide">command prompt</label><input id="msg1" type="text" value="" /></td>
+      <td class="button rightpad"><div class="send-button" id="sendbut1" type="button" value="send"></div></td>
+      <td class="button rightpad"><div class="splash-button" id="menubut1" type="button" value="menu"></div></td>
+    </tr></table>
+  </div>
+  <div id="fileframe" style="visibility: hidden;">
+    <input id="file1" type="file" />
+  </div>
+  <script src="dwst.js" charset="UTF-8"></script>
+  <script>
+    if (self.origin.startsWith('https://dwst.github.io')) {
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  
+      ga('create', 'UA-103558597-1', 'auto');
+      ga('send', 'pageview');
+    }
+  </script>
 </body>
 </html>
