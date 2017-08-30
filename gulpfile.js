@@ -9,7 +9,7 @@ const htmlhint = require('gulp-htmlhint');
 const browserSync = require('browser-sync').create();
 
 gulp.task('jsonlint', () => {
-  return gulp.src(['**/*.json', '!node_modules/**'])
+  return gulp.src(['**/*.json', '.htmlhintrc', '!node_modules/**'])
     .pipe(jsonlint())
     .pipe(jsonlint.failOnError());
 });
@@ -23,7 +23,7 @@ gulp.task('eslint', () => {
 
 gulp.task('htmlhint', () => {
   gulp.src(['**/*.html', '!node_modules/**'])
-    .pipe(htmlhint())
+    .pipe(htmlhint('.htmlhintrc'))
     .pipe(htmlhint.failReporter());
 });
 
