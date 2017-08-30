@@ -33,6 +33,11 @@ gulp.task('test', ['validate']);
 
 gulp.task('default');
 
+gulp.task('sync-css', () => {
+  return gulp.src(['dwst/**/*.css'])
+    .pipe(browserSync.stream());
+});
+
 gulp.task('browser-sync', () => {
   browserSync.init({
     server: {
@@ -40,6 +45,8 @@ gulp.task('browser-sync', () => {
       index: 'dwst.html',
     },
   });
+  gulp.watch('dwst/**/*.css', ['sync-css']);
+  gulp.watch(['dwst/**/*', '!dwst/**/*.css']).on('change', browserSync.reload);
 });
 
 gulp.task('dev', ['browser-sync']);
