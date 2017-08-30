@@ -16,11 +16,11 @@ William Orr <will@worrbase.com>, US 2012
   <meta http-equiv="Content-Security-Policy" content="default-src; img-src 'self' https://www.google-analytics.com; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; connect-src *;" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#222" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="manifest" href="manifest.json" />
   <title>Dark WebSocket Terminal</title>
-  <link rel="stylesheet" type="text/css" href="dwst.css" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" type="text/css" href="styles/dwst.css" />
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
 </head>
 <body>
   <div class="dwst-background">
@@ -44,7 +44,7 @@ William Orr <will@worrbase.com>, US 2012
   <div id="fileframe" style="visibility: hidden;">
     <input id="file1" type="file" />
   </div>
-  <script src="dwst.js" charset="UTF-8"></script>
+  <script src="scripts/dwst.js" charset="UTF-8"></script>
   <script>
     if (self.origin.startsWith('https://dwst.github.io')) {
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
