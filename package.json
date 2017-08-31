@@ -42,6 +42,9 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
     "browser-sync": "^2.14.3",
     "file-loader": "^0.11.2",
     "gulp": "^3.9.1",

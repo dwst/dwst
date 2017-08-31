@@ -119,6 +119,23 @@ gulp.task('build-js', () => {
       output: {
         filename: 'dwst.js',
       },
+      module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            query: {
+              presets: [
+                ['env', {
+                  targets: {
+                    browsers: require('./package.json').browserslist,
+                  },
+                }],
+              ],
+            },
+          },
+        ],
+      },
     }, webpack2))
     .pipe(gulp.dest('build/scripts/'))
     .pipe(rename(p => {
