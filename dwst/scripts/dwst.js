@@ -1,15 +1,16 @@
 'use strict';
 
-/*
-Dark WebSocket Terminal
+/**
 
-CC0, http://creativecommons.org/publicdomain/zero/1.0/
+  Authors: Toni Ruottu, Finland 2010-2017
+           William Orr, US 2012
 
-To the extent possible under law, Dark WebSocket Terminal developers have waived all copyright and related or neighboring rights to Dark WebSocket Terminal.
+  This file is part of Dark WebSocket Terminal.
 
-Dark WebSocket Terminal developers:
-Toni Ruottu <toni.ruottu@iki.fi>, Finland 2010-2017
-William Orr <will@worrbase.com>, US 2012
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
 
 */
 
