@@ -12,44 +12,7 @@
 
 */
 
-:root {
-  --dwst-color-black: #030303;
-  --dwst-color-black--af: #000;
-  --dwst-color-white: #fffefd;
-  --dwst-color-white--af: #fff;
-
-  --dwst-color-blue: #27b;
-  --dwst-color-blue--light: #77c;
-  --dwst-color-cyan: #6ab;
-  --dwst-color-cyan--light: #3ef;
-  --dwst-color-green: #464;
-  --dwst-color-green--light: #7f7;
-  --dwst-color-pink: #d6a;
-  --dwst-color-pink--light: #f8c;
-  --dwst-color-purple: #614;
-  --dwst-color-purple--transparent: rgba(102, 17, 68, 0.5);
-  --dwst-color-purple--light: #936;
-  --dwst-color-red: #f00;
-  --dwst-color-red--light: #c77;
-  --dwst-color-yellow: #ffa;
-  --dwst-color-yellow--light: #ff0;
-  --dwst-color-gray: #888786;
-  --dwst-color-gray--light: #cccbca;
-
-  --dwst-color-gray-1: #111;
-  --dwst-color-gray-2: #222;
-  --dwst-color-gray-4: #444;
-  --dwst-color-gray-7: #777;
-  --dwst-color-gray-d: #ddd;
-
-  --dwst-color-purplified-black: #150010;
-  --dwst-color-purplified-gray: #302;
-
-  --dwst-color-debug-brown: #131303;
-  --dwst-color-debug-orange: #431303;
-
-  --dwst-bar-height: 24pt;
-}
+@import '_variables.css';
 
 body {
   margin: 0;
