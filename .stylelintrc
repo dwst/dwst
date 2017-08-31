@@ -102,7 +102,7 @@
     "color-no-hex": null,
     "function-url-no-scheme-relative": true,
     "value-no-vendor-prefix": true,
-    "property-no-vendor-prefix": null,
+    "property-no-vendor-prefix": true,
     "declaration-no-important": true,
     "selector-no-qualifying-type": null,
     "selector-no-vendor-prefix": true,

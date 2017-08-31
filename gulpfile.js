@@ -30,6 +30,7 @@ const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
 const rename = require('gulp-rename');
 const stylelint = require('gulp-stylelint');
+const autoprefixer = require('autoprefixer');
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '.htmlhintrc', '.stylelintrc', '!node_modules/**'])
@@ -100,6 +101,7 @@ gulp.task('build-css', () => {
   return gulp.src('dwst/styles/dwst.css')
     .pipe(postcss([
       atImport(),
+      autoprefixer(),
     ]))
     .pipe(gulp.dest('build/styles/'))
     .pipe(rename(p => {
