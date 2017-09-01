@@ -1,4 +1,7 @@
 {
+  "plugins": [
+    "stylelint-no-unsupported-browser-features"
+  ],
   "rules": {
     "indentation": 2,
     "max-empty-lines": 1,
@@ -185,6 +188,15 @@
     "at-rule-semicolon-space-before": "never",
 
     "comment-empty-line-before": null,
-    "comment-whitespace-inside": null
+    "comment-whitespace-inside": null,
+
+    "plugin/no-unsupported-browser-features": [true, {
+      "ignore": [
+        "css-hyphens",
+        "multicolumn",
+        "viewport-units",
+        "outline"
+      ]
+    }]
   }
 }
