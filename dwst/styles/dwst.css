@@ -13,7 +13,6 @@
 */
 
 :root {
-
   --dwst-color-black: #030303;
   --dwst-color-black--af: #000;
   --dwst-color-white: #fffefd;
@@ -50,11 +49,10 @@
   --dwst-color-debug-orange: #431303;
 
   --dwst-bar-height: 24pt;
-
 }
 
-body
-{
+body {
+  margin: 0;
   font-family: monospace;
   font-size: 3.9vw;
   height: 100%;
@@ -66,21 +64,18 @@ body
   }
 }
 
-.button
-{
+.button {
   width: auto;
   padding: 0 1em 0 0;
 }
-input[type="text"]
-{
+input[type="text"] {
   background-color: var(--dwst-color-gray-4);
   color: var(--dwst-color-white);
   font-family: monospace;
   border: thin solid var(--dwst-color-red);
 }
 
-.bar2 input[type="text"]
-{
+.bar2 input[type="text"] {
   background-color: var(--dwst-color-gray-1);
   border-width: 0;
   width: 100%;
@@ -90,22 +85,16 @@ input[type="text"]
   border-width: 0;
 }
 
-.consolebar input[type="button"]
-{
+.consolebar input[type="button"] {
   padding: 0;
   width: 5em;
 }
 
-body
-{
-  margin: 0;
-}
 .preserved {
   white-space: pre-wrap;
 }
 
-.consolebar
-{
+.consolebar {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -113,30 +102,25 @@ body
   background-color: var(--dwst-color-gray-2);
 }
 
-.consolebar .time
-{
+.consolebar .time {
   font-family: monospace;
   width: 1em;
   color: var(--dwst-color-gray-d);
 }
 
-.sec
-{
-  color:  var(--dwst-color-gray-7);
+.sec {
+  color: var(--dwst-color-gray-7);
 }
 
-.consolebar .leftpad
-{
+.consolebar .leftpad {
   padding-left: 1em;
 }
 
-.consolebar .rightpad
-{
+.consolebar .rightpad {
   padding-right: 1em;
 }
 
-.bar2
-{
+.bar2 {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -273,7 +257,6 @@ body
   background-color: var(--dwst-color-debug-orange);
 }
 
-
 .dwst-background__content-area {
   position: absolute;
   top: 0;
@@ -297,8 +280,7 @@ body
   background-color: var(--dwst-color-debug-brown);
 }
 
-#screen1
-{
+#screen1 {
   position: absolute;
   top: 0;
   left: 0;
@@ -311,8 +293,7 @@ body
   cursor: text;
 }
 
-.terminal
-{
+.terminal {
   min-height: 100%;
   background-color: var(--dwst-color-black);
   color: var(--dwst-color-gray--light);
@@ -327,7 +308,7 @@ body
 
 .dwst-logclear {
   float: left;
-  height: calc(100vh - var(--dwst-bar-height))
+  height: calc(100vh - var(--dwst-bar-height));
 }
 
 .dwst-logline {
@@ -348,13 +329,10 @@ body
   hyphens: none;
 }
 
-
 @media screen and (min-width: 750px) {
-
   .dwst-logline {
     grid-template-columns: 8ch 10ch calc(100% - 8ch - 10ch - 2 * 1ch);
   }
-
 }
 
 .dwst-logline__item.time {
@@ -371,33 +349,27 @@ body
   text-align: right;
 }
 
-.dwst-direction--sent
-{
+.dwst-direction--sent {
   color: var(--dwst-color-blue--light);
 }
 
-.dwst-direction--received
-{
+.dwst-direction--received {
   color: var(--dwst-color-red--light);
 }
 
-.dwst-direction--command
-{
+.dwst-direction--command {
   color: var(--dwst-color-cyan--light);
 }
 
-.dwst-direction--error
-{
+.dwst-direction--error {
   color: var(--dwst-color-red);
 }
 
-.dwst-direction--warning
-{
+.dwst-direction--warning {
   color: var(--dwst-color-yellow);
 }
 
-.dwst-direction--system
-{
+.dwst-direction--system {
   color: var(--dwst-color-green--light);
 }
 

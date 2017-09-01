@@ -29,9 +29,10 @@ const fse = require('fs-extra');
 const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
 const rename = require('gulp-rename');
+const stylelint = require('gulp-stylelint');
 
 gulp.task('jsonlint', () => {
-  return gulp.src(['**/*.json', '.htmlhintrc', '!node_modules/**'])
+  return gulp.src(['**/*.json', '.htmlhintrc', '.stylelintrc', '!node_modules/**'])
     .pipe(jsonlint())
     .pipe(jsonlint.failOnError());
 });
@@ -49,7 +50,19 @@ gulp.task('htmlhint', () => {
     .pipe(htmlhint.failReporter());
 });
 
-gulp.task('validate', ['jsonlint', 'eslint', 'htmlhint']);
+gulp.task('stylelint', () => {
+  return gulp.src('dwst/styles/*.css')
+    .pipe(stylelint({
+      reporters: [
+        {
+          formatter: 'string',
+          console: true,
+        },
+      ],
+    }));
+});
+
+gulp.task('validate', ['jsonlint', 'eslint', 'stylelint', 'htmlhint']);
 
 gulp.task('test', ['validate']);
 
