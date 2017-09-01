@@ -1,6 +1,13 @@
 {
   "name": "dwst",
   "version": "2.2.6",
+  "browserslist": [
+    "last 1 chrome versions",
+    "last 1 firefox versions",
+    "last 1 safari versions",
+    "last 1 edge versions",
+    "last 1 ie versions"
+  ],
   "description": "Dark WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server.",
   "main": "dwst/dwst.js",
   "scripts": {
@@ -35,6 +42,10 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "autoprefixer": "^7.1.3",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
     "browser-sync": "^2.14.3",
     "file-loader": "^0.11.2",
     "gulp": "^3.9.1",
@@ -48,6 +59,7 @@
     "gulp-stylelint": "^5.0.0",
     "gulp-webpack": "^1.5.0",
     "postcss-import": "^10.0.0",
+    "stylelint-no-unsupported-browser-features": "^1.0.0",
     "vinyl-fs": "^2.4.4",
     "webpack": "^3.5.5",
     "webpack-stream": "^4.0.0"
