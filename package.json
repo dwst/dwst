@@ -1,6 +1,13 @@
 {
   "name": "dwst",
   "version": "2.2.6",
+  "browserslist": [
+    "last 1 chrome versions",
+    "last 1 firefox versions",
+    "last 1 safari versions",
+    "last 1 edge versions",
+    "last 1 ie versions"
+  ],
   "description": "Dark WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server.",
   "main": "dwst/dwst.js",
   "scripts": {
