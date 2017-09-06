@@ -1,4 +1,3 @@
-'use strict';
 
 /* global require */
 
@@ -31,6 +30,7 @@ const atImport = require('postcss-import');
 const rename = require('gulp-rename');
 const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
+const replace = require('gulp-replace');
 
 gulp.task('jsonlint', () => {
   return gulp.src(['**/*.json', '.htmlhintrc', '.stylelintrc', '!node_modules/**'])
@@ -152,7 +152,10 @@ gulp.task('sync-html', () => {
 });
 
 gulp.task('build-html', () => {
+  // We bundle javascript with webpack for production builds
+  // So we should be fine without the module system
   return gulp.src('dwst/dwst.html')
+    .pipe(replace('<script type="module"', '<script'))
     .pipe(gulp.dest('build/'))
     .pipe(rename(p => {
       p.dirname = path.join('build', p.dirname);
