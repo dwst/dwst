@@ -67,25 +67,47 @@ gulp.task('validate', ['jsonlint', 'eslint', 'stylelint', 'htmlhint']);
 
 gulp.task('test', ['validate']);
 
-gulp.task('browser-sync', ['build'], () => {
+gulp.task('browser-sync-build', ['build'], () => {
+  browserSync.init({
+    server: {
+      baseDir: 'build',
+      index: 'index.html',
+    },
+  });
+  gulp.watch('dwst/manifest.json', ['build-manifest']);
+  gulp.watch('dwst/dwst.html', ['build-html']);
+  gulp.watch('dwst/images/*.png', ['build-images']);
+  gulp.watch('dwst/images/*.ico', ['build-images']);
+  gulp.watch('dwst/scripts/*.js', ['build-js']);
+  gulp.watch('dwst/styles/*.css', ['build-css']);
+});
+
+gulp.task('browser-sync-raw', () => {
   browserSync.init({
     server: {
       baseDir: 'dwst',
       index: 'dwst.html',
-      routes: {
-        '/build': 'build',
-      },
     },
   });
-  gulp.watch('dwst/manifest.json', ['build-manifest', 'sync-manifest']);
-  gulp.watch('dwst/dwst.html', ['build-html', 'sync-html']);
-  gulp.watch('dwst/images/*.png', ['build-images', 'sync-images']);
-  gulp.watch('dwst/images/*.ico', ['build-images', 'sync-images']);
-  gulp.watch('dwst/scripts/*.js', ['build-js', 'sync-js']);
-  gulp.watch('dwst/styles/*.css', ['build-css', 'sync-css']);
+  gulp.watch('dwst/manifest.json', ['sync-manifest']);
+  gulp.watch('dwst/dwst.html', ['sync-html']);
+  gulp.watch('dwst/images/*.png', ['sync-images']);
+  gulp.watch('dwst/images/*.ico', ['sync-images']);
+  gulp.watch('dwst/scripts/*.js', ['sync-js']);
+  gulp.watch('dwst/styles/*.css', ['sync-css']);
 });
 
-gulp.task('dev', ['browser-sync']);
+gulp.task('raw', ['browser-sync-raw']);
+
+gulp.task('dev', ['browser-sync-build'], () => {
+  const lines = [
+    '',
+    'Hosting the transpiled application bundle.',
+    'Use "gulp raw" to host the raw source files.',
+    '',
+  ];
+  console.log(lines.join('\n'));  // eslint-disable-line no-console
+});
 
 gulp.task('clean', () => {
   return gulp.src('build/', {read: false})
