@@ -58,7 +58,7 @@
     "function-url-scheme-whitelist": [],
     "selector-attribute-operator-whitelist": ["="],
     "unit-whitelist": ["%", "ch", "em", "pt", "px", "vh", "vw"],
-    "at-rule-whitelist": ["media"],
+    "at-rule-whitelist": ["media","import"],
     "media-feature-name-whitelist": ["min-width"],
     "selector-pseudo-class-whitelist": [
       "active",
