@@ -255,7 +255,7 @@ gulp.task('build-manifest', () => {
 gulp.task('build-assets', ['build-js', 'build-css', 'build-html', 'build-images', 'build-manifest']);
 
 gulp.task('create-symlinks', () => {
-  fse.ensureLinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
+  fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
 });
 
 gulp.task('build', gulpSequence('clean', 'build-assets', 'create-symlinks'));
