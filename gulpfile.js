@@ -78,7 +78,7 @@ gulp.task('browser-sync-build', ['build'], () => {
   gulp.watch('dwst/dwst.html', ['build-html']);
   gulp.watch('dwst/images/*.png', ['build-images']);
   gulp.watch('dwst/images/*.ico', ['build-images']);
-  gulp.watch('dwst/scripts/*.js', ['build-js']);
+  gulp.watch('dwst/scripts/**/*.js', ['build-js']);
   gulp.watch('dwst/styles/*.css', ['build-css']);
 });
 
@@ -93,7 +93,7 @@ gulp.task('browser-sync-raw', () => {
   gulp.watch('dwst/dwst.html', ['sync-html']);
   gulp.watch('dwst/images/*.png', ['sync-images']);
   gulp.watch('dwst/images/*.ico', ['sync-images']);
-  gulp.watch('dwst/scripts/*.js', ['sync-js']);
+  gulp.watch('dwst/scripts/**/*.js', ['sync-js']);
   gulp.watch('dwst/styles/*.css', ['sync-css']);
 });
 
@@ -133,7 +133,7 @@ gulp.task('build-css', () => {
 });
 
 gulp.task('sync-js', () => {
-  return gulp.src('dwst/scripts/*.js')
+  return gulp.src('dwst/scripts/**/*.js')
     .pipe(browserSync.stream());
 });
 
