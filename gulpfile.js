@@ -32,27 +32,68 @@ const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
 const replace = require('gulp-replace');
 
+const jsRootFile = 'dwst.js';
+const htmlRootFile = 'dwst.html';
+const htmlRootLink = 'index.html';
+
+const buildBase = 'build';
+const targetDirs = {
+  styles: path.join(buildBase, 'styles'),
+  scripts: path.join(buildBase, 'scripts'),
+  images: path.join(buildBase, 'images'),
+};
+const targetPaths = {
+  htmlRoot: path.join(buildBase, htmlRootFile),
+  htmlLink: path.join(buildBase, htmlRootLink),
+};
+
+const sourceBase = 'dwst';
+const sourceDirs = {
+  styles: path.join(sourceBase, 'styles'),
+  scripts: path.join(sourceBase, 'scripts'),
+  images: path.join(sourceBase, 'images'),
+};
+const sourcePaths = {
+  manifest: path.join(sourceBase, 'manifest.json'),
+  html: path.join(sourceBase, 'dwst.html'),
+  css: path.join(sourceDirs.styles, '*.css'),
+  cssEntry: path.join(sourceDirs.styles, 'dwst.css'),
+  images: [
+    path.join(sourceDirs.images, '*.png'),
+    path.join(sourceDirs.images, '*.ico'),
+  ],
+  scripts: path.join(sourceDirs.scripts, '**/*.js'),
+  scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
+};
+
+const lintingPaths = {
+  json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc'],
+  javascript: [sourcePaths.scripts, 'gulpfile.js'],
+  html: sourcePaths.html,
+  css: sourcePaths.css,
+};
+
 gulp.task('jsonlint', () => {
-  return gulp.src(['**/*.json', '.htmlhintrc', '.stylelintrc', '!node_modules/**'])
+  return gulp.src(lintingPaths.json)
     .pipe(jsonlint())
     .pipe(jsonlint.failOnError());
 });
 
 gulp.task('eslint', () => {
-  return gulp.src(['**/*.js', '!node_modules/**', '!build/**'])
+  return gulp.src(lintingPaths.javascript)
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
 
 gulp.task('htmlhint', () => {
-  gulp.src(['**/*.html', '!node_modules/**', '!build/**'])
+  gulp.src(lintingPaths.html)
     .pipe(htmlhint('.htmlhintrc'))
     .pipe(htmlhint.failReporter());
 });
 
 gulp.task('stylelint', () => {
-  return gulp.src('dwst/styles/*.css')
+  return gulp.src(lintingPaths.css)
     .pipe(stylelint({
       reporters: [
         {
@@ -70,31 +111,29 @@ gulp.task('test', ['validate']);
 gulp.task('browser-sync-build', ['build'], () => {
   browserSync.init({
     server: {
-      baseDir: 'build',
-      index: 'index.html',
+      baseDir: buildBase,
+      index: htmlRootLink,
     },
   });
-  gulp.watch('dwst/manifest.json', ['build-manifest']);
-  gulp.watch('dwst/dwst.html', ['build-html']);
-  gulp.watch('dwst/images/*.png', ['build-images']);
-  gulp.watch('dwst/images/*.ico', ['build-images']);
-  gulp.watch('dwst/scripts/**/*.js', ['build-js']);
-  gulp.watch('dwst/styles/*.css', ['build-css']);
+  gulp.watch(sourcePaths.manifest, ['build-manifest']);
+  gulp.watch(sourcePaths.html, ['build-html']);
+  gulp.watch(sourcePaths.images, ['build-images']);
+  gulp.watch(sourcePaths.scripts, ['build-js']);
+  gulp.watch(sourcePaths.css, ['build-css']);
 });
 
 gulp.task('browser-sync-raw', () => {
   browserSync.init({
     server: {
-      baseDir: 'dwst',
-      index: 'dwst.html',
+      baseDir: sourceBase,
+      index: htmlRootFile,
     },
   });
-  gulp.watch('dwst/manifest.json', ['sync-manifest']);
-  gulp.watch('dwst/dwst.html', ['sync-html']);
-  gulp.watch('dwst/images/*.png', ['sync-images']);
-  gulp.watch('dwst/images/*.ico', ['sync-images']);
-  gulp.watch('dwst/scripts/**/*.js', ['sync-js']);
-  gulp.watch('dwst/styles/*.css', ['sync-css']);
+  gulp.watch(sourcePaths.manifest, ['sync-manifest']);
+  gulp.watch(sourcePaths.html, ['sync-html']);
+  gulp.watch(sourcePaths.images, ['sync-images']);
+  gulp.watch(sourcePaths.scripts, ['sync-js']);
+  gulp.watch(sourcePaths.css, ['sync-css']);
 });
 
 gulp.task('raw', ['browser-sync-raw']);
@@ -110,38 +149,38 @@ gulp.task('dev', ['browser-sync-build'], () => {
 });
 
 gulp.task('clean', () => {
-  return gulp.src('build/', {read: false})
+  return gulp.src(buildBase, {read: false})
     .pipe(clean());
 });
 
 gulp.task('sync-css', () => {
-  return gulp.src('dwst/styles/*.css')
+  return gulp.src(sourcePaths.css)
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-css', () => {
-  return gulp.src('dwst/styles/dwst.css')
+  return gulp.src(sourcePaths.cssEntry)
     .pipe(postcss([
       atImport(),
       autoprefixer(),
     ]))
-    .pipe(gulp.dest('build/styles/'))
+    .pipe(gulp.dest(targetDirs.styles))
     .pipe(rename(p => {
-      p.dirname = path.join('build/styles', p.dirname);
+      p.dirname = path.join(targetDirs.styles, p.dirname);
     }))
     .pipe(browserSync.stream());
 });
 
 gulp.task('sync-js', () => {
-  return gulp.src('dwst/scripts/**/*.js')
+  return gulp.src(sourcePaths.scripts)
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-js', () => {
-  return gulp.src('dwst/scripts/dwst.js')
+  return gulp.src(sourcePaths.scriptEntry)
     .pipe(webpackStream({
       output: {
-        filename: 'dwst.js',
+        filename: jsRootFile,
       },
       module: {
         loaders: [
@@ -161,54 +200,54 @@ gulp.task('build-js', () => {
         ],
       },
     }, webpack2))
-    .pipe(gulp.dest('build/scripts/'))
+    .pipe(gulp.dest(targetDirs.scripts))
     .pipe(rename(p => {
-      p.dirname = path.join('build/scripts', p.dirname);
+      p.dirname = path.join(targetDirs.scripts, p.dirname);
     }))
     .pipe(browserSync.stream());
 });
 
 gulp.task('sync-html', () => {
-  return gulp.src('dwst/dwst.html')
+  return gulp.src(sourcePaths.html)
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-html', () => {
   // We bundle javascript with webpack for production builds
   // So we should be fine without the module system
-  return gulp.src('dwst/dwst.html')
+  return gulp.src(sourcePaths.html)
     .pipe(replace('<script type="module"', '<script'))
-    .pipe(gulp.dest('build/'))
+    .pipe(gulp.dest(buildBase))
     .pipe(rename(p => {
-      p.dirname = path.join('build', p.dirname);
+      p.dirname = path.join(buildBase, p.dirname);
     }))
     .pipe(browserSync.stream());
 });
 
 gulp.task('sync-images', () => {
-  return gulp.src(['dwst/images/*.png', 'dwst/images/*.ico'])
+  return gulp.src(sourcePaths.images)
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-images', () => {
-  return gulp.src(['dwst/images/*.png', 'dwst/images/*.ico'])
-    .pipe(gulp.dest('build/images'))
+  return gulp.src(sourcePaths.images)
+    .pipe(gulp.dest(targetDirs.images))
     .pipe(rename(p => {
-      p.dirname = path.join('build/images', p.dirname);
+      p.dirname = path.join(targetDirs.images, p.dirname);
     }))
     .pipe(browserSync.stream());
 });
 
 gulp.task('sync-manifest', () => {
-  return gulp.src('dwst/manifest.json')
+  return gulp.src(sourcePaths.manifest)
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-manifest', () => {
-  return gulp.src('dwst/manifest.json')
-    .pipe(gulp.dest('build/'))
+  return gulp.src(sourcePaths.manifest)
+    .pipe(gulp.dest(buildBase))
     .pipe(rename(p => {
-      p.dirname = path.join('build', p.dirname);
+      p.dirname = path.join(buildBase, p.dirname);
     }))
     .pipe(browserSync.stream());
 });
@@ -216,7 +255,7 @@ gulp.task('build-manifest', () => {
 gulp.task('build-assets', ['build-js', 'build-css', 'build-html', 'build-images', 'build-manifest']);
 
 gulp.task('create-symlinks', () => {
-  fse.ensureLinkSync('build/dwst.html', 'build/index.html');
+  fse.ensureLinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
 });
 
 gulp.task('build', gulpSequence('clean', 'build-assets', 'create-symlinks'));
