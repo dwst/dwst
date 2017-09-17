@@ -1,0 +1,82 @@
+
+/**
+
+  Authors: Toni Ruottu, Finland 2010-2017
+
+  This file is part of Dark WebSocket Terminal.
+
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+*/
+
+.dwst-mlog {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  hyphens: none;
+}
+.dwst-mlog__help-link-wrapper--nowrap {
+  white-space: nowrap;
+}
+.dwst-mlog__help-link {
+  color: var(--dwst-color-gray);
+  font-style: italic;
+  text-decoration: none;
+}
+.dwst-mlog__help-link--spacing {
+  display: inline-block;
+  padding-bottom: 1ch;
+}
+.dwst-mlog__help-link--warning {
+  color: var(--dwst-color-white);
+  font-style: normal;
+  text-decoration: underline;
+}
+.dwst-mlog__help-link:hover {
+  color: var(--dwst-color-yellow--light);
+  text-decoration: none;
+}
+.dwst-mlog__command-link {
+  color: var(--dwst-color-cyan);
+  text-decoration: none;
+  text-indent: -2ch;
+  margin-left: 2ch;
+  display: inline-block;
+}
+.dwst-mlog__command-link:hover {
+  color: var(--dwst-color-cyan--light);
+  text-decoration: none;
+}
+.dwst-mlog__hexline {
+  display: inline-block;
+  color: var(--dwst-color-gray);
+}
+.dwst-mlog__code {
+  color: var(--dwst-color-pink);
+}
+.dwst-mlog__strong {
+  color: var(--dwst-color-pink);
+  font-weight: bold;
+}
+.dwst-mlog__h1 {
+  color: var(--dwst-color-white);
+  font-weight: bold;
+}
+.dwst-mlog__h2 {
+  color: var(--dwst-color-white);
+  text-transform: uppercase;
+}
+.dwst-mlog__link {
+  color: var(--dwst-color-blue);
+}
+.dwst-mlog__link:hover {
+  color: var(--dwst-color-pink--light);
+}
+.dwst-mlog__syntax {
+  font-style: italic;
+  text-indent: -2ch;
+  margin-left: 2ch;
+  display: inline-block;
+}

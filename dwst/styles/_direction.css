@@ -1,0 +1,42 @@
+
+/**
+
+  Authors: Toni Ruottu, Finland 2010-2017
+
+  This file is part of Dark WebSocket Terminal.
+
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+*/
+
+.dwst-direction {
+  overflow: hidden;
+  text-align: right;
+}
+
+.dwst-direction--sent {
+  color: var(--dwst-color-blue--light);
+}
+
+.dwst-direction--received {
+  color: var(--dwst-color-red--light);
+}
+
+.dwst-direction--command {
+  color: var(--dwst-color-cyan--light);
+}
+
+.dwst-direction--error {
+  color: var(--dwst-color-red);
+}
+
+.dwst-direction--warning {
+  color: var(--dwst-color-yellow);
+}
+
+.dwst-direction--system {
+  color: var(--dwst-color-green--light);
+}

@@ -1,0 +1,94 @@
+
+/**
+
+  Authors: Toni Ruottu, Finland 2010-2017
+
+  This file is part of Dark WebSocket Terminal.
+
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+*/
+
+.dwst-gfx {
+  max-width: 110ch;
+  overflow: hidden;
+}
+
+.dwst-gfx__content {
+  overflow: hidden;
+  max-width: 110ch;
+  display: inline-block;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+.dwst-gfx__line {
+  margin: 0 auto;
+}
+.dwst-gfx__element {
+  white-space: pre;
+}
+
+.dwst-gfx__element--color-0 {
+  color: var(--dwst-color-black--af);
+}
+.dwst-gfx__element--color-1 {
+  color: var(--dwst-color-blue);
+}
+.dwst-gfx__element--color-2 {
+  color: var(--dwst-color-green);
+}
+.dwst-gfx__element--color-3 {
+  color: var(--dwst-color-cyan);
+}
+.dwst-gfx__element--color-4 {
+  color: var(--dwst-color-red);
+}
+.dwst-gfx__element--color-5 {
+  color: var(--dwst-color-purple);
+}
+.dwst-gfx__element--color-6 {
+  color: var(--dwst-color-yellow);
+}
+.dwst-gfx__element--color-7 {
+  color: var(--dwst-color-white);
+}
+.dwst-gfx__element--color-8 {
+  color: var(--dwst-color-gray);
+}
+.dwst-gfx__element--color-9 {
+  color: var(--dwst-color-pink);
+}
+
+.dwst-gfx__element--color-a {
+  color: var(--dwst-color-black);
+}
+.dwst-gfx__element--color-b {
+  color: var(--dwst-color-blue--light);
+}
+.dwst-gfx__element--color-c {
+  color: var(--dwst-color-green--light);
+}
+.dwst-gfx__element--color-d {
+  color: var(--dwst-color-cyan--light);
+}
+.dwst-gfx__element--color-e {
+  color: var(--dwst-color-red--light);
+}
+.dwst-gfx__element--color-f {
+  color: var(--dwst-color-purple--light);
+}
+.dwst-gfx__element--color-g {
+  color: var(--dwst-color-yellow--light);
+}
+.dwst-gfx__element--color-h {
+  color: var(--dwst-color-white--af);
+}
+.dwst-gfx__element--color-i {
+  color: var(--dwst-color-gray--light);
+}
+.dwst-gfx__element--color-j {
+  color: var(--dwst-color-pink--light);
+}
