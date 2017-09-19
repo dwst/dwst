@@ -130,7 +130,7 @@ export default class Terminal {
 
   clearLog() {
     const logClear = document.createElement('div');
-    logClear.setAttribute('class', 'dwst-logclear');
+    logClear.setAttribute('class', 'dwst-log__clear');
     this.addLogLine(logClear);
   }
 
@@ -152,7 +152,7 @@ export default class Terminal {
     });
 
     const gfxContainer = document.createElement('div');
-    gfxContainer.setAttribute('class', 'dwst-gfx');
+    gfxContainer.setAttribute('class', 'dwst-log__item dwst-log__item--gfx dwst-gfx');
     gfxContainer.setAttribute('aria-hidden', 'true');
     gfxContainer.appendChild(gfxContent);
 
@@ -254,9 +254,9 @@ export default class Terminal {
             const textChunks = utils.divissimo(rawText, 4);
 
             const byteGrid = document.createElement('div');
-            const byteGridClasses = ['dwst-bytegrid'];
+            const byteGridClasses = ['dwst-byte-grid'];
             if (hexChunks.length < 3) {
-              byteGridClasses.push('dwst-bytegrid--less-than-three');
+              byteGridClasses.push('dwst-byte-grid--less-than-three');
             }
             byteGrid.setAttribute('class', byteGridClasses.join(' '));
 
@@ -268,13 +268,13 @@ export default class Terminal {
 
               const hexContent = this._htmlescape(hexChunk.join(' '));
               const hexItem = document.createElement('div');
-              hexItem.setAttribute('class', 'dwst-bytegrid__item');
+              hexItem.setAttribute('class', 'dwst-byte-grid__item');
               hexItem.innerHTML = hexContent;
               byteGrid.appendChild(hexItem);
 
               const textContent = this._htmlescape(textChunk.join('').padEnd(chunkLength));
               const textItem = document.createElement('div');
-              textItem.setAttribute('class', 'dwst-bytegrid__item');
+              textItem.setAttribute('class', 'dwst-byte-grid__item');
               textItem.innerHTML = textContent;
               byteGrid.appendChild(textItem);
             });
@@ -330,15 +330,16 @@ export default class Terminal {
     });
     const time = currenttime();
     const logLine = document.createElement('div');
-    logLine.setAttribute('class', `dwst-logline dwst-logline--${type}`);
-    logLine.innerHTML = `<span class="dwst-logline__item time">${time}</span><span class="dwst-logline__item dwst-direction dwst-direction--${type}">${type}:</span>`;
+    logLine.setAttribute('class', `dwst-log__item dwst-log__item--${type} dwst-log-entry`);
+    logLine.innerHTML = `<span class="dwst-log-entry__time dwst-time">${time}</span><span class="dwst-log-entry__direction dwst-direction dwst-direction--${type}">${type}:</span>`;
     const outputCell = document.createElement('span');
-    outputCell.setAttribute('class', 'dwst-logline__item dwst-logline__item--main preserved');
+    outputCell.setAttribute('class', 'dwst-log-entry__content dwst-mlog');
     lineElements.forEach(lineElement => {
       lineElement.forEach(segmentElement => {
         outputCell.appendChild(segmentElement);
       });
       const br = document.createElement('br');
+      br.setAttribute('class', 'dwst-mlog__br');
       outputCell.appendChild(br);
     });
     logLine.appendChild(outputCell);

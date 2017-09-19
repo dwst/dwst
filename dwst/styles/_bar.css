@@ -12,16 +12,17 @@
 
 */
 
-export default function currenttime() {
-  const addzero = function (i) {
-    if (i < 10) {
-      return `0${i}`;
-    }
-    return String(i);
-  };
-  const date = new Date();
-  const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="dwst-time__sec">:${addzero(date.getSeconds())}</span>`;
-  return time;
-
+.dwst-bar {
+  width: 100%;
+  height: 100%;
+  display: table;
+  background-color: var(--dwst-color-gray-2);
+  border-spacing: 1em 0;
 }
-
+.dwst-bar__item {
+  display: table-cell;
+  vertical-align: middle;
+}
+.dwst-bar__item--grow {
+  width: 100%;
+}

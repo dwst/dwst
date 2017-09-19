@@ -1,0 +1,89 @@
+
+/**
+
+  Authors: Toni Ruottu, Finland 2010-2017
+
+  This file is part of Dark WebSocket Terminal.
+
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+*/
+
+.dwst-layout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.dwst-layout__control-area {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: var(--dwst-bar-height);
+}
+
+.dwst-layout__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--dwst-bar-height);
+  width: 42ch;
+  max-width: 100%;
+}
+@media only screen and (min-width: 600px) {
+  .dwst-layout__background {
+    width: 74ch;
+  }
+}
+@media screen and (min-width: 750px) {
+  .dwst-layout__background {
+    width: 110ch;
+  }
+}
+.dwst-debug .dwst-layout__background {
+  background-color: var(--dwst-color-debug-orange);
+}
+
+.dwst-layout__guide {
+  position: absolute;
+  top: 0;
+  left: 2ch;
+  right: 0;
+  bottom: 0;
+  width: 38ch;
+  max-width: 100%;
+}
+@media only screen and (min-width: 600px) {
+  .dwst-layout__guide {
+    width: 70ch;
+  }
+}
+@media screen and (min-width: 750px) {
+  .dwst-layout__guide {
+    left: 20ch;
+  }
+}
+.dwst-debug .dwst-layout__guide {
+  background-color: var(--dwst-color-debug-brown);
+}
+
+.dwst-layout__content-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--dwst-bar-height);
+}
+
+.dwst-layout__notification-area {
+  position: absolute;
+  bottom: calc(var(--dwst-bar-height));
+  left: 0;
+  right: 0;
+}

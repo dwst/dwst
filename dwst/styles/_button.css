@@ -1,0 +1,40 @@
+
+/**
+
+  Authors: Toni Ruottu, Finland 2010-2017
+
+  This file is part of Dark WebSocket Terminal.
+
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+*/
+
+.dwst-button {
+  border-width: 0;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  outline: none;
+}
+
+.dwst-button--send {
+  height: var(--dwst-bar-height);
+  width: var(--dwst-bar-height);
+  background-image: url('../images/return.png');
+  background-position: 4px;
+}
+.dwst-button--send:hover {
+  background-image: url('../images/return-hover.png');
+}
+
+.dwst-button--splash {
+  height: calc(var(--dwst-bar-height));
+  width: 48px;
+  background-image: url('../images/minilogo.png');
+}
+.dwst-button--splash:hover {
+  background-image: url('../images/minilogo-hover.png');
+}

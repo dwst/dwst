@@ -22,24 +22,31 @@
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
   <link rel="icon" type="image/png" href="images/favicon.png" />
 </head>
-<body>
-  <div class="dwst-background">
-    <div class="dwst-background__content-area"></div>
+<body class="dwst-base dwst-layout">
+  <div class="dwst-layout__background">
+    <div class="dwst-layout__guide"></div>
   </div>
-  <div id="screen1" class="screen">
-    <div id="ter1" class="terminal">
+  <div class="dwst-layout__content-area dwst-scroll-area" id="screen1">
+    <div id="ter1" class="dwst-scroll-area__content">
     </div>
   </div>
-  <div class="dwst-notification js-scroll-notification" style="display: none;">
+  <div class="dwst-layout__notification-area dwst-notification js-scroll-notification" style="display: none;">
     <a href="#" class="dwst-notification__link js-auto-scroll-button">scroll to bottom</a>
   </div>
-  <div class="bar2">
-    <table class="consolebar"><tr>
-      <td id="clock1" style="color: transparent;" class="time rightpad leftpad">00:00:00</td>
-      <td class="input-holder"><label for="msg1" class="dwst-hide">command prompt</label><input id="msg1" type="text" value="" /></td>
-      <td class="button rightpad"><div class="send-button" id="sendbut1" type="button" value="send"></div></td>
-      <td class="button rightpad"><div class="splash-button" id="menubut1" type="button" value="menu"></div></td>
-    </tr></table>
+  <div class="dwst-layout__control-area bar2">
+    <div class="dwst-bar">
+      <div class="dwst-bar__item dwst-time dwst-time--bright" id="clock1" style="color: transparent;">00:00:00</div>
+      <div class="dwst-bar__item dwst-bar__item--grow"><div class="dwst-prompt">
+        <div class="dwst-prompt__input">
+          <label for="msg1" style="position: absolute; left: -10000px;">command prompt</label>
+          <input class="dwst-text-input" id="msg1" type="text" value="" />
+        </div>
+        <div class="dwst-prompt__button">
+          <button class="dwst-button dwst-button--send" id="sendbut1" value="send"></button>
+        </div>
+      </div></div>
+      <div class="dwst-bar__item"><button class="dwst-button dwst-button--splash" id="menubut1" value="menu"></button></div>
+    </div>
   </div>
   <div id="fileframe" style="visibility: hidden;">
     <input id="file1" type="file" />

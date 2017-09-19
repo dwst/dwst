@@ -1,0 +1,86 @@
+
+/**
+
+  Authors: Toni Ruottu, Finland 2010-2017
+
+  This file is part of Dark WebSocket Terminal.
+
+  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
+
+  To the extent possible under law, Dark WebSocket Terminal developers have waived all
+  copyright and related or neighboring rights to Dark WebSocket Terminal.
+
+*/
+
+.dwst-byte-grid {
+  font-family: monospace;
+  display: grid;
+  grid-template-columns: 13ch 13ch 5ch 5ch;
+}
+.dwst-byte-grid__item {
+  white-space: pre;
+}
+.dwst-byte-grid__item:nth-child(3) {
+  grid-column: 2;
+  grid-row: 1;
+}
+.dwst-byte-grid__item:nth-child(7) {
+  grid-column: 2;
+  grid-row: 2;
+}
+.dwst-byte-grid__item:nth-child(2):before {
+  content: '|';
+}
+.dwst-byte-grid__item:nth-child(4):after {
+  content: '|';
+}
+.dwst-byte-grid__item:nth-child(6):before {
+  content: '|';
+}
+.dwst-byte-grid__item:nth-child(8):after {
+  content: '|';
+}
+.dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(5) {
+  display: none;
+}
+.dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(6) {
+  display: none;
+}
+.dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(7) {
+  display: none;
+}
+.dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(8) {
+  display: none;
+}
+
+@media only screen and (min-width: 600px) {
+  .dwst-byte-grid {
+    grid-template-columns: 12ch 13ch 12ch 13ch 5ch 4ch 4ch 5ch;
+  }
+  .dwst-byte-grid__item:nth-child(5) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .dwst-byte-grid__item:nth-child(7) {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .dwst-byte-grid__item:nth-child(4):after {
+    content: '';
+  }
+  .dwst-byte-grid__item:nth-child(6):before {
+    content: '';
+  }
+  .dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(5) {
+    display: initial;
+  }
+  .dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(6) {
+    display: initial;
+  }
+  .dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(7) {
+    display: initial;
+  }
+  .dwst-byte-grid--less-than-three .dwst-byte-grid__item:nth-child(8) {
+    display: initial;
+  }
+}
