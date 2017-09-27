@@ -31,6 +31,7 @@ const rename = require('gulp-rename');
 const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
 const replace = require('gulp-replace');
+const mocha = require('gulp-mocha');
 
 const jsRootFile = 'dwst.js';
 const htmlRootFile = 'dwst.html';
@@ -68,7 +69,7 @@ const sourcePaths = {
 
 const lintingPaths = {
   json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc'],
-  javascript: [sourcePaths.scripts, 'gulpfile.js'],
+  javascript: [sourcePaths.scripts, 'gulpfile.js', 'dwst/**/test/**/*.js'],
   html: sourcePaths.html,
   css: sourcePaths.css,
 };
@@ -106,7 +107,14 @@ gulp.task('stylelint', () => {
 
 gulp.task('validate', ['jsonlint', 'eslint', 'stylelint', 'htmlhint']);
 
-gulp.task('test', ['validate']);
+gulp.task('mocha', () => {
+  return gulp.src('test/test.js', {read: false})
+    .pipe(mocha({
+      compilers: 'js:babel-core/register',
+    }));
+});
+
+gulp.task('test', ['validate', 'mocha']);
 
 gulp.task('browser-sync-build', ['build'], () => {
   browserSync.init({

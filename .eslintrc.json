@@ -1,14 +1,16 @@
 {
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "mocha": true
   },
   "parserOptions": {
     "ecmaVersion": 8,
     "sourceType": "module"
   },
   "globals": {
-    "chrome": true
+    "chrome": true,
+    "require": true
   },
   "extends": "eslint:recommended",
   "rules": {
