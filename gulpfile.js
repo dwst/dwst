@@ -27,6 +27,7 @@ const webpack2 = require('webpack');
 const fse = require('fs-extra');
 const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
+const colorHexAlpha = require('postcss-color-hex-alpha');
 const rename = require('gulp-rename');
 const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
@@ -170,6 +171,7 @@ gulp.task('build-css', () => {
   return gulp.src(sourcePaths.cssEntry)
     .pipe(postcss([
       atImport(),
+      colorHexAlpha(),
       autoprefixer(),
     ]))
     .pipe(gulp.dest(targetDirs.styles))
