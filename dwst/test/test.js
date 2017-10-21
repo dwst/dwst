@@ -1,6 +1,2 @@
 
-describe('DWST', () => {
-
-  require('../scripts/test/test.js');
-
-});
+require('../scripts/test/test.js');
