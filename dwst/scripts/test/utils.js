@@ -27,4 +27,28 @@ describe('utils', () => {
       expect(result).to.equal(0x10);
     });
   });
+  describe('chunkify function', () => {
+    it('should make chunks from an array', () => {
+      const array = [1, 2, 3];
+      const chunkSize = 2;
+      const expectedChunks = [
+        [1, 2], [3],
+      ];
+      const result = utils.chunkify(array, chunkSize);
+      expect(result).to.deep.equal(expectedChunks);
+    });
+
+    it('should make chunks from a string', () => {
+      const string = 'aaabbbcccdd';
+      const chunkSize = 3;
+      const expectedChunks = [
+        ['a', 'a', 'a'],
+        ['b', 'b', 'b'],
+        ['c', 'c', 'c'],
+        ['d', 'd'],
+      ];
+      const result = utils.chunkify(string, chunkSize);
+      expect(result).to.deep.equal(expectedChunks);
+    });
+  });
 });
