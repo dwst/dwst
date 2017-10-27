@@ -13,6 +13,7 @@
 */
 
 .dwst-button {
+  display: block;
   border-width: 0;
   cursor: pointer;
   background-repeat: no-repeat;
