@@ -22,7 +22,7 @@ export default {
     return num;
   },
 
-  divissimo: (l, n) => {
+  chunkify: (l, n) => {
     const chunks = [];
     let chunk = [];
     let i = 0;

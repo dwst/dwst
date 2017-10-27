@@ -125,7 +125,7 @@ export default class Binary {
       if (params.length === 1) {
         const hex = params[0];
         const nums = hex.split('');
-        const pairs = utils.divissimo(nums, 2);
+        const pairs = utils.chunkify(nums, 2);
         const tmp = pairs.map(hexpairtobyte);
         bytes = tmp.filter(b => (b !== null));
       } else {

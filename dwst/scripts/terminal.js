@@ -250,8 +250,8 @@ export default class Terminal {
             return link;
           }
           if (segment.type === 'hexline') {
-            const hexChunks = utils.divissimo(segment.hexes, 4);
-            const textChunks = utils.divissimo(rawText, 4);
+            const hexChunks = utils.chunkify(segment.hexes, 4);
+            const textChunks = utils.chunkify(rawText, 4);
 
             const byteGrid = document.createElement('div');
             const byteGridClasses = ['dwst-byte-grid'];
