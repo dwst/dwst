@@ -44,7 +44,7 @@ export default class Forget {
     this._dwst.terminal.mlog(['Successfully forgot stored history!', historyLine], 'system');
   }
 
-  run(target) {
+  _run(target) {
     if (target === 'everything') {
       this._removeHistory();
       this._dwst.terminal.log("You may wish to use your browser's cleaning features to remove tracking cookies and other remaining traces.", 'warning');
@@ -54,4 +54,12 @@ export default class Forget {
     }
   }
 
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
+  }
 }

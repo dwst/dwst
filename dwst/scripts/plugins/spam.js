@@ -41,7 +41,7 @@ export default class Spam {
     return 'run a command multiple times';
   }
 
-  run(timesStr, ...commandParts) {
+  _run(timesStr, ...commandParts) {
     const times = utils.parseNum(timesStr);
     const spam = (limit, i = 0) => {
       if (i === limit) {
@@ -62,6 +62,15 @@ export default class Spam {
       }
     };
     spam(times);
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }
 

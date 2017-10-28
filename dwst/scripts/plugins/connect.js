@@ -43,7 +43,7 @@ export default class Connect {
     return 'connect to a server';
   }
 
-  run(url, protocolString = '') {
+  _run(url, protocolString = '') {
     if (this._dwst.connection !== null) {
       this._dwst.terminal.mlog([
         'Already connected to a server',
@@ -109,5 +109,14 @@ export default class Connect {
       return [`Accepted protocols: ${protoFormatted}`];
     })();
     this._dwst.terminal.mlog([`Connecting to ${this._dwst.connection.url}`].concat(negotiation), 'system');
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }

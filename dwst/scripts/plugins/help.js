@@ -478,7 +478,7 @@ export default class Help {
     ]), 'system');
   }
 
-  run(parameter = null) {
+  _run(parameter = null) {
 
     this._dwst.terminal.clearLog();
 
@@ -492,6 +492,15 @@ export default class Help {
       return;
     }
     this._commandHelp(section);
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }
 

@@ -13,6 +13,7 @@
 */
 
 import utils from '../utils.js';
+import lisb from '../lisb.js';
 
 export default class Send {
 
@@ -47,7 +48,7 @@ export default class Send {
     return 'send textual data';
   }
 
-  process(instr, params, postfix) {
+  _process(instr, params, postfix) {
     let out;
     if (instr === 'default') {
       out = params[0];
@@ -98,8 +99,11 @@ export default class Send {
     return out + postfix;
   }
 
-  run(...processed) {
-    const msg = processed.join('');
+  run(paramString) {
+    function joinStrings(strings) {
+      return strings.join('');
+    }
+    const msg = lisb(paramString, this._process, joinStrings);
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [
         'Use ',

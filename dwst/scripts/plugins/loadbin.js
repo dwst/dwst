@@ -39,7 +39,7 @@ export default class Loadbin {
     return 'load binary data from a file';
   }
 
-  run(variable = 'default') {
+  _run(variable = 'default') {
     const upload = document.getElementById('file1');
     upload.onchange = () => {
       const file = upload.files[0];
@@ -55,6 +55,13 @@ export default class Loadbin {
     };
     upload.click();
   }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
+  }
 }
-
-

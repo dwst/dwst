@@ -13,6 +13,7 @@
 */
 
 import utils from '../utils.js';
+import lisb from '../lisb.js';
 
 export default class Binary {
 
@@ -49,7 +50,7 @@ export default class Binary {
     return 'send binary data';
   }
 
-  process(instr, params) {
+  _process(instr, params) {
     function byteValue(x) {
       const code = x.charCodeAt(0);
       if (code !== (code & 0xff)) { // eslint-disable-line no-bitwise
@@ -136,9 +137,8 @@ export default class Binary {
   }
 
 
-  run(...buffers) {
-    function joinbufs(buffersToJoin) {
-
+  run(paramString) {
+    function joinBuffers(buffersToJoin) {
       let total = 0;
       for (const buffer of buffersToJoin) {
         total += buffer.length;
@@ -149,9 +149,10 @@ export default class Binary {
         out.set(buffer, offset);
         offset += buffer.length;
       }
-      return out;
+      return out.buffer;
     }
-    const out = joinbufs(buffers).buffer;
+    const out = lisb(paramString, this._process, joinBuffers);
+
     const msg = `<${out.byteLength}B of data> `;
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [

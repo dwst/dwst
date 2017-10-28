@@ -39,7 +39,7 @@ export default class Bins {
     return 'list loaded binaries';
   }
 
-  run(variable = null) {
+  _run(variable = null) {
     if (variable !== null) {
       const buffer = this._dwst.bins.get(variable);
       if (typeof buffer !== 'undefined') {
@@ -62,5 +62,14 @@ export default class Bins {
     });
     const strs = ['Loaded binaries:'].concat(listing);
     this._dwst.mlog(strs, 'system');
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }
