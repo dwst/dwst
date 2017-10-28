@@ -40,7 +40,7 @@ export default class Texts {
     return 'list loaded texts';
   }
 
-  run(variable = null) {
+  _run(variable = null) {
     if (variable !== null) {
       const text = this._dwst.texts.get(variable);
       if (typeof text  !== 'undefined') {
@@ -62,6 +62,15 @@ export default class Texts {
     });
     const strs = ['Loaded texts:'].concat(listing);
     this._dwst.terminal.mlog(strs, 'system');
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }
 

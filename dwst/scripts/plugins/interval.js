@@ -43,7 +43,7 @@ export default class Interval {
     return 'run an other command periodically';
   }
 
-  run(intervalStr = null, ...commandParts) {
+  _run(intervalStr = null, ...commandParts) {
     if (intervalStr === null) {
       if (this._dwst.intervalId === null) {
         this._dwst.terminal.log('no interval to clear', 'error');
@@ -76,5 +76,14 @@ export default class Interval {
     }
     this._dwst.intervalId = setInterval(spammer, interval);
     this._dwst.terminal.log('interval set', 'system');
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }

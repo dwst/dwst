@@ -40,7 +40,7 @@ export default class Loadtext {
     return 'load text data from a file';
   }
 
-  run(variable = 'default', encoding) {
+  _run(variable = 'default', encoding) {
     const upload = document.getElementById('file1');
     upload.onchange = () => {
       const file = upload.files[0];
@@ -55,6 +55,15 @@ export default class Loadtext {
       reader.readAsText(file, encoding);
     };
     upload.click();
+  }
+
+  run(paramString) {
+    if (paramString.length < 1) {
+      this._run();
+      return;
+    }
+    const params = paramString.split(' ');
+    this._run(...params);
   }
 }
 

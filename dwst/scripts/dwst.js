@@ -165,47 +165,13 @@ for (const Constructor of plugins) {
   }
 }
 
-function process(plugin, rawParam) {
-  const pro = plugin.process;
-  let param = rawParam;
-  /* eslint-disable prefer-template */
-  if (param.substr(param.length - 2, 2) === '\\\\') {
-    param = param.substr(0, param.length - 2) + '\\';
-  } else if (param.substr(param.length - 1, 1) === '\\') {
-    param = param.substr(0, param.length - 1) + ' ';
-  }
-  /* eslint-enable prefer-template */
-  if (typeof pro === 'undefined') {
-    return param;
-  }
-  let instruction = 'default';
-  let params = [];
-  let end = '';
-  if (param.substr(0, 2) === '\\\\') {
-    params.push(param.substr(1));
-  } else if (param.substr(0, 2) === '\\[') {
-    params.push(param.substr(1));
-  } else if (param.substr(0, 1) === '[') {
-    const tmp = param.split(']');
-    const call = tmp[0].split('[')[1];
-    end = tmp[1];
-    const tmp2 = call.split('(').concat('');
-    instruction = tmp2[0];
-    const pl = tmp2[1].split(')')[0];
-    if (pl.length > 0) {
-      params = pl.split(',');
-    }
-  } else {
-    params.push(param);
-  }
-  return pro(instruction, params, end);
-}
+function run(command) {
+  const [pluginName, ...params] = command.split(' ');
+  const paramString = params.join(' ');
 
-function run(command, ...params) {
-
-  const plugin = pluginInterface.commands.get(command);
+  const plugin = pluginInterface.commands.get(pluginName);
   if (typeof plugin === 'undefined') {
-    const errorMessage = `invalid command: ${command}`;
+    const errorMessage = `invalid command: ${pluginName}`;
     const helpTip = [
       'type ',
       {
@@ -217,8 +183,7 @@ function run(command, ...params) {
     terminal.mlog([errorMessage, helpTip], 'error');
     return;
   }
-  const processed = params.map(param => process(plugin, param));
-  plugin.run(...processed);
+  plugin.run(paramString);
 }
 
 function refreshclock() {
@@ -228,8 +193,7 @@ function refreshclock() {
 
 function silent(line) {
   const noslash = line.substring(1);
-  const parts = noslash.split(' ');
-  run(...parts);
+  run(noslash);
 }
 
 function loud(line) {
