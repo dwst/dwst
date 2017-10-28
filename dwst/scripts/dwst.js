@@ -201,31 +201,23 @@ function loud(line) {
   silent(line);
 }
 
-function send() {
-  const raw = document.getElementById('msg1').value;
-  if (raw === '/idkfa') {
-    // dwst debugger
-    document.documentElement.className += ' dwst-debug';
-    return;
-  }
-  pluginInterface.historyManager.select(raw);
-  document.getElementById('msg1').value = '';
-  if (raw.length < 1) {
-    const helpTip = [
-      'type ',
-      {
-        type: 'command',
-        text: '/help',
-      },
-      ' to list available commands',
-    ];
-    terminal.log(helpTip, 'system');
-    return;
-  }
-  if (raw[0] === '/') {
-    loud(raw);
-    return;
-  }
+function enableDebugger() {
+  document.documentElement.className += ' dwst-debug';
+}
+
+function showHelpTip() {
+  const helpTip = [
+    'type ',
+    {
+      type: 'command',
+      text: '/help',
+    },
+    ' to list available commands',
+  ];
+  terminal.log(helpTip, 'system');
+}
+
+function escapeForCommand(raw) {
   const replmap = [
     [' [', '\\ \\['],
     [' ', '\\ '],
@@ -256,9 +248,28 @@ function send() {
   } else {
     final = almost;
   }
-  const command = `/send ${final}`;
+  return final;
+}
+
+function send() {
+  const raw = document.getElementById('msg1').value;
+  document.getElementById('msg1').value = '';
+  pluginInterface.historyManager.select(raw);
+  if (raw === '/idkfa') {
+    enableDebugger();
+    return;
+  }
+  if (raw.length < 1) {
+    showHelpTip();
+    return;
+  }
+  if (raw[0] === '/') {
+    loud(raw);
+    return;
+  }
+  const text = escapeForCommand(raw);
+  const command = `/send ${text}`;
   loud(command);
-  return;
 }
 
 function globalKeyPress(event) {
