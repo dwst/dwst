@@ -39,3 +39,12 @@
 .dwst-button--splash:hover {
   background-image: url('../images/minilogo-hover.png');
 }
+
+.dwst-button--splash-connected {
+  height: calc(var(--dwst-bar-height));
+  width: 48px;
+  background-image: url('../images/minilogo-connected.png');
+}
+.dwst-button--splash-connected:hover {
+  background-image: url('../images/minilogo-connected-hover.png');
+}
