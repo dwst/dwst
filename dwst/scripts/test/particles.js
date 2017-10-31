@@ -13,89 +13,89 @@
 
 */
 
-import {parseLisb} from '../particles.js';
+import {parseParticles} from '../particles.js';
 import {expect} from 'chai';
 
 describe('particles module', () => {
-  describe('parseLisb function', () => {
-    it.skip('should parse a single default particle', () => {
-      const result = parseLisb('particle');
+  describe('parseParticles function', () => {
+    it('should parse a single default particle', () => {
+      const result = parseParticles('particle');
       const expectedResult = [
         ['default', 'particle'],
       ];
       expect(result).to.deep.equal(expectedResult);
     });
-    it.skip('should parse a single named particle without parameters', () => {
-      const result = parseLisb('${instruction()}');
+    it('should parse a single named particle without parameters', () => {
+      const result = parseParticles('${instruction()}');
       const expectedResult = [
         ['instruction'],
       ];
       expect(result).to.deep.equal(expectedResult);
     });
-    it.skip('should parse a single named particle with a single parameter', () => {
-      const result = parseLisb('${instruction(123)}');
+    it('should parse a single named particle with a single parameter', () => {
+      const result = parseParticles('${instruction(123)}');
       const expectedResult = [
         ['instruction', '123'],
       ];
       expect(result).to.deep.equal(expectedResult);
     });
-    it.skip('should parse a single named particle with two parameters', () => {
-      const result = parseLisb('${instruction(123,abc)}');
+    it('should parse a single named particle with two parameters', () => {
+      const result = parseParticles('${instruction(123,abc)}');
       const expectedResult = [
         ['instruction', '123', 'abc'],
       ];
       expect(result).to.deep.equal(expectedResult);
     });
-    it.skip('should parse two instruction particles',  () => {
-      expect(parseLisb(
+    it('should parse two instruction particles',  () => {
+      expect(parseParticles(
         '${foo()}${bar()}',
       )).to.deep.equal([
         ['foo'],
         ['bar'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         'foo${bar()}',
       )).to.deep.equal([
         ['default', 'foo'],
         ['bar'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '${foo()}bar',
       )).to.deep.equal([
         ['foo'],
         ['default', 'bar'],
       ]);
     });
-    it.skip('should parse three instruction particles', () => {
-      expect(parseLisb(
+    it('should parse three instruction particles', () => {
+      expect(parseParticles(
         '${foo()}${bar()}${quux()}',
       )).to.deep.equal([
         ['foo'],
         ['bar'],
         ['quux'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         'foo${bar()}${quux()}',
       )).to.deep.equal([
         ['default', 'foo'],
         ['bar'],
         ['quux'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '${foo()}bar${quux()}',
       )).to.deep.equal([
         ['foo'],
         ['default', 'bar'],
         ['quux'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '${foo()}${bar()}quux',
       )).to.deep.equal([
         ['foo'],
         ['bar'],
         ['default', 'quux'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         'foo${bar()}quux',
       )).to.deep.equal([
         ['default', 'foo'],
@@ -105,22 +105,22 @@ describe('particles module', () => {
     });
     it.skip('should parse escaped dollar sign as a regular character', () => {
       // note that javascript eliminates every other backslash
-      expect(parseLisb(
+      expect(parseParticles(
         '\\$',
       )).to.deep.equal([
         ['default', '$'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '\\${foo()}',
       )).to.deep.equal([
         ['default', '${foo()}'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         'foo\\${bar()}',
       )).to.deep.equal([
         ['default', 'foo${bar()}'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '\\${foo()}bar',
       )).to.deep.equal([
         ['default', '${foo()}bar'],
@@ -128,22 +128,22 @@ describe('particles module', () => {
     });
     it.skip('should parse escaped backslash as a regular character', () => {
       // note that javascript eliminates every other backslash
-      expect(parseLisb(
+      expect(parseParticles(
         '\\\\',
       )).to.deep.equal([
         ['default', '\\'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '\\\\${foo()}',
       )).to.deep.equal([
         ['default', '\\${foo()}'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         'foo\\\\${bar()}',
       )).to.deep.equal([
         ['default', 'foo\\${bar()}'],
       ]);
-      expect(parseLisb(
+      expect(parseParticles(
         '\\\\${foo()}bar',
       )).to.deep.equal([
         ['default', '\\${foo()}bar'],
@@ -163,7 +163,7 @@ describe('particles module', () => {
       ];
       invalidLisbExamples.forEach(invalidLisb => {
         expect(() => {
-          return parseLisb(invalidLisb);
+          return parseParticles(invalidLisb);
         }).to.throw();
       });
     });
