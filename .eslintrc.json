@@ -140,7 +140,7 @@
     "keyword-spacing": 2,
     "space-before-blocks": 2,
     "object-curly-spacing": 2,
-    "object-property-newline": 2,
+    "object-property-newline": [2, {"allowMultiplePropertiesPerLine": true}],
     "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
     "spaced-comment": 2,
 
