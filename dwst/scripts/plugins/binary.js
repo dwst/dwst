@@ -151,7 +151,7 @@ export default class Binary {
       }
       return out.buffer;
     }
-    const out = particles(paramString, this._process, joinBuffers);
+    const out = particles(paramString, (...args) => this._process(...args), joinBuffers);
 
     const msg = `<${out.byteLength}B of data> `;
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {

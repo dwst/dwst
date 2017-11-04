@@ -41,6 +41,7 @@ export default class Loadtext {
   }
 
   _run(variable = 'default', encoding) {
+    const that = this;
     const upload = document.getElementById('file1');
     upload.onchange = () => {
       const file = upload.files[0];
@@ -49,8 +50,8 @@ export default class Loadtext {
       const reader = new FileReader();
       reader.onload = function (e2) {
         const text = e2.target.result;
-        this._dwst.texts.set(variable, text);
-        this._dwst.terminal.log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
+        that._dwst.texts.set(variable, text);
+        that._dwst.terminal.log(`Text file ${file.fileName} (${text.length}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsText(file, encoding);
     };

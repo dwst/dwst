@@ -40,6 +40,7 @@ export default class Loadbin {
   }
 
   _run(variable = 'default') {
+    const that = this;
     const upload = document.getElementById('file1');
     upload.onchange = () => {
       const file = upload.files[0];
@@ -48,8 +49,8 @@ export default class Loadbin {
       const reader = new FileReader();
       reader.onload = function (e2) {
         const buffer = e2.target.result;
-        this._dwst.bins.set(variable, buffer);
-        this._dwst.terminal.log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
+        that._dwst.bins.set(variable, buffer);
+        that._dwst.terminal.log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
     };
