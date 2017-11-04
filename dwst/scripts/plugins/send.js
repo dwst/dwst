@@ -13,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import lisb from '../lisb.js';
+import particles from '../particles.js';
 
 export default class Send {
 
@@ -27,20 +27,20 @@ export default class Send {
 
   usage() {
     return [
-      '/send [components...]',
-      '/s [components...]',
+      '/send [template]',
+      '/s [template]',
     ];
   }
 
   examples() {
     return [
-      '/send Hello\\ world!',
-      '/send rpc( [random(5)] )',
-      '/send [text]',
-      '/send \\["JSON","is","cool"]',
-      '/send [time] s\\ since\\ epoch',
-      '/send From\\ a\\ to\\ z:\\ [range(97,122)]',
-      '/s Available\\ now\\ with\\ 60%\\ less\\ typing!',
+      '/send Hello world!',
+      '/send rpc(${random(5)})',
+      '/send ${text()}',
+      '/send ["JSON","is","cool"]',
+      '/send ${time()}s since epoch',
+      '/send From a to z: ${range(97,122)}',
+      '/s Available now with 60% less typing!',
     ];
   }
 
@@ -48,7 +48,7 @@ export default class Send {
     return 'send textual data';
   }
 
-  _process(instr, params, postfix) {
+  _process(instr, params) {
     let out;
     if (instr === 'default') {
       out = params[0];
@@ -96,14 +96,14 @@ export default class Send {
       }
       out = str;
     }
-    return out + postfix;
+    return out;
   }
 
   run(paramString) {
     function joinStrings(strings) {
       return strings.join('');
     }
-    const msg = lisb(paramString, this._process, joinStrings);
+    const msg = particles(paramString, this._process, joinStrings);
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [
         'Use ',

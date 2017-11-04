@@ -13,10 +13,18 @@
 
 */
 
-import {parseParticles} from '../particles.js';
+import {parseParticles, escapeForParticles} from '../particles.js';
 import {expect} from 'chai';
 
 describe('particles module', () => {
+  describe('escapeForParticles', () => {
+    it('should escape $', () => {
+      expect(escapeForParticles('$')).to.equal('\\$');
+    });
+    it('should escape \\', () => {
+      expect(escapeForParticles('\\')).to.equal('\\\\');
+    });
+  });
   describe('parseParticles function', () => {
     it('should parse a single default particle', () => {
       const result = parseParticles('particle');
@@ -149,8 +157,8 @@ describe('particles module', () => {
         ['default', '\\${foo()}bar'],
       ]);
     });
-    it('should throw an exception for invalid lisb', () => {
-      const invalidLisbExamples = [
+    it('should throw an exception for invalid particles', () => {
+      const invalidParticlesExamples = [
         '$',
         '$ {foo()}',
         '$foo()',
@@ -161,9 +169,9 @@ describe('particles module', () => {
         '${foo()',
         '\\a',
       ];
-      invalidLisbExamples.forEach(invalidLisb => {
+      invalidParticlesExamples.forEach(invalidExample => {
         expect(() => {
-          return parseParticles(invalidLisb);
+          return parseParticles(invalidExample);
         }).to.throw();
       });
     });

@@ -219,9 +219,37 @@ export function parseParticles(particleString) {
   return Array.from(readParticles(particleString));
 }
 
-export default function lisb(paramString, processFunction, joinFunction) {
+export function escapeForParticles(textString) {
+  const replmap = [
+    ['$', '\\$'],
+    ['\\', '\\\\'],
+  ];
+
+  function replacer(str, rm) {
+    if (rm.length < 1) {
+      return str;
+    }
+    const head = rm[0];
+    const find = head[0];
+    const rep = head[1];
+
+    const parts = str.split(find);
+    const complete = [];
+    for (const part of parts) {
+      const loput = rm.slice(1);
+      const news = replacer(part, loput);
+      complete.push(news);
+    }
+    const out = complete.join(rep);
+    return out;
+  }
+  const complete = replacer(textString, replmap);
+  return complete;
+}
+
+export default function particles(paramString, processFunction, joinFunction) {
   return joinFunction(parseParticles(paramString).map(particle => {
     const [instruction, ...args] = particle;
-    return processFunction(instruction, args, '');
+    return processFunction(instruction, args);
   }));
 }

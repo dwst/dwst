@@ -13,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import lisb from '../lisb.js';
+import particles from '../particles.js';
 
 export default class Binary {
 
@@ -27,22 +27,22 @@ export default class Binary {
 
   usage() {
     return [
-      '/binary [components...]',
-      '/b [components...]',
+      '/binary [template]',
+      '/b [template]',
     ];
   }
 
   examples() {
     return [
-      '/binary Hello\\ world!',
-      '/binary [random(16)]',
-      '/binary [text]',
-      '/binary [bin]',
-      '/binary \\["JSON","is","cool"]',
-      '/binary [range(0,0xff)]',
-      '/binary [hex(1234567890abcdef)]',
-      '/binary [hex(52)] [random(1)] lol',
-      '/b Available\\ now\\ with\\ ~71.43%\\ less\\ typing!',
+      '/binary Hello world!',
+      '/binary ${random(16)}',
+      '/binary ${text()}',
+      '/binary ${bin()}',
+      '/binary ["JSON","is","cool"]',
+      '/binary ${range(0,0xff)}',
+      '/binary ${hex(1234567890abcdef)}',
+      '/binary ${hex(52)}${random(1)}lol',
+      '/b Available now with ~71.43% less typing!',
     ];
   }
 
@@ -151,7 +151,7 @@ export default class Binary {
       }
       return out.buffer;
     }
-    const out = lisb(paramString, this._process, joinBuffers);
+    const out = particles(paramString, this._process, joinBuffers);
 
     const msg = `<${out.byteLength}B of data> `;
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
