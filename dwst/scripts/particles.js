@@ -2,6 +2,7 @@
 /**
 
   Authors: Toni Ruottu, Finland 2017
+           Lauri Kaitala, Finland 2017
 
   This file is part of Dark WebSocket Terminal.
 
