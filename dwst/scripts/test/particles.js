@@ -149,7 +149,7 @@ describe('particles module', () => {
         ['default', '\\${foo()}bar'],
       ]);
     });
-    it.skip('should throw an exception for invalid lisb', () => {
+    it('should throw an exception for invalid lisb', () => {
       const invalidLisbExamples = [
         '$',
         '$ {foo()}',

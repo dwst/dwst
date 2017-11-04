@@ -23,9 +23,20 @@ function extractEscapedChar(remainder1) {
   const remainder2 = remainder1.slice(1);
   if (remainder2 === '') {
     const msg = 'syntax error: looks like your last character is an escape. ';
+    // TODO - what if it is the only character?
     throw new Error(msg);
   }
   const escapedChar = remainder2.charAt(0);
+  let escapedIsSpecial = false;
+  specialChars.forEach(character => {
+    if (character === escapedChar) {
+      escapedIsSpecial = true;
+    }
+  });
+  if (escapedIsSpecial === false) {
+    const msg = 'syntax error: don\'t escape normal characters. ';
+    throw new Error(msg);
+  }
   const remainder = remainder2.slice(1);
   return [escapedChar, remainder];
 }
@@ -140,6 +151,10 @@ function readInstructionArg(remainder1) {
     sliceIndex = argSeparatorIndex;
   }
   const arg = remainder1.slice(0, sliceIndex);
+  if (arg.indexOf(' ') > -1) {
+    const msg = 'syntax error: whitespace in instruction args';
+    throw new Error(msg);
+  }
   const remainder = remainder1.slice(sliceIndex);
   return [arg, remainder];
 }
