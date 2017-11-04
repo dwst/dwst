@@ -13,6 +13,7 @@
 
 */
 
+import {escapeForParticles} from './particles.js';
 import currenttime from './currenttime.js';
 import HistoryManager from './history_manager.js';
 
@@ -223,40 +224,6 @@ function showHelpTip() {
   terminal.log(helpTip, 'system');
 }
 
-function escapeForCommand(raw) {
-  const replmap = [
-    [' [', '\\ \\['],
-    [' ', '\\ '],
-  ];
-
-  function replacer(str, rm) {
-    if (rm.length < 1) {
-      return str;
-    }
-    const head = rm[0];
-    const find = head[0];
-    const rep = head[1];
-
-    const parts = str.split(find);
-    const complete = [];
-    for (const part of parts) {
-      const loput = rm.slice(1);
-      const news = replacer(part, loput);
-      complete.push(news);
-    }
-    const out = complete.join(rep);
-    return out;
-  }
-  const almost = replacer(raw, replmap);
-  let final;
-  if (almost[0] === '[') {
-    final = `\\${almost}`;
-  } else {
-    final = almost;
-  }
-  return final;
-}
-
 function send() {
   const raw = document.getElementById('msg1').value;
   document.getElementById('msg1').value = '';
@@ -273,7 +240,7 @@ function send() {
     loud(raw);
     return;
   }
-  const text = escapeForCommand(raw);
+  const text = escapeForParticles(raw);
   const command = `/send ${text}`;
   loud(command);
 }
