@@ -13,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import lisb from '../lisb.js';
+import lisb from '../particles.js';
 
 export default class Send {
 
