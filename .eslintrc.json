@@ -104,7 +104,7 @@
     "no-new-object": 2,
     "consistent-this": 2,
     "no-spaced-func": 2,
-    "no-underscore-dangle": [2, { "allowAfterThis": true }],
+    "no-underscore-dangle": 0,
     "no-mixed-operators": 2,
     "new-parens": 2,
     "no-new-wrappers": 2,

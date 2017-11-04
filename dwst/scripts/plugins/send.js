@@ -103,7 +103,7 @@ export default class Send {
     function joinStrings(strings) {
       return strings.join('');
     }
-    const msg = particles(paramString, this._process, joinStrings);
+    const msg = particles(paramString, (...args) => this._process(...args), joinStrings);
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [
         'Use ',
