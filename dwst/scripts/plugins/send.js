@@ -13,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import lisb from '../particles.js';
+import particles from '../particles.js';
 
 export default class Send {
 
@@ -103,7 +103,7 @@ export default class Send {
     function joinStrings(strings) {
       return strings.join('');
     }
-    const msg = lisb(paramString, this._process, joinStrings);
+    const msg = particles(paramString, this._process, joinStrings);
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [
         'Use ',

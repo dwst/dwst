@@ -13,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import lisb from '../particles.js';
+import particles from '../particles.js';
 
 export default class Binary {
 
@@ -151,7 +151,7 @@ export default class Binary {
       }
       return out.buffer;
     }
-    const out = lisb(paramString, this._process, joinBuffers);
+    const out = particles(paramString, this._process, joinBuffers);
 
     const msg = `<${out.byteLength}B of data> `;
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {

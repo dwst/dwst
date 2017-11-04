@@ -157,8 +157,8 @@ describe('particles module', () => {
         ['default', '\\${foo()}bar'],
       ]);
     });
-    it('should throw an exception for invalid lisb', () => {
-      const invalidLisbExamples = [
+    it('should throw an exception for invalid particles', () => {
+      const invalidParticlesExamples = [
         '$',
         '$ {foo()}',
         '$foo()',
@@ -169,9 +169,9 @@ describe('particles module', () => {
         '${foo()',
         '\\a',
       ];
-      invalidLisbExamples.forEach(invalidLisb => {
+      invalidParticlesExamples.forEach(invalidExample => {
         expect(() => {
-          return parseParticles(invalidLisb);
+          return parseParticles(invalidExample);
         }).to.throw();
       });
     });
