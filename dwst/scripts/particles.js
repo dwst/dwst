@@ -207,17 +207,15 @@ function readParticle(particleString) {
   return readDefaultParticle(particleString);
 }
 
-function *readParticles(particleString) {
+export function parseParticles(particleString) {
+  const parsedParticles = [];
   let tmp = particleString;
   while (tmp.length > 0) {
     const [particle, remainder] = readParticle(tmp);
-    yield particle;
+    parsedParticles.push(particle);
     tmp = remainder;
   }
-}
-
-export function parseParticles(particleString) {
-  return Array.from(readParticles(particleString));
+  return parsedParticles;
 }
 
 export function escapeForParticles(textString) {
