@@ -53,7 +53,7 @@ export default class Connect {
             type: 'command',
             text: '/disconnect',
           },
-          ' to end the conection',
+          ' to end the connection',
         ],
       ], 'error');
       return;
