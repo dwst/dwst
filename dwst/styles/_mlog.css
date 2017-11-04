@@ -38,6 +38,11 @@
   color: var(--dwst-color-yellow--light);
   text-decoration: none;
 }
+.dwst-mlog__help-link--warning:hover {
+  color: var(--dwst-color-white);
+  font-style: normal;
+  text-decoration: underline;
+}
 .dwst-mlog__command-link {
   color: var(--dwst-color-cyan);
   text-decoration: none;
@@ -70,9 +75,6 @@
 }
 .dwst-mlog__link {
   color: var(--dwst-color-blue);
-}
-.dwst-mlog__link:hover {
-  color: var(--dwst-color-pink--light);
 }
 .dwst-mlog__syntax {
   font-style: italic;
