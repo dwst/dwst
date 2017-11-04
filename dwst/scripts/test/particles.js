@@ -103,7 +103,7 @@ describe('particles module', () => {
         ['default', 'quux'],
       ]);
     });
-    it.skip('should parse escaped dollar sign as a regular character', () => {
+    it('should parse escaped dollar sign as a regular character', () => {
       // note that javascript eliminates every other backslash
       expect(parseParticles(
         '\\$',
@@ -126,7 +126,7 @@ describe('particles module', () => {
         ['default', '${foo()}bar'],
       ]);
     });
-    it.skip('should parse escaped backslash as a regular character', () => {
+    it('should parse escaped backslash as a regular character', () => {
       // note that javascript eliminates every other backslash
       expect(parseParticles(
         '\\\\',

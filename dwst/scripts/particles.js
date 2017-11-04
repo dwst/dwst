@@ -19,28 +19,52 @@ const specialChars = [
   '\\',
 ];
 
-function readDefaultParticleContent(remainder1) {
-  const specialPositionsNear = specialChars.map(character => {
+function extractEscapedChar(remainder1) {
+  const remainder2 = remainder1.slice(1);
+  if (remainder2 === '') {
+    const msg = 'syntax error: looks like your last character is an escape. ';
+    throw new Error(msg);
+  }
+  const escapedChar = remainder2.charAt(0);
+  const remainder = remainder2.slice(1);
+  return [escapedChar, remainder];
+}
+
+function getNextSpecialCharPosition(remainder1) {
+  return specialChars.map(character => {
     const i = remainder1.indexOf(character);
     if (i < 0) {
       return 0;
     }
     return i;
-  });
-  specialPositionsNear.sort((a, b) => {
+  }).sort((a, b) => {
     return a - b;
-  });
-  const nextSpecialPos = specialPositionsNear.filter(i => i > 0)[0];
-  let content;
-  let remainder;
-  if (typeof nextSpecialPos === 'undefined') {
-    content = remainder1;
-    remainder = '';
-  } else {
-    content = remainder1.slice(0, nextSpecialPos);
-    remainder = remainder1.slice(nextSpecialPos);
+  }).filter(i => i > 0)[0];
+}
+
+function readDefaultParticleContent(remainder1) {
+  let content = '';
+  let escapedChar;
+  let remainder2 = remainder1;
+  while (remainder2.length > 0) {
+    if (remainder2.charAt(0) === '$') {
+      break;
+    }
+    if (remainder2.charAt(0) === '\\') {
+      [escapedChar, remainder2] = extractEscapedChar(remainder2);
+      content += escapedChar;
+    }
+    const nextSpecialPos = getNextSpecialCharPosition(remainder2);
+    let sliceIndex;
+    if (typeof nextSpecialPos === 'undefined') {
+      sliceIndex = remainder2.length;
+    } else {
+      sliceIndex = nextSpecialPos;
+    }
+    content += remainder2.slice(0, sliceIndex);
+    remainder2 = remainder2.slice(sliceIndex);
   }
-  return [content, remainder];
+  return [content, remainder2];
 }
 
 function skipExpressionOpen(remainder1) {
