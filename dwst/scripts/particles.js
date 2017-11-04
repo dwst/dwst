@@ -219,6 +219,10 @@ export function parseParticles(particleString) {
   return Array.from(readParticles(particleString));
 }
 
+export function escapeForParticles(textString) {
+  return textString;
+}
+
 export default function lisb(paramString, processFunction, joinFunction) {
   return joinFunction(parseParticles(paramString).map(particle => {
     const [instruction, ...args] = particle;

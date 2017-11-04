@@ -13,10 +13,18 @@
 
 */
 
-import {parseParticles} from '../particles.js';
+import {parseParticles, escapeForParticles} from '../particles.js';
 import {expect} from 'chai';
 
 describe('particles module', () => {
+  describe('escapeForParticles', () => {
+    it('should escape $', () => {
+      expect(escapeForParticles('$')).to.equal('\\$');
+    });
+    it('should escape \\', () => {
+      expect(escapeForParticles('\\')).to.equal('\\\\');
+    });
+  });
   describe('parseParticles function', () => {
     it('should parse a single default particle', () => {
       const result = parseParticles('particle');
