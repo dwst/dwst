@@ -250,6 +250,6 @@ export function escapeForParticles(textString) {
 export default function lisb(paramString, processFunction, joinFunction) {
   return joinFunction(parseParticles(paramString).map(particle => {
     const [instruction, ...args] = particle;
-    return processFunction(instruction, args, '');
+    return processFunction(instruction, args);
   }));
 }

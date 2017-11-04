@@ -48,7 +48,7 @@ export default class Send {
     return 'send textual data';
   }
 
-  _process(instr, params, postfix) {
+  _process(instr, params) {
     let out;
     if (instr === 'default') {
       out = params[0];
@@ -96,7 +96,7 @@ export default class Send {
       }
       out = str;
     }
-    return out + postfix;
+    return out;
   }
 
   run(paramString) {
