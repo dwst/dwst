@@ -27,20 +27,20 @@ export default class Send {
 
   usage() {
     return [
-      '/send [components...]',
-      '/s [components...]',
+      '/send [template]',
+      '/s [template]',
     ];
   }
 
   examples() {
     return [
-      '/send Hello\\ world!',
-      '/send rpc( [random(5)] )',
-      '/send [text]',
-      '/send \\["JSON","is","cool"]',
-      '/send [time] s\\ since\\ epoch',
-      '/send From\\ a\\ to\\ z:\\ [range(97,122)]',
-      '/s Available\\ now\\ with\\ 60%\\ less\\ typing!',
+      '/send Hello world!',
+      '/send rpc(${random(5)})',
+      '/send ${text()}',
+      '/send ["JSON","is","cool"]',
+      '/send ${time()}s since epoch',
+      '/send From a to z: ${range(97,122)}',
+      '/s Available now with 60% less typing!',
     ];
   }
 

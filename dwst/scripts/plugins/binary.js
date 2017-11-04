@@ -27,22 +27,22 @@ export default class Binary {
 
   usage() {
     return [
-      '/binary [components...]',
-      '/b [components...]',
+      '/binary [template]',
+      '/b [template]',
     ];
   }
 
   examples() {
     return [
-      '/binary Hello\\ world!',
-      '/binary [random(16)]',
-      '/binary [text]',
-      '/binary [bin]',
-      '/binary \\["JSON","is","cool"]',
-      '/binary [range(0,0xff)]',
-      '/binary [hex(1234567890abcdef)]',
-      '/binary [hex(52)] [random(1)] lol',
-      '/b Available\\ now\\ with\\ ~71.43%\\ less\\ typing!',
+      '/binary Hello world!',
+      '/binary ${random(16)}',
+      '/binary ${text()}',
+      '/binary ${bin()}',
+      '/binary ["JSON","is","cool"]',
+      '/binary ${range(0,0xff)}',
+      '/binary ${hex(1234567890abcdef)}',
+      '/binary ${hex(52)}${random(1)}lol',
+      '/b Available now with ~71.43% less typing!',
     ];
   }
 

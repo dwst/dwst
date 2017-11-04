@@ -34,7 +34,7 @@ export default class Interval {
   examples() {
     return [
       '/interval 1000',
-      '/interval 1000 /binary [random(10)]',
+      '/interval 1000 /binary ${random(10)}',
       '/interval',
     ];
   }
