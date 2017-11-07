@@ -144,15 +144,24 @@ describe('particles module', () => {
       expect(parseParticles(
         '\\\\${foo()}',
       )).to.deep.equal([
-        ['default', '\\${foo()}'],
+        ['default', '\\'],
+        ['foo'],
       ]);
       expect(parseParticles(
         'foo\\\\${bar()}',
       )).to.deep.equal([
-        ['default', 'foo\\${bar()}'],
+        ['default', 'foo\\'],
+        ['bar'],
       ]);
       expect(parseParticles(
         '\\\\${foo()}bar',
+      )).to.deep.equal([
+        ['default', '\\'],
+        ['foo'],
+        ['default', 'bar'],
+      ]);
+      expect(parseParticles(
+        '\\\\\\${foo()}bar',
       )).to.deep.equal([
         ['default', '\\${foo()}bar'],
       ]);
