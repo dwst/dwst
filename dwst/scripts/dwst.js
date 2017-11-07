@@ -132,7 +132,7 @@ const terminal = new Terminal('ter1', controller);
 
 const pluginInterface = {
 
-  VERSION: '2.4.0',
+  VERSION: '2.4.1',
   ECHO_SERVER_URL: 'wss://echo.websocket.org/',
 
   terminal,
