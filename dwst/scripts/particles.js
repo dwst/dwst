@@ -28,13 +28,7 @@ function extractEscapedChar(remainder1) {
     throw new Error(msg);
   }
   const escapedChar = remainder2.charAt(0);
-  let escapedIsSpecial = false;
-  specialChars.forEach(character => {
-    if (character === escapedChar) {
-      escapedIsSpecial = true;
-    }
-  });
-  if (escapedIsSpecial === false) {
+  if (specialChars.includes(escapedChar) === false) {
     const msg = 'syntax error: don\'t escape normal characters. ';
     throw new Error(msg);
   }
@@ -54,29 +48,37 @@ function getNextSpecialCharPosition(remainder1) {
   }).filter(i => i > 0)[0];
 }
 
-function readDefaultParticleContent(remainder1) {
-  let content = '';
-  let escapedChar;
-  let remainder2 = remainder1;
-  while (remainder2.length > 0) {
-    if (remainder2.charAt(0) === '$') {
-      break;
-    }
-    if (remainder2.charAt(0) === '\\') {
-      [escapedChar, remainder2] = extractEscapedChar(remainder2);
-      content += escapedChar;
-    }
-    const nextSpecialPos = getNextSpecialCharPosition(remainder2);
-    let sliceIndex;
-    if (typeof nextSpecialPos === 'undefined') {
-      sliceIndex = remainder2.length;
-    } else {
-      sliceIndex = nextSpecialPos;
-    }
-    content += remainder2.slice(0, sliceIndex);
-    remainder2 = remainder2.slice(sliceIndex);
+function extractRegularChars(remainder1) {
+  const nextSpecialPos = getNextSpecialCharPosition(remainder1);
+  let sliceIndex;
+  if (typeof nextSpecialPos === 'undefined') {
+    sliceIndex = remainder1.length;
+  } else {
+    sliceIndex = nextSpecialPos;
   }
-  return [content, remainder2];
+  const chars = remainder1.slice(0, sliceIndex);
+  const remainder = remainder1.slice(sliceIndex);
+  return [chars, remainder];
+}
+
+function readCharBlock(remainder1) {
+  if (remainder1.charAt(0) === '\\') {
+    return extractEscapedChar(remainder1);
+  }
+  return extractRegularChars(remainder1);
+}
+
+function readDefaultParticleContent(remainder1) {
+  const charBlocks = [];
+  let tmp = remainder1;
+  while (tmp.length > 0 && tmp.charAt(0) !== '$') {
+    const [charBlock, blockRemainder] = readCharBlock(tmp);
+    charBlocks.push(charBlock);
+    tmp = blockRemainder;
+  }
+  const content = charBlocks.join('');
+  const remainder = tmp;
+  return [content, remainder];
 }
 
 function skipExpressionOpen(remainder1) {
