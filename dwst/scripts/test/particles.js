@@ -17,7 +17,7 @@ import {parseParticles, escapeForParticles} from '../particles.js';
 import {expect} from 'chai';
 
 describe('particles module', () => {
-  describe('escapeForParticles', () => {
+  describe('escapeForParticles function', () => {
     it('should escape $', () => {
       expect(escapeForParticles('$')).to.equal('\\$');
     });

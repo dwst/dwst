@@ -16,7 +16,7 @@
 import utils from '../utils.js';
 import {expect} from 'chai';
 
-describe('utils', () => {
+describe('utils module', () => {
   describe('parseNum function', () => {
     it('should support decimal values', () => {
       const result = utils.parseNum('123');
