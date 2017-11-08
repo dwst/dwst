@@ -20,6 +20,15 @@ const specialChars = [
   '\\',
 ];
 
+function skipSpace(remainder1) {
+  let tmp = remainder1;
+  while (tmp.charAt(0) === ' ') {
+    tmp = tmp.slice(1);
+  }
+  const remainder = tmp;
+  return remainder;
+}
+
 function extractEscapedChar(remainder1) {
   const remainder2 = remainder1.slice(1);
   if (remainder2 === '') {
@@ -36,22 +45,21 @@ function extractEscapedChar(remainder1) {
   return [escapedChar, remainder];
 }
 
-function getNextSpecialCharPosition(remainder1) {
-  return specialChars.map(character => {
-    const i = remainder1.indexOf(character);
-    if (i < 0) {
-      return 0;
-    }
-    return i;
-  }).sort((a, b) => {
-    return a - b;
-  }).filter(i => i > 0)[0];
+function indexOfAny(inputString, chars) {
+  const indices = new Set(chars.map(character => {
+    return inputString.indexOf(character);
+  }));
+  indices.delete(-1);
+  if (indices.size === 0) {
+    return -1;
+  }
+  return Math.min(...indices);
 }
 
 function extractRegularChars(remainder1) {
-  const nextSpecialPos = getNextSpecialCharPosition(remainder1);
+  const nextSpecialPos = indexOfAny(remainder1, specialChars);
   let sliceIndex;
-  if (typeof nextSpecialPos === 'undefined') {
+  if (nextSpecialPos === -1) {
     sliceIndex = remainder1.length;
   } else {
     sliceIndex = nextSpecialPos;
@@ -137,62 +145,60 @@ function readInstructionName(remainder1) {
 }
 
 function readInstructionArg(remainder1) {
-  const argSeparatorIndex = remainder1.indexOf(',');
-  if (argSeparatorIndex === 0) {
+  const nextBreakIndex = indexOfAny(remainder1, [' ', ',', ')']);
+  if (nextBreakIndex === 0) {
     const msg = `broken particle argument: missing argument, remainder = ${remainder1}`;
     throw new Error(msg);
   }
-  let sliceIndex;
-  if (argSeparatorIndex === -1) {
-    const argListCloseIndex = remainder1.indexOf(')');
-    if (argListCloseIndex === -1) {
-      const msg = `Expected ' or ), remainder = ${remainder1}`;
-      throw new Error(msg);
-    }
-    sliceIndex = argListCloseIndex;
-  } else {
-    sliceIndex = argSeparatorIndex;
-  }
-  const arg = remainder1.slice(0, sliceIndex);
-  if (arg.indexOf(' ') > -1) {
-    const msg = 'syntax error: whitespace in instruction args';
+  if (nextBreakIndex === -1) {
+    const msg = `Expected ' or ), remainder = ${remainder1}`;
     throw new Error(msg);
   }
-  const remainder = remainder1.slice(sliceIndex);
+  const arg = remainder1.slice(0, nextBreakIndex);
+  const remainder = remainder1.slice(nextBreakIndex);
   return [arg, remainder];
 }
 
 function readInstructionArgs(remainder1) {
-  if (remainder1.charAt(0) === ',') {
-    throw new Error('Unexpected comma.');
-  }
   const instructionArgs = [];
-  let tmp = remainder1;
-  while (tmp.charAt(0) !== ')') {
-    if (tmp.charAt(0) === ',') {
-      tmp = skipArgSeparator(tmp);
-    }
-    const [arg, remainder2] = readInstructionArg(tmp);
-    instructionArgs.push(arg);
-    tmp = remainder2;
+  if (remainder1.charAt(0) === ')') {
+    return [instructionArgs, remainder1];
   }
-  const remainder = tmp;
-  return [instructionArgs, remainder];
+  let tmp = remainder1;
+  while (true) {  // eslint-disable-line
+    const [arg, instructionRemainder] = readInstructionArg(tmp);
+    instructionArgs.push(arg);
+    tmp = skipSpace(instructionRemainder);
+    if (tmp.charAt(0) === ')') {
+      const remainder = tmp;
+      return [instructionArgs, remainder];
+    }
+    if (tmp.charAt(0) !== ',') {
+      const msg = 'syntax error: garbage';
+      throw new Error(msg);
+    }
+    tmp = skipArgSeparator(tmp);
+    tmp = skipSpace(tmp);
+  }
 }
 
 function parseExpression(remainder1) {
   const [instructionName, remainder2] = readInstructionName(remainder1);
   const remainder3 = skipArgListOpen(remainder2);
-  const [instructionArgs, remainder4] = readInstructionArgs(remainder3);
-  const remainder = skipArgListClose(remainder4);
+  const remainder4 = skipSpace(remainder3);
+  const [instructionArgs, remainder5] = readInstructionArgs(remainder4);
+  const remainder6 = skipSpace(remainder5);
+  const remainder = skipArgListClose(remainder6);
   const particle = [instructionName].concat(instructionArgs);
   return [particle, remainder];
 }
 
 function readInstructionParticle(remainder1) {
   const remainder2 = skipExpressionOpen(remainder1);
-  const [particle, remainder3] = parseExpression(remainder2);
-  const remainder = skipExpressionClose(remainder3);
+  const remainder3 = skipSpace(remainder2);
+  const [particle, remainder4] = parseExpression(remainder3);
+  const remainder5 = skipSpace(remainder4);
+  const remainder = skipExpressionClose(remainder5);
   return [particle, remainder];
 }
 
