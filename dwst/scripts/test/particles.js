@@ -166,14 +166,35 @@ describe('particles module', () => {
         ['default', '\\${foo()}bar'],
       ]);
     });
+    it('should allow extra spaces inside placeholders', () => {
+      expect(parseParticles(
+        '${foo(123 , 456)}',
+      )).to.deep.equal([
+        ['foo', '123', '456'],
+      ]);
+      expect(parseParticles(
+        '${foo( 123,456 )}',
+      )).to.deep.equal([
+        ['foo', '123', '456'],
+      ]);
+      expect(parseParticles(
+        '${ foo(123,456) }',
+      )).to.deep.equal([
+        ['foo', '123', '456'],
+      ]);
+    });
     it('should throw an exception for invalid particles', () => {
       const invalidParticlesExamples = [
         '$',
         '$ {foo()}',
         '$foo()',
-        '${foo(123, 456)}',
+        '${foo(123,)}',
+        '${foo(,456)}',
         '${foo}',
         '${foo(}',
+        '${foo(123',
+        '${foo(123,',
+        '${foo(123,456',
         '${foo)}',
         '${foo()',
         '\\a',
