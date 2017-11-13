@@ -13,7 +13,21 @@
 */
 
 import utils from '../utils.js';
-import particles from '../particles.js';
+import {parseParticles, InvalidParticles} from '../particles.js';
+
+function joinBuffers(buffersToJoin) {
+  let total = 0;
+  for (const buffer of buffersToJoin) {
+    total += buffer.length;
+  }
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const buffer of buffersToJoin) {
+    out.set(buffer, offset);
+    offset += buffer.length;
+  }
+  return out.buffer;
+}
 
 export default class Binary {
 
@@ -138,20 +152,21 @@ export default class Binary {
 
 
   run(paramString) {
-    function joinBuffers(buffersToJoin) {
-      let total = 0;
-      for (const buffer of buffersToJoin) {
-        total += buffer.length;
+    let parsed;
+    try {
+      parsed = parseParticles(paramString);
+    } catch (e) {
+      if (e instanceof InvalidParticles) {
+        this._dwst.terminal.mlog(['Syntax error.'], 'error');
+        return;
       }
-      const out = new Uint8Array(total);
-      let offset = 0;
-      for (const buffer of buffersToJoin) {
-        out.set(buffer, offset);
-        offset += buffer.length;
-      }
-      return out.buffer;
+      throw e;
     }
-    const out = particles(paramString, (...args) => this._process(...args), joinBuffers);
+    const processed = parsed.map(particle => {
+      const [instruction, ...args] = particle;
+      return this._process(instruction, args);
+    });
+    const out = joinBuffers(processed);
 
     const msg = `<${out.byteLength}B of data> `;
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {

@@ -20,6 +20,8 @@ const specialChars = [
   '\\',
 ];
 
+export class InvalidParticles extends Error { }
+
 function skipSpace(remainder1) {
   let tmp = remainder1;
   while (tmp.charAt(0) === ' ') {
@@ -34,12 +36,12 @@ function extractEscapedChar(remainder1) {
   if (remainder2 === '') {
     const msg = 'syntax error: looks like your last character is an escape. ';
     // TODO - what if it is the only character?
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   const escapedChar = remainder2.charAt(0);
   if (specialChars.includes(escapedChar) === false) {
     const msg = 'syntax error: don\'t escape normal characters. ';
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   const remainder = remainder2.slice(1);
   return [escapedChar, remainder];
@@ -93,7 +95,7 @@ function skipExpressionOpen(remainder1) {
   const expressionOpen = '${';
   if (remainder1.startsWith(expressionOpen) === false) {
     const msg = `expression needs to start with ${expressionOpen}`;
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   const remainder = remainder1.slice(expressionOpen.length);
   return remainder;
@@ -103,7 +105,7 @@ function skipExpressionClose(remainder1) {
   const expressionClose = '}';
   if (remainder1.startsWith(expressionClose) === false) {
     const msg = `expression needs to end with ${expressionClose}`;
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   const remainder = remainder1.slice(expressionClose.length);
   return remainder;
@@ -131,7 +133,7 @@ function readInstructionName(remainder1) {
   const argListOpenIndex = remainder1.indexOf('(');
   if (argListOpenIndex === 0) {
     const msg = `broken named particle: missing instruction name, remainder = ${remainder1}`;
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   let sliceIndex;
   if (argListOpenIndex === -1) {
@@ -148,11 +150,11 @@ function readInstructionArg(remainder1) {
   const nextBreakIndex = indexOfAny(remainder1, [' ', ',', ')']);
   if (nextBreakIndex === 0) {
     const msg = `broken particle argument: missing argument, remainder = ${remainder1}`;
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   if (nextBreakIndex === -1) {
     const msg = `Expected ' or ), remainder = ${remainder1}`;
-    throw new Error(msg);
+    throw new InvalidParticles(msg);
   }
   const arg = remainder1.slice(0, nextBreakIndex);
   const remainder = remainder1.slice(nextBreakIndex);
@@ -175,7 +177,7 @@ function readInstructionArgs(remainder1) {
     }
     if (tmp.charAt(0) !== ',') {
       const msg = 'syntax error: garbage';
-      throw new Error(msg);
+      throw new InvalidParticles(msg);
     }
     tmp = skipArgSeparator(tmp);
     tmp = skipSpace(tmp);
@@ -254,9 +256,4 @@ export function escapeForParticles(textString) {
   return complete;
 }
 
-export default function particles(paramString, processFunction, joinFunction) {
-  return joinFunction(parseParticles(paramString).map(particle => {
-    const [instruction, ...args] = particle;
-    return processFunction(instruction, args);
-  }));
-}
+export default parseParticles;
