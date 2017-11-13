@@ -69,7 +69,7 @@ const sourcePaths = {
 };
 
 const lintingPaths = {
-  json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc'],
+  json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc', 'package.json'],
   javascript: [sourcePaths.scripts, 'gulpfile.js', 'dwst/**/test/**/*.js'],
   html: sourcePaths.html,
   css: sourcePaths.css,
