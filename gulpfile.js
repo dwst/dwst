@@ -198,6 +198,11 @@ gulp.task('build-js', () => {
             test: /\.js$/,
             loader: 'babel-loader',
             query: {
+              plugins: [
+                ['babel-plugin-transform-builtin-extend', {
+                  globals: ['Error'],
+                }],
+              ],
               presets: [
                 ['env', {
                   targets: {

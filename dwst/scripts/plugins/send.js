@@ -13,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import particles from '../particles.js';
+import {parseParticles, InvalidParticles} from '../particles.js';
 
 export default class Send {
 
@@ -100,10 +100,22 @@ export default class Send {
   }
 
   run(paramString) {
-    function joinStrings(strings) {
-      return strings.join('');
+    let parsed;
+    try {
+      parsed = parseParticles(paramString);
+    } catch (e) {
+      if (e instanceof InvalidParticles) {
+        this._dwst.terminal.mlog(['Syntax error.'], 'error');
+        return;
+      }
+      throw e;
     }
-    const msg = particles(paramString, (...args) => this._process(...args), joinStrings);
+    const processed = parsed.map(particle => {
+      const [instruction, ...args] = particle;
+      return this._process(instruction, args);
+    });
+    const msg = processed.join('');
+
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
       const connectTip = [
         'Use ',

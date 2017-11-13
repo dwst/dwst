@@ -45,6 +45,7 @@
     "autoprefixer": "^7.1.3",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "browser-sync": "^2.14.3",
@@ -72,6 +73,11 @@
   "babel": {
     "presets": [
       "env"
+    ],
+    "plugins": [
+      ["babel-plugin-transform-builtin-extend", {
+        "globals": ["Error"]
+      }]
     ]
   }
 }
