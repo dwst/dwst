@@ -13,7 +13,7 @@
 
 */
 
-import {parseParticles, escapeForParticles} from '../particles.js';
+import {parseParticles, escapeForParticles, InvalidParticles} from '../particles.js';
 import {expect} from 'chai';
 
 describe('particles module', () => {
@@ -202,7 +202,7 @@ describe('particles module', () => {
       invalidParticlesExamples.forEach(invalidExample => {
         expect(() => {
           return parseParticles(invalidExample);
-        }).to.throw();
+        }).to.throw(InvalidParticles);
       });
     });
   });

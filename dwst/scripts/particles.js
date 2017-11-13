@@ -135,6 +135,10 @@ function readInstructionName(remainder1) {
     const msg = `broken named particle: missing instruction name, remainder = ${remainder1}`;
     throw new InvalidParticles(msg);
   }
+  if (argListOpenIndex === -1) {
+    const msg = `broken named particle: missing arg list open, remainder = ${remainder1}`;
+    throw new InvalidParticles(msg);
+  }
   let sliceIndex;
   if (argListOpenIndex === -1) {
     sliceIndex = remainder.length;
