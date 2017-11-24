@@ -20,6 +20,7 @@ export default class Terminal {
   constructor(elementId, controller) {
     this._elementId = elementId;
     this._controller = controller;
+    this._limit = 1000;
   }
 
   _htmlescape(line) {
@@ -122,6 +123,9 @@ export default class Terminal {
     const terminal = document.getElementById(this._elementId);
     const userWasScrolling = this.isUserScrolling();
     terminal.appendChild(logLine);
+    while (terminal.childElementCount > this._limit) {
+      terminal.removeChild(terminal.firstChild);
+    }
     if (userWasScrolling) {
       return;
     }
