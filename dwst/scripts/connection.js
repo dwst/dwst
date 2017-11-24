@@ -18,8 +18,21 @@ class FakeSocket {
     this.protocol = '';
     this.readyState = 1;
     this._path = url.split('//').pop();
+    this._nextFlood = null;
     window.setTimeout(() => {
       this.onopen();
+      if (this._path === 'flood') {
+        this._flood(0);
+      }
+    }, 0);
+  }
+
+  _flood(count) {
+    this._nextFlood = window.setTimeout(() => {
+      this.onmessage({
+        data: `${count}`,
+      });
+      this._flood(count + 1);
     }, 0);
   }
 
@@ -43,6 +56,7 @@ class FakeSocket {
   }
 
   close() {
+    window.clearTimeout(this._nextFlood);
     this.readyState = 3;
     this.onclose({
       code: 1000,
