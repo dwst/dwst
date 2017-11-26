@@ -28,6 +28,7 @@ const fse = require('fs-extra');
 const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
 const colorHexAlpha = require('postcss-color-hex-alpha');
+const discardComments = require('postcss-discard-comments');
 const rename = require('gulp-rename');
 const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
@@ -173,6 +174,7 @@ gulp.task('build-css', () => {
       atImport(),
       colorHexAlpha(),
       autoprefixer(),
+      discardComments(),
     ]))
     .pipe(gulp.dest(targetDirs.styles))
     .pipe(rename(p => {
