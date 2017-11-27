@@ -79,7 +79,7 @@ export default class Help {
     ]);
   }
 
-  _mainHelp() {
+  _commandsList() {
     const available = [];
     [...this._dwst.commands.keys()].sort().forEach(c => {
       if (c.length > 1) {
@@ -93,8 +93,10 @@ export default class Help {
         available.push(commandSegment);
       }
     });
+    return [flatList(available)];
+  }
 
-    const commandsList = [flatList(available)];
+  _mainHelp() {
 
     this._dwst.terminal.mlog([
       this._createBreadCrumbs(),
@@ -147,6 +149,14 @@ export default class Help {
         },
         ' and tracking information',
       ],
+      [
+        '- Alphabetical List of ',
+        {
+          type: 'dwstgg',
+          text: '#commands',
+          section: '#commands',
+        },
+      ],
       '',
       [
         'Open with ',
@@ -156,22 +166,7 @@ export default class Help {
         },
       ],
       '',
-      {
-        type: 'h2',
-        text: 'Commands',
-      },
-      '',
-    ].concat(commandsList).concat([
-      [
-        'Type ',
-        {
-          type: 'syntax',
-          text: '/help <command>',
-        },
-        ' for instructions',
-      ],
-      '',
-    ]), 'system');
+    ], 'system');
   }
 
   _helpPage(page) {
@@ -517,6 +512,30 @@ export default class Help {
         ],
         '',
       ], 'system');
+      return;
+    }
+    if (page === '#commands') {
+      const commandsList = this._commandsList();
+
+      this._dwst.terminal.mlog([
+        this._createBreadCrumbs(page),
+        '',
+        {
+          type: 'h1',
+          text: 'Alphabetical List of Commands',
+        },
+        '',
+      ].concat(commandsList).concat([
+        [
+          'Type ',
+          {
+            type: 'syntax',
+            text: '/help <command>',
+          },
+          ' for usage',
+        ],
+        '',
+      ]), 'system');
       return;
     }
 
