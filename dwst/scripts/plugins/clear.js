@@ -39,6 +39,6 @@ export default class Clear {
   }
 
   run() {
-    this._dwst.clearLog();
+    this._dwst.terminal.clearLog();
   }
 }
