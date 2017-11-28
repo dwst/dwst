@@ -15,6 +15,14 @@
 import utils from '../utils.js';
 import {parseParticles, InvalidParticles} from '../particles.js';
 
+class UnknownInstruction extends Error {
+
+  constructor(instruction) {
+    super();
+    this.instruction = instruction;
+  }
+}
+
 export default class Send {
 
   constructor(dwst) {
@@ -49,13 +57,12 @@ export default class Send {
   }
 
   _process(instr, params) {
-    let out;
     if (instr === 'default') {
-      out = params[0];
+      return params[0];
     }
     if (instr === 'random') {
       const randomchar = () => {
-        out = Math.floor(Math.random() * (0xffff + 1));
+        let out = Math.floor(Math.random() * (0xffff + 1));
         out /= 2; // avoid risky characters
         const char = String.fromCharCode(out);
         return char;
@@ -68,17 +75,17 @@ export default class Send {
       for (let i = 0; i < num; i++) {
         str += randomchar();
       }
-      out = str;
+      return str;
     }
     if (instr === 'text') {
       let variable = 'default';
       if (params.length === 1) {
         variable = params[0];
       }
-      out = this._dwst.texts.get(variable);
+      return this._dwst.texts.get(variable);
     }
     if (instr === 'time') {
-      out = String(Math.round(new Date().getTime() / 1000));
+      return String(Math.round(new Date().getTime() / 1000));
     }
     if (instr === 'range') {
       let start = 32;
@@ -94,9 +101,9 @@ export default class Send {
       for (let i = start; i <= end; i++) {
         str += String.fromCharCode(i);
       }
-      out = str;
+      return str;
     }
-    return out;
+    throw new UnknownInstruction(instr);
   }
 
   run(paramString) {
@@ -110,10 +117,35 @@ export default class Send {
       }
       throw e;
     }
-    const processed = parsed.map(particle => {
-      const [instruction, ...args] = particle;
-      return this._process(instruction, args);
-    });
+    let processed;
+    try {
+      processed = parsed.map(particle => {
+        const [instruction, ...args] = particle;
+        return this._process(instruction, args);
+      });
+    } catch (e) {
+      if (e instanceof UnknownInstruction) {
+        const message = [
+          [
+            'No helper ',
+            {
+              type: 'strong',
+              text: e.instruction,
+            },
+            ' available for ',
+            {
+              type: 'dwstgg',
+              text: 'send',
+              section: 'send',
+            },
+            '.',
+          ],
+        ];
+        this._dwst.terminal.mlog(message, 'error');
+        return;
+      }
+      throw e;
+    }
     const msg = processed.join('');
 
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
