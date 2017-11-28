@@ -11,7 +11,7 @@
   copyright and related or neighboring rights to Dark WebSocket Terminal.
 
 -->
-<html lang="en">
+<html lang="en" class="dwst-debug">
 <head>
   <meta http-equiv="Content-Security-Policy" content="default-src; img-src 'self' https://www.google-analytics.com; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; manifest-src 'self'; connect-src *;" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,7 +24,9 @@
 </head>
 <body class="dwst-base dwst-layout">
   <div class="dwst-layout__background">
-    <div class="dwst-layout__guide"></div>
+    <div class="dwst-debug__background-guide">
+      <div class="dwst-debug__content-guide"></div>
+    </div>
   </div>
   <div class="dwst-layout__content-area dwst-scroll-area" id="screen1">
     <div id="ter1" class="dwst-scroll-area__content">

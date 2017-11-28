@@ -33,6 +33,7 @@
   left: 0;
   right: 0;
   bottom: var(--dwst-bar-height);
+  z-index: -1;
   width: 42ch;
   max-width: 100%;
 }
@@ -45,32 +46,6 @@
   .dwst-layout__background {
     width: 110ch;
   }
-}
-.dwst-debug .dwst-layout__background {
-  background-color: var(--dwst-color-debug-orange);
-}
-
-.dwst-layout__guide {
-  position: absolute;
-  top: 0;
-  left: 2ch;
-  right: 0;
-  bottom: 0;
-  width: 38ch;
-  max-width: 100%;
-}
-@media only screen and (min-width: 600px) {
-  .dwst-layout__guide {
-    width: 70ch;
-  }
-}
-@media screen and (min-width: 750px) {
-  .dwst-layout__guide {
-    left: 20ch;
-  }
-}
-.dwst-debug .dwst-layout__guide {
-  background-color: var(--dwst-color-debug-brown);
 }
 
 .dwst-layout__content-area {

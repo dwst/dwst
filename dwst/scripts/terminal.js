@@ -154,6 +154,15 @@ export default class Terminal {
       });
       gfxContent.appendChild(logLine);
     });
+    const background = document.createElement('div');
+    background.setAttribute('class', 'dwst-gfx__background');
+    const safe = document.createElement('div');
+    safe.setAttribute('class', 'dwst-debug__background-guide');
+    const safeco = document.createElement('div');
+    safeco.setAttribute('class', 'dwst-debug__content-guide');
+    safe.appendChild(safeco);
+    background.appendChild(safe);
+    gfxContent.appendChild(background);
 
     const gfxContainer = document.createElement('div');
     gfxContainer.setAttribute('class', 'dwst-log__item dwst-log__item--gfx dwst-gfx');
