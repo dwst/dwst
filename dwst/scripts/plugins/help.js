@@ -150,7 +150,7 @@ export default class Help {
         ' and tracking information',
       ],
       [
-        '- Alphabetical List of ',
+        '- Alphabetical list of ',
         {
           type: 'dwstgg',
           text: '#commands',
