@@ -23,7 +23,19 @@
   display: inline-block;
   margin-left: 50%;
   transform: translateX(-50%);
+  position: relative;
 }
+
+.dwst-gfx__background {
+  background: var(--dwst-color-black);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+
 .dwst-gfx__line {
   margin: 0 auto;
 }

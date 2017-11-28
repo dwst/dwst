@@ -209,7 +209,7 @@ function loud(line) {
 }
 
 function enableDebugger() {
-  document.documentElement.className += ' dwst-debug';
+  document.documentElement.classList.add('dwst-debug--guides');
 }
 
 function showHelpTip() {
