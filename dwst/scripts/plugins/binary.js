@@ -15,6 +15,30 @@
 import utils from '../utils.js';
 import {parseParticles, InvalidParticles} from '../particles.js';
 
+class UnknownInstruction extends Error {
+
+  constructor(instruction) {
+    super();
+    this.instruction = instruction;
+  }
+}
+
+function byteValue(x) {
+  const code = x.charCodeAt(0);
+  if (code !== (code & 0xff)) { // eslint-disable-line no-bitwise
+    return 0;
+  }
+  return code;
+}
+
+function hexpairtobyte(hp) {
+  const hex = hp.join('');
+  if (hex.length !== 2) {
+    return null;
+  }
+  return parseInt(hex, 16);
+}
+
 function joinBuffers(buffersToJoin) {
   let total = 0;
   for (const buffer of buffersToJoin) {
@@ -65,24 +89,10 @@ export default class Binary {
   }
 
   _process(instr, params) {
-    function byteValue(x) {
-      const code = x.charCodeAt(0);
-      if (code !== (code & 0xff)) { // eslint-disable-line no-bitwise
-        return 0;
-      }
-      return code;
-    }
-    function hexpairtobyte(hp) {
-      const hex = hp.join('');
-      if (hex.length !== 2) {
-        return null;
-      }
-      return parseInt(hex, 16);
-    }
-    let bytes = [];
     if (instr === 'default') {
       const text = params[0];
-      bytes = [...text].map(byteValue);
+      const bytes = [...text].map(byteValue);
+      return new Uint8Array(bytes);
     }
     if (instr === 'random') {
       const randombyte = () => {
@@ -93,10 +103,11 @@ export default class Binary {
       if (params.length === 1) {
         num = utils.parseNum(params[0]);
       }
-      bytes = [];
+      const bytes = [];
       for (let i = 0; i < num; i++) {
         bytes.push(randombyte());
       }
+      return new Uint8Array(bytes);
     }
     if (instr === 'range') {
       let start = 0;
@@ -108,10 +119,11 @@ export default class Binary {
         start = utils.parseNum(params[0]);
         end = utils.parseNum(params[1]);
       }
-      bytes = [];
+      const bytes = [];
       for (let i = start; i <= end; i++) {
         bytes.push(i);
       }
+      return new Uint8Array(bytes);
     }
     if (instr === 'bin') {
       let variable = 'default';
@@ -130,13 +142,16 @@ export default class Binary {
         variable = params[0];
       }
       const text = this._dwst.texts.get(variable);
+      let bytes;
       if (typeof text === 'undefined') {
         bytes = [];
       } else {
         bytes = [...text].map(byteValue);
       }
+      return new Uint8Array(bytes);
     }
     if (instr === 'hex') {
+      let bytes;
       if (params.length === 1) {
         const hex = params[0];
         const nums = hex.split('');
@@ -146,8 +161,9 @@ export default class Binary {
       } else {
         bytes = [];
       }
+      return new Uint8Array(bytes);
     }
-    return new Uint8Array(bytes);
+    throw new UnknownInstruction(instr);
   }
 
 
@@ -162,10 +178,35 @@ export default class Binary {
       }
       throw e;
     }
-    const processed = parsed.map(particle => {
-      const [instruction, ...args] = particle;
-      return this._process(instruction, args);
-    });
+    let processed;
+    try {
+      processed = parsed.map(particle => {
+        const [instruction, ...args] = particle;
+        return this._process(instruction, args);
+      });
+    } catch (e) {
+      if (e instanceof UnknownInstruction) {
+        const message = [
+          [
+            'No helper ',
+            {
+              type: 'strong',
+              text: e.instruction,
+            },
+            ' available for ',
+            {
+              type: 'dwstgg',
+              text: 'binary',
+              section: 'binary',
+            },
+            '.',
+          ],
+        ];
+        this._dwst.terminal.mlog(message, 'error');
+        return;
+      }
+      throw e;
+    }
     const out = joinBuffers(processed);
 
     const msg = `<${out.byteLength}B of data> `;
