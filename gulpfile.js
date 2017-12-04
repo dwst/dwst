@@ -34,18 +34,22 @@ const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
 const replace = require('gulp-replace');
 const mocha = require('gulp-mocha');
+const styleguide = require('sc5-styleguide');
 
 const jsRootFile = 'dwst.js';
+const cssRootFile = 'dwst.css';
 const htmlRootFile = 'dwst.html';
 const htmlRootLink = 'index.html';
 
 const buildBase = 'build';
 const targetDirs = {
   styles: path.join(buildBase, 'styles'),
+  styleguide: path.join(buildBase, 'styleguide'),
   scripts: path.join(buildBase, 'scripts'),
   images: path.join(buildBase, 'images'),
 };
 const targetPaths = {
+  cssRoot: path.join(targetDirs.styles, cssRootFile),
   htmlRoot: path.join(buildBase, htmlRootFile),
   htmlLink: path.join(buildBase, htmlRootLink),
 };
@@ -61,10 +65,12 @@ const sourcePaths = {
   html: path.join(sourceBase, 'dwst.html'),
   css: path.join(sourceDirs.styles, '*.css'),
   cssEntry: path.join(sourceDirs.styles, 'dwst.css'),
+  cssReadme: path.join(sourceDirs.styles, 'overview.md'),
   images: [
     path.join(sourceDirs.images, '*.png'),
     path.join(sourceDirs.images, '*.ico'),
   ],
+  favicon: path.join(sourceDirs.images, 'favicon.ico'),
   scripts: path.join(sourceDirs.scripts, '**/*.js'),
   scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
 };
@@ -130,6 +136,8 @@ gulp.task('browser-sync-build', ['build'], () => {
   gulp.watch(sourcePaths.images, ['build-images']);
   gulp.watch(sourcePaths.scripts, ['build-js']);
   gulp.watch(sourcePaths.css, ['build-css']);
+  gulp.watch(sourcePaths.css, ['build-styleguide']);
+  gulp.watch(sourcePaths.cssReadme, ['build-styleguide']);
 });
 
 gulp.task('browser-sync-raw', () => {
@@ -269,7 +277,30 @@ gulp.task('build-manifest', () => {
     .pipe(browserSync.stream());
 });
 
-gulp.task('build-assets', ['build-js', 'build-css', 'build-html', 'build-images', 'build-manifest']);
+gulp.task('styleguide:generate', () => {
+  return gulp.src(sourcePaths.css)
+    .pipe(styleguide.generate({
+      title: 'DWST Style Guide',
+      overviewPath: sourcePaths.cssReadme,
+      rootPath: targetDirs.styleguide,
+      appRoot: '/styleguide',
+      readOnly: true,
+      extraHead: [
+        '<style>.sg-design {display: none;}</style>',
+      ],
+    }))
+    .pipe(gulp.dest(targetDirs.styleguide));
+});
+
+gulp.task('styleguide:applystyles', ['build-css'], () => {
+  return gulp.src(targetPaths.cssRoot)
+    .pipe(styleguide.applyStyles())
+    .pipe(gulp.dest(targetDirs.styleguide));
+});
+
+gulp.task('build-styleguide', ['styleguide:generate', 'styleguide:applystyles']);
+
+gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-css', 'build-html', 'build-images', 'build-manifest']);
 
 gulp.task('create-symlinks', () => {
   fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);

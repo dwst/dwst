@@ -12,9 +12,24 @@
 
 */
 
-.dwst-time--bright {
-  color: var(--dwst-color-gray-d);
-}
+
+/*
+Time
+
+Default - Dark version
+--bright - Bright version
+
+markup:
+<div class="dwst-base">
+  <span class="dwst-time dwst-time{$modifiers}">00:00<span class="dwst-time__sec">:00</span></span>
+</div>
+
+Styleguide 2.1
+*/
+
 .dwst-time__sec {
   color: var(--dwst-color-gray-7);
+}
+.dwst-time--bright {
+  color: var(--dwst-color-gray-d);
 }
