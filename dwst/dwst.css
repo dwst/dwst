@@ -5,6 +5,14 @@ body
   height: 100%;
   background-color: #540;
 }
+.eol-announcement {
+  font-family: monospace;
+  color: #888;
+  padding: 1em;
+}
+.eol-announcement a {
+  color: #fff;
+}
 .button
 {
   width: auto;
