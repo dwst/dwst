@@ -12,12 +12,128 @@
 
 */
 
-:root {
+
+/*
+Base & Colors
+
+Styleguide 1
+*/
+
+
+/*
+Black and White
+
+Our highly fashionable selection of black and white.
+We mostly use black for neutral backgrounds and white for extreme text highlights.
+
+--dwst-color-black - our default black
+--dwst-color-black--af - for times when our default black just isn't black enough
+--dwst-color-white - our default white
+--dwst-color-white--af - for times when our default white just isn't white enough
+
+markup:
+<div style="height: 2em; width: 2em; border: thin solid #000; background: var({$modifiers});"></div>
+
+Styleguide 1.2
+*/
+
+/* styleguide:ignore:start */
+:root, :host {
   --dwst-color-black: #030303;
   --dwst-color-black--af: #000;
   --dwst-color-white: #fffefd;
   --dwst-color-white--af: #fff;
+}
+/* styleguide:ignore:end */
 
+
+/*
+Background Colors
+
+There is a reason why DWST is called dark.
+
+--dwst-color-gray-1 - #111
+--dwst-color-gray-2 - #222
+--dwst-color-gray-4 - #444
+--dwst-color-gray-7 - #777
+--dwst-color-gray-d - #ddd
+--dwst-color-purplified-gray - dark purple
+--dwst-color-purplified-black - insanely dark purple
+
+markup:
+<div style="height: 2em; width: 2em; border: thin solid #000; background: var({$modifiers});"></div>
+
+Styleguide 1.3
+*/
+
+/* styleguide:ignore:start */
+:root, :host {
+  --dwst-color-gray-1: #111;
+  --dwst-color-gray-2: #222;
+  --dwst-color-gray-4: #444;
+  --dwst-color-gray-7: #777;
+  --dwst-color-gray-d: #ddd;
+
+  --dwst-color-purplified-black: #150010;
+  --dwst-color-purplified-gray: #302;
+}
+/* styleguide:ignore:end */
+
+
+/*
+Transparent Overlay Colors
+
+Background colors used for overlays that get drawn in front of the content.
+
+--dwst-color-purple--transparent - transparent purple background for overlays
+
+markup:
+<div style="height: 2em; width: 2em; border: thin solid #000; background: var(--dwst-color-black);">
+  <div style="height: 2em; width: 2em; border: thin solid #000; position: relative; left: 0.5em; top: 0.5em; background: var({$modifiers});"></div>
+</div>
+
+Styleguide 1.4
+*/
+
+/* styleguide:ignore:start */
+:root, :host {
+  --dwst-color-purple--transparent: #6148;
+}
+/* styleguide:ignore:end */
+
+
+/*
+Text Colors
+
+Colors used for highlighting (and lowlighting) text.
+
+--dwst-color-blue - ...
+--dwst-color-blue--light - ...
+--dwst-color-cyan - ...
+--dwst-color-cyan--light - ...
+--dwst-color-green - ...
+--dwst-color-green--light - ...
+--dwst-color-pink - ...
+--dwst-color-pink--light - ...
+--dwst-color-purple - ...
+--dwst-color-purple--light - ...
+--dwst-color-red - ...
+--dwst-color-red--light - ...
+--dwst-color-yellow - ...
+--dwst-color-yellow--light - ...
+--dwst-color-gray - ...
+--dwst-color-gray--light - ...
+
+markup:
+<div class="dwst-base" style="background-color: var(--dwst-color-black); color: var({$modifiers});">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis, elit ut fringilla viverra, neque mauris maximus mauris, sed dapibus lectus massa in eros. Phasellus ullamcorper sapien arcu, id vestibulum dolor pellentesque et. Mauris sem magna, ultricies vel enim vitae, consequat bibendum quam. Aenean ultrices nulla ac condimentum porttitor. In venenatis aliquet lorem aliquet fringilla. Aenean placerat sodales nisl, ut maximus nisl convallis non. Vestibulum sit amet tempor massa. Curabitur eu dapibus nisl. Proin faucibus tristique tortor, luctus finibus dolor imperdiet eu. Fusce non ligula dictum ante auctor viverra.
+</div>
+
+Styleguide 1.5
+*/
+
+/* styleguide:ignore:start */
+:root, :host {
   --dwst-color-blue: #27b;
   --dwst-color-blue--light: #77c;
   --dwst-color-cyan: #6ab;
@@ -27,7 +143,6 @@
   --dwst-color-pink: #d6a;
   --dwst-color-pink--light: #f8c;
   --dwst-color-purple: #614;
-  --dwst-color-purple--transparent: #6148;
   --dwst-color-purple--light: #936;
   --dwst-color-red: #f00;
   --dwst-color-red--light: #c77;
@@ -35,19 +150,35 @@
   --dwst-color-yellow--light: #ff0;
   --dwst-color-gray: #888786;
   --dwst-color-gray--light: #cccbca;
+}
+/* styleguide:ignore:end */
 
-  --dwst-color-gray-1: #111;
-  --dwst-color-gray-2: #222;
-  --dwst-color-gray-4: #444;
-  --dwst-color-gray-7: #777;
-  --dwst-color-gray-d: #ddd;
 
-  --dwst-color-purplified-black: #150010;
-  --dwst-color-purplified-gray: #302;
+/*
+Debug Colors
 
+We us these colors as backgrounds for development tools, such as layout aids that are not part of a typical user experience.
+
+--dwst-color-debug-brown - ...
+--dwst-color-debug-orange - ...
+
+markup:
+<div style="height: 2em; width: 2em; border: thin solid #000; background: var({$modifiers});"></div>
+
+Styleguide 1.6
+*/
+
+/* styleguide:ignore:start */
+:root, :host {
   --dwst-color-debug-brown: #131303;
   --dwst-color-debug-orange: #431303;
+}
+/* styleguide:ignore:end */
 
+
+/* styleguide:ignore:start */
+:root, :host {
   --dwst-bar-height: 24pt;
 }
+/* styleguide:ignore:end */
 

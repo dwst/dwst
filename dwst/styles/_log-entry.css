@@ -18,12 +18,13 @@
   grid-template-columns: 1ch calc(100% - 2ch);
   grid-column-gap: 1ch;
 }
+/* styleguide:ignore:start */
 @media screen and (min-width: 750px) {
   .dwst-log-entry {
     grid-template-columns: 8ch 10ch calc(100% - 8ch - 10ch - 2 * 1ch);
   }
 }
-
+/* styleguide:ignore:end */
 .dwst-log-entry__time {
   vertical-align: top;
   display: none;

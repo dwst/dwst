@@ -1,15 +1,15 @@
 
-/**
+/*
+Base Style
 
-  Authors: Toni Ruottu, Finland 2010-2017
+This is the base style that everything else in DWST Style Guide builds upon.
 
-  This file is part of Dark WebSocket Terminal.
+markup:
+<div class="dwst-base">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis, elit ut fringilla viverra, neque mauris maximus mauris, sed dapibus lectus massa in eros. Phasellus ullamcorper sapien arcu, id vestibulum dolor pellentesque et. Mauris sem magna, ultricies vel enim vitae, consequat bibendum quam. Aenean ultrices nulla ac condimentum porttitor. In venenatis aliquet lorem aliquet fringilla. Aenean placerat sodales nisl, ut maximus nisl convallis non. Vestibulum sit amet tempor massa. Curabitur eu dapibus nisl. Proin faucibus tristique tortor, luctus finibus dolor imperdiet eu. Fusce non ligula dictum ante auctor viverra.
+</div>
 
-  CC0 1.0 Universal, http://creativecommons.org/publicdomain/zero/1.0/
-
-  To the extent possible under law, Dark WebSocket Terminal developers have waived all
-  copyright and related or neighboring rights to Dark WebSocket Terminal.
-
+Styleguide 1.1
 */
 
 .dwst-base {
