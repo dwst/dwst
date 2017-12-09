@@ -66,6 +66,7 @@
     "postcss-color-hex-alpha": "^3.0.0",
     "postcss-discard-comments": "^2.0.4",
     "postcss-import": "^10.0.0",
+    "rewire": "^3.0.2",
     "stylelint-no-unsupported-browser-features": "^1.0.0",
     "vinyl-fs": "^2.4.4",
     "webpack": "^3.5.5",
