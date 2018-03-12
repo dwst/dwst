@@ -12,6 +12,27 @@
 
 */
 
+/*
+Prompt
+
+Prompts are used by users to execute arbitrary commands.
+
+markup:
+<div class="dwst-base">
+  <div class="dwst-prompt">
+    <div class="dwst-prompt__input">
+      <label for="input-field-id" style="position: absolute; left: -10000px;">command prompt</label>
+      <input class="dwst-text-input" id="input-field-id" type="text" value="example user input">
+    </div>
+    <div class="dwst-prompt__button">
+      <button class="dwst-button dwst-button--send" aria-label="send"></button>
+    </div>
+  </div>
+</div>
+
+Styleguide 2.5
+*/
+
 .dwst-prompt {
   width: 100%;
   height: var(--dwst-bar-height);
