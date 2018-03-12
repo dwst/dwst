@@ -12,6 +12,19 @@
 
 */
 
+/*
+Text Input
+
+Basic text input. The text inputs adapt their size based on the containing element.
+
+markup:
+<div class="dwst-base" style="position: relative; height: 30px;">
+  <input class="dwst-text-input" type="text" value="example user input">
+</div>
+
+Styleguide 2.6
+*/
+
 .dwst-text-input {
   width: 100%;
   height: 100%;

@@ -12,6 +12,23 @@
 
 */
 
+/*
+Button
+
+Buttons are used to navigate the app and execute commands without a keyboard.
+
+--send - send button for sending text and executing commands
+--splash - splash button for navigating back to "home screen"
+--splash-connected - special splash button for an active connection
+
+markup:
+<div class="dwst-base">
+  <button class="dwst-button dwst-button{$modifiers}" aria-label="action description"></button>
+</div>
+
+Styleguide 2.4
+*/
+
 .dwst-button {
   display: block;
   border-width: 0;

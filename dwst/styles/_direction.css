@@ -12,6 +12,26 @@
 
 */
 
+/*
+Direction
+
+The communication direction indicator is used to tell the users what caused specific messages to get printed.
+
+--sent - sent message indicator
+--received - received message indicator
+--command - executed command indicator
+--error - error message indicator
+--warning - warning message indicator
+--system - system message indicator
+
+markup:
+<div class="dwst-base">
+  <span class="dwst-direction dwst-direction{$modifiers}">communication direction:</span>
+</div>
+
+Styleguide 2.3
+*/
+
 .dwst-direction {
   overflow: hidden;
   text-align: right;
