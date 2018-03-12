@@ -12,6 +12,31 @@
 
 */
 
+/*
+Bar
+
+The bottom bar. Ties together the more graphical part of the user interface.
+
+markup:
+<div class="dwst-base">
+  <div class="dwst-bar">
+    <div class="dwst-bar__item dwst-time dwst-time--bright" id="clock1">12:34<span class="dwst-time__sec">:56</span></div>
+    <div class="dwst-bar__item dwst-bar__item--grow"><div class="dwst-prompt">
+      <div class="dwst-prompt__input">
+        <label for="input-field-id" style="position: absolute; left: -10000px;">command prompt</label>
+        <input class="dwst-text-input" id="input-field-id" type="text" value="example user input">
+      </div>
+      <div class="dwst-prompt__button">
+        <button class="dwst-button dwst-button--send" aria-label="send"></button>
+      </div>
+    </div></div>
+    <div class="dwst-bar__item"><button class="dwst-button dwst-button--splash" aria-label="menu"></button></div>
+  </div>
+</div>
+
+Styleguide 2.7
+*/
+
 .dwst-bar {
   width: 100%;
   height: 100%;
