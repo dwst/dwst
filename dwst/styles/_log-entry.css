@@ -12,6 +12,25 @@
 
 */
 
+/*
+Log Entry
+
+A single log entry with timestamp direction and content.
+The timestamp is only visible on bigger screens.
+The direction indicator is chopped to a single character on small screen sizes.
+
+markup:
+<div class="dwst-base">
+  <div class="dwst-log-entry">
+    <span class="dwst-log-entry__time dwst-time">10:39<span class="dwst-time__sec">:58</span></span>
+    <span class="dwst-log-entry__direction dwst-direction dwst-direction--system">system:</span>
+    <span class="dwst-log-entry__content dwst-mlog">Connection established.</span>
+  </div>
+</div>
+
+Styleguide 2.11
+*/
+
 .dwst-log-entry {
   padding: 0 1ch;
   display: grid;
