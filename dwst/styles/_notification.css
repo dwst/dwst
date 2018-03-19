@@ -12,6 +12,21 @@
 
 */
 
+/*
+Notification
+
+Notifications are used to inform users about pressing matters. Currently there is only one telling the user that auto scrolling is disabled at the moment.
+
+markup:
+<div class="dwst-base">
+  <div class="dwst-notification">
+    <a href="#" class="dwst-notification__link">scroll to bottom</a>
+  </div>
+</div>
+
+Styleguide 2.10
+*/
+
 .dwst-notification {
   height: var(--dwst-bar-height);
   line-height: var(--dwst-bar-height);
