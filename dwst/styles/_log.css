@@ -12,6 +12,24 @@
 
 */
 
+/*
+Log
+
+The log component is used for vertical phrasing. It supports clearing the screen and adds empty lines to make reading the message flow easier. Clearing doesn't behave correctly in the styleguide since it is dependent on hard coded values and the height of the screen. The clearing works by adding an element that causes the log to become long enough so that the old content gets scrolled outside the area currently visible on the screen.
+
+markup:
+<div class="dwst-base">
+  <div class="dwst-log">
+    <div class="dwst-log__item">Log item before clearing screen</div>
+    <div class="dwst-log__clear"></div>
+    <div class="dwst-log__item">Log item after clearing screen</div>
+    <div class="dwst-log__item dwst-log__item--command">Log items marked as commands have an empty line before them</div>
+  </div>
+</div>
+
+Styleguide 2.12
+*/
+
 .dwst-log__clear {
   float: left;
   height: calc(100vh - var(--dwst-bar-height));
