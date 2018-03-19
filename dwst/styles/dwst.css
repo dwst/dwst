@@ -12,15 +12,23 @@
 
 */
 
-/*
-Components
 
-Styleguide 2
+/*
+Base & Colors
+
+Styleguide 1
 */
 
 @import '_variables.css';
 @import '_scrollbars.css';
 @import '_base.css';
+
+
+/*
+Components
+
+Styleguide 2
+*/
 
 @import '_bar.css';
 @import '_button.css';
