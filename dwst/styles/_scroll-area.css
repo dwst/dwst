@@ -12,6 +12,21 @@
 
 */
 
+/*
+Scroll Area
+
+Since terminal contents do not always fit on the screen in their entirety.
+
+markup:
+<div class="dwst-scroll-area" style="height: 45px;">
+  <div class="dwst-scroll-area__content">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis, elit ut fringilla viverra, neque mauris maximus mauris, sed dapibus lectus massa in eros. Phasellus ullamcorper sapien arcu, id vestibulum dolor pellentesque et. Mauris sem magna, ultricies vel enim vitae, consequat bibendum quam. Aenean ultrices nulla ac condimentum porttitor. In venenatis aliquet lorem aliquet fringilla. Aenean placerat sodales nisl, ut maximus nisl convallis non. Vestibulum sit amet tempor massa. Curabitur eu dapibus nisl. Proin faucibus tristique tortor, luctus finibus dolor imperdiet eu. Fusce non ligula dictum ante auctor viverra.
+  </div>
+</div>
+
+Styleguide 2.13
+*/
+
 .dwst-scroll-area {
   overflow: hidden;
   overflow-y: scroll;
