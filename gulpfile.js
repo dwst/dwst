@@ -73,6 +73,7 @@ const sourcePaths = {
   favicon: path.join(sourceDirs.images, 'favicon.ico'),
   scripts: path.join(sourceDirs.scripts, '**/*.js'),
   scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
+  styleguideFavicon: path.join(sourceDirs.styles, 'favicon.ico'),
 };
 
 const lintingPaths = {
@@ -298,7 +299,12 @@ gulp.task('styleguide:applystyles', ['build-css'], () => {
     .pipe(gulp.dest(targetDirs.styleguide));
 });
 
-gulp.task('build-styleguide', ['styleguide:generate', 'styleguide:applystyles']);
+gulp.task('replace-styleguide-favicon', () => {
+  return gulp.src(sourcePaths.styleguideFavicon)
+    .pipe(gulp.dest(path.join(targetDirs.styleguide, 'assets/img')));
+});
+
+gulp.task('build-styleguide', gulpSequence(['styleguide:generate', 'styleguide:applystyles'], 'replace-styleguide-favicon'));
 
 gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-css', 'build-html', 'build-images', 'build-manifest']);
 
