@@ -132,15 +132,6 @@ export default class Help {
         ' sockets',
       ],
       [
-        '- Running the ',
-        {
-          type: 'dwstgg',
-          text: '#development',
-          section: '#development',
-        },
-        ' server',
-      ],
-      [
         '- ',
         {
           type: 'dwstgg',
@@ -156,6 +147,15 @@ export default class Help {
           text: '#commands',
           section: '#commands',
         },
+      ],
+      [
+        '- ',
+        {
+          type: 'dwstgg',
+          text: '#developing',
+          section: '#developing',
+        },
+        ' DWST itself',
       ],
       '',
       [
@@ -256,6 +256,35 @@ export default class Help {
       ]), 'system');
       return;
     }
+    if (page === '#developing') {
+      this._dwst.terminal.mlog(([
+        this._createBreadCrumbs(page),
+        '',
+        {
+          type: 'h1',
+          text: 'DWST Development',
+        },
+        '',
+        [
+          '- Run the ',
+          {
+            type: 'dwstgg',
+            text: '#development',
+            section: '#development',
+          },
+          ' server',
+        ],
+        [
+          '- Explore the user interface ',
+          {
+            type: 'dwstgg',
+            text: '#styleguide',
+            section: '#styleguide',
+          },
+        ],
+      ]), 'system');
+      return;
+    }
     if (page === '#development') {
       const commands = [
         'git clone https://github.com/dwst/dwst.git',
@@ -291,6 +320,27 @@ export default class Help {
           ' WebSockets.',
         ],
         '',
+      ]), 'system');
+      return;
+    }
+    if (page === '#styleguide') {
+      this._dwst.terminal.mlog(([
+        this._createBreadCrumbs(page),
+        '',
+        {
+          type: 'h1',
+          text: 'Living Styleguide',
+        },
+        '',
+        [
+          'DWST is built out of custom built user interface elements which are documented in the ',
+          {
+            type: 'link',
+            text: 'living styleguide',
+            url: '/styleguide',
+          },
+          '. The styleguide is generated automatically from KSS metadata which is included in related CSS files.',
+        ],
       ]), 'system');
       return;
     }
