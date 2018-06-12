@@ -67,8 +67,16 @@ export default class Terminal {
   }
 
   isUserScrolling() {
+    const errorMargin = 1;
+    // Some device pixel ratios create problems when errorMargin < 1.
+    // Try to use Windows 10 with 125%, 175% and 225% scaling.
     const screen = document.getElementById('screen1');
-    return (screen.scrollTop !== (screen.scrollHeight - screen.offsetHeight));
+    const contentHeight = screen.scrollHeight;
+    const visible = screen.offsetHeight;
+    const invisible = contentHeight - visible;
+    const invisibleAbove = screen.scrollTop;
+    const invisibleBelow = invisible - invisibleAbove;
+    return invisibleBelow > errorMargin;
   }
 
   scrollLog() {
