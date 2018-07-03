@@ -43,6 +43,7 @@ export default class Send {
   examples() {
     return [
       '/send Hello world!',
+      '/send multiline\\r\\nmessage',
       '/send rpc(${random(5)})',
       '/send ${text()}',
       '/send ["JSON","is","cool"]',

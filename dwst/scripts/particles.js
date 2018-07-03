@@ -39,12 +39,18 @@ function extractEscapedChar(remainder1) {
     throw new InvalidParticles(msg);
   }
   const escapedChar = remainder2.charAt(0);
-  if (specialChars.includes(escapedChar) === false) {
-    const msg = 'syntax error: don\'t escape normal characters. ';
-    throw new InvalidParticles(msg);
-  }
   const remainder = remainder2.slice(1);
-  return [escapedChar, remainder];
+  if (escapedChar === 'n') {
+    return ['\x0a', remainder];
+  }
+  if (escapedChar === 'r') {
+    return ['\x0d', remainder];
+  }
+  if (specialChars.includes(escapedChar)) {
+    return [escapedChar, remainder];
+  }
+  const msg = 'syntax error: don\'t escape normal characters. ';
+  throw new InvalidParticles(msg);
 }
 
 function indexOfAny(inputString, chars) {

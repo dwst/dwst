@@ -166,6 +166,20 @@ describe('particles module', () => {
         ['default', '\\${foo()}bar'],
       ]);
     });
+    it('should parse encoded line-endings', () => {
+      const lineFeed = '\x0a';
+      const carriageReturn = '\x0d';
+      expect(parseParticles(
+        '\\n',
+      )).to.deep.equal([
+        ['default', lineFeed],
+      ]);
+      expect(parseParticles(
+        '\\r',
+      )).to.deep.equal([
+        ['default', carriageReturn],
+      ]);
+    });
     it('should allow extra spaces inside placeholders', () => {
       expect(parseParticles(
         '${foo(123 , 456)}',

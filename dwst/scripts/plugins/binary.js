@@ -73,6 +73,7 @@ export default class Binary {
   examples() {
     return [
       '/binary Hello world!',
+      '/binary multiline\\r\\nmessage',
       '/binary ${random(16)}',
       '/binary ${text()}',
       '/binary ${bin()}',
