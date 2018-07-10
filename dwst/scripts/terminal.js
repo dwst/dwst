@@ -241,9 +241,10 @@ export default class Terminal {
               }
               return '/help';
             })();
-            link.onclick = () => {
+            link.onclick = (evt => {
+              evt.preventDefault();
               this._controller.onHelpLinkClick(command);
-            };
+            });
             link.setAttribute('href', '#');
             link.setAttribute('title', command);
             const textSpan = document.createElement('span');
@@ -260,9 +261,10 @@ export default class Terminal {
             const link = document.createElement('a');
             link.setAttribute('class', 'dwst-mlog__command-link');
             const command = rawText;
-            link.onclick = () => {
+            link.onclick = (evt => {
+              evt.preventDefault();
               this._controller.onCommandLinkClick(command);
-            };
+            });
             link.setAttribute('href', '#');
             link.setAttribute('title', safeText);
             const textSpan = document.createElement('span');
