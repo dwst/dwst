@@ -13,6 +13,8 @@
 
 */
 
+import config from './config.js';
+
 import {escapeForParticles} from './particles.js';
 import currenttime from './currenttime.js';
 import HistoryManager from './history_manager.js';
@@ -132,8 +134,8 @@ const terminal = new Terminal('ter1', controller);
 
 const pluginInterface = {
 
-  VERSION: '2.4.10',
-  ECHO_SERVER_URL: 'wss://echo.websocket.org/',
+  VERSION: config.appVersion,
+  ECHO_SERVER_URL: config.echoServer,
 
   terminal,
   controller,
