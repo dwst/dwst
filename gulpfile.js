@@ -14,6 +14,7 @@
 
 */
 
+const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
@@ -40,19 +41,7 @@ const jsRootFile = 'dwst.js';
 const cssRootFile = 'dwst.css';
 const htmlRootFile = 'dwst.html';
 const htmlRootLink = 'index.html';
-
-const buildBase = 'build';
-const targetDirs = {
-  styles: path.join(buildBase, 'styles'),
-  styleguide: path.join(buildBase, 'styleguide'),
-  scripts: path.join(buildBase, 'scripts'),
-  images: path.join(buildBase, 'images'),
-};
-const targetPaths = {
-  cssRoot: path.join(targetDirs.styles, cssRootFile),
-  htmlRoot: path.join(buildBase, htmlRootFile),
-  htmlLink: path.join(buildBase, htmlRootLink),
-};
+const styleguideRoot = 'styleguide';
 
 const sourceBase = 'dwst';
 const sourceDirs = {
@@ -74,7 +63,32 @@ const sourcePaths = {
   scripts: path.join(sourceDirs.scripts, '**/*.js'),
   scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
   styleguideFavicon: path.join(sourceDirs.styles, 'favicon.ico'),
+  config: path.join(sourceDirs.scripts, 'config.js'),
 };
+
+const VERSION = (function () {
+  // hack to read the version number from an EcmaScript module
+  const configFile = fs.readFileSync(sourcePaths.config, {encoding: 'utf-8'});
+  return configFile.match(/appVersion: +'([^']*)',/)[1];
+}());
+
+const buildBase = 'build';
+const targetDirs = {
+  styles: path.join(buildBase, 'styles'),
+  scripts: path.join(buildBase, 'scripts'),
+  images: path.join(buildBase, 'images'),
+  styleguide: path.join(buildBase, styleguideRoot),
+};
+const targetPaths = {
+  cssRoot: path.join(targetDirs.styles, cssRootFile),
+  htmlRoot: path.join(buildBase, htmlRootFile),
+  htmlLink: path.join(buildBase, htmlRootLink),
+  cacheBusterLink: path.join(buildBase, VERSION),
+};
+
+// The ending slash of both base paths seems to be meaninful for some reason
+const appBase = `/${VERSION}/`;
+const styleguideBase = `/${VERSION}/${styleguideRoot}`;
 
 const lintingPaths = {
   json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc', 'package.json'],
@@ -243,6 +257,7 @@ gulp.task('build-html', () => {
   // So we should be fine without the module system
   return gulp.src(sourcePaths.html)
     .pipe(replace('<script type="module"', '<script'))
+    .pipe(replace('<base href="/"', `<base href="${appBase}"`))
     .pipe(gulp.dest(buildBase))
     .pipe(rename(p => {
       p.dirname = path.join(buildBase, p.dirname);
@@ -284,7 +299,7 @@ gulp.task('styleguide:generate', () => {
       title: 'DWST Style Guide',
       overviewPath: sourcePaths.cssReadme,
       rootPath: targetDirs.styleguide,
-      appRoot: '/styleguide',
+      appRoot: styleguideBase,
       readOnly: true,
       extraHead: [
         '<style>.sg-design {display: none;}</style>',
@@ -309,6 +324,7 @@ gulp.task('build-styleguide', gulpSequence(['styleguide:generate', 'styleguide:a
 gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-css', 'build-html', 'build-images', 'build-manifest']);
 
 gulp.task('create-symlinks', () => {
+  fse.ensureSymlinkSync('.', targetPaths.cacheBusterLink);
   fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
 });
 
