@@ -320,7 +320,10 @@ function init() {
     terminal.scrollLog();
   });
   [...document.getElementsByClassName('js-auto-scroll-button')].forEach(asb => {
-    asb.addEventListener('click', () => terminal.scrollLog());
+    asb.addEventListener('click', evt => {
+      evt.preventDefault();
+      terminal.scrollLog();
+    });
   });
   setInterval(() => terminal.scrollNotificationUpdate(), 1000);
   document.getElementById('msg1').focus();
