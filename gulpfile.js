@@ -143,7 +143,7 @@ gulp.task('mocha', () => {
 
 gulp.task('test', ['validate', 'mocha']);
 
-gulp.task('browser-sync-build', ['build'], () => {
+gulp.task('dev', ['build'], () => {
   browserSync.init({
     server: {
       baseDir: buildBase,
@@ -159,40 +159,9 @@ gulp.task('browser-sync-build', ['build'], () => {
   gulp.watch(sourcePaths.cssReadme, ['build-styleguide']);
 });
 
-gulp.task('browser-sync-raw', () => {
-  browserSync.init({
-    server: {
-      baseDir: sourceBase,
-      index: htmlRootFile,
-    },
-  });
-  gulp.watch(sourcePaths.manifest, ['sync-manifest']);
-  gulp.watch(sourcePaths.html, ['sync-html']);
-  gulp.watch(sourcePaths.images, ['sync-images']);
-  gulp.watch(sourcePaths.scripts, ['sync-js']);
-  gulp.watch(sourcePaths.css, ['sync-css']);
-});
-
-gulp.task('raw', ['browser-sync-raw']);
-
-gulp.task('dev', ['browser-sync-build'], () => {
-  const lines = [
-    '',
-    'Hosting the transpiled application bundle.',
-    'Use "gulp raw" to host the raw source files.',
-    '',
-  ];
-  console.log(lines.join('\n'));  // eslint-disable-line no-console
-});
-
 gulp.task('clean', () => {
   return gulp.src(buildBase, {read: false})
     .pipe(clean());
-});
-
-gulp.task('sync-css', () => {
-  return gulp.src(sourcePaths.css)
-    .pipe(browserSync.stream());
 });
 
 gulp.task('build-css', () => {
@@ -207,11 +176,6 @@ gulp.task('build-css', () => {
     .pipe(rename(p => {
       p.dirname = path.join(targetDirs.styles, p.dirname);
     }))
-    .pipe(browserSync.stream());
-});
-
-gulp.task('sync-js', () => {
-  return gulp.src(sourcePaths.scripts)
     .pipe(browserSync.stream());
 });
 
@@ -251,11 +215,6 @@ gulp.task('build-js', () => {
     .pipe(browserSync.stream());
 });
 
-gulp.task('sync-html', () => {
-  return gulp.src(sourcePaths.html)
-    .pipe(browserSync.stream());
-});
-
 gulp.task('build-html', () => {
   // We bundle javascript with webpack for production builds
   // So we should be fine without the module system
@@ -269,22 +228,12 @@ gulp.task('build-html', () => {
     .pipe(browserSync.stream());
 });
 
-gulp.task('sync-images', () => {
-  return gulp.src(sourcePaths.images)
-    .pipe(browserSync.stream());
-});
-
 gulp.task('build-images', () => {
   return gulp.src(sourcePaths.images)
     .pipe(gulp.dest(targetDirs.images))
     .pipe(rename(p => {
       p.dirname = path.join(targetDirs.images, p.dirname);
     }))
-    .pipe(browserSync.stream());
-});
-
-gulp.task('sync-manifest', () => {
-  return gulp.src(sourcePaths.manifest)
     .pipe(browserSync.stream());
 });
 
