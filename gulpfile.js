@@ -28,6 +28,7 @@ const webpack2 = require('webpack');
 const fse = require('fs-extra');
 const postcss = require('gulp-postcss');
 const atImport = require('postcss-import');
+const sprites = require('postcss-sprites');
 const colorHexAlpha = require('postcss-color-hex-alpha');
 const discardComments = require('postcss-discard-comments');
 const rename = require('gulp-rename');
@@ -49,6 +50,7 @@ const sourceBase = 'dwst';
 const sourceDirs = {
   styles: path.join(sourceBase, 'styles'),
   scripts: path.join(sourceBase, 'scripts'),
+  sprites: path.join(sourceBase, 'sprites'),
   images: path.join(sourceBase, 'images'),
 };
 const sourcePaths = {
@@ -57,6 +59,7 @@ const sourcePaths = {
   css: path.join(sourceDirs.styles, '*.css'),
   cssEntry: path.join(sourceDirs.styles, 'dwst.css'),
   cssReadme: path.join(sourceDirs.styles, 'overview.md'),
+  sprites: path.join(sourceDirs.sprites, '*.png'),
   images: [
     path.join(sourceDirs.images, '*.png'),
     path.join(sourceDirs.images, '*.ico'),
@@ -154,8 +157,8 @@ gulp.task('dev', ['build'], () => {
   gulp.watch(sourcePaths.html, ['build-html']);
   gulp.watch(sourcePaths.images, ['build-images']);
   gulp.watch(sourcePaths.scripts, ['build-js']);
-  gulp.watch(sourcePaths.css, ['build-css']);
   gulp.watch(sourcePaths.css, ['build-styleguide']);
+  gulp.watch(sourcePaths.sprites, ['build-styleguide']);
   gulp.watch(sourcePaths.cssReadme, ['build-styleguide']);
 });
 
@@ -168,6 +171,13 @@ gulp.task('build-css', () => {
   return gulp.src(sourcePaths.cssEntry)
     .pipe(postcss([
       atImport(),
+      sprites({
+        spritePath: targetDirs.images,
+        stylesheetPath: targetDirs.styles,
+        spritesmith: {
+          padding: 2,
+        },
+      }),
       colorHexAlpha(),
       autoprefixer(),
       discardComments(),
@@ -272,9 +282,12 @@ gulp.task('replace-styleguide-favicon', () => {
     .pipe(gulp.dest(path.join(targetDirs.styleguide, 'assets/img')));
 });
 
-gulp.task('build-styleguide', gulpSequence(['styleguide:generate', 'styleguide:applystyles'], 'replace-styleguide-favicon'));
+gulp.task('build-styleguide', cb => {
+  // the cb hassle is needed since gulpSequence is used inside a watcher
+  gulpSequence(['styleguide:generate', 'styleguide:applystyles'], 'replace-styleguide-favicon')(cb);
+});
 
-gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-css', 'build-html', 'build-images', 'build-manifest']);
+gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-html', 'build-images', 'build-manifest']);
 
 gulp.task('create-symlinks', () => {
   fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, targetPaths.styleguideHtmlLink);
