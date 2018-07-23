@@ -46,6 +46,8 @@ const htmlRootLink = 'index.html';
 const styleguideRoot = 'styleguide';
 const styleguideRootFile = 'index.html';
 const styleguideRootLink = path.join(styleguideRoot, 'index.html');
+const serviceworkerRootFile = 'service_worker.js';
+const serviceworkerRootLink = 'service_worker.js';
 
 const sourceBase = 'dwst';
 const sourceDirs = {
@@ -93,6 +95,8 @@ const targetPaths = {
   htmlLink: path.join(buildBase, htmlRootLink),
   styleguideHtmlRoot: path.join(targetDirs.styleguide, styleguideRootFile),
   styleguideHtmlLink: path.join(buildBase, styleguideRootLink),
+  serviceworkerRoot: path.join(targetDirs.scripts, serviceworkerRootFile),
+  serviceworkerLink: path.join(buildBase, serviceworkerRootLink),
 };
 
 // The ending slash of both base paths seems to be meaninful for some reason
@@ -237,9 +241,9 @@ gulp.task('build-sw-js', () => {
       },
       module: webpackModuleConf,
     }, webpack2))
-    .pipe(gulp.dest(buildBase))
+    .pipe(gulp.dest(targetDirs.scripts))
     .pipe(rename(p => {
-      p.dirname = path.join(buildBase, p.dirname);
+      p.dirname = path.join(targetDirs.scripts, p.dirname);
     }))
     .pipe(browserSync.stream());
 });
@@ -315,6 +319,7 @@ gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-html', 'build-
 gulp.task('create-symlinks', () => {
   fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, targetPaths.styleguideHtmlLink);
   fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
+  fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, targetPaths.serviceworkerLink);
 });
 
 gulp.task('build', gulpSequence('clean', 'build-assets', 'create-symlinks'));
