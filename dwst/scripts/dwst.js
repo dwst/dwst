@@ -330,5 +330,13 @@ function init() {
 
 }
 
+function onLoad() {
+  terminal.updateGfxPositions();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service_worker.js');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', init);
-window.addEventListener('load', () => terminal.updateGfxPositions());
+window.addEventListener('load', onLoad);

@@ -39,6 +39,7 @@ const mocha = require('gulp-mocha');
 const styleguide = require('sc5-styleguide');
 
 const jsRootFile = 'dwst.js';
+const swRootFile = 'service_worker.js';
 const cssRootFile = 'dwst.css';
 const htmlRootFile = 'dwst.html';
 const htmlRootLink = 'index.html';
@@ -67,6 +68,7 @@ const sourcePaths = {
   favicon: path.join(sourceDirs.images, 'favicon.ico'),
   scripts: path.join(sourceDirs.scripts, '**/*.js'),
   scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
+  swEntry: path.join(sourceDirs.scripts, 'service_worker.js'),
   styleguideFavicon: path.join(sourceDirs.styles, 'favicon.ico'),
   config: path.join(sourceDirs.scripts, 'config.js'),
 };
@@ -189,40 +191,61 @@ gulp.task('build-css', () => {
     .pipe(browserSync.stream());
 });
 
-gulp.task('build-js', () => {
+const webpackModuleConf = {
+  loaders: [
+    {
+      test: /\.js$/,
+      loader: 'babel-loader',
+      query: {
+        plugins: [
+          ['babel-plugin-transform-builtin-extend', {
+            globals: ['Error'],
+          }],
+        ],
+        presets: [
+          ['env', {
+            targets: {
+              browsers: require('./package.json').browserslist,
+            },
+          }],
+        ],
+      },
+    },
+  ],
+};
+
+gulp.task('build-app-js', () => {
   return gulp.src(sourcePaths.scriptEntry)
     .pipe(webpackStream({
       output: {
         filename: jsRootFile,
       },
-      module: {
-        loaders: [
-          {
-            test: /\.js$/,
-            loader: 'babel-loader',
-            query: {
-              plugins: [
-                ['babel-plugin-transform-builtin-extend', {
-                  globals: ['Error'],
-                }],
-              ],
-              presets: [
-                ['env', {
-                  targets: {
-                    browsers: require('./package.json').browserslist,
-                  },
-                }],
-              ],
-            },
-          },
-        ],
-      },
+      module: webpackModuleConf,
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
     .pipe(rename(p => {
       p.dirname = path.join(targetDirs.scripts, p.dirname);
     }))
     .pipe(browserSync.stream());
+});
+
+gulp.task('build-sw-js', () => {
+  return gulp.src(sourcePaths.swEntry)
+    .pipe(webpackStream({
+      output: {
+        filename: swRootFile,
+      },
+      module: webpackModuleConf,
+    }, webpack2))
+    .pipe(gulp.dest(buildBase))
+    .pipe(rename(p => {
+      p.dirname = path.join(buildBase, p.dirname);
+    }))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('build-js', cb => {
+  gulpSequence('build-sw-js', 'build-app-js')(cb);
 });
 
 gulp.task('build-html', () => {
