@@ -16,6 +16,8 @@
 Button
 
 Buttons are used to navigate the app and execute commands without a keyboard.
+The buttons have an alternative simple form for cases when images are still loading or fail to load entirely.
+The examples below shows both the regular form and then the simple form for each button.
 
 --send - send button for sending text and executing commands
 --splash - splash button for navigating back to "home screen"
@@ -24,6 +26,7 @@ Buttons are used to navigate the app and execute commands without a keyboard.
 markup:
 <div class="dwst-base">
   <button class="dwst-button dwst-button{$modifiers}" aria-label="action description"></button>
+  <button class="dwst-button dwst-button{$modifiers}" aria-label="action description" style="background-image: none;"></button>
 </div>
 
 Styleguide 2.4
@@ -42,26 +45,32 @@ Styleguide 2.4
 .dwst-button--send {
   height: var(--dwst-bar-height);
   width: var(--dwst-bar-height);
+  background-color: var(--dwst-color-gray-4);
   background-image: url('../sprites/return.png');
 }
 .dwst-button--send:hover {
+  background-color: var(--dwst-color-gray-7);
   background-image: url('../sprites/return-hover.png');
 }
 
 .dwst-button--splash {
   height: calc(var(--dwst-bar-height));
   width: 48px;
+  background-color: var(--dwst-color-gray-4);
   background-image: url('../sprites/minilogo.png');
 }
 .dwst-button--splash:hover {
+  background-color: var(--dwst-color-gray-7);
   background-image: url('../sprites/minilogo-hover.png');
 }
 
 .dwst-button--splash-connected {
   height: calc(var(--dwst-bar-height));
   width: 48px;
+  background-color: var(--dwst-color-green);
   background-image: url('../sprites/minilogo-connected.png');
 }
 .dwst-button--splash-connected:hover {
+  background-color: var(--dwst-color-green--light);
   background-image: url('../sprites/minilogo-connected-hover.png');
 }
