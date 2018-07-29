@@ -44,66 +44,65 @@ export default class Splash {
 
     /* eslint-disable quotes,object-property-newline */
 
-    const SPLASH = [
-      [
-        // ".       HH.      dd .        ..  TT    ..        ..        ..        ..    TT  ..        . dd      .HH       .",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                   `ggg.                                                                      ",
-        "                                     ggg                                                                      ",
-        "                                      gg.                                                                     ",
-        "                                       gg                                 ggg'                                ",
-        "                                       gg                                 gg                                  ",
-        "                                   ,ggg g.  ggg       ggg.   .gggggg.     g                                   ",
-        "                                 ,gg  `ggg ggg         ggg. gg      `g.  gg                                   ",
-        "                                 gg     gg.g'           `gg gg.       `gggggg'                                ",
-        "                                 gg     ggg'             gg. 'gggggg.  ,g                                     ",
-        "                                 ll.     ll.     ,l.      ll       `ll l.                                     ",
-        "                                  ll.   llll.   ,lll.   ,ll l`     ,ll ll.                                    ",
-        "                                   `lllll' `lllll' `lllll'  `lllllll'   lll.                                  ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-      ],
-      [
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                   fffff                                                                      ",
-        "                                     fff                                                                      ",
-        "                                      fff                                                                     ",
-        "                                       ff                                 ffff                                ",
-        "                                       ff                                 ff                                  ",
-        "                                   ffff ff  fff       ffff   ffffffff     f                                   ",
-        "                                 fff  ffff fff         ffff ff      fff  ff                                   ",
-        "                                 ff     fffff           fff fff       ffffffff                                ",
-        "                                 ff     ffff             fff ffffffff  ff                                     ",
-        "                                 555     555     555      55       555 55                                     ",
-        "                                  555   55555   55555   555 55     555 555                                    ",
-        "                                   5555555 5555555 5555555  555555555   5555                                  ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-        "                                                                                                              ",
-      ],
+    const shape = [
+      // ".       HH.      dd .        ..  TT    ..        ..        ..        ..    TT  ..        . dd      .HH       .",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                   `ggg.                                                                      ",
+      "                                     ggg                                                                      ",
+      "                                      gg.                                                                     ",
+      "                                       gg                                 ggg'                                ",
+      "                                       gg                                 gg                                  ",
+      "                                   ,ggg g.  ggg       ggg.   .gggggg.     g                                   ",
+      "                                 ,gg  `ggg ggg         ggg. gg      `g.  gg                                   ",
+      "                                 gg     gg.g'           `gg gg.       `gggggg'                                ",
+      "                                 gg     ggg'             gg. 'gggggg.  ,g                                     ",
+      "                                 ll.     ll.     ,l.      ll       `ll l.                                     ",
+      "                                  ll.   llll.   ,lll.   ,ll l`     ,ll ll.                                    ",
+      "                                   `lllll' `lllll' `lllll'  `lllllll'   lll.                                  ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
     ];
-    /*
+
+    const defaultColors = [
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                   fffff                                                                      ",
+      "                                     fff                                                                      ",
+      "                                      fff                                                                     ",
+      "                                       ff                                 ffff                                ",
+      "                                       ff                                 ff                                  ",
+      "                                   ffff ff  fff       ffff   ffffffff     f                                   ",
+      "                                 fff  ffff fff         ffff ff      fff  ff                                   ",
+      "                                 ff     fffff           fff fff       ffffffff                                ",
+      "                                 ff     ffff             fff ffffffff  ff                                     ",
+      "                                 555     555     555      55       555 55                                     ",
+      "                                  555   55555   55555   555 55     555 555                                    ",
+      "                                   5555555 5555555 5555555  555555555   5555                                  ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+      "                                                                                                              ",
+    ];
+
     const xmasColors = [
       "                                                                                                              ",
       "                                                                                                              ",
       "                                                                                                              ",
       "                                                                                                              ",
-      "                                    xxxx                                                                      ",
-      "                                     111                                                                      ",
-      "                                      11x                                                                     ",
-      "                                       11                                 xxxx                                ",
-      "                                       11                                 11                                  ",
-      "                                   xxx1 11  xxx       xxxx   xxxxxxxx     1                                   ",
-      "                                 xx1  1111 111         111x x1      1xx  x1                                   ",
-      "                                 11     11111           111 111       1xx11111                                ",
-      "                                 11     1111             11x 11111111  11                                     ",
+      "                                   77777                                                                      ",
+      "                                     444                                                                      ",
+      "                                      447                                                                     ",
+      "                                       44                                 7777                                ",
+      "                                       44                                 44                                  ",
+      "                                   7774 44  777       7777   77777777     4                                   ",
+      "                                 774  4444 444         4447 74      477  74                                   ",
+      "                                 44     44444           444 444       47744444                                ",
+      "                                 44     4444             447 44444444  44                                     ",
       "                                 222     222     222      22       222 22                                     ",
       "                                  222   22222   22222   222 22     222 222                                    ",
       "                                   2222222 2222222 2222222  222222222   2222                                  ",
@@ -111,9 +110,16 @@ export default class Splash {
       "                                                                                                              ",
       "                                                                                                              ",
     ];
-    */
 
     /* eslint-enable quotes,object-property-newline */
+
+    let colors = defaultColors;
+    const now = new Date();
+    const date = now.getDate();
+    const month = now.getMonth();
+    if (date === 24 && month === 11) {
+      colors = xmasColors;
+    }
 
     const CONNECTION_LIST_CAP = 3;
     const historySummary = this._dwst.historyManager.getSummary();
@@ -309,7 +315,7 @@ export default class Splash {
         linkSection,
       ];
     })();
-    this._dwst.terminal.gfx(...SPLASH);
+    this._dwst.terminal.gfx(shape, colors);
     this._dwst.terminal.mlog([].concat(...sections), 'system');
   }
 
