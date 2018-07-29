@@ -20,7 +20,7 @@ The bottom bar. Ties together the more graphical part of the user interface.
 markup:
 <div class="dwst-base">
   <div class="dwst-bar">
-    <div class="dwst-bar__item dwst-time dwst-time--bright" id="clock1">12:34<span class="dwst-time__sec">:56</span></div>
+    <div class="dwst-bar__item dwst-time dwst-time--panel" id="clock1">12:34<span class="dwst-time__sec">:56</span></div>
     <div class="dwst-bar__item dwst-bar__item--grow"><div class="dwst-prompt">
       <div class="dwst-prompt__input">
         <label for="input-field-id" style="position: absolute; left: -10000px;">command prompt</label>
@@ -47,6 +47,7 @@ Styleguide 2.7
 .dwst-bar__item {
   display: table-cell;
   vertical-align: middle;
+  background-color: var(--dwst-color-gray-1);
 }
 .dwst-bar__item--grow {
   width: 100%;

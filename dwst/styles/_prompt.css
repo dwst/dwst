@@ -37,18 +37,21 @@ Styleguide 2.5
   width: 100%;
   height: var(--dwst-bar-height);
   position: relative;
+  background-color: var(--dwst-color-gray-2);
 }
 .dwst-prompt__input {
   vertical-align: middle;
-  width: calc(100% - var(--dwst-bar-height));
+  width: calc(100% - var(--dwst-bar-height) - 8px);
   position: absolute;
   top: 4px;
   bottom: 4px;
-  left: 0;
+  left: 4px;
 }
 .dwst-prompt__button {
+  width: var(--dwst-bar-height);
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
+  background-color: var(--dwst-color-gray-1);
 }
