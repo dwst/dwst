@@ -21,7 +21,15 @@ addEventListener('install', evt => {
   }));
 });
 
+/* eslint-disable consistent-return */
+
 addEventListener('fetch', evt => {
+  if (evt.request.url.indexOf('styleguide') !== -1) {
+    return false;
+  }
+  if (evt.request.url.indexOf('google-analytics.com') !== -1) {
+    return false;
+  }
   evt.respondWith(caches.match(evt.request).then(response => {
     if (response) {
       return response;
@@ -29,6 +37,8 @@ addEventListener('fetch', evt => {
     return fetch(evt.request);
   }));
 });
+
+/* eslint-enable consistent-return */
 
 addEventListener('activate', evt => {
   evt.waitUntil(caches.keys().then(cachedVersions => {
