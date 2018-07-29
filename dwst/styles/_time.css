@@ -16,8 +16,9 @@
 /*
 Time
 
-Default - Dark version
---bright - Bright version
+Default - The basic version used for time stamps
+--placeholder - Transparent placeholder for making layout space reservation
+--panel - Panel widget version
 
 markup:
 <div class="dwst-base">
@@ -30,6 +31,17 @@ Styleguide 2.1
 .dwst-time__sec {
   color: var(--dwst-color-gray-7);
 }
-.dwst-time--bright {
+.dwst-time--panel {
+  display: block;
+  height: var(--dwst-bar-height);
+  line-height: var(--dwst-bar-height);
+  background-color: var(--dwst-color-gray-2);
   color: var(--dwst-color-gray-d);
+}
+.dwst-time--placeholder {
+  background-color: transparent;
+  color: transparent;
+}
+.dwst-time--placeholder .dwst-time__sec {
+  color: transparent;
 }

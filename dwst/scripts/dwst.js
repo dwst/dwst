@@ -195,7 +195,7 @@ function run(command) {
   plugin.run(paramString);
 }
 
-function refreshclock() {
+function refreshClock() {
   const time = currenttime();
   document.getElementById('clock1').innerHTML = time;
 }
@@ -303,11 +303,15 @@ function throttledUpdateGfxPositions() {
   }
 }
 
+function startClock() {
+  refreshClock();
+  const clock = document.getElementById('clock1');
+  clock.classList.remove('dwst-time--placeholder');
+  setInterval(refreshClock, 500);
+}
+
 function init() {
   loadSaves();
-  refreshclock();
-  document.getElementById('clock1').removeAttribute('style');
-  setInterval(refreshclock, 500);
   silent('/splash');
 
   window.addEventListener('resize', throttledUpdateGfxPositions);
@@ -332,7 +336,7 @@ function init() {
 
 function onLoad() {
   terminal.updateGfxPositions();
-
+  startClock();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service_worker.js');
   }
