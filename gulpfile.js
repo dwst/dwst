@@ -290,6 +290,7 @@ gulp.task('styleguide:generate', () => {
       overviewPath: sourcePaths.cssReadme,
       rootPath: targetDirs.styleguide,
       appRoot: styleguideBase,
+      disableEncapsulation: true,
       readOnly: true,
       extraHead: [
         '<style>.sg-design {display: none;}</style>',

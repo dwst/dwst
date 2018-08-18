@@ -31,7 +31,7 @@ Styleguide 1.2
 */
 
 /* styleguide:ignore:start */
-:root, :host {
+:root {
   --dwst-color-black: #030303;
   --dwst-color-black--af: #000;
   --dwst-color-white: #fffefd;
@@ -60,7 +60,7 @@ Styleguide 1.3
 */
 
 /* styleguide:ignore:start */
-:root, :host {
+:root {
   --dwst-color-gray-1: #111;
   --dwst-color-gray-2: #222;
   --dwst-color-gray-4: #444;
@@ -89,7 +89,7 @@ Styleguide 1.4
 */
 
 /* styleguide:ignore:start */
-:root, :host {
+:root {
   --dwst-color-purple--transparent: #6148;
 }
 /* styleguide:ignore:end */
@@ -126,7 +126,7 @@ Styleguide 1.5
 */
 
 /* styleguide:ignore:start */
-:root, :host {
+:root {
   --dwst-color-blue: #27b;
   --dwst-color-blue--light: #77c;
   --dwst-color-cyan: #6ab;
@@ -162,7 +162,7 @@ Styleguide 1.6
 */
 
 /* styleguide:ignore:start */
-:root, :host {
+:root {
   --dwst-color-debug-brown: #131303;
   --dwst-color-debug-orange: #431303;
 }
@@ -170,7 +170,7 @@ Styleguide 1.6
 
 
 /* styleguide:ignore:start */
-:root, :host {
+:root {
   --dwst-bar-height: 24pt;
 }
 /* styleguide:ignore:end */
