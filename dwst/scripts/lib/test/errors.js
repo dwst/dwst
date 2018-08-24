@@ -54,9 +54,29 @@ describe('errors module', () => {
     });
   });
   describe('InvalidParticles error', () => {
-    const error = new errors.InvalidParticles();
+    const stringOrArray = Symbol();
+    const error = new errors.InvalidParticles(stringOrArray, ',456)}');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
+    });
+    it('should construct succesfully without expression argument', () => {
+      expect(error).to.deep.include({
+        expected: stringOrArray,
+        remainder: ',456)}',
+        expression: null,
+      });
+    });
+    it('should allow setting expression after creation', () => {
+      error.expression = '${foo(,456)}';
+      expect(error).to.deep.include({
+        expected: stringOrArray,
+        remainder: ',456)}',
+        expression: '${foo(,456)}',
+      });
+    });
+    it('should provide correct error position', () => {
+      error.expression = '${foo(,456)}';
+      expect(error.errorPosition).to.equal('${foo(,456)}'.indexOf(','));
     });
   });
   describe('InvalidArgument error', () => {

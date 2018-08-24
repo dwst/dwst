@@ -31,7 +31,17 @@ class AlreadyConnected extends DwstError {}
 
 class SocketError extends DwstError {}
 
-class InvalidParticles extends DwstError { }
+class InvalidParticles extends DwstError {
+  constructor(expected, remainder, expression = null) {
+    super();
+    this.expected = expected;
+    this.remainder = remainder;
+    this.expression = expression;
+  }
+  get errorPosition() {
+    return this.expression.length - this.remainder.length;
+  }
+}
 
 class InvalidArgument extends DwstError {
   constructor(argument, extraInfo) {
