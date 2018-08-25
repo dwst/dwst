@@ -15,6 +15,8 @@
 
 // DWST particles templating language
 
+import Parsee from './parsee.js';
+
 const specialChars = [
   '$',
   '\\',
@@ -22,218 +24,166 @@ const specialChars = [
 
 export class InvalidParticles extends Error { }
 
-function skipSpace(remainder1) {
-  let tmp = remainder1;
-  while (tmp.charAt(0) === ' ') {
-    tmp = tmp.slice(1);
+function skipSpace(parsee) {
+  while (parsee.read(' ')) {
+    // empty while on purpose
   }
-  const remainder = tmp;
-  return remainder;
 }
 
-function extractEscapedChar(remainder1) {
-  const remainder2 = remainder1.slice(1);
-  if (remainder2 === '') {
+function extractEscapedChar(parsee) {
+
+  if (parsee.length === 0) {
     const msg = 'syntax error: looks like your last character is an escape. ';
     // TODO - what if it is the only character?
     throw new InvalidParticles(msg);
   }
-  const escapedChar = remainder2.charAt(0);
-  const remainder = remainder2.slice(1);
-  if (escapedChar === 'n') {
-    return ['\x0a', remainder];
+  if (parsee.read('n')) {
+    return '\x0a';
   }
-  if (escapedChar === 'r') {
-    return ['\x0d', remainder];
+  if (parsee.read('r')) {
+    return '\x0d';
   }
-  if (specialChars.includes(escapedChar)) {
-    return [escapedChar, remainder];
+  for (const specialChar of specialChars) {
+    if (parsee.read(specialChar)) {
+      return specialChar;
+    }
   }
   const msg = 'syntax error: don\'t escape normal characters. ';
   throw new InvalidParticles(msg);
 }
 
-function indexOfAny(inputString, chars) {
-  const indices = new Set(chars.map(character => {
-    return inputString.indexOf(character);
-  }));
-  indices.delete(-1);
-  if (indices.size === 0) {
-    return -1;
-  }
-  return Math.min(...indices);
+function extractRegularChars(parsee) {
+  return parsee.readUntil(specialChars);
 }
 
-function extractRegularChars(remainder1) {
-  const nextSpecialPos = indexOfAny(remainder1, specialChars);
-  let sliceIndex;
-  if (nextSpecialPos === -1) {
-    sliceIndex = remainder1.length;
-  } else {
-    sliceIndex = nextSpecialPos;
+function readCharBlock(parsee) {
+  if (parsee.read('\\')) {
+    return extractEscapedChar(parsee);
   }
-  const chars = remainder1.slice(0, sliceIndex);
-  const remainder = remainder1.slice(sliceIndex);
-  return [chars, remainder];
+  return extractRegularChars(parsee);
 }
 
-function readCharBlock(remainder1) {
-  if (remainder1.charAt(0) === '\\') {
-    return extractEscapedChar(remainder1);
-  }
-  return extractRegularChars(remainder1);
-}
-
-function readDefaultParticleContent(remainder1) {
+function readDefaultParticleContent(parsee) {
   const charBlocks = [];
-  let tmp = remainder1;
-  while (tmp.length > 0 && tmp.charAt(0) !== '$') {
-    const [charBlock, blockRemainder] = readCharBlock(tmp);
+  while (parsee.length > 0 && parsee.startsWith('$') === false) {
+    const charBlock = readCharBlock(parsee);
     charBlocks.push(charBlock);
-    tmp = blockRemainder;
   }
   const content = charBlocks.join('');
-  const remainder = tmp;
-  return [content, remainder];
+  return content;
 }
 
-function skipExpressionOpen(remainder1) {
-  const expressionOpen = '${';
-  if (remainder1.startsWith(expressionOpen) === false) {
+function skipExpressionOpen(parsee) {
+  const expressionOpen = '{';
+  if (parsee.read(expressionOpen) === false) {
     const msg = `expression needs to start with ${expressionOpen}`;
     throw new InvalidParticles(msg);
   }
-  const remainder = remainder1.slice(expressionOpen.length);
-  return remainder;
 }
 
-function skipExpressionClose(remainder1) {
+function skipExpressionClose(parsee) {
   const expressionClose = '}';
-  if (remainder1.startsWith(expressionClose) === false) {
+  if (parsee.read(expressionClose) === false) {
     const msg = `expression needs to end with ${expressionClose}`;
     throw new InvalidParticles(msg);
   }
-  const remainder = remainder1.slice(expressionClose.length);
-  return remainder;
 }
 
-function skipArgListOpen(remainder1) {
+function skipArgListOpen(parsee) {
   const argListOpen = '(';
-  const remainder = remainder1.slice(argListOpen.length);
-  return remainder;
+  parsee.read(argListOpen);
 }
 
-function skipArgSeparator(remainder1) {
-  const argSeparator = ',';
-  const remainder = remainder1.slice(argSeparator.length);
-  return remainder;
-}
-
-function skipArgListClose(remainder1) {
+function skipArgListClose(parsee) {
   const argListClose = ')';
-  const remainder = remainder1.slice(argListClose.length);
-  return remainder;
+  parsee.read(argListClose);
 }
 
-function readInstructionName(remainder1) {
-  const argListOpenIndex = remainder1.indexOf('(');
-  if (argListOpenIndex === 0) {
-    const msg = `broken named particle: missing instruction name, remainder = ${remainder1}`;
+function readInstructionName(parsee) {
+  const instructionName = parsee.readUntil(['(']);
+  if (instructionName.length === 0) {
+    const msg = `broken named particle: missing instruction name, remainder = ${parsee}`;
     throw new InvalidParticles(msg);
   }
-  if (argListOpenIndex === -1) {
-    const msg = `broken named particle: missing arg list open, remainder = ${remainder1}`;
+  if (parsee.length === 0) {
+    const msg = `broken named particle: missing arg list open, remainder = ${parsee}`;
     throw new InvalidParticles(msg);
   }
-  let sliceIndex;
-  if (argListOpenIndex === -1) {
-    sliceIndex = remainder.length;
-  } else {
-    sliceIndex = argListOpenIndex;
-  }
-  const instructionName = remainder1.slice(0, sliceIndex);
-  const remainder = remainder1.slice(sliceIndex);
-  return [instructionName, remainder];
+  return instructionName;
 }
 
-function readInstructionArg(remainder1) {
-  const nextBreakIndex = indexOfAny(remainder1, [' ', ',', ')']);
-  if (nextBreakIndex === 0) {
-    const msg = `broken particle argument: missing argument, remainder = ${remainder1}`;
+function readInstructionArg(parsee) {
+  const arg = parsee.readUntil([' ', ',', ')']);
+  if (arg.length === 0) {
+    const msg = `broken particle argument: missing argument, remainder = ${parsee}`;
     throw new InvalidParticles(msg);
   }
-  if (nextBreakIndex === -1) {
-    const msg = `Expected ' or ), remainder = ${remainder1}`;
+  if (parsee.length === 0) {
+    const msg = `Expected ' or ), remainder = ${parsee}`;
     throw new InvalidParticles(msg);
   }
-  const arg = remainder1.slice(0, nextBreakIndex);
-  const remainder = remainder1.slice(nextBreakIndex);
-  return [arg, remainder];
+  return arg;
 }
 
-function readInstructionArgs(remainder1) {
+function readInstructionArgs(parsee) {
   const instructionArgs = [];
-  if (remainder1.charAt(0) === ')') {
-    return [instructionArgs, remainder1];
+  if (parsee.startsWith(')')) {
+    return instructionArgs;
   }
-  let tmp = remainder1;
   while (true) {  // eslint-disable-line
-    const [arg, instructionRemainder] = readInstructionArg(tmp);
+    const arg = readInstructionArg(parsee);
     instructionArgs.push(arg);
-    tmp = skipSpace(instructionRemainder);
-    if (tmp.charAt(0) === ')') {
-      const remainder = tmp;
-      return [instructionArgs, remainder];
+    skipSpace(parsee);
+    if (parsee.startsWith(')')) {
+      return instructionArgs;
     }
-    if (tmp.charAt(0) !== ',') {
+    if (parsee.read(',') === false) {
       const msg = 'syntax error: garbage';
       throw new InvalidParticles(msg);
     }
-    tmp = skipArgSeparator(tmp);
-    tmp = skipSpace(tmp);
+    skipSpace(parsee);
   }
 }
 
-function parseExpression(remainder1) {
-  const [instructionName, remainder2] = readInstructionName(remainder1);
-  const remainder3 = skipArgListOpen(remainder2);
-  const remainder4 = skipSpace(remainder3);
-  const [instructionArgs, remainder5] = readInstructionArgs(remainder4);
-  const remainder6 = skipSpace(remainder5);
-  const remainder = skipArgListClose(remainder6);
+function parseExpression(parsee) {
+  const instructionName = readInstructionName(parsee);
+  skipArgListOpen(parsee);
+  skipSpace(parsee);
+  const instructionArgs = readInstructionArgs(parsee);
+  skipSpace(parsee);
+  skipArgListClose(parsee);
   const particle = [instructionName].concat(instructionArgs);
-  return [particle, remainder];
+  return particle;
 }
 
-function readInstructionParticle(remainder1) {
-  const remainder2 = skipExpressionOpen(remainder1);
-  const remainder3 = skipSpace(remainder2);
-  const [particle, remainder4] = parseExpression(remainder3);
-  const remainder5 = skipSpace(remainder4);
-  const remainder = skipExpressionClose(remainder5);
-  return [particle, remainder];
+function readInstructionParticle(parsee) {
+  skipExpressionOpen(parsee);
+  skipSpace(parsee);
+  const particle = parseExpression(parsee);
+  skipSpace(parsee);
+  skipExpressionClose(parsee);
+  return particle;
 }
 
-function readDefaultParticle(remainder1) {
-  const [content, remainder] = readDefaultParticleContent(remainder1);
+function readDefaultParticle(parsee) {
+  const content = readDefaultParticleContent(parsee);
   const particle = ['default', content];
-  return [particle, remainder];
+  return particle;
 }
 
-function readParticle(particleString) {
-  if (particleString.charAt(0) === '$') {
-    return readInstructionParticle(particleString);
+function readParticle(parsee) {
+  if (parsee.read('$')) {
+    return readInstructionParticle(parsee);
   }
-  return readDefaultParticle(particleString);
+  return readDefaultParticle(parsee);
 }
 
 export function parseParticles(particleString) {
   const parsedParticles = [];
-  let tmp = particleString;
-  while (tmp.length > 0) {
-    const [particle, remainder] = readParticle(tmp);
+  const parsee = new Parsee(particleString);
+  while (parsee.length > 0) {
+    const particle = readParticle(parsee);
     parsedParticles.push(particle);
-    tmp = remainder;
   }
   return parsedParticles;
 }
