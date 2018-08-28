@@ -224,6 +224,7 @@ gulp.task('build-app-js', () => {
       output: {
         filename: jsRootFile,
       },
+      devtool: 'source-map',
       module: webpackModuleConf,
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
@@ -239,6 +240,7 @@ gulp.task('build-sw-js', () => {
       output: {
         filename: swRootFile,
       },
+      devtool: 'source-map',
       module: webpackModuleConf,
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
