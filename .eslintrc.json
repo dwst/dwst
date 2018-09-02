@@ -8,6 +8,9 @@
     "ecmaVersion": 8,
     "sourceType": "module"
   },
+  "plugins": [
+    "chai-friendly"
+  ],
   "globals": {
     "chrome": true,
     "require": true
@@ -117,7 +120,8 @@
     "no-useless-computed-key": 2,
     "no-useless-constructor": 2,
     "no-useless-rename": 2,
-    "no-unused-expressions": 2,
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 2,
     "no-shadow-restricted-names": 2,
     "no-array-constructor": 2,
     "one-var-declaration-per-line": 2,
