@@ -31,6 +31,7 @@ const atImport = require('postcss-import');
 const sprites = require('postcss-sprites');
 const colorHexAlpha = require('postcss-color-hex-alpha');
 const discardComments = require('postcss-discard-comments');
+const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
 const stylelint = require('gulp-stylelint');
 const autoprefixer = require('autoprefixer');
@@ -175,6 +176,7 @@ gulp.task('clean', () => {
 
 gulp.task('build-css', () => {
   return gulp.src(sourcePaths.cssEntry)
+    .pipe(sourcemaps.init())
     .pipe(postcss([
       atImport(),
       sprites({
@@ -188,6 +190,7 @@ gulp.task('build-css', () => {
       autoprefixer(),
       discardComments(),
     ]))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(targetDirs.styles))
     .pipe(rename(p => {
       p.dirname = path.join(targetDirs.styles, p.dirname);
@@ -224,6 +227,7 @@ gulp.task('build-app-js', () => {
       output: {
         filename: jsRootFile,
       },
+      devtool: 'source-map',
       module: webpackModuleConf,
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
@@ -239,6 +243,7 @@ gulp.task('build-sw-js', () => {
       output: {
         filename: swRootFile,
       },
+      devtool: 'source-map',
       module: webpackModuleConf,
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
