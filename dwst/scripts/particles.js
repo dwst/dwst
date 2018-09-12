@@ -16,11 +16,19 @@
 // DWST particles templating language
 
 import Parsee from './parsee.js';
+import utils from './utils.js';
 
 const specialChars = [
   '$',
   '\\',
 ];
+
+const legalInstructionNameChars = (() => {
+  const aCode = 'a'.charCodeAt(0);
+  const zCode = 'z'.charCodeAt(0);
+  const charCodes = utils.range(aCode, zCode + 1);
+  return charCodes.map(charCode => String.fromCharCode(charCode));
+})();
 
 export class InvalidParticles extends Error { }
 
@@ -91,16 +99,21 @@ function skipExpressionClose(parsee) {
 
 function skipArgListOpen(parsee) {
   const argListOpen = '(';
-  parsee.read(argListOpen);
+  if (parsee.read(argListOpen) === false) {
+    const msg = `missing ${argListOpen}`;
+    throw new InvalidParticles(msg);
+  }
 }
 
 function skipArgListClose(parsee) {
   const argListClose = ')';
-  parsee.read(argListClose);
+  if (parsee.read(argListClose) === false) {
+    throw new Error('unexpected return value');
+  }
 }
 
 function readInstructionName(parsee) {
-  const instructionName = parsee.readUntil(['(']);
+  const instructionName = parsee.readWhile(legalInstructionNameChars);
   if (instructionName.length === 0) {
     const msg = `broken named particle: missing instruction name, remainder = ${parsee}`;
     throw new InvalidParticles(msg);

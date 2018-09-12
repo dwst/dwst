@@ -211,6 +211,7 @@ describe('particles module', () => {
         '${foo(123,456',
         '${foo)}',
         '${foo()',
+        '${foo}()}',
         '\\a',
       ];
       invalidParticlesExamples.forEach(invalidExample => {

@@ -23,6 +23,17 @@ function indexOfAny(inputString, chars) {
   return Math.min(...indices);
 }
 
+function indexOfNone(inputString, chars) {
+  const indices = inputString.split('').map(character => {
+    return chars.includes(character);
+  });
+  const thisIndexOf = indices.indexOf(false);
+  if (thisIndexOf === -1) {
+    return inputString.length;
+  }
+  return thisIndexOf;
+}
+
 export default class Parsee {
 
   constructor(original) {
@@ -53,6 +64,13 @@ export default class Parsee {
     } else {
       sliceIndex = nextSpecialPos;
     }
+    const chars = this._remainder.slice(0, sliceIndex);
+    this._remainder = this._remainder.slice(sliceIndex);
+    return chars;
+  }
+
+  readWhile(allowChars) {
+    const sliceIndex = indexOfNone(this._remainder, allowChars);
     const chars = this._remainder.slice(0, sliceIndex);
     this._remainder = this._remainder.slice(sliceIndex);
     return chars;
