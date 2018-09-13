@@ -276,7 +276,7 @@ export default class Terminal {
             const hexChunks = utils.chunkify(segment.hexes, 4);
             const textChunks = utils.chunkify(rawText, 4);
 
-            const byteGrid = document.createElement('div');
+            const byteGrid = document.createElement('span');
             const byteGridClasses = ['dwst-byte-grid'];
             if (hexChunks.length < 3) {
               byteGridClasses.push('dwst-byte-grid--less-than-three');
@@ -290,13 +290,13 @@ export default class Terminal {
               const [textChunk = []] = [textChunks[i]];
 
               const hexContent = this._htmlescape(hexChunk.join(' '));
-              const hexItem = document.createElement('div');
+              const hexItem = document.createElement('span');
               hexItem.setAttribute('class', 'dwst-byte-grid__item');
               hexItem.innerHTML = hexContent;
               byteGrid.appendChild(hexItem);
 
               const textContent = this._htmlescape(textChunk.join('').padEnd(chunkLength));
-              const textItem = document.createElement('div');
+              const textItem = document.createElement('span');
               textItem.setAttribute('class', 'dwst-byte-grid__item');
               textItem.innerHTML = textContent;
               byteGrid.appendChild(textItem);
