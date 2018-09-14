@@ -21,18 +21,18 @@ Default - Always show all item pairs
 
 markup:
 <div class="dwst-base">
-  <div class="dwst-byte-grid dwst-byte-grid{$modifiers}">
-    <div class="dwst-byte-grid__item">83 e9 59 50</div> <div class="dwst-byte-grid__item">..YP</div>
-    <div class="dwst-byte-grid__item">a5 90 25 44</div> <div class="dwst-byte-grid__item">..%D</div>
-    <div class="dwst-byte-grid__item">18 71 c6 0c</div> <div class="dwst-byte-grid__item">.q..</div>
-    <div class="dwst-byte-grid__item">4e 57 a3 c3</div> <div class="dwst-byte-grid__item">NW..</div>
-  </div>
-  <div class="dwst-byte-grid dwst-byte-grid{$modifiers}">
-    <div class="dwst-byte-grid__item">81 32 0f 00</div> <div class="dwst-byte-grid__item">.2..</div>
-    <div class="dwst-byte-grid__item"></div> <div class="dwst-byte-grid__item">    </div>
-    <div class="dwst-byte-grid__item"></div> <div class="dwst-byte-grid__item">    </div>
-    <div class="dwst-byte-grid__item"></div> <div class="dwst-byte-grid__item">    </div>
-  </div>
+  <span class="dwst-byte-grid dwst-byte-grid{$modifiers}">
+    <span class="dwst-byte-grid__item">83 e9 59 50</span> <span class="dwst-byte-grid__item">..YP</span>
+    <span class="dwst-byte-grid__item">a5 90 25 44</span> <span class="dwst-byte-grid__item">..%D</span>
+    <span class="dwst-byte-grid__item">18 71 c6 0c</span> <span class="dwst-byte-grid__item">.q..</span>
+    <span class="dwst-byte-grid__item">4e 57 a3 c3</span> <span class="dwst-byte-grid__item">NW..</span>
+  </span>
+  <span class="dwst-byte-grid dwst-byte-grid{$modifiers}">
+    <span class="dwst-byte-grid__item">81 32 0f 00</span> <span class="dwst-byte-grid__item">.2..</span>
+    <span class="dwst-byte-grid__item"></span> <span class="dwst-byte-grid__item">    </span>
+    <span class="dwst-byte-grid__item"></span> <span class="dwst-byte-grid__item">    </span>
+    <span class="dwst-byte-grid__item"></span> <span class="dwst-byte-grid__item">    </span>
+  </span>
 </div>
 
 Styleguide 2.2
