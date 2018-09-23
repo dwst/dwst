@@ -85,5 +85,31 @@ describe('parsee module', () => {
         expect(String(parsee)).to.equal('');
       });
     });
+    describe('readWhile method', () => {
+      it('should return and read content up to any unlisted symbol', () => {
+        expect(parsee.readWhile(['a', 'b'])).to.equal('ab');
+        expect(String(parsee)).to.equal('c');
+      });
+      it('should work the same regardless of symbol list order', () => {
+        expect(parsee.readWhile(['b', 'a'])).to.equal('ab');
+        expect(String(parsee)).to.equal('c');
+      });
+      it('should work the same regardless of list containing symbols never occurrign in parsee remainder', () => {
+        expect(parsee.readWhile(['9', 'a', 'b', 'd'])).to.equal('ab');
+        expect(String(parsee)).to.equal('c');
+      });
+      it('should stop immediately on first unlisted symbol regardless of further matches ahead', () => {
+        expect(parsee.readWhile(['a', 'c'])).to.equal('a');
+        expect(String(parsee)).to.equal('bc');
+      });
+      it('should read nothing if symbol list is empty', () => {
+        expect(parsee.readWhile([])).to.equal('');
+        expect(String(parsee)).to.equal('abc');
+      });
+      it('should read nothing if first symbol is not on list', () => {
+        expect(parsee.readWhile(['b', 'c', 'd'])).to.equal('');
+        expect(String(parsee)).to.equal('abc');
+      });
+    });
   });
 });
