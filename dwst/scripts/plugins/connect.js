@@ -14,6 +14,7 @@
 
 import utils from '../utils.js';
 import Connection from '../connection.js';
+import {AlreadyConnected} from '../errors.js';
 
 export default class Connect {
 
@@ -45,18 +46,7 @@ export default class Connect {
 
   _run(url, protocolString = '') {
     if (this._dwst.connection !== null) {
-      this._dwst.ui.terminal.mlog([
-        'Already connected to a server',
-        [
-          'Type ',
-          {
-            type: 'command',
-            text: '/disconnect',
-          },
-          ' to end the connection',
-        ],
-      ], 'error');
-      return;
+      throw new AlreadyConnected();
     }
     const protoCandidates = (() => {
       if (protocolString === '') {

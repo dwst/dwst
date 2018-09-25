@@ -50,9 +50,6 @@ export default class Help {
     }
     this._dwst.ui.terminal.clearLog();
     const page = this._dwst.dwstgg.page(section);
-    if (page === null) {
-      return;
-    }
     this._dwst.ui.terminal.mlog(page, 'system');
   }
 

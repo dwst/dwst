@@ -12,6 +12,8 @@
 
 */
 
+import {InvalidArgument} from '../errors.js';
+
 export default class Forget {
 
   constructor(dwst) {
@@ -50,7 +52,7 @@ export default class Forget {
       this._dwst.ui.terminal.log("You may wish to use your browser's cleaning features to remove tracking cookies and other remaining traces.", 'warning');
     } else {
       const historyLine = this._dwst.historyManager.getSummary().concat(['.']);
-      this._dwst.ui.terminal.mlog([`Invalid argument: ${target}`, historyLine], 'error');
+      throw new InvalidArgument(target, historyLine);
     }
   }
 

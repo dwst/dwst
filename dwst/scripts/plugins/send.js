@@ -13,15 +13,8 @@
 */
 
 import utils from '../utils.js';
-import {parseParticles, InvalidParticles} from '../particles.js';
-
-class UnknownInstruction extends Error {
-
-  constructor(instruction) {
-    super();
-    this.instruction = instruction;
-  }
-}
+import {parseParticles} from '../particles.js';
+import {NoConnection, UnknownInstruction} from '../errors.js';
 
 export default class Send {
 
@@ -104,63 +97,19 @@ export default class Send {
       }
       return str;
     }
-    throw new UnknownInstruction(instr);
+    throw new UnknownInstruction(instr, 'send');
   }
 
   run(paramString) {
-    let parsed;
-    try {
-      parsed = parseParticles(paramString);
-    } catch (e) {
-      if (e instanceof InvalidParticles) {
-        this._dwst.ui.terminal.mlog(['Syntax error.'], 'error');
-        return;
-      }
-      throw e;
-    }
-    let processed;
-    try {
-      processed = parsed.map(particle => {
-        const [instruction, ...args] = particle;
-        return this._process(instruction, args);
-      });
-    } catch (e) {
-      if (e instanceof UnknownInstruction) {
-        const message = [
-          [
-            'No helper ',
-            {
-              type: 'strong',
-              text: e.instruction,
-            },
-            ' available for ',
-            {
-              type: 'dwstgg',
-              text: 'send',
-              section: 'send',
-            },
-            '.',
-          ],
-        ];
-        this._dwst.ui.terminal.mlog(message, 'error');
-        return;
-      }
-      throw e;
-    }
+    const parsed = parseParticles(paramString);
+    const processed = parsed.map(particle => {
+      const [instruction, ...args] = particle;
+      return this._process(instruction, args);
+    });
     const msg = processed.join('');
 
     if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
-      const connectTip = [
-        'Use ',
-        {
-          type: 'dwstgg',
-          text: 'connect',
-          section: 'connect',
-        },
-        ' to form a connection and try again.',
-      ];
-      this._dwst.ui.terminal.mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
-      return;
+      throw new NoConnection(msg);
     }
     this._dwst.ui.terminal.log(msg, 'sent');
     this._dwst.connection.send(msg);

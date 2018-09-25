@@ -12,6 +12,8 @@
 
 */
 
+import {UnknownText} from '../errors.js';
+
 export default class Texts {
 
   constructor(dwst) {
@@ -47,15 +49,7 @@ export default class Texts {
         this._dwst.ui.terminal.log(text, 'system');
         return;
       }
-      const listTip = [
-        'List available texts by typing ',
-        {
-          type: 'command',
-          text: '/texts',
-        },
-        '.',
-      ];
-      this._dwst.ui.terminal.mlog([`Text "${variable}" does not exist.`, listTip], 'error');
+      throw new UnknownText(variable);
     }
     const listing = [...this._dwst.texts.entries()].map(([name, text]) => {
       return `"${name}": <${text.length}B of text data>`;

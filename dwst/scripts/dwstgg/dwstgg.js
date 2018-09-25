@@ -12,6 +12,8 @@
 
 */
 
+import {UnknownCommand, UnknownHelpPage} from '../errors.js';
+
 import chromePage from './chrome.js';
 import commandsPage from './commands.js';
 import developingPage from './developing.js';
@@ -85,19 +87,16 @@ export default class Dwstgg {
       const commands = [...this._dwst.commands.keys()];
       return commandsPage(commands);
     }
-    this._dwst.ui.terminal.log(`Unkown help page: ${section}`, 'error');
-    return null;
+    throw new UnknownHelpPage(section);
   }
 
   _commandHelp(command) {
     const plugin = this._dwst.commands.get(command);
     if (typeof plugin === 'undefined') {
-      this._dwst.ui.terminal.log(`the command does not exist: ${command}`, 'error');
-      return null;
+      throw new UnknownCommand(command);
     }
     if (typeof plugin.usage === 'undefined') {
-      this._dwst.ui.terminal.log(`no help available for: ${command}`, 'system');
-      return null;
+      throw new UnknownHelpPage(command);
     }
     const usage = plugin.usage().map(usageExample => {
       return {
