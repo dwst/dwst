@@ -344,3 +344,8 @@ function onLoad() {
 
 document.addEventListener('DOMContentLoaded', init);
 window.addEventListener('load', onLoad);
+
+// plugin interface developer access for live debugging
+if (typeof window === 'object') {
+  window._dwst = pluginInterface;
+}
