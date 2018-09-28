@@ -155,7 +155,7 @@
     "no-magic-numbers": [0, {"ignore": [0, 1, 2, 3]}],
     "no-use-before-define": 0,
     "no-implicit-globals": 0,
-    "no-warning-comments": 0,
+    "no-warning-comments": [2, {"terms": ["WAITING"], "location": "start"}],
 
     "wrap-regex": 0,
     "no-restricted-imports": 0,
