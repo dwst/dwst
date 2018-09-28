@@ -64,7 +64,7 @@ export default class Interval {
         return;
       }
       if (commandParts.length < 1) {
-        this._dwst.controller.run('send', String(count));
+        this._dwst.controller.run(['send', String(count)].join(' '));
         count += 1;
         return;
       }

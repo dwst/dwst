@@ -48,7 +48,7 @@ export default class Spam {
         return;
       }
       if (commandParts.length < 1) {
-        this._dwst.controller.run('send', String(i));
+        this._dwst.controller.run(['send', String(i)].join(' '));
       } else {
         this._dwst.controller.silent(commandParts.join(' '));
       }
