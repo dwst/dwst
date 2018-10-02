@@ -12,34 +12,13 @@
 
 */
 
-export default class Reset {
+export default function renderDirection(type) {
 
-  constructor(dwst) {
-    this._dwst = dwst;
-  }
+  const direction = document.createElement('span');
+  direction.setAttribute('class', `dwst-direction dwst-direction--${type}`);
+  direction.innerHTML = `${type}:`;
 
-  commands() {
-    return ['reset'];
-  }
+  return direction;
 
-  usage() {
-    return [
-      '/reset',
-    ];
-  }
-
-  examples() {
-    return [
-      '/reset',
-    ];
-  }
-
-  info() {
-    return 'reset the message buffer';
-  }
-
-  run() {
-    this._dwst.ui.terminal.reset();
-  }
 }
 

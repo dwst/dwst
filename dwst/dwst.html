@@ -33,32 +33,32 @@
       <div class="dwst-debug__content-guide"></div>
     </div>
   </div>
-  <div class="dwst-layout__content-area dwst-scroll-area" id="screen1">
-    <div id="ter1" class="dwst-scroll-area__content">
+  <div id="js-screen" class="dwst-layout__content-area dwst-scroll-area">
+    <div id="js-terminal" class="dwst-scroll-area__content">
     </div>
   </div>
-  <div class="dwst-layout__notification-area dwst-notification js-scroll-notification" style="display: none;">
-    <a href="#" class="dwst-notification__link js-auto-scroll-button">scroll to bottom</a>
+  <div id="js-scroll-notification" class="dwst-layout__notification-area dwst-notification" style="display: none;">
+    <a id="js-auto-scroll-button" href="#" class="dwst-notification__link">scroll to bottom</a>
   </div>
   <div class="dwst-layout__control-area">
     <div class="dwst-bar">
       <div class="dwst-bar__item">
-        <div class="dwst-time dwst-time--panel dwst-time--placeholder" id="clock1">00:00:00</div>
+        <div id="js-clock" class="dwst-time dwst-time--panel dwst-time--placeholder">00:00:00</div>
       </div>
       <div class="dwst-bar__item dwst-bar__item--grow"><div class="dwst-prompt">
         <div class="dwst-prompt__input">
           <label for="msg1" style="position: absolute; left: -10000px;">command prompt</label>
-          <input class="dwst-text-input" id="msg1" type="text" value="" />
+          <input id="js-prompt" class="dwst-text-input" type="text" value="" />
         </div>
         <div class="dwst-prompt__button">
-          <button class="dwst-button dwst-button--send" id="sendbut1" aria-label="send"></button>
+          <button id="js-send-button" class="dwst-button dwst-button--send" aria-label="send"></button>
         </div>
       </div></div>
-      <div class="dwst-bar__item"><button class="dwst-button dwst-button--splash" id="menubut1" aria-label="menu"></button></div>
+      <div class="dwst-bar__item"><button id="js-menu-button" class="dwst-button dwst-button--splash" aria-label="menu"></button></div>
     </div>
   </div>
-  <div id="fileframe" style="visibility: hidden;">
-    <input id="file1" type="file" />
+  <div id="js-file-input" style="visibility: hidden;">
+    <input type="file" />
   </div>
   <script type="module" src="scripts/dwst.js" charset="UTF-8"></script>
   <script>

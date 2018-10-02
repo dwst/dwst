@@ -58,7 +58,7 @@ export default class Spam {
       if (this._dwst.connection !== null && this._dwst.connection.isOpen()) {
         setTimeout(nextspam, 0);
       } else {
-        this._dwst.terminal.log('spam failed, no connection', 'error');
+        this._dwst.ui.terminal.log('spam failed, no connection', 'error');
       }
     };
     spam(times);

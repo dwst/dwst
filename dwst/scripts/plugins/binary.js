@@ -174,7 +174,7 @@ export default class Binary {
       parsed = parseParticles(paramString);
     } catch (e) {
       if (e instanceof InvalidParticles) {
-        this._dwst.terminal.mlog(['Syntax error.'], 'error');
+        this._dwst.ui.terminal.mlog(['Syntax error.'], 'error');
         return;
       }
       throw e;
@@ -203,7 +203,7 @@ export default class Binary {
             '.',
           ],
         ];
-        this._dwst.terminal.mlog(message, 'error');
+        this._dwst.ui.terminal.mlog(message, 'error');
         return;
       }
       throw e;
@@ -221,10 +221,10 @@ export default class Binary {
         },
         ' to form a connection and try again.',
       ];
-      this._dwst.terminal.mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
+      this._dwst.ui.terminal.mlog(['No connection.', `Cannot send: ${msg}`, connectTip], 'error');
       return;
     }
-    this._dwst.terminal.blog(out, 'sent');
+    this._dwst.ui.terminal.blog(out, 'sent');
     this._dwst.connection.send(out);
   }
 }
