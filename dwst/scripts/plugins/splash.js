@@ -40,7 +40,7 @@ export default class Splash {
 
   run() {
 
-    this._dwst.terminal.clearLog();
+    this._dwst.ui.terminal.clearLog();
 
     /* eslint-disable quotes,object-property-newline */
 
@@ -341,8 +341,8 @@ export default class Splash {
         linkSection,
       ];
     })();
-    this._dwst.terminal.gfx(shape, colors);
-    this._dwst.terminal.mlog([].concat(...sections), 'system');
+    this._dwst.ui.terminal.gfx(shape, colors);
+    this._dwst.ui.terminal.mlog([].concat(...sections), 'system');
   }
 
 }

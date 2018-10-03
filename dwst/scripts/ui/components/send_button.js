@@ -12,34 +12,16 @@
 
 */
 
-export default class Reset {
+export default class SendButton {
 
-  constructor(dwst) {
+  constructor(element, dwst) {
+    this._element = element;
     this._dwst = dwst;
   }
 
-  commands() {
-    return ['reset'];
-  }
-
-  usage() {
-    return [
-      '/reset',
-    ];
-  }
-
-  examples() {
-    return [
-      '/reset',
-    ];
-  }
-
-  info() {
-    return 'reset the message buffer';
-  }
-
-  run() {
-    this._dwst.ui.terminal.reset();
+  init() {
+    this._element.addEventListener('click', () => {
+      this._dwst.ui.prompt.send();
+    });
   }
 }
-

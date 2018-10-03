@@ -41,20 +41,15 @@ export default class Loadbin {
 
   _run(variable = 'default') {
     const that = this;
-    const upload = document.getElementById('file1');
-    upload.onchange = () => {
-      const file = upload.files[0];
-      const ff = document.getElementById('fileframe');
-      ff.innerHTML = ff.innerHTML;
+    this._dwst.ui.fileInput.read(file => {
       const reader = new FileReader();
-      reader.onload = function (e2) {
-        const buffer = e2.target.result;
+      reader.onload = function (evt) {
+        const buffer = evt.target.result;
         that._dwst.bins.set(variable, buffer);
-        that._dwst.terminal.log(`Binary file ${file.fileName} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
+        that._dwst.ui.terminal.log(`Binary file ${file.name} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
       };
       reader.readAsArrayBuffer(file);
-    };
-    upload.click();
+    });
   }
 
   run(paramString) {

@@ -15,11 +15,9 @@
 
 import config from './config.js';
 
-import {escapeForParticles} from './particles.js';
-import currenttime from './currenttime.js';
 import HistoryManager from './history_manager.js';
 
-import Terminal from './terminal.js';
+import Ui from './ui/ui.js';
 
 import Binary from './plugins/binary.js';
 import Bins from './plugins/bins.js';
@@ -37,11 +35,9 @@ import Spam from './plugins/spam.js';
 import Splash from './plugins/splash.js';
 import Texts from './plugins/texts.js';
 
-
-let resizePending = false;
-
 const controller = {
 
+  loud,
   silent,
   run,
 
@@ -61,10 +57,8 @@ const controller = {
       }
       return [`Selected protocol: ${protocol}`];
     })();
-    terminal.mlog(['Connection established.'].concat(selected), 'system');
-    [...document.getElementsByClassName('dwst-button--splash')].forEach(element => {
-      element.classList.replace('dwst-button--splash', 'dwst-button--splash-connected');
-    });
+    pluginInterface.ui.terminal.mlog(['Connection established.'].concat(selected), 'system');
+    pluginInterface.ui.menuButton.connected(true);
   },
 
   onConnectionClose: (e, sessionLength) => {
@@ -100,44 +94,39 @@ const controller = {
       }
       return [`Session length: ${sessionLength}ms`];
     })();
-    terminal.mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
+    pluginInterface.ui.terminal.mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
     pluginInterface.connection = null;
-    [...document.getElementsByClassName('dwst-button--splash-connected')].forEach(element => {
-      element.classList.replace('dwst-button--splash-connected', 'dwst-button--splash');
-    });
+    pluginInterface.ui.menuButton.connected(false);
   },
 
   onMessage: msg => {
     if (typeof msg === 'string') {
-      terminal.log(msg, 'received');
+      pluginInterface.ui.terminal.log(msg, 'received');
     } else {
       const fr = new FileReader();
       fr.onload = function (e) {
         const buffer = e.target.result;
-        terminal.blog(buffer, 'received');
+        pluginInterface.ui.terminal.blog(buffer, 'received');
       };
       fr.readAsArrayBuffer(msg);
     }
   },
 
   onError: () => {
-    terminal.log('WebSocket error.', 'error');
+    pluginInterface.ui.terminal.log('WebSocket error.', 'error');
   },
 
   onSendWhileConnecting: verb => {
-    terminal.log(`Attempting to send data while ${verb}`, 'warning');
+    pluginInterface.ui.terminal.log(`Attempting to send data while ${verb}`, 'warning');
   },
 
 };
-
-const terminal = new Terminal('ter1', controller);
 
 const pluginInterface = {
 
   VERSION: config.appVersion,
   ECHO_SERVER_URL: config.echoServer,
 
-  terminal,
   controller,
   historyManager: null,
   connection: null,
@@ -189,15 +178,10 @@ function run(command) {
       },
       ' to list available commands',
     ];
-    terminal.mlog([errorMessage, helpTip], 'error');
+    pluginInterface.ui.terminal.mlog([errorMessage, helpTip], 'error');
     return;
   }
   plugin.run(paramString);
-}
-
-function refreshClock() {
-  const time = currenttime();
-  document.getElementById('clock1').innerHTML = time;
 }
 
 function silent(line) {
@@ -206,77 +190,8 @@ function silent(line) {
 }
 
 function loud(line) {
-  terminal.log(line, 'command');
+  pluginInterface.ui.terminal.log(line, 'command');
   silent(line);
-}
-
-function enableDebugger() {
-  document.documentElement.classList.add('dwst-debug--guides');
-}
-
-function showHelpTip() {
-  const helpTip = [
-    'type ',
-    {
-      type: 'command',
-      text: '/help',
-    },
-    ' to list available commands',
-  ];
-  terminal.log(helpTip, 'system');
-}
-
-function send() {
-  const raw = document.getElementById('msg1').value;
-  document.getElementById('msg1').value = '';
-  pluginInterface.historyManager.select(raw);
-  if (raw === '/idkfa') {
-    enableDebugger();
-    return;
-  }
-  if (raw.length < 1) {
-    showHelpTip();
-    return;
-  }
-  if (raw[0] === '/') {
-    loud(raw);
-    return;
-  }
-  const text = escapeForParticles(raw);
-  const command = `/send ${text}`;
-  loud(command);
-}
-
-function globalKeyPress(event) {
-  const msg1 = document.getElementById('msg1');
-  if (event.key === 'Escape') {
-    if (pluginInterface.connection !== null && (pluginInterface.connection.isOpen() || pluginInterface.connection.isConnecting())) {
-      loud('/disconnect');
-    } else if (msg1.value === '') {
-      const connects = pluginInterface.historyManager.getConnectCommands(1);
-      if (connects.length < 1) {
-        msg1.value = `/connect ${pluginInterface.ECHO_SERVER_URL}`;
-      } else {
-        msg1.value = connects[0];
-      }
-    } else {
-      pluginInterface.historyManager.select(msg1.value);
-      msg1.value = '';
-    }
-  }
-}
-
-function msgKeyPress(event) {
-  const msg1 = document.getElementById('msg1');
-  if (event.keyCode === 13) {
-    send();
-  } else if (event.keyCode === 38) { // up
-    msg1.value = pluginInterface.historyManager.getPrevious(msg1.value);
-    return;
-  } else if (event.keyCode === 40) { // down
-    msg1.value = pluginInterface.historyManager.getNext(msg1.value);
-    return;
-  }
 }
 
 function loadSaves() {
@@ -293,50 +208,14 @@ function loadSaves() {
   pluginInterface.historyManager = new HistoryManager(history, {save});
 }
 
-function throttledUpdateGfxPositions() {
-  if (resizePending !== true) {
-    resizePending = true;
-    setTimeout(() => {
-      resizePending = false;
-      terminal.updateGfxPositions();
-    }, 100);
-  }
-}
-
-function startClock() {
-  refreshClock();
-  const clock = document.getElementById('clock1');
-  clock.classList.remove('dwst-time--placeholder');
-  setInterval(refreshClock, 500);
-}
-
 function init() {
   loadSaves();
-  silent('/splash');
-
-  window.addEventListener('resize', throttledUpdateGfxPositions);
-
-  document.addEventListener('keydown', globalKeyPress);
-  document.getElementById('msg1').addEventListener('keydown', msgKeyPress);
-  document.getElementById('sendbut1').addEventListener('click', send);
-  document.getElementById('menubut1').addEventListener('click', () => {
-    loud('/splash');
-    terminal.scrollLog();
-  });
-  [...document.getElementsByClassName('js-auto-scroll-button')].forEach(asb => {
-    asb.addEventListener('click', evt => {
-      evt.preventDefault();
-      terminal.scrollLog();
-    });
-  });
-  setInterval(() => terminal.scrollNotificationUpdate(), 1000);
-  document.getElementById('msg1').focus();
-
+  pluginInterface.ui = new Ui(document, pluginInterface);
+  pluginInterface.ui.init();
 }
 
 function onLoad() {
-  terminal.updateGfxPositions();
-  startClock();
+  pluginInterface.ui.onLoad();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service_worker.js');
   }

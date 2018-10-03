@@ -53,4 +53,8 @@ export default {
     return Array(length).fill().map((_, i) => start + i);
   },
 
+  htmlescape: text => {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  },
+
 };

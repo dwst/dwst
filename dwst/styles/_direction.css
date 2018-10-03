@@ -33,6 +33,8 @@ Styleguide 2.3
 */
 
 .dwst-direction {
+  display: inline-block;
+  width: 100%;
   overflow: hidden;
   text-align: right;
 }

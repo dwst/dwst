@@ -12,34 +12,20 @@
 
 */
 
-export default class Reset {
+export default class FileInput {
 
-  constructor(dwst) {
+  constructor(element, dwst) {
+    this._element = element;
     this._dwst = dwst;
   }
 
-  commands() {
-    return ['reset'];
-  }
-
-  usage() {
-    return [
-      '/reset',
-    ];
-  }
-
-  examples() {
-    return [
-      '/reset',
-    ];
-  }
-
-  info() {
-    return 'reset the message buffer';
-  }
-
-  run() {
-    this._dwst.ui.terminal.reset();
+  read(callback) {
+    const upload = this._element.getElementsByTagName('input')[0];
+    upload.onchange = () => {
+      const file = upload.files[0];
+      this._element.innerHTML = this._element.innerHTML;
+      callback(file);
+    };
+    upload.click();
   }
 }
-

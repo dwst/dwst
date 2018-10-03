@@ -12,16 +12,17 @@
 
 */
 
-export default function currenttime() {
-  const addzero = function (i) {
-    if (i < 10) {
-      return `0${i}`;
-    }
-    return String(i);
-  };
-  const date = new Date();
-  const time = `${addzero(date.getHours())}:${addzero(date.getMinutes())}<span class="dwst-time__sec">:${addzero(date.getSeconds())}</span>`;
-  return time;
+export default class AutoScrollButton {
 
+  constructor(element, dwst) {
+    this._element = element;
+    this._dwst = dwst;
+  }
+
+  init() {
+    this._element.addEventListener('click', evt => {
+      evt.preventDefault();
+      this._dwst.ui.screen.scrollLog();
+    });
+  }
 }
-
