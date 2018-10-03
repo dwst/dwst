@@ -53,22 +53,50 @@ export default class Interval {
       }
       return;
     }
+    const [command, payload] = (() => {
+      if (commandParts.length < 1) {
+        return ['send', null];
+      }
+      const firstPart = commandParts[0];
+      const otherParts = commandParts.slice(1);
+      if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
+        this._dwst.ui.terminal.mlog([
+          [
+            'Invalid ',
+            {
+              type: 'dwstgg',
+              text: 'interval',
+              section: 'interval',
+            },
+            ' command combination.',
+          ],
+          'Compatible commands: send, binary',
+        ], 'error');
+        return [null, null];
+      }
+      return [firstPart.slice(1), otherParts.join(' ')];
+    })();
+    if (command === null) {
+      return;
+    }
     let count = 0;
     const interval = utils.parseNum(intervalStr);
     const spammer = () => {
-      if (this._dwst.connection === null || !this._dwst.connection.isOpen()) {
+      const message = (() => {
+        if (payload === null) {
+          return String(count);
+        }
+        return payload;
+      })();
+      if (this._dwst.connection === null || this._dwst.connection.isOpen() === false) {
         if (this._dwst.intervalId !== null) {
           this._dwst.ui.terminal.log('interval failed, no connection', 'error');
           this._dwst.controller.run('interval');
         }
         return;
       }
-      if (commandParts.length < 1) {
-        this._dwst.controller.run(['send', String(count)].join(' '));
-        count += 1;
-        return;
-      }
-      this._dwst.controller.silent(commandParts.join(' '));
+      this._dwst.controller.run([command, message].join(' '));
+      count += 1;
     };
     if (this._dwst.intervalId !== null) {
       this._dwst.ui.terminal.log('clearing old interval', 'system');

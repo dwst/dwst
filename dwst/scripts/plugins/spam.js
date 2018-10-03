@@ -43,23 +43,51 @@ export default class Spam {
 
   _run(timesStr, ...commandParts) {
     const times = utils.parseNum(timesStr);
+    const [command, payload] = (() => {
+      if (commandParts.length < 1) {
+        return ['send', null];
+      }
+      const firstPart = commandParts[0];
+      const otherParts = commandParts.slice(1);
+      if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
+        this._dwst.ui.terminal.mlog([
+          [
+            'Invalid ',
+            {
+              type: 'dwstgg',
+              text: 'spam',
+              section: 'spam',
+            },
+            ' command combination.',
+          ],
+          'Compatible commands: send, binary',
+        ], 'error');
+        return [null, null];
+      }
+      return [firstPart.slice(1), otherParts.join(' ')];
+    })();
+    if (command === null) {
+      return;
+    }
     const spam = (limit, i = 0) => {
       if (i === limit) {
         return;
       }
-      if (commandParts.length < 1) {
-        this._dwst.controller.run(['send', String(i)].join(' '));
-      } else {
-        this._dwst.controller.silent(commandParts.join(' '));
+      const message = (() => {
+        if (payload === null) {
+          return String(i);
+        }
+        return payload;
+      })();
+      if (this._dwst.connection === null || this._dwst.connection.isOpen() === false) {
+        this._dwst.ui.terminal.log('spam failed, no connection', 'error');
+        return;
       }
+      this._dwst.controller.run([command, message].join(' '));
       const nextspam = () => {
         spam(limit, i + 1);
       };
-      if (this._dwst.connection !== null && this._dwst.connection.isOpen()) {
-        setTimeout(nextspam, 0);
-      } else {
-        this._dwst.ui.terminal.log('spam failed, no connection', 'error');
-      }
+      setTimeout(nextspam, 0);
     };
     spam(times);
   }
