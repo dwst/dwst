@@ -16,6 +16,7 @@
 import config from './config.js';
 
 import HistoryManager from './history_manager.js';
+import Dwstgg from './dwstgg/dwstgg.js';
 
 import Ui from './ui/ui.js';
 
@@ -136,6 +137,8 @@ const pluginInterface = {
   intervalId: null,
 
 };
+
+pluginInterface.dwstgg = new Dwstgg(pluginInterface);
 
 
 const plugins = [
