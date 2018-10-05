@@ -57,12 +57,8 @@ export default class Terminal {
   }
 
   mlog(mlogDescription, type) {
-    const linkHandlers = {
-      onHelpLinkClick: this._dwst.controller.onHelpLinkClick,
-      onCommandLinkClick: this._dwst.controller.onCommandLinkClick,
-    };
 
-    const logLine = renderLogEntry(mlogDescription, type, linkHandlers);
+    const logLine = renderLogEntry(mlogDescription, type, this._dwst.controller.link);
 
     const item = document.createElement('div');
     item.setAttribute('class', `dwst-log__item dwst-log__item--${type}`);

@@ -148,8 +148,8 @@ export default class Splash {
     }
 
     const CONNECTION_LIST_CAP = 3;
-    const historySummary = this._dwst.historyManager.getSummary();
-    const maybeTooManyConnectCommands =  this._dwst.historyManager.getConnectCommands(CONNECTION_LIST_CAP + 1);
+    const historySummary = this._dwst.model.history.getSummary();
+    const maybeTooManyConnectCommands =  this._dwst.model.history.getConnectCommands(CONNECTION_LIST_CAP + 1);
     const connectCommands = maybeTooManyConnectCommands.slice(0, CONNECTION_LIST_CAP);
     const connectionsLines = connectCommands.map(command => {
       return {
@@ -179,20 +179,20 @@ export default class Splash {
       tooManyWarning,
     );
     const statusSection = (() => {
-      if (this._dwst.connection === null) {
+      if (this._dwst.model.connection === null) {
         return [];
       }
       const connectionStatus = [
         'Currently ',
-        this._dwst.connection.verb,
+        this._dwst.model.connection.verb,
         ' to ',
         {
           type: 'strong',
-          text: this._dwst.connection.url,
+          text: this._dwst.model.connection.url,
         },
       ];
       const maybeProtocolStatus = (() => {
-        const protocol = this._dwst.connection.protocol;
+        const protocol = this._dwst.model.connection.protocol;
         if (protocol.length < 1) {
           return [];
         }
@@ -225,7 +225,7 @@ export default class Splash {
       [
         {
           type: 'h1',
-          text: `Dark WebSocket Terminal ${this._dwst.VERSION}`,
+          text: `Dark WebSocket Terminal ${this._dwst.model.config.appVersion}`,
         },
       ],
     ];
@@ -234,7 +234,7 @@ export default class Splash {
         '1. Create a test connection by typing ',
         {
           type: 'command',
-          text: `/connect ${this._dwst.ECHO_SERVER_URL}`,
+          text: `/connect ${this._dwst.model.config.echoServer}`,
         },
       ],
       [
@@ -305,7 +305,7 @@ export default class Splash {
       ],
     ];
     const sections = (() => {
-      if (this._dwst.connection !== null) {
+      if (this._dwst.model.connection !== null) {
         return [
           about,
           [''],

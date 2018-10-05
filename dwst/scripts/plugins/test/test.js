@@ -1,2 +1,4 @@
 
-require('./binary.js');
+describe('plugin collection', () => {
+  require('./binary.js');
+});

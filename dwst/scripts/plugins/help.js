@@ -49,7 +49,7 @@ export default class Help {
       section = parameter.toLowerCase();
     }
     this._dwst.ui.terminal.clearLog();
-    const page = this._dwst.dwstgg.page(section);
+    const page = this._dwst.model.dwstgg.page(section);
     this._dwst.ui.terminal.mlog(page, 'system');
   }
 

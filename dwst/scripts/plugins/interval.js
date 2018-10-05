@@ -12,9 +12,6 @@
 
 */
 
-import utils from '../utils.js';
-import {NoConnection, InvalidCombination} from '../errors.js';
-
 export default class Interval {
 
   constructor(dwst) {
@@ -46,12 +43,12 @@ export default class Interval {
 
   _run(intervalStr = null, ...commandParts) {
     if (intervalStr === null) {
-      if (this._dwst.intervalId === null) {
+      if (this._dwst.model.intervalId === null) {
         this._dwst.ui.terminal.log('No interval to clear', 'warning');
         return;
       }
-      clearInterval(this._dwst.intervalId);
-      this._dwst.intervalId = null;
+      clearInterval(this._dwst.model.intervalId);
+      this._dwst.model.intervalId = null;
       this._dwst.ui.terminal.log('interval cleared', 'system');
       return;
     }
@@ -62,12 +59,12 @@ export default class Interval {
       const firstPart = commandParts[0];
       const otherParts = commandParts.slice(1);
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
-        throw new InvalidCombination('interval', ['send', 'binary']);
+        throw new this._dwst.lib.errors.InvalidCombination('interval', ['send', 'binary']);
       }
       return [firstPart.slice(1), otherParts.join(' ')];
     })();
     let count = 0;
-    const interval = utils.parseNum(intervalStr);
+    const interval = this._dwst.lib.utils.parseNum(intervalStr);
     const spammer = () => {
       const message = (() => {
         if (payload === null) {
@@ -75,23 +72,23 @@ export default class Interval {
         }
         return payload;
       })();
-      if (this._dwst.connection === null || this._dwst.connection.isOpen() === false) {
-        if (this._dwst.intervalId !== null) {
-          clearInterval(this._dwst.intervalId);
-          this._dwst.intervalId = null;
-          throw new NoConnection(message);
+      if (this._dwst.model.connection === null || this._dwst.model.connection.isOpen() === false) {
+        if (this._dwst.model.intervalId !== null) {
+          clearInterval(this._dwst.model.intervalId);
+          this._dwst.model.intervalId = null;
+          throw new this._dwst.lib.errors.NoConnection(message);
         }
         return;
       }
-      this._dwst.controller.run([command, message].join(' '));
+      this._dwst.controller.prompt.run([command, message].join(' '));
       count += 1;
     };
-    if (this._dwst.intervalId !== null) {
+    if (this._dwst.model.intervalId !== null) {
       this._dwst.ui.terminal.log('clearing old interval', 'system');
-      clearInterval(this._dwst.intervalId);
-      this._dwst.intervalId = null;
+      clearInterval(this._dwst.model.intervalId);
+      this._dwst.model.intervalId = null;
     }
-    this._dwst.intervalId = setInterval(spammer, interval);
+    this._dwst.model.intervalId = setInterval(spammer, interval);
     this._dwst.ui.terminal.log('interval set', 'system');
   }
 

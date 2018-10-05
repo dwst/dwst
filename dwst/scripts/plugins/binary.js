@@ -12,10 +12,6 @@
 
 */
 
-import utils from '../utils.js';
-import {parseParticles} from '../particles.js';
-import {NoConnection, UnknownInstruction} from '../errors.js';
-
 function byteValue(x) {
   const code = x.charCodeAt(0);
   if (code !== (code & 0xff)) { // eslint-disable-line no-bitwise
@@ -95,7 +91,7 @@ export default class Binary {
       };
       let num = 16;
       if (params.length === 1) {
-        num = utils.parseNum(params[0]);
+        num = this._dwst.lib.utils.parseNum(params[0]);
       }
       const bytes = [];
       for (let i = 0; i < num; i++) {
@@ -107,11 +103,11 @@ export default class Binary {
       let start = 0;
       let end = 0xff;
       if (params.length === 1) {
-        end = utils.parseNum(params[0]);
+        end = this._dwst.lib.utils.parseNum(params[0]);
       }
       if (params.length === 2) {
-        start = utils.parseNum(params[0]);
-        end = utils.parseNum(params[1]);
+        start = this._dwst.lib.utils.parseNum(params[0]);
+        end = this._dwst.lib.utils.parseNum(params[1]);
       }
       const bytes = [];
       for (let i = start; i <= end; i++) {
@@ -124,7 +120,7 @@ export default class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      let buffer = this._dwst.bins.get(variable);
+      let buffer = this._dwst.model.bins.get(variable);
       if (typeof buffer === 'undefined') {
         buffer = [];
       }
@@ -135,7 +131,7 @@ export default class Binary {
       if (params.length === 1) {
         variable = params[0];
       }
-      const text = this._dwst.texts.get(variable);
+      const text = this._dwst.model.texts.get(variable);
       let bytes;
       if (typeof text === 'undefined') {
         bytes = [];
@@ -149,7 +145,7 @@ export default class Binary {
       if (params.length === 1) {
         const hex = params[0];
         const nums = hex.split('');
-        const pairs = utils.chunkify(nums, 2);
+        const pairs = this._dwst.lib.utils.chunkify(nums, 2);
         const tmp = pairs.map(hexpairtobyte);
         bytes = tmp.filter(b => (b !== null));
       } else {
@@ -157,12 +153,12 @@ export default class Binary {
       }
       return new Uint8Array(bytes);
     }
-    throw new UnknownInstruction(instr, 'binary');
+    throw new this._dwst.lib.errors.UnknownInstruction(instr, 'binary');
   }
 
 
   run(paramString) {
-    const parsed = parseParticles(paramString);
+    const parsed = this._dwst.lib.particles.parseParticles(paramString);
     const processed = parsed.map(particle => {
       const [instruction, ...args] = particle;
       return this._process(instruction, args);
@@ -170,11 +166,12 @@ export default class Binary {
     const out = joinBuffers(processed);
 
     const msg = `<${out.byteLength}B of data> `;
-    if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
-      throw new NoConnection(msg);
+    const connection = this._dwst.model.connection;
+    if (connection === null || connection.isClosing() || connection.isClosed()) {
+      throw new this._dwst.lib.errors.NoConnection(msg);
     }
     this._dwst.ui.terminal.blog(out, 'sent');
-    this._dwst.connection.send(out);
+    this._dwst.model.connection.send(out);
   }
 }
 

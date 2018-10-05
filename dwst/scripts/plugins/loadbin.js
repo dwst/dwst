@@ -40,14 +40,13 @@ export default class Loadbin {
   }
 
   _run(variable = 'default') {
-    const that = this;
     this._dwst.ui.fileInput.read(file => {
       const reader = new FileReader();
-      reader.onload = function (evt) {
+      reader.addEventListener('load', evt => {
         const buffer = evt.target.result;
-        that._dwst.bins.set(variable, buffer);
-        that._dwst.ui.terminal.log(`Binary file ${file.name} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
-      };
+        this._dwst.model.bins.set(variable, buffer);
+        this._dwst.ui.terminal.log(`Binary file ${file.name} (${buffer.byteLength}B) loaded to "${variable}"`, 'system');
+      });
       reader.readAsArrayBuffer(file);
     });
   }

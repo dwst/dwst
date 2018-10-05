@@ -101,7 +101,7 @@ class ElementHistory {
 
 }
 
-export default class HistoryManager {
+export default class History {
 
   constructor(savedHistory, options) {
     this.save = options.save;

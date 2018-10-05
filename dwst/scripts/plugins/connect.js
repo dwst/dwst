@@ -12,9 +12,7 @@
 
 */
 
-import utils from '../utils.js';
 import Connection from '../connection.js';
-import {AlreadyConnected} from '../errors.js';
 
 export default class Connect {
 
@@ -45,8 +43,8 @@ export default class Connect {
   }
 
   _run(url, protocolString = '') {
-    if (this._dwst.connection !== null) {
-      throw new AlreadyConnected();
+    if (this._dwst.model.connection !== null) {
+      throw new this._dwst.lib.errors.AlreadyConnected();
     }
     const protoCandidates = (() => {
       if (protocolString === '') {
@@ -58,7 +56,7 @@ export default class Connect {
 
       // https://tools.ietf.org/html/rfc6455#page-17
 
-      const basicAlphabet = utils.range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
+      const basicAlphabet = this._dwst.lib.utils.range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
       const httpSeparators = new Set([...'()<>@,;:\\"/[]?={} \t']);
       const validProtocolChars = new Set(basicAlphabet.filter(character => !httpSeparators.has(character)));
       const usedChars = [...protocolName];
@@ -90,7 +88,7 @@ export default class Connect {
         ],
       ], 'warning');
     }
-    this._dwst.connection = new Connection(url, protocols, this._dwst.controller);
+    this._dwst.model.connection = new Connection(url, protocols, this._dwst.controller.socket);
     const protoFormatted = protocols.join(', ');
     const negotiation = (() => {
       if (protocols.length < 1) {
@@ -98,7 +96,7 @@ export default class Connect {
       }
       return [`Accepted protocols: ${protoFormatted}`];
     })();
-    this._dwst.ui.terminal.mlog([`Connecting to ${this._dwst.connection.url}`].concat(negotiation), 'system');
+    this._dwst.ui.terminal.mlog([`Connecting to ${this._dwst.model.connection.url}`].concat(negotiation), 'system');
   }
 
   run(paramString) {

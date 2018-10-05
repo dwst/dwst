@@ -39,12 +39,12 @@ export default class Disconnect {
   }
 
   run() {
-    if (this._dwst.connection === null) {
+    if (this._dwst.model.connection === null) {
       this._dwst.ui.terminal.log('No connection to disconnect', 'warning');
     }
     const protocol = [];
-    this._dwst.ui.terminal.mlog([`Closing connection to ${this._dwst.connection.url}`].concat(protocol), 'system');
-    this._dwst.connection.close();
+    this._dwst.ui.terminal.mlog([`Closing connection to ${this._dwst.model.connection.url}`].concat(protocol), 'system');
+    this._dwst.model.connection.close();
   }
 }
 

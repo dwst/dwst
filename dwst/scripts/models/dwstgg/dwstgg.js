@@ -12,7 +12,8 @@
 
 */
 
-import {UnknownCommand, UnknownHelpPage} from '../errors.js';
+import errors from '../../lib/errors.js';
+const {UnknownCommand, UnknownHelpPage} = errors;
 
 import chromePage from './chrome.js';
 import commandsPage from './commands.js';
@@ -84,14 +85,14 @@ export default class Dwstgg {
       return introductionPage();
     }
     if (section === '#commands') {
-      const commands = [...this._dwst.commands.keys()];
+      const commands = this._dwst.plugins.getNames();
       return commandsPage(commands);
     }
     throw new UnknownHelpPage(section);
   }
 
   _commandHelp(command) {
-    const plugin = this._dwst.commands.get(command);
+    const plugin = this._dwst.plugins.getPlugin(command);
     if (typeof plugin === 'undefined') {
       throw new UnknownCommand(command);
     }

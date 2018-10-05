@@ -41,14 +41,13 @@ export default class Loadtext {
   }
 
   _run(variable = 'default', encoding) {
-    const that = this;
     this._dwst.ui.fileInput.read(file => {
       const reader = new FileReader();
-      reader.onload = function (evt) {
+      reader.addEventListener('load', evt => {
         const text = evt.target.result;
-        that._dwst.texts.set(variable, text);
-        that._dwst.ui.terminal.log(`Text file ${file.name} (${text.length}B) loaded to "${variable}"`, 'system');
-      };
+        this._dwst.model.texts.set(variable, text);
+        this._dwst.ui.terminal.log(`Text file ${file.name} (${text.length}B) loaded to "${variable}"`, 'system');
+      });
       reader.readAsText(file, encoding);
     });
   }
