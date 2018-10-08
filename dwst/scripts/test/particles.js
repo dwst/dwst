@@ -13,7 +13,8 @@
 
 */
 
-import {parseParticles, escapeForParticles, InvalidParticles} from '../particles.js';
+import {InvalidParticles} from '../errors.js';
+import {parseParticles, escapeForParticles} from '../particles.js';
 import {expect} from 'chai';
 
 describe('particles module', () => {

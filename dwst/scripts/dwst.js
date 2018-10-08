@@ -15,6 +15,7 @@
 
 import config from './config.js';
 
+import {errorHandler, SocketError, UnknownCommand, DwstError} from './errors.js';
 import HistoryManager from './history_manager.js';
 import Dwstgg from './dwstgg/dwstgg.js';
 
@@ -114,7 +115,7 @@ const controller = {
   },
 
   onError: () => {
-    pluginInterface.ui.terminal.log('WebSocket error.', 'error');
+    throw new SocketError();
   },
 
   onSendWhileConnecting: verb => {
@@ -172,17 +173,7 @@ function run(command) {
 
   const plugin = pluginInterface.commands.get(pluginName);
   if (typeof plugin === 'undefined') {
-    const errorMessage = `invalid command: ${pluginName}`;
-    const helpTip = [
-      'type ',
-      {
-        type: 'command',
-        text: '/help',
-      },
-      ' to list available commands',
-    ];
-    pluginInterface.ui.terminal.mlog([errorMessage, helpTip], 'error');
-    return;
+    throw new UnknownCommand(pluginName);
   }
   plugin.run(paramString);
 }
@@ -226,6 +217,12 @@ function onLoad() {
 
 document.addEventListener('DOMContentLoaded', init);
 window.addEventListener('load', onLoad);
+window.addEventListener('error', evt => {
+  if (evt.error instanceof DwstError) {
+    evt.preventDefault();
+    errorHandler(pluginInterface, evt.error);
+  }
+});
 
 // plugin interface developer access for live debugging
 if (typeof window === 'object') {

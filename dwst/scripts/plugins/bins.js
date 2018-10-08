@@ -12,6 +12,8 @@
 
 */
 
+import {UnknownBinary} from '../errors.js';
+
 export default class Bins {
 
   constructor(dwst) {
@@ -46,16 +48,7 @@ export default class Bins {
         this._dwst.ui.terminal.blog(buffer, 'system');
         return;
       }
-      const listTip = [
-        'List available binaries by typing ',
-        {
-          type: 'command',
-          text: '/bins',
-        },
-        '.',
-      ];
-      this._dwst.ui.terminal.mlog([`Binary "${variable}" does not exist.`, listTip], 'error');
-      return;
+      throw new UnknownBinary(variable);
     }
     const listing = [...this._dwst.bins.entries()].map(([name, buffer]) => {
       return `"${name}": <${buffer.byteLength}B of binary data>`;

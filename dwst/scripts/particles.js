@@ -16,6 +16,7 @@
 // DWST particles templating language
 
 import Parsee from './parsee.js';
+import {InvalidParticles} from './errors.js';
 import utils from './utils.js';
 
 const specialChars = [
@@ -29,8 +30,6 @@ const legalInstructionNameChars = (() => {
   const charCodes = utils.range(aCode, zCode + 1);
   return charCodes.map(charCode => String.fromCharCode(charCode));
 })();
-
-export class InvalidParticles extends Error { }
 
 function skipSpace(parsee) {
   while (parsee.read(' ')) {
