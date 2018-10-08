@@ -13,13 +13,22 @@
 
 */
 
-import config from './config.js';
+import config from './models/config.js';
+import History from './models/history.js';
+import Plugins from './models/plugins.js';
+import Dwstgg from './models/dwstgg/dwstgg.js';
 
-import {errorHandler, SocketError, UnknownCommand, DwstError} from './errors.js';
-import HistoryManager from './history_manager.js';
-import Dwstgg from './dwstgg/dwstgg.js';
+import errors from './lib/errors.js';
+import {DwstError} from './lib/errors.js'; // eslint-disable-line no-duplicate-imports
+import particles from './particles.js';
+import utils from './lib/utils.js';
 
 import Ui from './ui/ui.js';
+
+import LinkHandler from './controllers/links.js';
+import PromptHandler from './controllers/prompt.js';
+import SocketHandler from './controllers/socket.js';
+import ErrorHandler from './controllers/error.js';
 
 import Binary from './plugins/binary.js';
 import Bins from './plugins/bins.js';
@@ -37,112 +46,47 @@ import Spam from './plugins/spam.js';
 import Splash from './plugins/splash.js';
 import Texts from './plugins/texts.js';
 
-const controller = {
+function loadHistory() {
+  const HISTORY_KEY = 'history';
+  const response = localStorage.getItem(HISTORY_KEY);
+  const save = function (history) {
+    const saveState = JSON.stringify(history);
+    localStorage.setItem(HISTORY_KEY, saveState);
+  };
+  let history = [];
+  if (response !== null) {
+    history = JSON.parse(response);
+  }
+  return new History(history, {save});
+}
 
-  loud,
-  silent,
-  run,
+const dwst = Object.seal({
+  model: {},
+  controller: {},
+  lib: {},
+  plugins: null,
+  ui: null,
+});
 
-  onHelpLinkClick: command => {
-    loud(command);
-  },
+dwst.model.config = config;
+dwst.model.history = loadHistory();
+dwst.model.dwstgg = new Dwstgg(dwst);
+dwst.model.connection = null;
+dwst.model.bins = new Map();
+dwst.model.texts = new Map();
+dwst.model.intervalId = null;
+dwst.model.spam = null;
 
-  onCommandLinkClick: command => {
-    pluginInterface.historyManager.select(command);
-    loud(command);
-  },
+dwst.controller.link = new LinkHandler(dwst);
+dwst.controller.prompt = new PromptHandler(dwst);
+dwst.controller.socket = new SocketHandler(dwst);
+dwst.controller.error = new ErrorHandler(dwst);
 
-  onConnectionOpen: protocol => {
-    const selected = (() => {
-      if (protocol.length < 1) {
-        return [];
-      }
-      return [`Selected protocol: ${protocol}`];
-    })();
-    pluginInterface.ui.terminal.mlog(['Connection established.'].concat(selected), 'system');
-    pluginInterface.ui.menuButton.connected(true);
-  },
+dwst.lib.errors = errors;
+dwst.lib.utils = utils;
+dwst.lib.particles = particles;
 
-  onConnectionClose: (e, sessionLength) => {
-    const meanings = {
-      1000: 'Normal Closure',
-      1001: 'Going Away',
-      1002: 'Protocol error',
-      1003: 'Unsupported Data',
-      1005: 'No Status Rcvd',
-      1006: 'Abnormal Closure',
-      1007: 'Invalid frame payload data',
-      1008: 'Policy Violation',
-      1009: 'Message Too Big',
-      1010: 'Mandatory Ext.',
-      1011: 'Internal Server Error',
-      1015: 'TLS handshake',
-    };
-    const code = (() => {
-      if (meanings.hasOwnProperty(e.code)) {
-        return `${e.code} (${meanings[e.code]})`;
-      }
-      return `${e.code}`;
-    })();
-    const reason = (() => {
-      if (e.reason.length < 1) {
-        return [];
-      }
-      return [`Close reason: ${e.reason}`];
-    })();
-    const sessionLengthString = (() => {
-      if (sessionLength === null) {
-        return [];
-      }
-      return [`Session length: ${sessionLength}ms`];
-    })();
-    pluginInterface.ui.terminal.mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
-    pluginInterface.connection = null;
-    pluginInterface.ui.menuButton.connected(false);
-  },
-
-  onMessage: msg => {
-    if (typeof msg === 'string') {
-      pluginInterface.ui.terminal.log(msg, 'received');
-    } else {
-      const fr = new FileReader();
-      fr.onload = function (e) {
-        const buffer = e.target.result;
-        pluginInterface.ui.terminal.blog(buffer, 'received');
-      };
-      fr.readAsArrayBuffer(msg);
-    }
-  },
-
-  onError: () => {
-    throw new SocketError();
-  },
-
-  onSendWhileConnecting: verb => {
-    pluginInterface.ui.terminal.log(`Attempting to send data while ${verb}`, 'warning');
-  },
-
-};
-
-const pluginInterface = {
-
-  VERSION: config.appVersion,
-  ECHO_SERVER_URL: config.echoServer,
-
-  controller,
-  historyManager: null,
-  connection: null,
-  commands: null,
-  bins: new Map(),
-  texts: new Map(),
-  intervalId: null,
-
-};
-
-pluginInterface.dwstgg = new Dwstgg(pluginInterface);
-
-
-const plugins = [
+dwst.plugins = new Plugins(dwst, [
   Binary,
   Bins,
   Clear,
@@ -158,73 +102,26 @@ const plugins = [
   Spam,
   Splash,
   Texts,
-];
-pluginInterface.commands = new Map();
-for (const Constructor of plugins) {
-  const plugin = new Constructor(pluginInterface);
-  for (const command of plugin.commands()) {
-    pluginInterface.commands.set(command, plugin);
-  }
-}
+]);
 
-function run(command) {
-  const [pluginName, ...params] = command.split(' ');
-  const paramString = params.join(' ');
+document.addEventListener('DOMContentLoaded', () => {
+  dwst.ui = new Ui(document, dwst);
+  dwst.ui.init();
+});
 
-  const plugin = pluginInterface.commands.get(pluginName);
-  if (typeof plugin === 'undefined') {
-    throw new UnknownCommand(pluginName);
-  }
-  plugin.run(paramString);
-}
-
-function silent(line) {
-  const noslash = line.substring(1);
-  run(noslash);
-}
-
-function loud(line) {
-  pluginInterface.ui.terminal.log(line, 'command');
-  silent(line);
-}
-
-function loadSaves() {
-  const HISTORY_KEY = 'history';
-  const response = localStorage.getItem(HISTORY_KEY);
-  const save = function (history) {
-    const saveState = JSON.stringify(history);
-    localStorage.setItem(HISTORY_KEY, saveState);
-  };
-  let history = [];
-  if (response !== null) {
-    history = JSON.parse(response);
-  }
-  pluginInterface.historyManager = new HistoryManager(history, {save});
-}
-
-function init() {
-  loadSaves();
-  pluginInterface.ui = new Ui(document, pluginInterface);
-  pluginInterface.ui.init();
-}
-
-function onLoad() {
-  pluginInterface.ui.onLoad();
+window.addEventListener('load', () => {
+  dwst.ui.onLoad();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service_worker.js');
   }
-}
+});
 
-document.addEventListener('DOMContentLoaded', init);
-window.addEventListener('load', onLoad);
 window.addEventListener('error', evt => {
   if (evt.error instanceof DwstError) {
     evt.preventDefault();
-    errorHandler(pluginInterface, evt.error);
+    dwst.controller.error.onDwstError(evt.error);
   }
 });
 
-// plugin interface developer access for live debugging
-if (typeof window === 'object') {
-  window._dwst = pluginInterface;
-}
+// for live debugging
+window._dwst = dwst;

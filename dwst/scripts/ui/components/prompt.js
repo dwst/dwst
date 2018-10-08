@@ -13,7 +13,8 @@
 
 */
 
-import {escapeForParticles} from '../../particles.js';
+import particles from '../../particles.js';
+const {escapeForParticles} = particles;
 
 export default class Prompt {
 
@@ -42,7 +43,7 @@ export default class Prompt {
   send() {
     const raw = this._element.value;
     this._element.value = '';
-    this._dwst.historyManager.select(raw);
+    this._dwst.model.history.select(raw);
     if (raw === '/idkfa') {
       this._enableDebugger();
       return;
@@ -52,36 +53,36 @@ export default class Prompt {
       return;
     }
     if (raw[0] === '/') {
-      this._dwst.controller.loud(raw);
+      this._dwst.controller.prompt.loud(raw);
       return;
     }
     const text = escapeForParticles(raw);
     const command = `/send ${text}`;
-    this._dwst.controller.loud(command);
+    this._dwst.controller.prompt.loud(command);
   }
 
   _keyHandler(event) {
     if (event.keyCode === 13) {
       this.send();
     } else if (event.keyCode === 38) { // up
-      this._element.value = this._dwst.historyManager.getPrevious(this._element.value);
+      this._element.value = this._dwst.model.history.getPrevious(this._element.value);
       return;
     } else if (event.keyCode === 40) { // down
-      this._element.value = this._dwst.historyManager.getNext(this._element.value);
+      this._element.value = this._dwst.model.history.getNext(this._element.value);
       return;
     }
   }
 
   offerConnect() {
     if (this._element.value === '') {
-      const connects = this._dwst.historyManager.getConnectCommands(1);
+      const connects = this._dwst.model.history.getConnectCommands(1);
       if (connects.length < 1) {
-        this._element.value = `/connect ${this._dwst.ECHO_SERVER_URL}`;
+        this._element.value = `/connect ${this._dwst.model.config.echoServer}`;
       } else {
         this._element.value = connects[0];
       }
     } else {
-      this._dwst.historyManager.select(this._element.value);
+      this._dwst.model.history.select(this._element.value);
       this._element.value = '';
     }
     this._element.focus();

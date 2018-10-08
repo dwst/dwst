@@ -12,9 +12,10 @@
 
 */
 
-import {errorHandler, DwstError, NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownText, UnknownBinary} from '../errors.js';
-
 import {expect} from 'chai';
+
+import errors from '../errors.js';
+import {DwstError} from '../errors.js';  // eslint-disable-line no-duplicate-imports
 
 describe('errors module', () => {
   describe('DwstError super class', () => {
@@ -30,7 +31,7 @@ describe('errors module', () => {
     });
   });
   describe('NoConnection error', () => {
-    const error = new NoConnection('hello world');
+    const error = new errors.NoConnection('hello world');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -41,25 +42,25 @@ describe('errors module', () => {
     });
   });
   describe('AlreadyConnected error', () => {
-    const error = new AlreadyConnected();
+    const error = new errors.AlreadyConnected();
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
   });
   describe('SocketError error', () => {
-    const error = new SocketError();
+    const error = new errors.SocketError();
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
   });
   describe('InvalidParticles error', () => {
-    const error = new InvalidParticles();
+    const error = new errors.InvalidParticles();
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
   });
   describe('InvalidArgument error', () => {
-    const error = new InvalidArgument('forget', ['you still have stuff in your history']);
+    const error = new errors.InvalidArgument('forget', ['you still have stuff in your history']);
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -71,7 +72,7 @@ describe('errors module', () => {
     });
   });
   describe('InvalidCombination error', () => {
-    const error = new InvalidCombination('spam', ['send', 'binary']);
+    const error = new errors.InvalidCombination('spam', ['send', 'binary']);
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -83,7 +84,7 @@ describe('errors module', () => {
     });
   });
   describe('UnkownCommand error', () => {
-    const error = new UnknownCommand('foo');
+    const error = new errors.UnknownCommand('foo');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -94,7 +95,7 @@ describe('errors module', () => {
     });
   });
   describe('UnknownInstruction error', () => {
-    const error = new UnknownInstruction('foo', 'send');
+    const error = new errors.UnknownInstruction('foo', 'send');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -106,7 +107,7 @@ describe('errors module', () => {
     });
   });
   describe('UnknownHelpPage error', () => {
-    const error = new UnknownHelpPage('foo');
+    const error = new errors.UnknownHelpPage('foo');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -117,7 +118,7 @@ describe('errors module', () => {
     });
   });
   describe(' UnkownText error', () => {
-    const error = new UnknownText('foo');
+    const error = new errors.UnknownText('foo');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -128,7 +129,7 @@ describe('errors module', () => {
     });
   });
   describe(' UnkownBinary error', () => {
-    const error = new UnknownBinary('foo');
+    const error = new errors.UnknownBinary('foo');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
@@ -136,55 +137,6 @@ describe('errors module', () => {
       expect(error).to.include({
         variable: 'foo',
       });
-    });
-  });
-  describe('errorHandler function', () => {
-
-    class TerminalSimulator {
-
-      constructor() {
-        this.mlogCalled = false;
-        this.mlogs = [];
-        this.mlogTypes = [];
-      }
-
-      mlog(input, type) {
-        this.mlogCalled = true;
-        this.mlogs.push(input);
-        this.mlogTypes.push(type);
-      }
-    }
-
-    let fakedwst;
-
-    beforeEach(() => {
-      fakedwst = {
-        ui: {
-          terminal: new TerminalSimulator(),
-        },
-      };
-    });
-
-    it('should throw an error for unrecognized errors', () => {
-      class UnexpectedDwstError extends DwstError {}
-      expect(() => {
-        errorHandler(fakedwst, new UnexpectedDwstError());
-      }).to.throw(Error).that.does.include({
-        message: 'missing error handler for UnexpectedDwstError',
-      });
-      expect(fakedwst.ui.terminal.mlogCalled).to.be.false;
-      expect(fakedwst.ui.terminal.mlogs).to.deep.equal([]);
-      expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal([]);
-    });
-    it('should mlog InvalidParticles error', () => {
-      errorHandler(fakedwst, new InvalidParticles());
-      expect(fakedwst.ui.terminal.mlogCalled).to.be.true;
-      expect(fakedwst.ui.terminal.mlogs).to.deep.equal([
-        [
-          'Syntax error.',
-        ],
-      ]);
-      expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal(['error']);
     });
   });
 });

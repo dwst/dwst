@@ -12,9 +12,6 @@
 
 */
 
-import utils from '../utils.js';
-import {NoConnection, InvalidCombination} from '../errors.js';
-
 export default class Spam {
 
   constructor(dwst) {
@@ -43,7 +40,7 @@ export default class Spam {
   }
 
   _run(timesStr, ...commandParts) {
-    const times = utils.parseNum(timesStr);
+    const times = this._dwst.lib.utils.parseNum(timesStr);
     const [command, payload] = (() => {
       if (commandParts.length < 1) {
         return ['send', null];
@@ -51,7 +48,7 @@ export default class Spam {
       const firstPart = commandParts[0];
       const otherParts = commandParts.slice(1);
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
-        throw new InvalidCombination('spam', ['send', 'binary']);
+        throw new this._dwst.lib.errors.InvalidCombination('spam', ['send', 'binary']);
       }
       return [firstPart.slice(1), otherParts.join(' ')];
     })();
@@ -65,10 +62,10 @@ export default class Spam {
         }
         return payload;
       })();
-      if (this._dwst.connection === null || this._dwst.connection.isOpen() === false) {
-        throw new NoConnection(message);
+      if (this._dwst.model.connection === null || this._dwst.model.connection.isOpen() === false) {
+        throw new this._dwst.lib.errors.NoConnection(message);
       }
-      this._dwst.controller.run([command, message].join(' '));
+      this._dwst.controller.prompt.run([command, message].join(' '));
       const nextspam = () => {
         spam(limit, i + 1);
       };

@@ -12,8 +12,6 @@
 
 */
 
-import {InvalidArgument} from '../errors.js';
-
 export default class Forget {
 
   constructor(dwst) {
@@ -41,8 +39,8 @@ export default class Forget {
   }
 
   _removeHistory() {
-    this._dwst.historyManager.forget();
-    const historyLine = this._dwst.historyManager.getSummary().concat(['.']);
+    this._dwst.model.history.forget();
+    const historyLine = this._dwst.model.history.getSummary().concat(['.']);
     this._dwst.ui.terminal.mlog(['Successfully forgot stored history!', historyLine], 'system');
   }
 
@@ -51,8 +49,8 @@ export default class Forget {
       this._removeHistory();
       this._dwst.ui.terminal.log("You may wish to use your browser's cleaning features to remove tracking cookies and other remaining traces.", 'warning');
     } else {
-      const historyLine = this._dwst.historyManager.getSummary().concat(['.']);
-      throw new InvalidArgument(target, historyLine);
+      const historyLine = this._dwst.model.history.getSummary().concat(['.']);
+      throw new this._dwst.lib.errors.InvalidArgument(target, historyLine);
     }
   }
 

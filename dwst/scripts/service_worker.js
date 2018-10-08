@@ -1,4 +1,4 @@
-import config from './config.js';
+import config from './models/config.js';
 
 const VERSION = config.appVersion;
 

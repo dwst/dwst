@@ -12,10 +12,6 @@
 
 */
 
-import utils from '../utils.js';
-import {parseParticles} from '../particles.js';
-import {NoConnection, UnknownInstruction} from '../errors.js';
-
 export default class Send {
 
   constructor(dwst) {
@@ -63,7 +59,7 @@ export default class Send {
       };
       let num = 16;
       if (params.length === 1) {
-        num = utils.parseNum(params[0]);
+        num = this._dwst.lib.utils.parseNum(params[0]);
       }
       let str = '';
       for (let i = 0; i < num; i++) {
@@ -76,7 +72,7 @@ export default class Send {
       if (params.length === 1) {
         variable = params[0];
       }
-      return this._dwst.texts.get(variable);
+      return this._dwst.model.texts.get(variable);
     }
     if (instr === 'time') {
       return String(Math.round(new Date().getTime() / 1000));
@@ -85,11 +81,11 @@ export default class Send {
       let start = 32;
       let end = 126;
       if (params.length === 1) {
-        end = utils.parseNum(params[0]);
+        end = this._dwst.lib.utils.parseNum(params[0]);
       }
       if (params.length === 2) {
-        start = utils.parseNum(params[0]);
-        end = utils.parseNum(params[1]);
+        start = this._dwst.lib.utils.parseNum(params[0]);
+        end = this._dwst.lib.utils.parseNum(params[1]);
       }
       let str = '';
       for (let i = start; i <= end; i++) {
@@ -97,22 +93,23 @@ export default class Send {
       }
       return str;
     }
-    throw new UnknownInstruction(instr, 'send');
+    throw new this._dwst.lib.errors.UnknownInstruction(instr, 'send');
   }
 
   run(paramString) {
-    const parsed = parseParticles(paramString);
+    const parsed = this._dwst.lib.particles.parseParticles(paramString);
     const processed = parsed.map(particle => {
       const [instruction, ...args] = particle;
       return this._process(instruction, args);
     });
     const msg = processed.join('');
 
-    if (this._dwst.connection === null || this._dwst.connection.isClosing() || this._dwst.connection.isClosed()) {
-      throw new NoConnection(msg);
+    const connection = this._dwst.model.connection;
+    if (connection === null || connection.isClosing() || connection.isClosed()) {
+      throw new this._dwst.lib.errors.NoConnection(msg);
     }
     this._dwst.ui.terminal.log(msg, 'sent');
-    this._dwst.connection.send(msg);
+    this._dwst.model.connection.send(msg);
   }
 }
 

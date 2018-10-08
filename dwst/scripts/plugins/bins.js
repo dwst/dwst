@@ -12,8 +12,6 @@
 
 */
 
-import {UnknownBinary} from '../errors.js';
-
 export default class Bins {
 
   constructor(dwst) {
@@ -43,14 +41,14 @@ export default class Bins {
 
   _run(variable = null) {
     if (variable !== null) {
-      const buffer = this._dwst.bins.get(variable);
+      const buffer = this._dwst.model.bins.get(variable);
       if (typeof buffer !== 'undefined') {
         this._dwst.ui.terminal.blog(buffer, 'system');
         return;
       }
-      throw new UnknownBinary(variable);
+      throw new this._dwst.lib.errors.UnknownBinary(variable);
     }
-    const listing = [...this._dwst.bins.entries()].map(([name, buffer]) => {
+    const listing = [...this._dwst.model.bins.entries()].map(([name, buffer]) => {
       return `"${name}": <${buffer.byteLength}B of binary data>`;
     });
     const strs = ['Loaded binaries:'].concat(listing);
