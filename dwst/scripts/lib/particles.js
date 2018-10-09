@@ -15,10 +15,10 @@
 
 // DWST particles templating language
 
-import Parsee from './parsee.js';
-import errors from './lib/errors.js';
+import Parsee from './_parsee.js';
+import errors from './errors.js';
 const {InvalidParticles} = errors;
-import utils from './lib/utils.js';
+import utils from './utils.js';
 
 const specialChars = [
   '$',

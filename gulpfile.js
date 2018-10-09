@@ -73,7 +73,7 @@ const sourcePaths = {
   scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
   swEntry: path.join(sourceDirs.scripts, 'service_worker.js'),
   styleguideFavicon: path.join(sourceDirs.styles, 'favicon.ico'),
-  config: path.join(sourceDirs.scripts, 'models/config.js'),
+  config: path.join(sourceDirs.scripts, 'model/config.js'),
 };
 
 const VERSION = (function () {

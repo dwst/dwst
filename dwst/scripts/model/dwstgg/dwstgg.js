@@ -15,16 +15,16 @@
 import errors from '../../lib/errors.js';
 const {UnknownCommand, UnknownHelpPage} = errors;
 
-import chromePage from './chrome.js';
-import commandsPage from './commands.js';
-import developingPage from './developing.js';
-import developmentPage from './development.js';
-import firefoxPage from './firefox.js';
-import introductionPage from './introduction.js';
-import mainPage from './main.js';
-import privacyPage from './privacy.js';
-import styleguidePage from './styleguide.js';
-import unprotectedPage from './unprotected.js';
+import chromePage from './_chrome.js';
+import commandsPage from './_commands.js';
+import developingPage from './_developing.js';
+import developmentPage from './_development.js';
+import firefoxPage from './_firefox.js';
+import introductionPage from './_introduction.js';
+import mainPage from './_main.js';
+import privacyPage from './_privacy.js';
+import styleguidePage from './_styleguide.js';
+import unprotectedPage from './_unprotected.js';
 
 function createBreadCrumbs(section = null) {
   const root = [
