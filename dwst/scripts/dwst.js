@@ -13,22 +13,13 @@
 
 */
 
-import config from './models/config.js';
-import History from './models/history.js';
-import Plugins from './models/plugins.js';
-import Dwstgg from './models/dwstgg/dwstgg.js';
-
-import errors from './lib/errors.js';
-import {DwstError} from './lib/errors.js'; // eslint-disable-line no-duplicate-imports
-import particles from './particles.js';
-import utils from './lib/utils.js';
-
+import lib from './lib/lib.js';
+import Model from './model/model.js';
 import Ui from './ui/ui.js';
+import Controller from './controller/controller.js';
+import Plugins from './model/plugins.js';
 
-import LinkHandler from './controllers/links.js';
-import PromptHandler from './controllers/prompt.js';
-import SocketHandler from './controllers/socket.js';
-import ErrorHandler from './controllers/error.js';
+import {DwstError} from './lib/errors.js'; // eslint-disable-line no-duplicate-imports
 
 import Binary from './plugins/binary.js';
 import Bins from './plugins/bins.js';
@@ -46,7 +37,7 @@ import Spam from './plugins/spam.js';
 import Splash from './plugins/splash.js';
 import Texts from './plugins/texts.js';
 
-function loadHistory() {
+function loadModel(dwst) {
   const HISTORY_KEY = 'history';
   const response = localStorage.getItem(HISTORY_KEY);
   const save = function (history) {
@@ -57,34 +48,20 @@ function loadHistory() {
   if (response !== null) {
     history = JSON.parse(response);
   }
-  return new History(history, {save});
+  return new Model(dwst, history, save);
 }
 
 const dwst = Object.seal({
-  model: {},
-  controller: {},
-  lib: {},
-  plugins: null,
+  lib,
+  model: null,
   ui: null,
+  controller: null,
+  plugins: null,
 });
 
-dwst.model.config = config;
-dwst.model.history = loadHistory();
-dwst.model.dwstgg = new Dwstgg(dwst);
-dwst.model.connection = null;
-dwst.model.bins = new Map();
-dwst.model.texts = new Map();
-dwst.model.intervalId = null;
-dwst.model.spam = null;
+dwst.model = loadModel(dwst);
 
-dwst.controller.link = new LinkHandler(dwst);
-dwst.controller.prompt = new PromptHandler(dwst);
-dwst.controller.socket = new SocketHandler(dwst);
-dwst.controller.error = new ErrorHandler(dwst);
-
-dwst.lib.errors = errors;
-dwst.lib.utils = utils;
-dwst.lib.particles = particles;
+dwst.controller = new Controller(dwst);
 
 dwst.plugins = new Plugins(dwst, [
   Binary,

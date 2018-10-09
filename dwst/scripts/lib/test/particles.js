@@ -14,7 +14,7 @@
 */
 
 import {expect} from 'chai';
-import errors from '../lib/errors.js';
+import errors from '../errors.js';
 const {InvalidParticles} = errors;
 import particles from '../particles.js';
 
