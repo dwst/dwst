@@ -25,10 +25,17 @@ const specialChars = [
   '\\',
 ];
 
-const legalInstructionNameChars = (() => {
+const alphaChars = (() => {
   const aCode = 'a'.charCodeAt(0);
   const zCode = 'z'.charCodeAt(0);
   const charCodes = utils.range(aCode, zCode + 1);
+  return charCodes.map(charCode => String.fromCharCode(charCode));
+})();
+
+const digitChars = (() => {
+  const zeroCode = '0'.charCodeAt(0);
+  const nineCode = '9'.charCodeAt(0);
+  const charCodes = utils.range(zeroCode, nineCode + 1);
   return charCodes.map(charCode => String.fromCharCode(charCode));
 })();
 
@@ -113,7 +120,7 @@ function skipArgListClose(parsee) {
 }
 
 function readInstructionName(parsee) {
-  const instructionName = parsee.readWhile(legalInstructionNameChars);
+  const instructionName = parsee.readWhile(alphaChars);
   if (instructionName.length === 0) {
     const msg = `broken named particle: missing instruction name, remainder = ${parsee}`;
     throw new InvalidParticles(msg);
@@ -126,7 +133,7 @@ function readInstructionName(parsee) {
 }
 
 function readInstructionArg(parsee) {
-  const arg = parsee.readUntil([' ', ',', ')']);
+  const arg = parsee.readWhile(alphaChars.concat(digitChars));
   if (arg.length === 0) {
     const msg = `broken particle argument: missing argument, remainder = ${parsee}`;
     throw new InvalidParticles(msg);

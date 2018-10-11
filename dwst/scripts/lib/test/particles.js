@@ -210,6 +210,7 @@ describe('particles module', () => {
         '${foo(,456)}',
         '${foo}',
         '${foo(}',
+        '${foo(})}',
         '${foo(123',
         '${foo(123,',
         '${foo(123,456',
