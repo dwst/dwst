@@ -14,6 +14,18 @@
 import errors from '../lib/errors.js';
 const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownText, UnknownBinary} = errors;
 
+function commaCommaOr(stringList) {
+  if (stringList.length === 0) {
+    return '';
+  }
+  if (stringList.length === 1) {
+    return stringList[0];
+  }
+  const last = stringList[stringList.length - 1];
+  const listExcludingLast = stringList.slice(0, stringList.length - 1);
+  const upToSecondLastJoined = listExcludingLast.join(', ');
+  return `${upToSecondLastJoined} or ${last}`;
+}
 
 export default class ErrorHandler {
 
@@ -52,33 +64,13 @@ export default class ErrorHandler {
     }
     if (error instanceof InvalidParticles) {
       const padding = ' '.repeat(error.errorPosition);
-      const expected = (textOrPatterns => {
-        if (typeof textOrPatterns === 'object') {
-          const patterns = textOrPatterns;
-          const quotedPattern = patterns.map(pattern => {
-            return `'${pattern}'`;
-          });
-          if (quotedPattern.length > 1) {
-            const last = quotedPattern[quotedPattern.length - 1];
-            const patternUpToSecondLast = quotedPattern.slice(0, quotedPattern.length - 1);
-            const upToSecondLastJoined = patternUpToSecondLast.join(', ');
-            const quotedPatternString = `${upToSecondLastJoined} or ${last}`;
-            return quotedPatternString;
-          }
-          return quotedPattern[0];
-        }
-        if (typeof textOrPattern === 'string') {
-          const text = textOrPatterns;
-          return text;
-        }
-        return textOrPatterns;
-      })(error.expected);
+      const expected = commaCommaOr(error.expected);
       const got = error.remainder.charAt(0);
       return [
         'Invalid template.',
         error.expression,
         `${padding}^`,
-        `Expected ${expected}, but got '${got}' instead.`,
+        `Expected ${expected}, but got "${got}" instead.`,
       ];
     }
     if (error instanceof InvalidArgument) {

@@ -206,7 +206,7 @@ describe('particles module', () => {
         return parseParticles('$');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '$',
-        expected: ['{'],
+        expected: ['"{"'],
         remainder: '',
         errorPosition: '$'.length,
       });
@@ -216,7 +216,7 @@ describe('particles module', () => {
         return parseParticles('$ {foo()}');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '$ {foo()}',
-        expected: ['{'],
+        expected: ['"{"'],
         remainder: ' {foo()}',
         errorPosition: '$'.length,
       });
@@ -226,7 +226,7 @@ describe('particles module', () => {
         return parseParticles('$foo()');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '$foo()',
-        expected: ['{'],
+        expected: ['"{"'],
         remainder: 'foo()',
         errorPosition: '$'.length,
       });
@@ -234,9 +234,9 @@ describe('particles module', () => {
     it('should throw InvalidParticles for missing argument after a comma', () => {
       expect(() => {
         return parseParticles('${foo(123,)}');
-      }).to.throw(InvalidParticles).that.does.include({
+      }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(123,)}',
-        expected: 'an argument',
+        expected: ['an argument'],
         remainder: ')}',
         errorPosition: '${foo(123,'.length,
       });
@@ -244,11 +244,31 @@ describe('particles module', () => {
     it('should throw InvalidParticles for missing first argument before a comma', () => {
       expect(() => {
         return parseParticles('${foo(,456)}');
-      }).to.throw(InvalidParticles).that.does.include({
+      }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(,456)}',
-        expected: 'an argument',
+        expected: ['an argument', '")"'],
         remainder: ',456)}',
         errorPosition: '${foo('.length,
+      });
+    });
+    it('should throw InvalidParticles for missing comma', () => {
+      expect(() => {
+        return parseParticles('${foo(123 456)}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo(123 456)}',
+        expected: ['","', '")"'],
+        remainder: '456)}',
+        errorPosition: '${foo(123 '.length,
+      });
+    });
+    it('should throw InvalidParticles for missing comma', () => {
+      expect(() => {
+        return parseParticles('${foo(123 456)}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo(123 456)}',
+        expected: ['","', '")"'],
+        remainder: '456)}',
+        errorPosition: '${foo(123 '.length,
       });
     });
     it('should throw InvalidParticles for no argument list', () => {
@@ -256,7 +276,7 @@ describe('particles module', () => {
         return parseParticles('${foo}');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo}',
-        expected: ['('],
+        expected: ['"("'],
         remainder: '}',
         errorPosition: '${foo'.length,
       });
@@ -264,9 +284,9 @@ describe('particles module', () => {
     it('should throw InvalidParticles for empty argument list missing close', () => {
       expect(() => {
         return parseParticles('${foo(}');
-      }).to.throw(InvalidParticles).that.does.include({
+      }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(}',
-        expected: 'an argument',
+        expected: ['an argument', '")"'],
         remainder: '}',
         errorPosition: '${foo('.length,
       });
@@ -274,9 +294,9 @@ describe('particles module', () => {
     it('should throw InvalidParticles for expression terminator as argument', () => {
       expect(() => {
         return parseParticles('${foo(})}');
-      }).to.throw(InvalidParticles).that.does.include({
+      }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(})}',
-        expected: 'an argument',
+        expected: ['an argument', '")"'],
         remainder: '})}',
         errorPosition: '${foo('.length,
       });
@@ -286,7 +306,7 @@ describe('particles module', () => {
         return parseParticles('${foo(123');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(123',
-        expected: [',', ')'],
+        expected: ['","', '")"'],
         remainder: '',
         errorPosition: '${foo(123'.length,
       });
@@ -294,9 +314,9 @@ describe('particles module', () => {
     it('should throw InvalidParticles for unterminated expression with populated argument list missing both argument after comma and argument list close', () => {
       expect(() => {
         return parseParticles('${foo(123,');
-      }).to.throw(InvalidParticles).that.does.include({
+      }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(123,',
-        expected: 'an argument',
+        expected: ['an argument'],
         remainder: '',
         errorPosition: '${foo(123,'.length,
       });
@@ -306,8 +326,18 @@ describe('particles module', () => {
         return parseParticles('${foo(123,456');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo(123,456',
-        expected: [',', ')'],
+        expected: ['","', '")"'],
         remainder: '',
+        errorPosition: '${foo(123,456'.length,
+      });
+    });
+    it('should throw InvalidParticles for terminated multivalue argument list expression missing argument list close', () => {
+      expect(() => {
+        return parseParticles('${foo(123,456}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo(123,456}',
+        expected: ['","', '")"'],
+        remainder: '}',
         errorPosition: '${foo(123,456'.length,
       });
     });
@@ -316,7 +346,7 @@ describe('particles module', () => {
         return parseParticles('${foo)}');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo)}',
-        expected: ['('],
+        expected: ['"("'],
         remainder: ')}',
         errorPosition: '${foo'.length,
       });
@@ -326,7 +356,7 @@ describe('particles module', () => {
         return parseParticles('${foo()');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo()',
-        expected: ['}'],
+        expected: ['"}"'],
         remainder: '',
         errorPosition: '${foo()'.length,
       });
@@ -336,7 +366,7 @@ describe('particles module', () => {
         return parseParticles('${foo}()}');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '${foo}()}',
-        expected: ['('],
+        expected: ['"("'],
         remainder: '}()}',
         errorPosition: '${foo'.length,
       });
@@ -346,7 +376,7 @@ describe('particles module', () => {
         return parseParticles('\\a');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '\\a',
-        expected: ['$', '\\', 'n', 'r'],
+        expected: ['"$"', '"\\"', '"n"', '"r"'],
         remainder: 'a',
         errorPosition: '\\'.length,
       });
@@ -356,7 +386,7 @@ describe('particles module', () => {
         return parseParticles('a\\');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: 'a\\',
-        expected: ['$', '\\', 'n', 'r'],
+        expected: ['"$"', '"\\"', '"n"', '"r"'],
         remainder: '',
         errorPosition: 'a\\'.length,
       });
