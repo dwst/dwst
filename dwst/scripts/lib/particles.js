@@ -110,7 +110,7 @@ function skipArgListOpen(parsee) {
 function skipArgListClose(parsee) {
   const argListClose = ')';
   if (parsee.read(argListClose) === false) {
-    throw new Error('unexpected return value');
+    throw new InvalidParticles([argListClose], String(parsee));
   }
 }
 
@@ -145,11 +145,9 @@ function readInstructionArgs(parsee) {
     const arg = readInstructionArg(parsee);
     instructionArgs.push(arg);
     skipSpace(parsee);
-    if (parsee.startsWith(')')) {
-      return instructionArgs;
-    }
+    // WAITING for tests
     if (parsee.read(',') === false) {
-      throw new InvalidParticles([','], String(parsee));
+      return instructionArgs;
     }
     skipSpace(parsee);
   }
