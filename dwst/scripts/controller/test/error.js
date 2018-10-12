@@ -63,11 +63,18 @@ describe('ErrorHandler class', () => {
       expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal([]);
     });
     it('should mlog InvalidParticles error', () => {
-      errorHandler.onDwstError(new InvalidParticles());
+      errorHandler.onDwstError(new InvalidParticles(...[
+        [')'],
+        '}quux',
+        'foo${bar(123, 456}quux',
+      ]));
       expect(fakedwst.ui.terminal.mlogCalled).to.be.true;
       expect(fakedwst.ui.terminal.mlogs).to.deep.equal([
         [
-          'Syntax error.',
+          'Invalid template.',
+          'foo${bar(123, 456}quux',
+          '                 ^',
+          'Expected \')\', but got \'}\' instead.',
         ],
       ]);
       expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal(['error']);

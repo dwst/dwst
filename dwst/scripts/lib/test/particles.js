@@ -2,7 +2,7 @@
 /**
 
   Authors: Toni Ruottu, Finland 2017-2018
-           Lauri Kaitala, Finland 2017
+           Lauri Kaitala, Finland 2017-2018
 
   This file is part of Dark WebSocket Terminal.
 
@@ -201,28 +201,164 @@ describe('particles module', () => {
         ['foo', '123', '456'],
       ]);
     });
-    it('should throw an exception for invalid particles', () => {
-      const invalidParticlesExamples = [
-        '$',
-        '$ {foo()}',
-        '$foo()',
-        '${foo(123,)}',
-        '${foo(,456)}',
-        '${foo}',
-        '${foo(}',
-        '${foo(})}',
-        '${foo(123',
-        '${foo(123,',
-        '${foo(123,456',
-        '${foo)}',
-        '${foo()',
-        '${foo}()}',
-        '\\a',
-      ];
-      invalidParticlesExamples.forEach(invalidExample => {
-        expect(() => {
-          return parseParticles(invalidExample);
-        }).to.throw(InvalidParticles);
+    it('should throw InvalidParticles for lone expression start', () => {
+      expect(() => {
+        return parseParticles('$');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '$',
+        expected: ['{'],
+        remainder: '',
+        errorPosition: '$'.length,
+      });
+    });
+    it('should throw InvalidParticles for space between expression start and expression open', () => {
+      expect(() => {
+        return parseParticles('$ {foo()}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '$ {foo()}',
+        expected: ['{'],
+        remainder: ' {foo()}',
+        errorPosition: '$'.length,
+      });
+    });
+    it('should throw InvalidParticles for missing expression open and close', () => {
+      expect(() => {
+        return parseParticles('$foo()');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '$foo()',
+        expected: ['{'],
+        remainder: 'foo()',
+        errorPosition: '$'.length,
+      });
+    });
+    it('should throw InvalidParticles for missing argument after a comma', () => {
+      expect(() => {
+        return parseParticles('${foo(123,)}');
+      }).to.throw(InvalidParticles).that.does.include({
+        expression: '${foo(123,)}',
+        expected: 'an argument',
+        remainder: ')}',
+        errorPosition: '${foo(123,'.length,
+      });
+    });
+    it('should throw InvalidParticles for missing first argument before a comma', () => {
+      expect(() => {
+        return parseParticles('${foo(,456)}');
+      }).to.throw(InvalidParticles).that.does.include({
+        expression: '${foo(,456)}',
+        expected: 'an argument',
+        remainder: ',456)}',
+        errorPosition: '${foo('.length,
+      });
+    });
+    it('should throw InvalidParticles for no argument list', () => {
+      expect(() => {
+        return parseParticles('${foo}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo}',
+        expected: ['('],
+        remainder: '}',
+        errorPosition: '${foo'.length,
+      });
+    });
+    it('should throw InvalidParticles for empty argument list missing close', () => {
+      expect(() => {
+        return parseParticles('${foo(}');
+      }).to.throw(InvalidParticles).that.does.include({
+        expression: '${foo(}',
+        expected: 'an argument',
+        remainder: '}',
+        errorPosition: '${foo('.length,
+      });
+    });
+    it('should throw InvalidParticles for expression terminator as argument', () => {
+      expect(() => {
+        return parseParticles('${foo(})}');
+      }).to.throw(InvalidParticles).that.does.include({
+        expression: '${foo(})}',
+        expected: 'an argument',
+        remainder: '})}',
+        errorPosition: '${foo('.length,
+      });
+    });
+    it('should throw InvalidParticles for unterminated expression with populated argument list missing it\'s close', () => {
+      expect(() => {
+        return parseParticles('${foo(123');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo(123',
+        expected: [',', ')'],
+        remainder: '',
+        errorPosition: '${foo(123'.length,
+      });
+    });
+    it('should throw InvalidParticles for unterminated expression with populated argument list missing both argument after comma and argument list close', () => {
+      expect(() => {
+        return parseParticles('${foo(123,');
+      }).to.throw(InvalidParticles).that.does.include({
+        expression: '${foo(123,',
+        expected: 'an argument',
+        remainder: '',
+        errorPosition: '${foo(123,'.length,
+      });
+    });
+    it('should throw InvalidParticles for unterminated expression with multivalue argument list missing it\'s close', () => {
+      expect(() => {
+        return parseParticles('${foo(123,456');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo(123,456',
+        expected: [',', ')'],
+        remainder: '',
+        errorPosition: '${foo(123,456'.length,
+      });
+    });
+    it('should throw InvalidParticles for missing argument list open', () => {
+      expect(() => {
+        return parseParticles('${foo)}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo)}',
+        expected: ['('],
+        remainder: ')}',
+        errorPosition: '${foo'.length,
+      });
+    });
+    it('should throw InvalidParticles for unterminated expression', () => {
+      expect(() => {
+        return parseParticles('${foo()');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo()',
+        expected: ['}'],
+        remainder: '',
+        errorPosition: '${foo()'.length,
+      });
+    });
+    it('should throw InvalidParticles for terminator character in instruction name', () => {
+      expect(() => {
+        return parseParticles('${foo}()}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo}()}',
+        expected: ['('],
+        remainder: '}()}',
+        errorPosition: '${foo'.length,
+      });
+    });
+    it('should throw InvalidParticles for escaped nonspecial character', () => {
+      expect(() => {
+        return parseParticles('\\a');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '\\a',
+        expected: ['$', '\\', 'n', 'r'],
+        remainder: 'a',
+        errorPosition: '\\'.length,
+      });
+    });
+    it('should throw InvalidParticles for escape at end of input', () => {
+      expect(() => {
+        return parseParticles('a\\');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: 'a\\',
+        expected: ['$', '\\', 'n', 'r'],
+        remainder: '',
+        errorPosition: 'a\\'.length,
       });
     });
   });

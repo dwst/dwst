@@ -2,7 +2,7 @@
 /**
 
   Authors: Toni Ruottu, Finland 2017-2018
-           Lauri Kaitala, Finland 2017
+           Lauri Kaitala, Finland 2017-2018
 
   This file is part of Dark WebSocket Terminal.
 
@@ -48,9 +48,8 @@ function skipSpace(parsee) {
 function extractEscapedChar(parsee) {
 
   if (parsee.length === 0) {
-    const msg = 'syntax error: looks like your last character is an escape. ';
     // TODO - what if it is the only character?
-    throw new InvalidParticles(msg);
+    throw new InvalidParticles(specialChars.concat(['n', 'r']), String(parsee));
   }
   if (parsee.read('n')) {
     return '\x0a';
@@ -63,8 +62,7 @@ function extractEscapedChar(parsee) {
       return specialChar;
     }
   }
-  const msg = 'syntax error: don\'t escape normal characters. ';
-  throw new InvalidParticles(msg);
+  throw new InvalidParticles(specialChars.concat(['n', 'r']), String(parsee));
 }
 
 function extractRegularChars(parsee) {
@@ -91,24 +89,21 @@ function readDefaultParticleContent(parsee) {
 function skipExpressionOpen(parsee) {
   const expressionOpen = '{';
   if (parsee.read(expressionOpen) === false) {
-    const msg = `expression needs to start with ${expressionOpen}`;
-    throw new InvalidParticles(msg);
+    throw new InvalidParticles([expressionOpen], String(parsee));
   }
 }
 
 function skipExpressionClose(parsee) {
   const expressionClose = '}';
   if (parsee.read(expressionClose) === false) {
-    const msg = `expression needs to end with ${expressionClose}`;
-    throw new InvalidParticles(msg);
+    throw new InvalidParticles([expressionClose], String(parsee));
   }
 }
 
 function skipArgListOpen(parsee) {
   const argListOpen = '(';
   if (parsee.read(argListOpen) === false) {
-    const msg = `missing ${argListOpen}`;
-    throw new InvalidParticles(msg);
+    throw new InvalidParticles([argListOpen], String(parsee));
   }
 }
 
@@ -122,25 +117,21 @@ function skipArgListClose(parsee) {
 function readInstructionName(parsee) {
   const instructionName = parsee.readWhile(alphaChars);
   if (instructionName.length === 0) {
-    const msg = `broken named particle: missing instruction name, remainder = ${parsee}`;
-    throw new InvalidParticles(msg);
+    throw new InvalidParticles('an instruction name', String(parsee));
   }
-  if (parsee.length === 0) {
-    const msg = `broken named particle: missing arg list open, remainder = ${parsee}`;
-    throw new InvalidParticles(msg);
+  if (parsee.startsWith('}') || parsee.length === 0) {
+    throw new InvalidParticles(['('], String(parsee));
   }
   return instructionName;
 }
 
 function readInstructionArg(parsee) {
   const arg = parsee.readWhile(alphaChars.concat(digitChars));
-  if (arg.length === 0) {
-    const msg = `broken particle argument: missing argument, remainder = ${parsee}`;
-    throw new InvalidParticles(msg);
+  if (parsee.startsWith('}') || arg.length === 0) {
+    throw new InvalidParticles('an argument', String(parsee));
   }
   if (parsee.length === 0) {
-    const msg = `Expected ' or ), remainder = ${parsee}`;
-    throw new InvalidParticles(msg);
+    throw new InvalidParticles([',', ')'], String(parsee));
   }
   return arg;
 }
@@ -158,8 +149,7 @@ function readInstructionArgs(parsee) {
       return instructionArgs;
     }
     if (parsee.read(',') === false) {
-      const msg = 'syntax error: garbage';
-      throw new InvalidParticles(msg);
+      throw new InvalidParticles([','], String(parsee));
     }
     skipSpace(parsee);
   }
@@ -198,7 +188,7 @@ function readParticle(parsee) {
   return readDefaultParticle(parsee);
 }
 
-function parseParticles(particleString) {
+function tryParseParticles(particleString) {
   const parsedParticles = [];
   const parsee = new Parsee(particleString);
   while (parsee.length > 0) {
@@ -206,6 +196,17 @@ function parseParticles(particleString) {
     parsedParticles.push(particle);
   }
   return parsedParticles;
+}
+
+function parseParticles(particleString) {
+  try {
+    return tryParseParticles(particleString);
+  } catch (e) {
+    if (e instanceof InvalidParticles) {
+      e.expression = particleString;
+    }
+    throw e;
+  }
 }
 
 function escapeForParticles(textString) {

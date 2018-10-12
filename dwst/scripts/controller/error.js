@@ -51,7 +51,35 @@ export default class ErrorHandler {
       return ['WebSocket error.'];
     }
     if (error instanceof InvalidParticles) {
-      return ['Syntax error.'];
+      const padding = ' '.repeat(error.errorPosition);
+      const expected = (textOrPatterns => {
+        if (typeof textOrPatterns === 'object') {
+          const patterns = textOrPatterns;
+          const quotedPattern = patterns.map(pattern => {
+            return `'${pattern}'`;
+          });
+          if (quotedPattern.length > 1) {
+            const last = quotedPattern[quotedPattern.length - 1];
+            const patternUpToSecondLast = quotedPattern.slice(0, quotedPattern.length - 1);
+            const upToSecondLastJoined = patternUpToSecondLast.join(', ');
+            const quotedPatternString = `${upToSecondLastJoined} or ${last}`;
+            return quotedPatternString;
+          }
+          return quotedPattern[0];
+        }
+        if (typeof textOrPattern === 'string') {
+          const text = textOrPatterns;
+          return text;
+        }
+        return textOrPatterns;
+      })(error.expected);
+      const got = error.remainder.charAt(0);
+      return [
+        'Invalid template.',
+        error.expression,
+        `${padding}^`,
+        `Expected ${expected}, but got '${got}' instead.`,
+      ];
     }
     if (error instanceof InvalidArgument) {
       return [`Invalid argument: ${error.argument}`, error.extraInfo];
