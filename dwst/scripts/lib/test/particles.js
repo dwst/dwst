@@ -251,6 +251,16 @@ describe('particles module', () => {
         errorPosition: '${foo('.length,
       });
     });
+    it('should throw InvalidParticles for missing comma', () => {
+      expect(() => {
+        return parseParticles('${foo(123 456)}');
+      }).to.throw(InvalidParticles).that.does.deep.include({
+        expression: '${foo(123 456)}',
+        expected: [','],
+        remainder: '456)}',
+        errorPosition: '${foo(123 '.length,
+      });
+    });
     it('should throw InvalidParticles for no argument list', () => {
       expect(() => {
         return parseParticles('${foo}');
