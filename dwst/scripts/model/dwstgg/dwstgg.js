@@ -24,6 +24,7 @@ import introductionPage from './_introduction.js';
 import mainPage from './_main.js';
 import privacyPage from './_privacy.js';
 import styleguidePage from './_styleguide.js';
+import simulatorPage from './_simulator.js';
 import unprotectedPage from './_unprotected.js';
 
 function createBreadCrumbs(section = null) {
@@ -74,6 +75,9 @@ export default class Dwstgg {
     }
     if (section === '#styleguide') {
       return styleguidePage();
+    }
+    if (section === '#simulator') {
+      return simulatorPage();
     }
     if (section === '#unprotected') {
       return unprotectedPage();
