@@ -29,11 +29,19 @@ export default function developingPage() {
       ' server',
     ],
     [
-      '- Explore the user interface ',
+      '- User interface ',
       {
         type: 'dwstgg',
         text: '#styleguide',
         section: '#styleguide',
+      },
+    ],
+    [
+      '- WebSocket server ',
+      {
+        type: 'dwstgg',
+        text: '#simulator',
+        section: '#simulator',
       },
     ],
   ];
