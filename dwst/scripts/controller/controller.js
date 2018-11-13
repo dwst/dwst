@@ -16,6 +16,7 @@ import LinkHandler from './link.js';
 import PromptHandler from './prompt.js';
 import SocketHandler from './socket.js';
 import ErrorHandler from './error.js';
+import PwaHandler from './pwa.js';
 
 export default class Controller {
 
@@ -24,5 +25,6 @@ export default class Controller {
     this.prompt = new PromptHandler(dwst);
     this.socket = new SocketHandler(dwst);
     this.error = new ErrorHandler(dwst);
+    this.pwa = new PwaHandler(dwst);
   }
 }
