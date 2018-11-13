@@ -16,7 +16,7 @@ const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArg
 
 function commaCommaOr(stringList) {
   if (stringList.length === 0) {
-    return '';
+    throw new Error('list has to have at least one item');
   }
   if (stringList.length === 1) {
     return stringList[0];
