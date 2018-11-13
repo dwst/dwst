@@ -64,7 +64,7 @@ describe('ErrorHandler class', () => {
     });
     it('should mlog InvalidParticles error', () => {
       errorHandler.onDwstError(new InvalidParticles(...[
-        [')'],
+        ['")"'],
         '}quux',
         'foo${bar(123, 456}quux',
       ]));
@@ -74,7 +74,7 @@ describe('ErrorHandler class', () => {
           'Invalid template.',
           'foo${bar(123, 456}quux',
           '                 ^',
-          'Expected \')\', but got \'}\' instead.',
+          'Expected ")", but got "}" instead.',
         ],
       ]);
       expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal(['error']);

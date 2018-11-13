@@ -39,6 +39,10 @@ const digitChars = (() => {
   return charCodes.map(charCode => String.fromCharCode(charCode));
 })();
 
+function quote(string) {
+  return `"${string}"`;
+}
+
 function skipSpace(parsee) {
   while (parsee.read(' ')) {
     // empty while on purpose
@@ -49,7 +53,7 @@ function extractEscapedChar(parsee) {
 
   if (parsee.length === 0) {
     // TODO - what if it is the only character?
-    throw new InvalidParticles(specialChars.concat(['n', 'r']), String(parsee));
+    throw new InvalidParticles(['$', '\\', 'n', 'r'].map(quote), String(parsee));
   }
   if (parsee.read('n')) {
     return '\x0a';
@@ -62,7 +66,7 @@ function extractEscapedChar(parsee) {
       return specialChar;
     }
   }
-  throw new InvalidParticles(specialChars.concat(['n', 'r']), String(parsee));
+  throw new InvalidParticles(['$', '\\', 'n', 'r'].map(quote), String(parsee));
 }
 
 function extractRegularChars(parsee) {
@@ -89,21 +93,21 @@ function readDefaultParticleContent(parsee) {
 function skipExpressionOpen(parsee) {
   const expressionOpen = '{';
   if (parsee.read(expressionOpen) === false) {
-    throw new InvalidParticles([expressionOpen], String(parsee));
+    throw new InvalidParticles([expressionOpen].map(quote), String(parsee));
   }
 }
 
 function skipExpressionClose(parsee) {
   const expressionClose = '}';
   if (parsee.read(expressionClose) === false) {
-    throw new InvalidParticles([expressionClose], String(parsee));
+    throw new InvalidParticles([expressionClose].map(quote), String(parsee));
   }
 }
 
 function skipArgListOpen(parsee) {
   const argListOpen = '(';
   if (parsee.read(argListOpen) === false) {
-    throw new InvalidParticles([argListOpen], String(parsee));
+    throw new InvalidParticles([argListOpen].map(quote), String(parsee));
   }
 }
 
@@ -117,21 +121,19 @@ function skipArgListClose(parsee) {
 function readInstructionName(parsee) {
   const instructionName = parsee.readWhile(alphaChars);
   if (instructionName.length === 0) {
-    throw new InvalidParticles('an instruction name', String(parsee));
+    throw new InvalidParticles(['an instruction name'], String(parsee));
   }
   if (parsee.startsWith('}') || parsee.length === 0) {
-    throw new InvalidParticles(['('], String(parsee));
+    throw new InvalidParticles(['('].map(quote), String(parsee));
   }
   return instructionName;
 }
 
 function readInstructionArg(parsee) {
   const arg = parsee.readWhile(alphaChars.concat(digitChars));
-  if (parsee.startsWith('}') || arg.length === 0) {
-    throw new InvalidParticles('an argument', String(parsee));
-  }
-  if (parsee.length === 0) {
-    throw new InvalidParticles([',', ')'], String(parsee));
+  if (arg.length === 0) {
+    const expected = ['an argument'];
+    throw new InvalidParticles(expected, String(parsee));
   }
   return arg;
 }
@@ -141,6 +143,11 @@ function readInstructionArgs(parsee) {
   if (parsee.startsWith(')')) {
     return instructionArgs;
   }
+  if (parsee.startsWithAny(alphaChars.concat(digitChars)) === false) {
+    const expected = ['an argument'].concat([')'].map(quote));
+    throw new InvalidParticles(expected, String(parsee));
+  }
+
   while (true) {  // eslint-disable-line
     const arg = readInstructionArg(parsee);
     instructionArgs.push(arg);
@@ -149,7 +156,7 @@ function readInstructionArgs(parsee) {
       return instructionArgs;
     }
     if (parsee.read(',') === false) {
-      throw new InvalidParticles([','], String(parsee));
+      throw new InvalidParticles([',', ')'].map(quote), String(parsee));
     }
     skipSpace(parsee);
   }
