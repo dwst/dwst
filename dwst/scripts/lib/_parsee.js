@@ -48,10 +48,6 @@ export default class Parsee {
     return this._remainder.startsWith(str);
   }
 
-  startsWithAny(list) {
-    return indexOfAny(this._remainder, list) === 0;
-  }
-
   read(str) {
     if (this._remainder.startsWith(str) === false) {
       return false;

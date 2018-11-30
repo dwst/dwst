@@ -39,6 +39,9 @@ const digitChars = (() => {
   return charCodes.map(charCode => String.fromCharCode(charCode));
 })();
 
+const instructionNameChars = alphaChars;
+const instructionArgChars = alphaChars.concat(digitChars);
+
 function quote(string) {
   return `"${string}"`;
 }
@@ -119,7 +122,7 @@ function skipArgListClose(parsee) {
 }
 
 function readInstructionName(parsee) {
-  const instructionName = parsee.readWhile(alphaChars);
+  const instructionName = parsee.readWhile(instructionNameChars);
   if (instructionName.length === 0) {
     throw new InvalidParticles(['an instruction name'], String(parsee));
   }
@@ -130,7 +133,7 @@ function readInstructionName(parsee) {
 }
 
 function readInstructionArg(parsee) {
-  const arg = parsee.readWhile(alphaChars.concat(digitChars));
+  const arg = parsee.readWhile(instructionArgChars);
   if (arg.length === 0) {
     const expected = ['an argument'];
     throw new InvalidParticles(expected, String(parsee));
@@ -143,7 +146,7 @@ function readInstructionArgs(parsee) {
   if (parsee.startsWith(')')) {
     return instructionArgs;
   }
-  if (parsee.startsWithAny(alphaChars.concat(digitChars)) === false) {
+  if (instructionArgChars.some(char => parsee.startsWith(char)) === false) {
     const expected = ['an argument'].concat([')'].map(quote));
     throw new InvalidParticles(expected, String(parsee));
   }
