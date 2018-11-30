@@ -31,6 +31,7 @@ import Help from './plugins/help.js';
 import Interval from './plugins/interval.js';
 import Loadbin from './plugins/loadbin.js';
 import Loadtext from './plugins/loadtext.js';
+import Pwa from './plugins/pwa.js';
 import Reset from './plugins/reset.js';
 import Send from './plugins/send.js';
 import Spam from './plugins/spam.js';
@@ -74,6 +75,7 @@ dwst.plugins = new Plugins(dwst, [
   Interval,
   Loadbin,
   Loadtext,
+  Pwa,
   Reset,
   Send,
   Spam,
@@ -99,6 +101,11 @@ window.addEventListener('error', evt => {
     dwst.controller.error.onDwstError(evt.error);
   }
 });
+
+window.addEventListener('beforeinstallprompt', evt => {
+  dwst.controller.pwa.beforeInstallPrompt(evt);
+});
+
 
 // for live debugging
 window._dwst = dwst;

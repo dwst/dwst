@@ -314,6 +314,7 @@ export default class Splash {
           helpReminder,
           [''],
           linkSection,
+          [''],
         ];
       }
       if (connectCommands.length > 0) {
@@ -327,6 +328,7 @@ export default class Splash {
           helpReminder,
           [''],
           linkSection,
+          [''],
         ];
       }
       return [
@@ -339,6 +341,7 @@ export default class Splash {
         helpReminder,
         [''],
         linkSection,
+        [''],
       ];
     })();
     this._dwst.ui.terminal.gfx(shape, colors);
