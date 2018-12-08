@@ -94,25 +94,40 @@ export default class ErrorHandler {
       ];
     }
     if (error instanceof UnknownCommand) {
-      const helpTip = [
-        'type ',
-        {
-          type: 'command',
-          text: '/help #commands',
-        },
-        ' to list available commands',
+      return [
+        [
+          'Unknown command ',
+          {
+            type: 'strong',
+            text: error.command,
+          },
+        ],
+        [
+          'Type ',
+          {
+            type: 'command',
+            text: '/help #commands',
+          },
+          ' to list available commands',
+        ],
       ];
-      return [`invalid command: ${error.command}`, helpTip];
     }
     if (error instanceof UnknownInstruction) {
       return [
         [
-          'Unknown helper function ',
+          'Unknown function ',
           {
             type: 'strong',
             text: error.instruction,
           },
-          '.',
+        ],
+        [
+          'Type ',
+          {
+            type: 'command',
+            text: '/help #functions',
+          },
+          ' to list available functions',
         ],
       ];
     }

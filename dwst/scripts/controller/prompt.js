@@ -24,17 +24,7 @@ export default class PromptHandler {
 
     const plugin = this._dwst.plugins.getPlugin(pluginName);
     if (plugin === null) {
-      const errorMessage = `invalid command: ${pluginName}`;
-      const helpTip = [
-        'type ',
-        {
-          type: 'command',
-          text: '/help',
-        },
-        ' to list available commands',
-      ];
-      this._dwst.ui.terminal.mlog([errorMessage, helpTip], 'error');
-      return;
+      throw new this._dwst.lib.errors.UnknownCommand(pluginName);
     }
     plugin.run(paramString);
   }
