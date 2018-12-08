@@ -67,10 +67,9 @@ class UnknownCommand extends DwstError {
 }
 
 class UnknownInstruction extends DwstError {
-  constructor(instruction, command) {
+  constructor(instruction) {
     super();
     this.instruction = instruction;
-    this.command = command;
   }
 }
 

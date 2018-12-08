@@ -33,11 +33,7 @@ export default class Send {
     return [
       '/send Hello world!',
       '/send multiline\\r\\nmessage',
-      '/send rpc(${random(5)})',
-      '/send ${text()}',
       '/send ["JSON","is","cool"]',
-      '/send ${time()}s since epoch',
-      '/send From a to z: ${range(97,122)}',
       '/s Available now with 60% less typing!',
     ];
   }
@@ -50,57 +46,23 @@ export default class Send {
     if (instr === 'default') {
       return params[0];
     }
-    if (instr === 'random') {
-      const randomchar = () => {
-        let out = Math.floor(Math.random() * (0xffff + 1));
-        out /= 2; // avoid risky characters
-        const char = String.fromCharCode(out);
-        return char;
-      };
-      let num = 16;
-      if (params.length === 1) {
-        num = this._dwst.lib.utils.parseNum(params[0]);
-      }
-      let str = '';
-      for (let i = 0; i < num; i++) {
-        str += randomchar();
-      }
-      return str;
+    const func = this._dwst.functions.getFunction(instr);
+    if (func === null) {
+      throw new this._dwst.lib.errors.UnknownInstruction(instr);
     }
-    if (instr === 'text') {
-      let variable = 'default';
-      if (params.length === 1) {
-        variable = params[0];
-      }
-      return this._dwst.model.texts.get(variable);
-    }
-    if (instr === 'time') {
-      return String(Math.round(new Date().getTime() / 1000));
-    }
-    if (instr === 'range') {
-      let start = 32;
-      let end = 126;
-      if (params.length === 1) {
-        end = this._dwst.lib.utils.parseNum(params[0]);
-      }
-      if (params.length === 2) {
-        start = this._dwst.lib.utils.parseNum(params[0]);
-        end = this._dwst.lib.utils.parseNum(params[1]);
-      }
-      let str = '';
-      for (let i = start; i <= end; i++) {
-        str += String.fromCharCode(i);
-      }
-      return str;
-    }
-    throw new this._dwst.lib.errors.UnknownInstruction(instr, 'send');
+    return func.run(params);
   }
 
   run(paramString) {
     const parsed = this._dwst.lib.particles.parseParticles(paramString);
     const processed = parsed.map(particle => {
       const [instruction, ...args] = particle;
-      return this._process(instruction, args);
+      const textOrBinary = this._process(instruction, args);
+      if (typeof textOrBinary === 'string') {
+        return textOrBinary;
+      }
+      const text = new TextDecoder('utf-8').decode(textOrBinary, {fatal: true});
+      return text;
     });
     const msg = processed.join('');
 

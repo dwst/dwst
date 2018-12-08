@@ -31,7 +31,7 @@ export default class Spam {
   examples() {
     return [
       '/spam 10',
-      '/spam 6 /binary ${random(10)}',
+      '/spam 6 /binary ${randomBytes(10)}',
     ];
   }
 

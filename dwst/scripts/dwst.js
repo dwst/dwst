@@ -18,6 +18,7 @@ import Model from './model/model.js';
 import Ui from './ui/ui.js';
 import Controller from './controller/controller.js';
 import Plugins from './model/plugins.js';
+import Functions from './model/functions.js';
 
 import {DwstError} from './lib/errors.js'; // eslint-disable-line no-duplicate-imports
 
@@ -37,6 +38,15 @@ import Send from './plugins/send.js';
 import Spam from './plugins/spam.js';
 import Splash from './plugins/splash.js';
 import Texts from './plugins/texts.js';
+
+import Bin from './functions/bin.js';
+import ByteRange from './functions/byte_range.js';
+import CharRange from './functions/char_range.js';
+import Hex from './functions/hex.js';
+import RandomBytes from './functions/random_bytes.js';
+import RandomChars from './functions/random_chars.js';
+import Text from './functions/text.js';
+import Time from './functions/time.js';
 
 function loadModel(dwst) {
   const HISTORY_KEY = 'history';
@@ -58,6 +68,7 @@ const dwst = Object.seal({
   ui: null,
   controller: null,
   plugins: null,
+  functions: null,
 });
 
 dwst.model = loadModel(dwst);
@@ -81,6 +92,17 @@ dwst.plugins = new Plugins(dwst, [
   Spam,
   Splash,
   Texts,
+]);
+
+dwst.functions = new Functions(dwst, [
+  Bin,
+  ByteRange,
+  CharRange,
+  Hex,
+  RandomBytes,
+  RandomChars,
+  Text,
+  Time,
 ]);
 
 document.addEventListener('DOMContentLoaded', () => {
