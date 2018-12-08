@@ -107,16 +107,10 @@ export default class ErrorHandler {
     if (error instanceof UnknownInstruction) {
       return [
         [
-          'No helper ',
+          'Unknown helper function ',
           {
             type: 'strong',
             text: error.instruction,
-          },
-          ' available for ',
-          {
-            type: 'dwstgg',
-            text: error.command,
-            section: error.command,
           },
           '.',
         ],

@@ -25,22 +25,20 @@ const specialChars = [
   '\\',
 ];
 
-const alphaChars = (() => {
-  const aCode = 'a'.charCodeAt(0);
-  const zCode = 'z'.charCodeAt(0);
-  const charCodes = utils.range(aCode, zCode + 1);
+function charCodeRange(start, end) {
+  const startCode = start.charCodeAt(0);
+  const endCode = end.charCodeAt(0);
+  const charCodes = utils.range(startCode, endCode + 1);
   return charCodes.map(charCode => String.fromCharCode(charCode));
-})();
+}
 
-const digitChars = (() => {
-  const zeroCode = '0'.charCodeAt(0);
-  const nineCode = '9'.charCodeAt(0);
-  const charCodes = utils.range(zeroCode, nineCode + 1);
-  return charCodes.map(charCode => String.fromCharCode(charCode));
-})();
+const digitChars = charCodeRange('0', '9');
+const smallChars = charCodeRange('a', 'z');
+const bigChars = charCodeRange('A', 'Z');
+const alphaChars = smallChars.concat(bigChars);
 
 const instructionNameChars = alphaChars;
-const instructionArgChars = alphaChars.concat(digitChars);
+const instructionArgChars = smallChars.concat(digitChars);
 
 function quote(string) {
   return `"${string}"`;

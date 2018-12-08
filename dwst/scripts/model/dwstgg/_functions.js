@@ -14,14 +14,15 @@
 
 import sectionList from './_section_list.js';
 
-export default function commandsPage(commands) {
+export default function functionsPage(functions) {
 
-  const listing = sectionList(commands);
+  const sections = functions.map(funcName => `${funcName}()`);
+  const listing = sectionList(sections);
 
   return ([
     {
       type: 'h1',
-      text: 'Alphabetical List of Commands',
+      text: 'Alphabetical List of Functions',
     },
     '',
   ]).concat(listing).concat([
@@ -29,7 +30,7 @@ export default function commandsPage(commands) {
       'Type ',
       {
         type: 'syntax',
-        text: '/help <command>',
+        text: '/help <function>',
       },
       ' for usage',
     ],

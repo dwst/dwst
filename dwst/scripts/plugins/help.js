@@ -41,13 +41,7 @@ export default class Help {
     return 'get help';
   }
 
-  _run(parameter = null) {
-    let section;
-    if (parameter === null) {
-      section = '#main';
-    } else {
-      section = parameter.toLowerCase();
-    }
+  _run(section = '#main') {
     this._dwst.ui.terminal.clearLog();
     const page = this._dwst.model.dwstgg.page(section);
     this._dwst.ui.terminal.mlog(page, 'system');

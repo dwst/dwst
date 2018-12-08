@@ -115,14 +115,13 @@ describe('errors module', () => {
     });
   });
   describe('UnknownInstruction error', () => {
-    const error = new errors.UnknownInstruction('foo', 'send');
+    const error = new errors.UnknownInstruction('foo');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
-    it('should store the unknown instruction and the commmand used', () => {
+    it('should store the unknown instruction', () => {
       expect(error).to.include({
         instruction: 'foo',
-        command: 'send',
       });
     });
   });

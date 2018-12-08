@@ -63,6 +63,14 @@ export default function mainPage() {
       },
     ],
     [
+      '- Alphabetical list of ',
+      {
+        type: 'dwstgg',
+        text: '#functions',
+        section: '#functions',
+      },
+    ],
+    [
       '- ',
       {
         type: 'dwstgg',

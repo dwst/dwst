@@ -14,14 +14,14 @@
 
 import rewire from 'rewire';
 import {expect} from 'chai';
-const binary = rewire('../binary.js');
+const hex = rewire('../hex.js');
 
-describe('binary plugin', () => {
+describe('hex function', () => {
   describe('hexpairtobyte helper function', () => {
     it('should convert hex pair to byte', () => {
-      expect(binary.__get__('hexpairtobyte')(['0', '0'])).to.equal(0);
-      expect(binary.__get__('hexpairtobyte')(['a', 'b'])).to.equal(171);
-      expect(binary.__get__('hexpairtobyte')(['f', 'f'])).to.equal(255);
+      expect(hex.__get__('hexpairtobyte')(['0', '0'])).to.equal(0);
+      expect(hex.__get__('hexpairtobyte')(['a', 'b'])).to.equal(171);
+      expect(hex.__get__('hexpairtobyte')(['f', 'f'])).to.equal(255);
     });
   });
 });
