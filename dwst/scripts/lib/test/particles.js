@@ -170,9 +170,15 @@ describe('particles module', () => {
         ['default', '\\${foo()}bar'],
       ]);
     });
-    it('should parse encoded line-endings', () => {
+    it('should parse encoded special characters', () => {
+      const nullTerminator = '\x00';
       const lineFeed = '\x0a';
       const carriageReturn = '\x0d';
+      expect(parseParticles(
+        '\\0',
+      )).to.deep.equal([
+        ['default', nullTerminator],
+      ]);
       expect(parseParticles(
         '\\n',
       )).to.deep.equal([
@@ -366,7 +372,7 @@ describe('particles module', () => {
         return parseParticles('\\a');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: '\\a',
-        expected: ['"$"', '"\\"', '"n"', '"r"'],
+        expected: ['"\\"', '"$"', '"n"', '"r"', '"0"'],
         remainder: 'a',
         errorPosition: '\\'.length,
       });
@@ -376,7 +382,7 @@ describe('particles module', () => {
         return parseParticles('a\\');
       }).to.throw(InvalidParticles).that.does.deep.include({
         expression: 'a\\',
-        expected: ['"$"', '"\\"', '"n"', '"r"'],
+        expected: ['"\\"', '"$"', '"n"', '"r"', '"0"'],
         remainder: '',
         errorPosition: 'a\\'.length,
       });
