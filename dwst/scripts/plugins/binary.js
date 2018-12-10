@@ -46,8 +46,9 @@ export default class Binary {
   examples() {
     return [
       '/binary Hello world!',
-      '/binary multiline\\r\\nmessage',
       '/binary ["JSON","is","cool"]',
+      '/binary multiline\\r\\nmessage',
+      '/binary null terminated string\\0one more\\0',
       '/b Available now with ~71.43% less typing!',
     ];
   }

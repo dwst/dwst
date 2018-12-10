@@ -32,8 +32,9 @@ export default class Send {
   examples() {
     return [
       '/send Hello world!',
-      '/send multiline\\r\\nmessage',
       '/send ["JSON","is","cool"]',
+      '/send multiline\\r\\nmessage',
+      '/send null terminated string\\0one more\\0',
       '/s Available now with 60% less typing!',
     ];
   }

@@ -51,23 +51,22 @@ function skipSpace(parsee) {
 }
 
 function extractEscapedChar(parsee) {
-
-  if (parsee.length === 0) {
-    // TODO - what if it is the only character?
-    throw new InvalidParticles(['$', '\\', 'n', 'r'].map(quote), String(parsee));
-  }
-  if (parsee.read('n')) {
-    return '\x0a';
-  }
-  if (parsee.read('r')) {
-    return '\x0d';
-  }
-  for (const specialChar of specialChars) {
-    if (parsee.read(specialChar)) {
-      return specialChar;
+  const mapping = [
+    ['\\', '\\'],
+    ['$', '$'],
+    ['n', '\x0a'],
+    ['r', '\x0d'],
+    ['0', '\x00'],
+  ];
+  if (parsee.length > 0) {
+    for (const [from, to] of mapping) {
+      if (parsee.read(from)) {
+        return to;
+      }
     }
   }
-  throw new InvalidParticles(['$', '\\', 'n', 'r'].map(quote), String(parsee));
+  const expected = mapping.map(pair => pair[0]);
+  throw new InvalidParticles(expected.map(quote), String(parsee));
 }
 
 function extractRegularChars(parsee) {
