@@ -110,6 +110,10 @@ describe('parsee module', () => {
         expect(parsee.readWhile(['b', 'c', 'd'])).to.equal('');
         expect(String(parsee)).to.equal('abc');
       });
+      it('should not exceed limit', () => {
+        expect(parsee.readWhile(['a', 'b'], 1)).to.equal('a');
+        expect(String(parsee)).to.equal('bc');
+      });
     });
   });
 });
