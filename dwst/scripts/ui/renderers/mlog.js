@@ -147,6 +147,13 @@ export default function renderMlog(lines, type, linkHandlers) {
           textSpan.innerHTML = safeText;
           return textSpan;
         }
+        if (segment.type === 'control') {
+          const textSpan = document.createElement('span');
+          textSpan.setAttribute('class', 'dwst-mlog__control');
+          textSpan.innerHTML = safeText;
+          textSpan.setAttribute('title', segment.title);
+          return textSpan;
+        }
         if (segment.type === 'strong') {
           const textSpan = document.createElement('span');
           textSpan.setAttribute('class', 'dwst-mlog__strong');

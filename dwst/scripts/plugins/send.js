@@ -75,7 +75,6 @@ export default class Send {
     if (connection === null || connection.isClosing() || connection.isClosed()) {
       throw new this._dwst.lib.errors.NoConnection(msg);
     }
-    this._dwst.ui.terminal.log(msg, 'sent');
     this._dwst.model.connection.send(msg);
   }
 }

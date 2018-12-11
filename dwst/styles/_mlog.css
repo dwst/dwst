@@ -31,6 +31,7 @@ help on a <span class="dwst-mlog__help-link-wrapper"><a class="dwst-mlog__help-l
 <a href="https://example.com/" target="_blank" rel="noopener" class="dwst-mlog__link">external link</a>
 <span class="dwst-mlog__syntax">/syntax [example]</span>
 <span class="dwst-mlog__code">code example</span>
+<span class="dwst-mlog__control" title="LINE FEED">(LF)</span>
 <span class="dwst-mlog__hexline"><span class="dwst-byte-grid"><span class="dwst-byte-grid__item">68 65 78 20</span><span class="dwst-byte-grid__item">hex </span><span class="dwst-byte-grid__item">65 78 61 6d</span><span class="dwst-byte-grid__item">exam</span><span class="dwst-byte-grid__item">70 6c 65</span><span class="dwst-byte-grid__item">ple </span><span class="dwst-byte-grid__item"></span><span class="dwst-byte-grid__item">    </span></span></span>
 forced linebreak (<br class="dwst-mlog__br">)
 empty row under a <span class="dwst-mlog__help-link-wrapper"><a class="dwst-mlog__help-link dwst-mlog__help-link--spacing" href="#" title="/help help">help</a></span> link
@@ -89,6 +90,13 @@ Styleguide 2.8
 .dwst-mlog__code {
   color: var(--dwst-color-pink);
 }
+.dwst-mlog__control {
+  color: var(--dwst-color-purple--light);
+  cursor: help;
+}
+.dwst-mlog__control:hover {
+  color: var(--dwst-color-pink);
+}
 .dwst-mlog__strong {
   color: var(--dwst-color-pink);
   font-weight: bold;
@@ -109,4 +117,7 @@ Styleguide 2.8
   text-indent: -2ch;
   margin-left: 2ch;
   display: inline-block;
+}
+.dwst-mlog__br {
+  user-select: none;
 }

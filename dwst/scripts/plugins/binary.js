@@ -90,7 +90,6 @@ export default class Binary {
     if (connection === null || connection.isClosing() || connection.isClosed()) {
       throw new this._dwst.lib.errors.NoConnection(msg);
     }
-    this._dwst.ui.terminal.blog(out, 'sent');
     this._dwst.model.connection.send(out);
   }
 }
