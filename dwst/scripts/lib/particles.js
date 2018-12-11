@@ -33,6 +33,7 @@ function charCodeRange(start, end) {
 }
 
 const digitChars = charCodeRange('0', '9');
+const hexChars = charCodeRange('a', 'f').concat(digitChars);
 const smallChars = charCodeRange('a', 'z');
 const bigChars = charCodeRange('A', 'Z');
 const alphaChars = smallChars.concat(bigChars);
@@ -50,6 +51,44 @@ function skipSpace(parsee) {
   }
 }
 
+function readHexSequence(parsee) {
+
+  const hexes = [];
+  if (parsee.read('{')) {
+    skipSpace(parsee);
+    while (parsee.length > 0 && parsee.startsWith('}') === false) {
+      const hex = parsee.readWhile(hexChars, 2);
+      if (hex.length < 1) {
+        throw new InvalidParticles(['hex digit'], String(parsee));
+      }
+      if (hex.length < 2) {
+        throw new InvalidParticles(['hex digit'], String(parsee));
+      }
+      hexes.push(hex);
+      skipSpace(parsee);
+    }
+    if (hexes.length === 0) {
+      throw new InvalidParticles(['hex digit'], String(parsee));
+    }
+    if (parsee.length === 0) {
+      throw new InvalidParticles(['hex digit', '"}"'], String(parsee));
+    }
+    parsee.read('}');
+  } else {
+    const hex = parsee.readWhile(hexChars, 2);
+    if (hex.length < 1) {
+      throw new InvalidParticles(['hex digit', '"{"'], String(parsee));
+    }
+    if (hex.length < 2) {
+      throw new InvalidParticles(['hex digit'], String(parsee));
+    }
+    hexes.push(hex);
+  }
+  const bytes = hexes.map(hex => parseInt(hex, 16));
+  const buffer = new Uint8Array(bytes);
+  return buffer;
+}
+
 function extractEscapedChar(parsee) {
   const mapping = [
     ['\\', '\\'],
@@ -57,7 +96,11 @@ function extractEscapedChar(parsee) {
     ['n', '\x0a'],
     ['r', '\x0d'],
     ['0', '\x00'],
+    ['x', null],
   ];
+  if (parsee.read('x')) {
+    return readHexSequence(parsee);
+  }
   if (parsee.length > 0) {
     for (const [from, to] of mapping) {
       if (parsee.read(from)) {
@@ -73,21 +116,11 @@ function extractRegularChars(parsee) {
   return parsee.readUntil(specialChars);
 }
 
-function readCharBlock(parsee) {
+function readDefaultParticleContent(parsee) {
   if (parsee.read('\\')) {
     return extractEscapedChar(parsee);
   }
   return extractRegularChars(parsee);
-}
-
-function readDefaultParticleContent(parsee) {
-  const charBlocks = [];
-  while (parsee.length > 0 && parsee.startsWith('$') === false) {
-    const charBlock = readCharBlock(parsee);
-    charBlocks.push(charBlock);
-  }
-  const content = charBlocks.join('');
-  return content;
 }
 
 function skipExpressionOpen(parsee) {

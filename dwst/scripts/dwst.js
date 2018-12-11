@@ -42,7 +42,6 @@ import Texts from './plugins/texts.js';
 import Bin from './functions/bin.js';
 import ByteRange from './functions/byte_range.js';
 import CharRange from './functions/char_range.js';
-import Hex from './functions/hex.js';
 import RandomBytes from './functions/random_bytes.js';
 import RandomChars from './functions/random_chars.js';
 import Text from './functions/text.js';
@@ -98,7 +97,6 @@ dwst.functions = new Functions(dwst, [
   Bin,
   ByteRange,
   CharRange,
-  Hex,
   RandomBytes,
   RandomChars,
   Text,
