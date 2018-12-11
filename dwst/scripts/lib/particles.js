@@ -53,40 +53,14 @@ function skipSpace(parsee) {
 
 function readHexSequence(parsee) {
 
-  const hexes = [];
-  if (parsee.read('{')) {
-    skipSpace(parsee);
-    while (parsee.length > 0 && parsee.startsWith('}') === false) {
-      const hex = parsee.readWhile(hexChars, 2);
-      if (hex.length < 1) {
-        throw new InvalidParticles(['hex digit'], String(parsee));
-      }
-      if (hex.length < 2) {
-        throw new InvalidParticles(['hex digit'], String(parsee));
-      }
-      hexes.push(hex);
-      skipSpace(parsee);
-    }
-    if (hexes.length === 0) {
-      throw new InvalidParticles(['hex digit'], String(parsee));
-    }
-    if (parsee.length === 0) {
-      throw new InvalidParticles(['hex digit', '"}"'], String(parsee));
-    }
-    parsee.read('}');
-  } else {
-    const hex = parsee.readWhile(hexChars, 2);
-    if (hex.length < 1) {
-      throw new InvalidParticles(['hex digit', '"{"'], String(parsee));
-    }
-    if (hex.length < 2) {
-      throw new InvalidParticles(['hex digit'], String(parsee));
-    }
-    hexes.push(hex);
+  const hex = parsee.readWhile(hexChars, 2);
+  if (hex.length < 2) {
+    throw new InvalidParticles(['hex digit'], String(parsee));
   }
-  const bytes = hexes.map(hex => parseInt(hex, 16));
+  const bytes = [parseInt(hex, 16)];
   const buffer = new Uint8Array(bytes);
   return buffer;
+
 }
 
 function readUnicodeSequence(parsee) {
