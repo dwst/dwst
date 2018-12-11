@@ -89,6 +89,35 @@ function readHexSequence(parsee) {
   return buffer;
 }
 
+function readUnicodeSequence(parsee) {
+
+  let hex;
+
+  if (parsee.read('{')) {
+    hex = parsee.readWhile(hexChars, 6);
+    if (hex.length < 1) {
+      throw new InvalidParticles(['hex digit'], String(parsee));
+    }
+    if (parsee.length === 0) {
+      throw new InvalidParticles(['hex digit', '"}"'], String(parsee));
+    }
+    if (parsee.read('}') === false) {
+      throw new InvalidParticles(['"}"'], String(parsee));
+    }
+  } else {
+    hex = parsee.readWhile(hexChars, 4);
+    if (hex.length < 1) {
+      throw new InvalidParticles(['hex digit', '"{"'], String(parsee));
+    }
+    if (hex.length < 4) {
+      throw new InvalidParticles(['hex digit'], String(parsee));
+    }
+  }
+  const charCode = parseInt(hex, 16);
+  const charValue = String.fromCodePoint(charCode);
+  return charValue;
+}
+
 function extractEscapedChar(parsee) {
   const mapping = [
     ['\\', '\\'],
@@ -97,9 +126,13 @@ function extractEscapedChar(parsee) {
     ['r', '\x0d'],
     ['0', '\x00'],
     ['x', null],
+    ['u', null],
   ];
   if (parsee.read('x')) {
     return readHexSequence(parsee);
+  }
+  if (parsee.read('u')) {
+    return readUnicodeSequence(parsee);
   }
   if (parsee.length > 0) {
     for (const [from, to] of mapping) {

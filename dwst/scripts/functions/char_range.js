@@ -56,7 +56,7 @@ export default class CharRange {
     }
     let str = '';
     for (let i = start; i <= end; i++) {
-      str += String.fromCharCode(i);
+      str += String.fromCodePoint(i);
     }
     return str;
   }
