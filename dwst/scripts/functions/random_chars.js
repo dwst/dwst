@@ -45,8 +45,7 @@ export default class RandomChars {
 
   run(params) {
     const randomchar = () => {
-      let out = Math.floor(Math.random() * (0xffff + 1));
-      out /= 2; // avoid risky characters
+      const out = Math.floor(Math.random() * (0xffff + 1));
       const char = String.fromCodePoint(out);
       return char;
     };
