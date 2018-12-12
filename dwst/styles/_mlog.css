@@ -43,7 +43,7 @@ Styleguide 2.8
 
 .dwst-mlog {
   white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-all;
   hyphens: none;
 }
 .dwst-mlog__help-link-wrapper--nowrap {
