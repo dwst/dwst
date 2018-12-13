@@ -77,9 +77,11 @@ export default class Binary {
       const [instruction, ...args] = particle;
       const textOrBinary = this._process(instruction, args);
       if (textOrBinary.constructor === Uint8Array) {
-        return textOrBinary;
+        const binary = textOrBinary;
+        return binary;
       }
-      const binary = new TextEncoder().encode(textOrBinary);
+      const text = textOrBinary;
+      const binary = new TextEncoder().encode(text);
       return binary;
     });
     const out = joinBuffers(processed);

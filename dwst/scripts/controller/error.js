@@ -12,7 +12,7 @@
 */
 
 import errors from '../lib/errors.js';
-const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownText, UnknownBinary} = errors;
+const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, InvalidUtf8, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownText, UnknownBinary} = errors;
 
 function commaCommaOr(stringList) {
   if (stringList.length === 0) {
@@ -91,6 +91,14 @@ export default class ErrorHandler {
           'Compatible commands: ',
           error.commands.join(', '),
         ],
+      ];
+    }
+    if (error instanceof InvalidUtf8) {
+      return [
+        [
+          `Utf-8 decoder failed to process ${error.buffer.byteLength}B buffer`,
+        ],
+        error.buffer,
       ];
     }
     if (error instanceof UnknownCommand) {

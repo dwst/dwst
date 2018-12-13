@@ -103,6 +103,18 @@ describe('errors module', () => {
       });
     });
   });
+  describe('InvalidUtf8 error', () => {
+    const invalid = new Uint8Array([0xa0]);
+    const error = new errors.InvalidUtf8(invalid.buffer);
+    it('should extend DwstError', () => {
+      expect(error).to.be.an.instanceof(DwstError);
+    });
+    it('should store buffer', () => {
+      expect(error).to.deep.include({
+        buffer: invalid.buffer,
+      });
+    });
+  });
   describe('UnkownCommand error', () => {
     const error = new errors.UnknownCommand('foo');
     it('should extend DwstError', () => {

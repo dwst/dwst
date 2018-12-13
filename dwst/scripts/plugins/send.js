@@ -63,10 +63,19 @@ export default class Send {
       const [instruction, ...args] = particle;
       const textOrBinary = this._process(instruction, args);
       if (typeof textOrBinary === 'string') {
-        return textOrBinary;
+        const text = textOrBinary;
+        return text;
       }
-      const text = new TextDecoder('utf-8').decode(textOrBinary, {fatal: true});
-      return text;
+      const binary = textOrBinary;
+      try {
+        const text = new TextDecoder('utf-8', {fatal: true}).decode(binary);
+        return text;
+      } catch (e) {
+        if (e instanceof TypeError) {
+          throw new this._dwst.lib.errors.InvalidUtf8(binary.buffer);
+        }
+        throw e;
+      }
     });
     const msg = processed.join('');
 
