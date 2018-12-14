@@ -59,6 +59,13 @@ class InvalidCombination extends DwstError {
   }
 }
 
+class InvalidUtf8 extends DwstError {
+  constructor(buffer) {
+    super();
+    this.buffer = buffer;
+  }
+}
+
 class UnknownCommand extends DwstError {
   constructor(command) {
     super();
@@ -101,6 +108,7 @@ export default {
   InvalidParticles,
   InvalidArgument,
   InvalidCombination,
+  InvalidUtf8,
   UnknownCommand,
   UnknownInstruction,
   UnknownHelpPage,
