@@ -12,24 +12,11 @@
 
 */
 
-function joinBuffers(buffersToJoin) {
-  let total = 0;
-  for (const buffer of buffersToJoin) {
-    total += buffer.length;
-  }
-  const out = new Uint8Array(total);
-  let offset = 0;
-  for (const buffer of buffersToJoin) {
-    out.set(buffer, offset);
-    offset += buffer.length;
-  }
-  return out.buffer;
-}
-
 export default class Binary {
 
   constructor(dwst) {
     this._dwst = dwst;
+    this.functionSupport = true;
   }
 
   commands() {
@@ -60,38 +47,24 @@ export default class Binary {
     return 'send binary data';
   }
 
-  _process(instr, params) {
-    if (instr === 'default') {
-      return params[0];
-    }
-    const func = this._dwst.functions.getFunction(instr);
-    if (func === null) {
-      throw new this._dwst.lib.errors.UnknownInstruction(instr);
-    }
-    return func.run(params);
-  }
-
-  run(paramString) {
-    const parsed = this._dwst.lib.particles.parseParticles(paramString);
-    const processed = parsed.map(particle => {
-      const [instruction, ...args] = particle;
-      const textOrBinary = this._process(instruction, args);
-      if (textOrBinary.constructor === Uint8Array) {
-        const binary = textOrBinary;
-        return binary;
+  run(...mixedChunks) {
+    const binaryChunks = mixedChunks.map(chunk => {
+      if (chunk.constructor === Uint8Array) {
+        return chunk;
       }
-      const text = textOrBinary;
-      const binary = new TextEncoder().encode(text);
-      return binary;
+      if (typeof chunk === 'string') {
+        return new TextEncoder().encode(chunk);
+      }
+      throw new Error('unexpected chunk type');
     });
-    const out = joinBuffers(processed);
+    const buffer = this._dwst.lib.utils.joinBuffers(binaryChunks).buffer;
 
-    const msg = `<${out.byteLength}B of data> `;
+    const msg = `<${buffer.byteLength}B of data> `;
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {
       throw new this._dwst.lib.errors.NoConnection(msg);
     }
-    this._dwst.model.connection.send(out);
+    this._dwst.model.connection.send(buffer);
   }
 }
 

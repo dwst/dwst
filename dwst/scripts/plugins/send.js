@@ -16,6 +16,7 @@ export default class Send {
 
   constructor(dwst) {
     this._dwst = dwst;
+    this.functionSupport = true;
   }
 
   commands() {
@@ -46,38 +47,25 @@ export default class Send {
     return 'send textual data';
   }
 
-  _process(instr, params) {
-    if (instr === 'default') {
-      return params[0];
-    }
-    const func = this._dwst.functions.getFunction(instr);
-    if (func === null) {
-      throw new this._dwst.lib.errors.UnknownInstruction(instr);
-    }
-    return func.run(params);
-  }
-
-  run(paramString) {
-    const parsed = this._dwst.lib.particles.parseParticles(paramString);
-    const processed = parsed.map(particle => {
-      const [instruction, ...args] = particle;
-      const textOrBinary = this._process(instruction, args);
-      if (typeof textOrBinary === 'string') {
-        const text = textOrBinary;
-        return text;
-      }
-      const binary = textOrBinary;
-      try {
-        const text = new TextDecoder('utf-8', {fatal: true}).decode(binary);
-        return text;
-      } catch (e) {
-        if (e instanceof TypeError) {
-          throw new this._dwst.lib.errors.InvalidUtf8(binary.buffer);
+  run(...mixedChunks) {
+    const textChunks = mixedChunks.map(chunk => {
+      if (chunk.constructor === Uint8Array) {
+        try {
+          const text = new TextDecoder('utf-8', {fatal: true}).decode(chunk.buffer);
+          return text;
+        } catch (e) {
+          if (e instanceof TypeError) {
+            throw new this._dwst.lib.errors.InvalidUtf8(chunk.buffer);
+          }
+          throw e;
         }
-        throw e;
       }
+      if (typeof chunk === 'string') {
+        return chunk;
+      }
+      throw new Error('unexpected chunk type');
     });
-    const msg = processed.join('');
+    const msg = textChunks.join('');
 
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {
