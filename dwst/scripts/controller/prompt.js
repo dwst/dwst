@@ -18,6 +18,42 @@ export default class PromptHandler {
     this._dwst = dwst;
   }
 
+  _process(instr, params) {
+    if (instr === 'default') {
+      return params[0];
+    }
+    const func = this._dwst.functions.getFunction(instr);
+    if (func === null) {
+      throw new this._dwst.lib.errors.UnknownInstruction(instr);
+    }
+    return func.run(params);
+  }
+
+  _getChunks(paramString) {
+    const parsed = this._dwst.lib.particles.parseParticles(paramString);
+    const chunks = [];
+    let current = null;
+    parsed.forEach(particle => {
+      const [instruction, ...args] = particle;
+      const output = this._process(instruction, args);
+      if (current === null) {
+        current = output;
+      } else if (typeof output !== typeof current) {
+        chunks.push(current);
+        current = output;
+      } else if (typeof current === 'string') {
+        current += output;
+      } else {
+        current = this._dwst.lib.utils.joinBuffers([current, output]);
+      }
+    });
+    if (current !== null) {
+      chunks.push(current);
+      current = null;
+    }
+    return chunks;
+  }
+
   run(command) {
     const [pluginName, ...params] = command.split(' ');
     const paramString = params.join(' ');
@@ -26,7 +62,12 @@ export default class PromptHandler {
     if (plugin === null) {
       throw new this._dwst.lib.errors.UnknownCommand(pluginName);
     }
-    plugin.run(paramString);
+    if (plugin.functionSupport) {
+      const paramChunks = this._getChunks(paramString);
+      plugin.run(...paramChunks);
+    } else {
+      plugin.run(paramString);
+    }
   }
 
   silent(line) {

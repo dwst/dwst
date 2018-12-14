@@ -57,4 +57,18 @@ export default {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   },
 
+  joinBuffers: buffersToJoin => {
+    let total = 0;
+    for (const buffer of buffersToJoin) {
+      total += buffer.length;
+    }
+    const out = new Uint8Array(total);
+    let offset = 0;
+    for (const buffer of buffersToJoin) {
+      out.set(buffer, offset);
+      offset += buffer.length;
+    }
+    return out;
+  },
+
 };
