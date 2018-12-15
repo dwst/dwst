@@ -12,6 +12,8 @@
 
 */
 
+import DwstFunction from '../types/function.js';
+
 export default class PromptHandler {
 
   constructor(dwst) {
@@ -22,11 +24,14 @@ export default class PromptHandler {
     if (instr === 'default') {
       return params[0];
     }
-    const func = this._dwst.functions.getFunction(instr);
+    const func = this._dwst.model.variables.getVariable(instr);
     if (func === null) {
       throw new this._dwst.lib.errors.UnknownInstruction(instr);
     }
-    return func.run(params);
+    if (func instanceof DwstFunction) {
+      return func.run(params);
+    }
+    throw new this._dwst.lib.errors.InvalidDataType(instr, ['FUNCTION']);
   }
 
   _getChunks(paramString) {

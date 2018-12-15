@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2018
@@ -12,14 +11,10 @@
 
 */
 
-import errors from './errors.js';
-import particles from './particles.js';
-import utils from './utils.js';
-import types from './types.js';
-
-export default {
-  errors,
-  types,
-  utils,
-  particles,
-};
+export default class DwstFunction {
+  constructor() {
+    if (new.target === DwstFunction) {
+      throw new Error('abstract');
+    }
+  }
+}

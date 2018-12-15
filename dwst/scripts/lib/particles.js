@@ -15,7 +15,7 @@
 
 // DWST particles templating language
 
-import Parsee from './_parsee.js';
+import Parsee from '../types/parsee.js';
 import errors from './errors.js';
 const {InvalidParticles} = errors;
 import utils from './utils.js';

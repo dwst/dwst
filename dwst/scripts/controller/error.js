@@ -12,7 +12,7 @@
 */
 
 import errors from '../lib/errors.js';
-const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, InvalidUtf8, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownText, UnknownBinary} = errors;
+const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
 
 function commaCommaOr(stringList) {
   if (stringList.length === 0) {
@@ -101,6 +101,13 @@ export default class ErrorHandler {
         error.buffer,
       ];
     }
+    if (error instanceof InvalidDataType) {
+      return [
+        [
+          `Variable ${error.variable} is not a ${commaCommaOr(error.expected)}`,
+        ],
+      ];
+    }
     if (error instanceof UnknownCommand) {
       return [
         [
@@ -149,25 +156,15 @@ export default class ErrorHandler {
       ];
       return [`Unkown help page: ${error.page}`, listTip];
     }
-    if (error instanceof UnknownText) {
+    if (error instanceof UnknownVariable) {
       const listTip = [
-        'List available texts by typing ',
+        'List available variables by typing ',
         {
           type: 'command',
-          text: '/texts',
+          text: '/vars',
         },
       ];
-      return [`Text "${error.variable}" does not exist.`, listTip];
-    }
-    if (error instanceof UnknownBinary) {
-      const listTip = [
-        'List available binaries by typing ',
-        {
-          type: 'command',
-          text: '/bins',
-        },
-      ];
-      return [`Binary "${error.variable}" does not exist.`, listTip];
+      return [`Variable "${error.variable}" does not exist.`, listTip];
     }
 
     throw new Error(`missing error handler for ${error.constructor.name}`);

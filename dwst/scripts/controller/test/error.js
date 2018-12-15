@@ -16,7 +16,7 @@ import {expect} from 'chai';
 
 import errors from '../../lib/errors.js';
 const {InvalidParticles} = errors;
-import {DwstError} from '../../lib/errors.js';  // eslint-disable-line no-duplicate-imports
+import DwstError from '../../types/error.js';
 
 import ErrorHandler from '../error.js';
 

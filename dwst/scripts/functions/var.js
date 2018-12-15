@@ -14,7 +14,7 @@
 
 import DwstFunction from '../types/function.js';
 
-export default class Bin extends DwstFunction {
+export default class Var extends DwstFunction {
 
   constructor(dwst) {
     super();
@@ -22,28 +22,28 @@ export default class Bin extends DwstFunction {
   }
 
   commands() {
-    return ['bin'];
+    return ['var'];
   }
 
   usage() {
     return [
-      'bin(<variable name>)',
+      'var(<variable name>)',
     ];
   }
 
   examples() {
     return [
-      '/s ${bin(foo)}',
-      '/b ${bin(foo)}',
+      '/s ${var(foo)}',
+      '/b ${var(foo)}',
     ];
   }
 
   type() {
-    return 'BINARY';
+    return 'VAR';
   }
 
   info() {
-    return 'read binary variable';
+    return 'read variable';
   }
 
   run(params) {
@@ -51,10 +51,16 @@ export default class Bin extends DwstFunction {
     if (params.length === 1) {
       variable = params[0];
     }
-    let buffer = this._dwst.model.bins.get(variable);
-    if (typeof buffer === 'undefined') {
-      buffer = [];
+    const value = this._dwst.model.variables.getVariable(variable);
+    if (typeof value  === 'string') {
+      return value;
     }
-    return new Uint8Array(buffer);
+    if (value instanceof ArrayBuffer) {
+      return new Uint8Array(value);
+    }
+    if (value instanceof this._dwst.lib.types.DwstFunction) {
+      throw new this._dwst.lib.errors.InvalidDataType(variable, ['STRING', 'BINARY']);
+    }
+    throw new this._dwst.lib.errors.UnknownVariable(variable);
   }
 }

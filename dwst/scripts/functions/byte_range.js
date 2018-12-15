@@ -12,9 +12,12 @@
 
 */
 
-export default class ByteRange {
+import DwstFunction from '../types/function.js';
+
+export default class ByteRange extends DwstFunction {
 
   constructor(dwst) {
+    super();
     this._dwst = dwst;
   }
 
