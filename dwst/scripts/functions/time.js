@@ -12,9 +12,12 @@
 
 */
 
-export default class Time {
+import DwstFunction from '../types/function.js';
+
+export default class Time extends DwstFunction {
 
   constructor(dwst) {
+    super();
     this._dwst = dwst;
   }
 

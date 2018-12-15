@@ -18,12 +18,10 @@ import Model from './model/model.js';
 import Ui from './ui/ui.js';
 import Controller from './controller/controller.js';
 import Plugins from './model/plugins.js';
-import Functions from './model/functions.js';
 
-import {DwstError} from './lib/errors.js'; // eslint-disable-line no-duplicate-imports
+import DwstError from './types/error.js';
 
 import Binary from './plugins/binary.js';
-import Bins from './plugins/bins.js';
 import Clear from './plugins/clear.js';
 import Connect from './plugins/connect.js';
 import Disconnect from './plugins/disconnect.js';
@@ -37,15 +35,7 @@ import Reset from './plugins/reset.js';
 import Send from './plugins/send.js';
 import Spam from './plugins/spam.js';
 import Splash from './plugins/splash.js';
-import Texts from './plugins/texts.js';
-
-import Bin from './functions/bin.js';
-import ByteRange from './functions/byte_range.js';
-import CharRange from './functions/char_range.js';
-import RandomBytes from './functions/random_bytes.js';
-import RandomChars from './functions/random_chars.js';
-import Text from './functions/text.js';
-import Time from './functions/time.js';
+import Vars from './plugins/vars.js';
 
 function loadModel(dwst) {
   const HISTORY_KEY = 'history';
@@ -76,7 +66,6 @@ dwst.controller = new Controller(dwst);
 
 dwst.plugins = new Plugins(dwst, [
   Binary,
-  Bins,
   Clear,
   Connect,
   Disconnect,
@@ -90,17 +79,7 @@ dwst.plugins = new Plugins(dwst, [
   Send,
   Spam,
   Splash,
-  Texts,
-]);
-
-dwst.functions = new Functions(dwst, [
-  Bin,
-  ByteRange,
-  CharRange,
-  RandomBytes,
-  RandomChars,
-  Text,
-  Time,
+  Vars,
 ]);
 
 document.addEventListener('DOMContentLoaded', () => {

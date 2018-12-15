@@ -15,21 +15,9 @@
 import {expect} from 'chai';
 
 import errors from '../errors.js';
-import {DwstError} from '../errors.js';  // eslint-disable-line no-duplicate-imports
+import DwstError from '../../types/error.js';
 
 describe('errors module', () => {
-  describe('DwstError super class', () => {
-    it('should be abstract', () => {
-      expect(() => {
-        new DwstError();
-      }).to.throw();
-    });
-    it('should extend Error', () => {
-      class DerivedError extends DwstError {}
-      const error = new DerivedError();
-      expect(error).to.be.an.instanceof(Error);
-    });
-  });
   describe('NoConnection error', () => {
     const error = new errors.NoConnection('hello world');
     it('should extend DwstError', () => {
@@ -115,6 +103,22 @@ describe('errors module', () => {
       });
     });
   });
+  describe('InvalidDataType error', () => {
+    const error = new errors.InvalidDataType('randomBytes', ['FUNCTION']);
+    it('should extend DwstError', () => {
+      expect(error).to.be.an.instanceof(DwstError);
+    });
+    it('should store variable name', () => {
+      expect(error).to.deep.include({
+        variable: 'randomBytes',
+      });
+    });
+    it('should store expected type', () => {
+      expect(error).to.deep.include({
+        expected: ['FUNCTION'],
+      });
+    });
+  });
   describe('UnkownCommand error', () => {
     const error = new errors.UnknownCommand('foo');
     it('should extend DwstError', () => {
@@ -148,23 +152,12 @@ describe('errors module', () => {
       });
     });
   });
-  describe(' UnkownText error', () => {
-    const error = new errors.UnknownText('foo');
+  describe(' UnkownVariable error', () => {
+    const error = new errors.UnknownVariable('foo');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
     it('should store the requested text variable name', () => {
-      expect(error).to.include({
-        variable: 'foo',
-      });
-    });
-  });
-  describe(' UnkownBinary error', () => {
-    const error = new errors.UnknownBinary('foo');
-    it('should extend DwstError', () => {
-      expect(error).to.be.an.instanceof(DwstError);
-    });
-    it('should store the requested binary variable name', () => {
       expect(error).to.include({
         variable: 'foo',
       });

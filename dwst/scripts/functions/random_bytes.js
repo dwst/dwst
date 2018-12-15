@@ -12,9 +12,12 @@
 
 */
 
-export default class RandomBytes {
+import DwstFunction from '../types/function.js';
+
+export default class RandomBytes extends DwstFunction {
 
   constructor(dwst) {
+    super();
     this._dwst = dwst;
   }
 

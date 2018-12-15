@@ -12,7 +12,7 @@
 
 */
 
-import Parsee from './_parsee.js';
+import Parsee from '../types/parsee.js';
 
 const controlCharNames = {
 

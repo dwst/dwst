@@ -12,9 +12,12 @@
 
 */
 
-export default class CharRange {
+import DwstFunction from '../types/function.js';
+
+export default class CharRange extends DwstFunction {
 
   constructor(dwst) {
+    super();
     this._dwst = dwst;
   }
 
