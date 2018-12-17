@@ -16,6 +16,7 @@ export default class Send {
 
   constructor(dwst) {
     this._dwst = dwst;
+    this._encoder = new TextDecoder('utf-8', {fatal: true});
     this.functionSupport = true;
   }
 
@@ -47,26 +48,20 @@ export default class Send {
     return 'send textual data';
   }
 
-  run(...mixedChunks) {
-    const textChunks = mixedChunks.map(chunk => {
-      if (chunk.constructor === Uint8Array) {
-        try {
-          const text = new TextDecoder('utf-8', {fatal: true}).decode(chunk.buffer);
-          return text;
-        } catch (e) {
-          if (e instanceof TypeError) {
-            throw new this._dwst.lib.errors.InvalidUtf8(chunk.buffer);
-          }
-          throw e;
-        }
+  _encode(buffer) {
+    try {
+      const text = new TextDecoder('utf-8', {fatal: true}).decode(buffer);
+      return text;
+    } catch (e) {
+      if (e instanceof TypeError) {
+        throw new this._dwst.lib.errors.InvalidUtf8(buffer);
       }
-      if (typeof chunk === 'string') {
-        return chunk;
-      }
-      throw new Error('unexpected chunk type');
-    });
-    const msg = textChunks.join('');
+      throw e;
+    }
+  }
 
+  run(buffer) {
+    const msg = this._encode(buffer);
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {
       throw new this._dwst.lib.errors.NoConnection(msg);

@@ -13,7 +13,7 @@
 */
 
 import errors from './errors.js';
-import particles from './particles.js';
+import parser from './parser.js';
 import utils from './utils.js';
 import types from './types.js';
 
@@ -21,5 +21,5 @@ export default {
   errors,
   types,
   utils,
-  particles,
+  parser,
 };

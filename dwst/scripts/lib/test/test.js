@@ -1,6 +1,6 @@
 
 describe('library collection', () => {
-  require('./particles.js');
+  require('./parser.js');
   require('./utils.js');
   require('./errors.js');
 });

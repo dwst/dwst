@@ -12,7 +12,7 @@
 */
 
 import errors from '../lib/errors.js';
-const {NoConnection, AlreadyConnected, SocketError, InvalidParticles, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
+const {NoConnection, AlreadyConnected, SocketError, InvalidTemplateExpression, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
 
 function commaCommaOr(stringList) {
   if (stringList.length === 0) {
@@ -62,7 +62,7 @@ export default class ErrorHandler {
     if (error instanceof SocketError) {
       return ['WebSocket error.'];
     }
-    if (error instanceof InvalidParticles) {
+    if (error instanceof InvalidTemplateExpression) {
       const padding = ' '.repeat(error.errorPosition);
       const expected = commaCommaOr(error.expected);
       const got = error.remainder.charAt(0);

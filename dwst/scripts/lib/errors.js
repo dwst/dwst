@@ -24,7 +24,7 @@ class AlreadyConnected extends DwstError {}
 
 class SocketError extends DwstError {}
 
-class InvalidParticles extends DwstError {
+class InvalidTemplateExpression extends DwstError {
   constructor(expected, remainder, expression = null) {
     super();
     this.expected = expected;
@@ -99,7 +99,7 @@ export default {
   NoConnection,
   AlreadyConnected,
   SocketError,
-  InvalidParticles,
+  InvalidTemplateExpression,
   InvalidArgument,
   InvalidCombination,
   InvalidUtf8,
