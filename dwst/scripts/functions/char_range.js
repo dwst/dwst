@@ -47,15 +47,15 @@ export default class CharRange extends DwstFunction {
     return 'generate sequential characters';
   }
 
-  run(params) {
+  run(args) {
     let start = 32;
     let end = 126;
-    if (params.length === 1) {
-      end = this._dwst.lib.utils.parseNum(params[0]);
+    if (args.length === 1) {
+      end = args[0].value;
     }
-    if (params.length === 2) {
-      start = this._dwst.lib.utils.parseNum(params[0]);
-      end = this._dwst.lib.utils.parseNum(params[1]);
+    if (args.length === 2) {
+      start = args[0].value;
+      end = args[1].value;
     }
     let str = '';
     for (let i = start; i <= end; i++) {

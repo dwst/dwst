@@ -60,7 +60,7 @@ describe('parser module', () => {
         ]},
       );
     });
-    it('should parse an embedded function without parameters', () => {
+    it('should parse an embedded function without arguments', () => {
       expect(parseTemplateExpression(
         '${function()}',
       )).to.deep.equal(
@@ -69,21 +69,37 @@ describe('parser module', () => {
         ]},
       );
     });
-    it('should parse an embedded function with one parameter', () => {
+    it('should parse an embedded function with an integer argument', () => {
       expect(parseTemplateExpression(
         '${function(123)}',
       )).to.deep.equal(
         {type: 'templateExpression', particles: [
-          {type: 'function', name: 'function', args: ['123']},
+          {type: 'function', name: 'function', args: [
+            {type: 'int', value: 123},
+          ]},
         ]},
       );
     });
-    it('should parse an embedded function with two parameters', () => {
+    it('should parse an embedded function with a hex encoded integer argument', () => {
       expect(parseTemplateExpression(
-        '${function(123,abc)}',
+        '${function(0x20)}',
       )).to.deep.equal(
         {type: 'templateExpression', particles: [
-          {type: 'function', name: 'function', args: ['123', 'abc']},
+          {type: 'function', name: 'function', args: [
+            {type: 'int', value: 32},
+          ]},
+        ]},
+      );
+    });
+    it('should parse an embedded function with two arguments', () => {
+      expect(parseTemplateExpression(
+        '${function(123,456)}',
+      )).to.deep.equal(
+        {type: 'templateExpression', particles: [
+          {type: 'function', name: 'function', args: [
+            {type: 'int', value: 123},
+            {type: 'int', value: 456},
+          ]},
         ]},
       );
     });
@@ -305,28 +321,39 @@ describe('parser module', () => {
         '${foo(123 , 456)}',
       )).to.deep.equal(
         {type: 'templateExpression', particles: [
-          {type: 'function', name: 'foo', args: ['123', '456']},
+          {type: 'function', name: 'foo', args: [
+            {type: 'int', value: 123},
+            {type: 'int', value: 456},
+          ]},
         ]},
       );
       expect(parseTemplateExpression(
         '${foo( 123,456 )}',
       )).to.deep.equal(
         {type: 'templateExpression', particles: [
-          {type: 'function', name: 'foo', args: ['123', '456']},
+          {type: 'function', name: 'foo', args: [
+            {type: 'int', value: 123},
+            {type: 'int', value: 456},
+          ]},
         ]},
       );
       expect(parseTemplateExpression(
         '${ foo(123,456) }',
       )).to.deep.equal(
         {type: 'templateExpression', particles: [
-          {type: 'function', name: 'foo', args: ['123', '456']},
+          {type: 'function', name: 'foo', args: [
+            {type: 'int', value: 123},
+            {type: 'int', value: 456},
+          ]},
         ]},
       );
       expect(parseTemplateExpression(
         '${foo (123)}',
       )).to.deep.equal(
         {type: 'templateExpression', particles: [
-          {type: 'function', name: 'foo', args: ['123']},
+          {type: 'function', name: 'foo', args: [
+            {type: 'int', value: 123},
+          ]},
         ]},
       );
       expect(parseTemplateExpression(
@@ -345,6 +372,16 @@ describe('parser module', () => {
         expected: ['"{"'],
         remainder: '',
         errorPosition: '$'.length,
+      });
+    });
+    it('should throw InvalidTemplateExpression for hex integer literal with 0 hex digits', () => {
+      expect(() => {
+        return parseTemplateExpression('${foo(0x)}');
+      }).to.throw(InvalidTemplateExpression).that.does.deep.include({
+        expression: '${foo(0x)}',
+        expected: ['hex digit'],
+        remainder: ')}',
+        errorPosition: '${foo(0x'.length,
       });
     });
     it('should throw InvalidTemplateExpression for space between expression start and expression open', () => {
@@ -372,7 +409,7 @@ describe('parser module', () => {
         return parseTemplateExpression('${foo(123,)}');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
         expression: '${foo(123,)}',
-        expected: ['an argument'],
+        expected: ['an integer'],
         remainder: ')}',
         errorPosition: '${foo(123,'.length,
       });
@@ -382,7 +419,7 @@ describe('parser module', () => {
         return parseTemplateExpression('${foo(,456)}');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
         expression: '${foo(,456)}',
-        expected: ['an argument', '")"'],
+        expected: ['an integer', '")"'],
         remainder: ',456)}',
         errorPosition: '${foo('.length,
       });
@@ -402,7 +439,7 @@ describe('parser module', () => {
         return parseTemplateExpression('${foo(}');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
         expression: '${foo(}',
-        expected: ['an argument', '")"'],
+        expected: ['an integer', '")"'],
         remainder: '}',
         errorPosition: '${foo('.length,
       });
@@ -412,7 +449,7 @@ describe('parser module', () => {
         return parseTemplateExpression('${foo(})}');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
         expression: '${foo(})}',
-        expected: ['an argument', '")"'],
+        expected: ['an integer', '")"'],
         remainder: '})}',
         errorPosition: '${foo('.length,
       });
@@ -432,7 +469,7 @@ describe('parser module', () => {
         return parseTemplateExpression('${foo(123,');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
         expression: '${foo(123,',
-        expected: ['an argument'],
+        expected: ['an integer'],
         remainder: '',
         errorPosition: '${foo(123,'.length,
       });

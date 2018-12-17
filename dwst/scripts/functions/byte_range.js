@@ -46,15 +46,15 @@ export default class ByteRange extends DwstFunction {
     return 'generate sequential bytes';
   }
 
-  run(params) {
+  run(args) {
     let start = 0;
     let end = 0xff;
-    if (params.length === 1) {
-      end = this._dwst.lib.utils.parseNum(params[0]);
+    if (args.length === 1) {
+      end = args[0].value;
     }
-    if (params.length === 2) {
-      start = this._dwst.lib.utils.parseNum(params[0]);
-      end = this._dwst.lib.utils.parseNum(params[1]);
+    if (args.length === 2) {
+      start = args[0].value;
+      end = args[1].value;
     }
     const bytes = [];
     for (let i = start; i <= end; i++) {

@@ -38,8 +38,8 @@ const smallChars = charCodeRange('a', 'z');
 const bigChars = charCodeRange('A', 'Z');
 const alphaChars = smallChars.concat(bigChars);
 
+const integerLiteralChars = hexChars.concat(['x']);
 const variableNameChars = alphaChars;
-const functionArgChars = smallChars.concat(digitChars);
 
 function quote(string) {
   return `"${string}"`;
@@ -157,13 +157,21 @@ function readVariableName(parsee) {
   return functionName;
 }
 
-function readFunctionArg(parsee) {
-  const arg = parsee.readWhile(functionArgChars);
-  if (arg.length === 0) {
-    const expected = ['an argument'];
-    throw new InvalidTemplateExpression(expected, String(parsee));
+function readInteger(parsee) {
+  if (parsee.read('0x')) {
+    const hexDigits = parsee.readWhile(hexChars);
+    if (hexDigits.length === 0) {
+      throw new InvalidTemplateExpression(['hex digit'], String(parsee));
+    }
+    const value = parseInt(hexDigits, 16);
+    return {type: 'int', value};
   }
-  return arg;
+  const digits = parsee.readWhile(digitChars);
+  if (digits.length === 0) {
+    throw new InvalidTemplateExpression(['an integer'], String(parsee));
+  }
+  const value = parseInt(digits, 10);
+  return {type: 'int', value};
 }
 
 function readFunctionArgs(parsee) {
@@ -171,13 +179,13 @@ function readFunctionArgs(parsee) {
   if (parsee.startsWith(')')) {
     return functionArgs;
   }
-  if (functionArgChars.some(char => parsee.startsWith(char)) === false) {
-    const expected = ['an argument'].concat([')'].map(quote));
+  if (integerLiteralChars.some(chr => parsee.startsWith(chr)) === false) {
+    const expected = ['an integer'].concat([')'].map(quote));
     throw new InvalidTemplateExpression(expected, String(parsee));
   }
 
   while (true) {  // eslint-disable-line
-    const arg = readFunctionArg(parsee);
+    const arg = readInteger(parsee);
     functionArgs.push(arg);
     skipSpace(parsee);
     if (parsee.startsWith(')')) {

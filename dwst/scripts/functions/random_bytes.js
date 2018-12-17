@@ -46,14 +46,14 @@ export default class RandomBytes extends DwstFunction {
     return 'generate random bytes';
   }
 
-  run(params) {
+  run(args) {
     const randombyte = () => {
       const out = Math.floor(Math.random() * (0xff + 1));
       return out;
     };
     let num = 16;
-    if (params.length === 1) {
-      num = this._dwst.lib.utils.parseNum(params[0]);
+    if (args.length === 1) {
+      num = args[0].value;
     }
     const bytes = [];
     for (let i = 0; i < num; i++) {
