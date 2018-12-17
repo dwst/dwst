@@ -38,7 +38,7 @@ const smallChars = charCodeRange('a', 'z');
 const bigChars = charCodeRange('A', 'Z');
 const alphaChars = smallChars.concat(bigChars);
 
-const functionNameChars = alphaChars;
+const variableNameChars = alphaChars;
 const functionArgChars = smallChars.concat(digitChars);
 
 function quote(string) {
@@ -135,7 +135,7 @@ function skipExpressionClose(parsee) {
 function skipArgListOpen(parsee) {
   const argListOpen = '(';
   if (parsee.read(argListOpen) === false) {
-    throw new InvalidTemplateExpression([argListOpen].map(quote), String(parsee));
+    throw new Error('unexpected return value');
   }
 }
 
@@ -146,13 +146,13 @@ function skipArgListClose(parsee) {
   }
 }
 
-function readFunctionName(parsee) {
-  const functionName = parsee.readWhile(functionNameChars);
+function readVariableName(parsee) {
+  const functionName = parsee.readWhile(variableNameChars);
   if (functionName.length === 0) {
-    throw new InvalidTemplateExpression(['a function name'], String(parsee));
+    throw new InvalidTemplateExpression(['a function name', 'a variable name'], String(parsee));
   }
-  if (parsee.startsWith('}') || parsee.length === 0) {
-    throw new InvalidTemplateExpression(['('].map(quote), String(parsee));
+  if (parsee.length === 0) {
+    throw new InvalidTemplateExpression(['(', '}'].map(quote), String(parsee));
   }
   return functionName;
 }
@@ -191,13 +191,20 @@ function readFunctionArgs(parsee) {
 }
 
 function readExpression(parsee) {
-  const name = readFunctionName(parsee);
-  skipArgListOpen(parsee);
+  const name = readVariableName(parsee);
   skipSpace(parsee);
-  const args = readFunctionArgs(parsee);
-  skipSpace(parsee);
-  skipArgListClose(parsee);
-  return {type: 'function', name, args};
+  if (parsee.startsWith('(')) {
+    skipArgListOpen(parsee);
+    skipSpace(parsee);
+    const args = readFunctionArgs(parsee);
+    skipSpace(parsee);
+    skipArgListClose(parsee);
+    return {type: 'function', name, args};
+  }
+  if (parsee.startsWith('}')) {
+    return {type: 'variable', name};
+  }
+  throw new InvalidTemplateExpression(['(', '}'].map(quote), String(parsee));
 }
 
 function readParticle(parsee) {
