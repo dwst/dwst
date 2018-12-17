@@ -41,9 +41,9 @@ describe('errors module', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });
   });
-  describe('InvalidParticles error', () => {
+  describe('InvalidTemplateExpression error', () => {
     const stringOrArray = Symbol();
-    const error = new errors.InvalidParticles(stringOrArray, ',456)}');
+    const error = new errors.InvalidTemplateExpression(stringOrArray, ',456)}');
     it('should extend DwstError', () => {
       expect(error).to.be.an.instanceof(DwstError);
     });

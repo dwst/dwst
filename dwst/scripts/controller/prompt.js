@@ -18,61 +18,70 @@ export default class PromptHandler {
 
   constructor(dwst) {
     this._dwst = dwst;
+    this._encoder = new TextEncoder();
   }
 
-  _process(instr, params) {
-    if (instr === 'default') {
-      return params[0];
-    }
-    const func = this._dwst.model.variables.getVariable(instr);
+  _evalFunction({name, args}) {
+    const func = this._dwst.model.variables.getVariable(name);
     if (func === null) {
-      throw new this._dwst.lib.errors.UnknownInstruction(instr);
+      throw new this._dwst.lib.errors.UnknownInstruction(name);
     }
     if (func instanceof DwstFunction) {
-      return func.run(params);
+      return func.run(args);
     }
-    throw new this._dwst.lib.errors.InvalidDataType(instr, ['FUNCTION']);
+    throw new this._dwst.lib.errors.InvalidDataType(name, ['FUNCTION']);
   }
 
-  _getChunks(paramString) {
-    const parsed = this._dwst.lib.particles.parseParticles(paramString);
-    const chunks = [];
-    let current = null;
-    parsed.forEach(particle => {
-      const [instruction, ...args] = particle;
-      const output = this._process(instruction, args);
-      if (current === null) {
-        current = output;
-      } else if (typeof output !== typeof current) {
-        chunks.push(current);
-        current = output;
-      } else if (typeof current === 'string') {
-        current += output;
-      } else {
-        current = this._dwst.lib.utils.joinBuffers([current, output]);
+  _evalTemplateExpression(templateExpression) {
+    const rootNode = this._dwst.lib.parser.parseTemplateExpression(templateExpression);
+    if (rootNode.type !== 'templateExpression') {
+      throw new Error('unexpected root node type');
+    }
+    const chunks = rootNode.particles.map(node => {
+      if (node.type === 'text') {
+        return this._encoder.encode(node.value);
       }
+      if (node.type === 'byte') {
+        const buffer = new Uint8Array([node.value]);
+        return buffer;
+      }
+      if (node.type === 'codepoint') {
+        const chr = String.fromCodePoint(node.value);
+        return this._encoder.encode(chr);
+      }
+      if (node.type === 'function') {
+        const output = this._evalFunction(node);
+        if (output.constructor === Uint8Array) {
+          return output;
+        }
+        if (typeof output === 'string') {
+          return this._encoder.encode(output);
+        }
+        throw new Error('unexpected function return type');
+      }
+      throw new Error('unexpected particle type');
     });
-    if (current !== null) {
-      chunks.push(current);
-      current = null;
-    }
-    return chunks;
+    const buffer = this._dwst.lib.utils.joinBuffers(chunks).buffer;
+    return buffer;
   }
 
-  run(command) {
-    const [pluginName, ...params] = command.split(' ');
-    const paramString = params.join(' ');
-
+  _runPlugin(pluginName, paramString) {
     const plugin = this._dwst.plugins.getPlugin(pluginName);
     if (plugin === null) {
       throw new this._dwst.lib.errors.UnknownCommand(pluginName);
     }
     if (plugin.functionSupport) {
-      const paramChunks = this._getChunks(paramString);
-      plugin.run(...paramChunks);
+      const binary = this._evalTemplateExpression(paramString);
+      plugin.run(binary);
     } else {
       plugin.run(paramString);
     }
+  }
+
+  run(command) {
+    const [pluginName, ...params] = command.split(' ');
+    const paramString = params.join(' ');
+    this._runPlugin(pluginName, paramString);
   }
 
   silent(line) {

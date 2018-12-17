@@ -47,18 +47,7 @@ export default class Binary {
     return 'send binary data';
   }
 
-  run(...mixedChunks) {
-    const binaryChunks = mixedChunks.map(chunk => {
-      if (chunk.constructor === Uint8Array) {
-        return chunk;
-      }
-      if (typeof chunk === 'string') {
-        return new TextEncoder().encode(chunk);
-      }
-      throw new Error('unexpected chunk type');
-    });
-    const buffer = this._dwst.lib.utils.joinBuffers(binaryChunks).buffer;
-
+  run(buffer) {
     const msg = `<${buffer.byteLength}B of data> `;
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {

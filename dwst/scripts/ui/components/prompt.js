@@ -13,8 +13,8 @@
 
 */
 
-import particles from '../../lib/particles.js';
-const {escapeForParticles} = particles;
+import parser from '../../lib/parser.js';
+const {escapeForTemplateExpression} = parser;
 
 export default class Prompt {
 
@@ -56,7 +56,7 @@ export default class Prompt {
       this._dwst.controller.prompt.loud(raw);
       return;
     }
-    const text = escapeForParticles(raw);
+    const text = escapeForTemplateExpression(raw);
     const command = `/send ${text}`;
     this._dwst.controller.prompt.loud(command);
   }

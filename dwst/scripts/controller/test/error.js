@@ -15,7 +15,7 @@
 import {expect} from 'chai';
 
 import errors from '../../lib/errors.js';
-const {InvalidParticles} = errors;
+const {InvalidTemplateExpression} = errors;
 import DwstError from '../../types/error.js';
 
 import ErrorHandler from '../error.js';
@@ -62,8 +62,8 @@ describe('ErrorHandler class', () => {
       expect(fakedwst.ui.terminal.mlogs).to.deep.equal([]);
       expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal([]);
     });
-    it('should mlog InvalidParticles error', () => {
-      errorHandler.onDwstError(new InvalidParticles(...[
+    it('should mlog InvalidTemplateExpression error', () => {
+      errorHandler.onDwstError(new InvalidTemplateExpression(...[
         ['")"'],
         '}quux',
         'foo${bar(123, 456}quux',

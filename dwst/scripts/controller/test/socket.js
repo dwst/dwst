@@ -21,7 +21,7 @@ const createLines = socketRewire.__get__('createLines');
 describe('SocketHandler module', () => {
 
   describe('createLines function', () => {
-    it('should mlog InvalidParticles error', () => {
+    it('should mlog InvalidTemplateExpression error', () => {
 
       expect(createLines(['foo'])).to.deep.equal([
         ['foo'],
