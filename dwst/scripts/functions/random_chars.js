@@ -46,15 +46,15 @@ export default class RandomChars extends DwstFunction {
     return 'generate random characters';
   }
 
-  run(params) {
+  run(args) {
     const randomchar = () => {
       const out = Math.floor(Math.random() * (0xffff + 1));
       const char = String.fromCodePoint(out);
       return char;
     };
     let num = 16;
-    if (params.length === 1) {
-      num = this._dwst.lib.utils.parseNum(params[0]);
+    if (args.length === 1) {
+      num = args[0].value;
     }
     let str = '';
     for (let i = 0; i < num; i++) {
