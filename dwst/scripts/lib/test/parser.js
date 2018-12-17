@@ -51,6 +51,15 @@ describe('parser module', () => {
         ]},
       );
     });
+    it('should parse an embedded variable', () => {
+      expect(parseTemplateExpression(
+        '${foo}',
+      )).to.deep.equal(
+        {type: 'templateExpression', particles: [
+          {type: 'variable', name: 'foo'},
+        ]},
+      );
+    });
     it('should parse an embedded function without parameters', () => {
       expect(parseTemplateExpression(
         '${function()}',
@@ -313,6 +322,20 @@ describe('parser module', () => {
           {type: 'function', name: 'foo', args: ['123', '456']},
         ]},
       );
+      expect(parseTemplateExpression(
+        '${foo (123)}',
+      )).to.deep.equal(
+        {type: 'templateExpression', particles: [
+          {type: 'function', name: 'foo', args: ['123']},
+        ]},
+      );
+      expect(parseTemplateExpression(
+        '${ foo }',
+      )).to.deep.equal(
+        {type: 'templateExpression', particles: [
+          {type: 'variable', name: 'foo'},
+        ]},
+      );
     });
     it('should throw InvalidTemplateExpression for lone expression start', () => {
       expect(() => {
@@ -372,16 +395,6 @@ describe('parser module', () => {
         expected: ['","', '")"'],
         remainder: '456)}',
         errorPosition: '${foo(123 '.length,
-      });
-    });
-    it('should throw InvalidTemplateExpression for no argument list', () => {
-      expect(() => {
-        return parseTemplateExpression('${foo}');
-      }).to.throw(InvalidTemplateExpression).that.does.deep.include({
-        expression: '${foo}',
-        expected: ['"("'],
-        remainder: '}',
-        errorPosition: '${foo'.length,
       });
     });
     it('should throw InvalidTemplateExpression for empty argument list missing close', () => {
@@ -449,7 +462,7 @@ describe('parser module', () => {
         return parseTemplateExpression('${foo)}');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
         expression: '${foo)}',
-        expected: ['"("'],
+        expected: ['"("', '"}"'],
         remainder: ')}',
         errorPosition: '${foo'.length,
       });
@@ -464,13 +477,13 @@ describe('parser module', () => {
         errorPosition: '${foo()'.length,
       });
     });
-    it('should throw InvalidTemplateExpression for terminator character in function name', () => {
+    it('should throw InvalidTemplateExpression for unexpected character in function name', () => {
       expect(() => {
-        return parseTemplateExpression('${foo}()}');
+        return parseTemplateExpression('${foo$()}');
       }).to.throw(InvalidTemplateExpression).that.does.deep.include({
-        expression: '${foo}()}',
-        expected: ['"("'],
-        remainder: '}()}',
+        expression: '${foo$()}',
+        expected: ['"("', '"}"'],
+        remainder: '$()}',
         errorPosition: '${foo'.length,
       });
     });

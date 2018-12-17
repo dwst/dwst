@@ -17,7 +17,6 @@ import CharRange from '../functions/char_range.js';
 import RandomBytes from '../functions/random_bytes.js';
 import RandomChars from '../functions/random_chars.js';
 import Time from '../functions/time.js';
-import Var from '../functions/var.js';
 
 import config from './config.js';
 import History from './history.js';
@@ -38,7 +37,6 @@ export default class Model {
       RandomBytes,
       RandomChars,
       Time,
-      Var,
     ]);
   }
 
