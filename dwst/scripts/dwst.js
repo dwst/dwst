@@ -21,6 +21,12 @@ import Plugins from './model/plugins.js';
 
 import DwstError from './types/error.js';
 
+import ByteRange from './functions/byte_range.js';
+import CharRange from './functions/char_range.js';
+import RandomBytes from './functions/random_bytes.js';
+import RandomChars from './functions/random_chars.js';
+import Time from './functions/time.js';
+
 import Binary from './plugins/binary.js';
 import Clear from './plugins/clear.js';
 import Connect from './plugins/connect.js';
@@ -48,7 +54,13 @@ function loadModel(dwst) {
   if (response !== null) {
     history = JSON.parse(response);
   }
-  return new Model(dwst, history, save);
+  return new Model(dwst, history, save, [
+    ByteRange,
+    CharRange,
+    RandomBytes,
+    RandomChars,
+    Time,
+  ]);
 }
 
 const dwst = Object.seal({
