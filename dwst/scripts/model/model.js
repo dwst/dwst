@@ -12,12 +12,6 @@
 
 */
 
-import ByteRange from '../functions/byte_range.js';
-import CharRange from '../functions/char_range.js';
-import RandomBytes from '../functions/random_bytes.js';
-import RandomChars from '../functions/random_chars.js';
-import Time from '../functions/time.js';
-
 import config from './config.js';
 import History from './history.js';
 import Variables from './variables.js';
@@ -25,19 +19,13 @@ import Dwstgg from './dwstgg/dwstgg.js';
 
 export default class Model {
 
-  constructor(dwst, history, save) {
+  constructor(dwst, history, save, functions) {
     this.config = config;
     this.history = new History(history, {save});
     this.dwstgg = new Dwstgg(dwst);
     this.connection = null;
     this.intervalId = null;
-    this.variables = new Variables(dwst, [
-      ByteRange,
-      CharRange,
-      RandomBytes,
-      RandomChars,
-      Time,
-    ]);
+    this.variables = new Variables(dwst, functions);
   }
 
 }
