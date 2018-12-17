@@ -33,7 +33,6 @@ export default class RandomBytes extends DwstFunction {
 
   examples() {
     return [
-      '/s rpc(${randomBytes(5)})',
       '/b ${randomBytes(16)}',
     ];
   }
