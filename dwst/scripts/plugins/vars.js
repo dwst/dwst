@@ -44,7 +44,7 @@ export default class Vars {
     if (variable !== null) {
       const v = this._dwst.model.variables.getVariable(variable);
       if (typeof v  === 'string') {
-        this._dwst.ui.terminal.log(v, 'system');
+        this._dwst.ui.terminal.tlog(v, 'system');
         return;
       }
       if (v instanceof ArrayBuffer) {

@@ -16,10 +16,10 @@ import renderTime from './time.js';
 import renderDirection from './direction.js';
 import renderMlog from './mlog.js';
 
-export default function renderLogEntry(mlog, type, linkHandlers) {
+export default function renderLogEntry(mlog, type, linkHandlers, options) {
   const time = renderTime();
   const direction = renderDirection(type);
-  const content = renderMlog(mlog, type, linkHandlers);
+  const content = renderMlog(mlog, type, linkHandlers, options);
 
   const logEntry = document.createElement('span');
   logEntry.setAttribute('class', 'dwst-log-entry');
