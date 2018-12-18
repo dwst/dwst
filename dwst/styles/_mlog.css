@@ -36,6 +36,7 @@ help on a <span class="dwst-mlog__help-link-wrapper"><a class="dwst-mlog__help-l
 forced linebreak (<br class="dwst-mlog__br">)
 empty row under a <span class="dwst-mlog__help-link-wrapper"><a class="dwst-mlog__help-link dwst-mlog__help-link--spacing" href="#" title="/help help">help</a></span> link
 comma for listing <span class="dwst-mlog__help-link-wrapper dwst-mlog__help-link-wrapper--nowrap"><a class="dwst-mlog__help-link" href="#" title="/help help">help</a>,</span> links
+<span class="dwst-mlog dwst-mlog--text-data">Long&nbsp;no-break&nbsp;line?&nbsp;Question&nbsp;marks&nbsp;don't&nbsp;break&nbsp;it&nbsp;doesn't&nbsp;break&nbsp;in&nbsp;"text&nbsp;data"&nbsp;mode.</span>
 </div>
 
 Styleguide 2.8
@@ -43,8 +44,11 @@ Styleguide 2.8
 
 .dwst-mlog {
   white-space: pre-wrap;
-  word-break: break-all;
+  word-break: break-word;
   hyphens: none;
+}
+.dwst-mlog--text-data {
+  word-break: break-all;
 }
 .dwst-mlog__help-link-wrapper--nowrap {
   white-space: nowrap;
@@ -75,9 +79,8 @@ Styleguide 2.8
 .dwst-mlog__command-link {
   color: var(--dwst-color-cyan);
   text-decoration: none;
-  text-indent: -2ch;
-  margin-left: 2ch;
   display: inline-block;
+  word-break: break-all;
 }
 .dwst-mlog__command-link:hover {
   color: var(--dwst-color-cyan--light);

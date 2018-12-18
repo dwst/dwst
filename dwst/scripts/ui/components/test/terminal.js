@@ -15,13 +15,13 @@
 import rewire from 'rewire';
 import {expect} from 'chai';
 
-const socketRewire = rewire('../socket.js');
-const createLines = socketRewire.__get__('createLines');
+const terminalRewire = rewire('../terminal.js');
+const createLines = terminalRewire.__get__('createLines');
 
-describe('SocketHandler module', () => {
+describe('terminal module', () => {
 
   describe('createLines function', () => {
-    it('should mlog InvalidTemplateExpression error', () => {
+    it('should break into lines', () => {
 
       expect(createLines(['foo'])).to.deep.equal([
         ['foo'],

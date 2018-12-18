@@ -238,7 +238,7 @@ function getLineSegments(line) {
   return line;
 }
 
-export default function renderMlog(sections, type, linkHandlers) {
+export default function renderMlog(sections, type, linkHandlers, options) {
 
   const domSections = sections.map(section => {
     const lines = [];
@@ -255,7 +255,10 @@ export default function renderMlog(sections, type, linkHandlers) {
     return domLines;
   });
   const outputCell = document.createElement('span');
-  outputCell.setAttribute('class', 'dwst-mlog');
+  outputCell.classList.add('dwst-mlog');
+  if (options.textData) {
+    outputCell.classList.add('dwst-mlog--text-data');
+  }
   domSections.forEach(domSection => {
     domSection.forEach(domLine => {
       domLine.forEach(domSegment => {
