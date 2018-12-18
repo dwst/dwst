@@ -259,6 +259,9 @@ export default function renderMlog(sections, type, linkHandlers, options) {
   if (options.textData) {
     outputCell.classList.add('dwst-mlog--text-data');
   }
+  if (options.truncated) {
+    outputCell.classList.add('dwst-mlog--truncated');
+  }
   domSections.forEach(domSection => {
     domSection.forEach(domLine => {
       domLine.forEach(domSegment => {

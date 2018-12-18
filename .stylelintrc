@@ -71,6 +71,7 @@
       "window-inactive"
     ],
     "function-whitelist": [
+      "linear-gradient",
       "translateX",
       "calc",
       "rgba",
@@ -193,6 +194,7 @@
 
     "plugin/no-unsupported-browser-features": [true, {
       "ignore": [
+        "css-masks",
         "css-hyphens",
         "multicolumn",
         "viewport-units",

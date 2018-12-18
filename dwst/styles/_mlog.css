@@ -37,18 +37,36 @@ forced linebreak (<br class="dwst-mlog__br">)
 empty row under a <span class="dwst-mlog__help-link-wrapper"><a class="dwst-mlog__help-link dwst-mlog__help-link--spacing" href="#" title="/help help">help</a></span> link
 comma for listing <span class="dwst-mlog__help-link-wrapper dwst-mlog__help-link-wrapper--nowrap"><a class="dwst-mlog__help-link" href="#" title="/help help">help</a>,</span> links
 <span class="dwst-mlog dwst-mlog--text-data">Long&nbsp;no-break&nbsp;line?&nbsp;Question&nbsp;marks&nbsp;don't&nbsp;break&nbsp;it&nbsp;doesn't&nbsp;break&nbsp;in&nbsp;"text&nbsp;data"&nbsp;mode.</span>
+<span class="dwst-mlog dwst-mlog--truncated">
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+long truncated content
+</span>
 </div>
 
 Styleguide 2.8
 */
 
 .dwst-mlog {
+  display: block;
   white-space: pre-wrap;
   word-break: break-word;
   hyphens: none;
 }
 .dwst-mlog--text-data {
   word-break: break-all;
+}
+.dwst-mlog--truncated {
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.2), 4em, #000 8em);
 }
 .dwst-mlog__help-link-wrapper--nowrap {
   white-space: nowrap;
