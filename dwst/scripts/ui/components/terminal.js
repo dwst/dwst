@@ -157,7 +157,12 @@ export default class Terminal {
     this._dwst.ui.updateGfxPositions();
   }
 
-  mlog(mlogDescription, type, options = {textData: false}) {
+  mlog(mlogDescription, type, userOptions) {
+
+    const options = Object.assign({
+      textData: false,
+      truncated: false,
+    }, userOptions);
 
     const logLine = renderLogEntry(mlogDescription, type, this._dwst.controller.link, options);
 
@@ -173,14 +178,42 @@ export default class Terminal {
   }
 
   blog(buffer, type) {
+    const size = buffer.byteLength;
+    const limit = 2 ** 10;
+    let truncated;
+    let view;
+    if (size > limit) {
+      view = buffer.slice(0, limit);
+      truncated = true;
+    } else {
+      view = buffer;
+      truncated = false;
+    }
     this.mlog([
       `<${buffer.byteLength}B of binary data>`,
-      buffer,
-    ], type);
+      view,
+    ], type, {truncated});
+    if (truncated) {
+      this.log(`User interface limit exceeded! Showing ${limit}B of the ${size}B buffer.`, 'warning');
+    }
   }
 
   tlog(msg, type) {
-    const mlogDescription = hilightControlChars(msg);
-    this.mlog(mlogDescription, type, {textData: true});
+    const size = msg.length;
+    const limit = 2 ** 12;
+    let truncated;
+    let view;
+    if (size > limit) {
+      view = msg.slice(0, limit);
+      truncated = true;
+    } else {
+      view = msg;
+      truncated = false;
+    }
+    const mlogDescription = hilightControlChars(view);
+    this.mlog(mlogDescription, type, {textData: true, truncated});
+    if (truncated) {
+      this.log(`User interface limit exceeded! Showing ${limit} of ${size} characters.`, 'warning');
+    }
   }
 }
