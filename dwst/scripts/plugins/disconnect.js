@@ -41,6 +41,7 @@ export default class Disconnect {
   run() {
     if (this._dwst.model.connection === null) {
       this._dwst.ui.terminal.log('No connection to disconnect', 'warning');
+      return;
     }
     const protocol = [];
     this._dwst.ui.terminal.mlog([`Closing connection to ${this._dwst.model.connection.url}`].concat(protocol), 'system');
