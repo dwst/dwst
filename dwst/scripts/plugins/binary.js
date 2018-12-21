@@ -16,7 +16,6 @@ export default class Binary {
 
   constructor(dwst) {
     this._dwst = dwst;
-    this.functionSupport = true;
   }
 
   commands() {
@@ -47,7 +46,8 @@ export default class Binary {
     return 'send binary data';
   }
 
-  run(buffer) {
+  run(templateExpression) {
+    const buffer = this._dwst.controller.template.eval(templateExpression);
     const msg = `<${buffer.byteLength}B of data> `;
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {

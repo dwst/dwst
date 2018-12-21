@@ -17,7 +17,6 @@ export default class Send {
   constructor(dwst) {
     this._dwst = dwst;
     this._encoder = new TextDecoder('utf-8', {fatal: true});
-    this.functionSupport = true;
   }
 
   commands() {
@@ -60,7 +59,8 @@ export default class Send {
     }
   }
 
-  run(buffer) {
+  run(templateExpression) {
+    const buffer = this._dwst.controller.template.eval(templateExpression);
     const msg = this._encode(buffer);
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {

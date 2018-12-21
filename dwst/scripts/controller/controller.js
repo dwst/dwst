@@ -13,6 +13,7 @@
 */
 
 import LinkHandler from './link.js';
+import TemplateHandler from './template.js';
 import PromptHandler from './prompt.js';
 import SocketHandler from './socket.js';
 import ErrorHandler from './error.js';
@@ -22,6 +23,7 @@ export default class Controller {
 
   constructor(dwst) {
     this.link = new LinkHandler(dwst);
+    this.template = new TemplateHandler(dwst);
     this.prompt = new PromptHandler(dwst);
     this.socket = new SocketHandler(dwst);
     this.error = new ErrorHandler(dwst);
