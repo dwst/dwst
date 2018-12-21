@@ -39,12 +39,8 @@ export default class CharRange extends DwstFunction {
     ];
   }
 
-  type() {
-    return 'STRING';
-  }
-
   info() {
-    return 'generate sequential characters';
+    return 'generate sequential utf-8 encoded characters';
   }
 
   run(args) {

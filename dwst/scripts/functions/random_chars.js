@@ -38,12 +38,8 @@ export default class RandomChars extends DwstFunction {
     ];
   }
 
-  type() {
-    return 'STRING';
-  }
-
   info() {
-    return 'generate random characters';
+    return 'generate random utf-8 encoded characters';
   }
 
   run(args) {

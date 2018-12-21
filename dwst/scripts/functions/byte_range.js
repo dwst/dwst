@@ -38,10 +38,6 @@ export default class ByteRange extends DwstFunction {
     ];
   }
 
-  type() {
-    return 'BINARY';
-  }
-
   info() {
     return 'generate sequential bytes';
   }
