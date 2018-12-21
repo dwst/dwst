@@ -38,12 +38,8 @@ export default class Time extends DwstFunction {
     ];
   }
 
-  type() {
-    return 'STRING';
-  }
-
   info() {
-    return 'generate timestamp';
+    return 'generate utf-8 encoded timestamp';
   }
 
   run() {

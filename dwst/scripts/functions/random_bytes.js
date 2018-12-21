@@ -37,10 +37,6 @@ export default class RandomBytes extends DwstFunction {
     ];
   }
 
-  type() {
-    return 'BINARY';
-  }
-
   info() {
     return 'generate random bytes';
   }

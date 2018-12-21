@@ -177,8 +177,6 @@ export default class Dwstgg {
 
     return ([
       [
-        func.type(),
-        ' ',
         {
           type: 'h1',
           text: `${section}`,
