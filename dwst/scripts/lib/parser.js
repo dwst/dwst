@@ -45,6 +45,11 @@ function quote(string) {
   return `"${string}"`;
 }
 
+function isValidVariableName(variableName) {
+  const validated = new Parsee(variableName).readWhile(variableNameChars);
+  return (variableName === validated);
+}
+
 function skipSpace(parsee) {
   while (parsee.read(' ')) {
     // empty while on purpose
@@ -282,4 +287,5 @@ function escapeForTemplateExpression(textString) {
 export default {
   parseTemplateExpression,
   escapeForTemplateExpression,
+  isValidVariableName,
 };

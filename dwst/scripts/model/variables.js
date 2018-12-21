@@ -15,6 +15,7 @@
 export default class Variables {
 
   constructor(dwst, functionClasses) {
+    this._dwst = dwst;
     this._functions = new Map();
     this._variables = new Map();
     for (const Constructor of functionClasses) {
@@ -26,6 +27,9 @@ export default class Variables {
   }
 
   setVariable(variableName, value) {
+    if (this._dwst.lib.parser.isValidVariableName(variableName) === false) {
+      throw new this._dwst.lib.errors.InvalidVariableName(variableName);
+    }
     this._variables.set(variableName, value);
   }
 
@@ -35,6 +39,10 @@ export default class Variables {
       return variable;
     }
     return this.getFunction(variableName);
+  }
+
+  deleteVariable(variableName) {
+    this._variables.delete(variableName);
   }
 
   getVariableNames() {

@@ -119,6 +119,17 @@ describe('errors module', () => {
       });
     });
   });
+  describe('InvalidVariableNamee error', () => {
+    const error = new errors.InvalidVariableName('?');
+    it('should extend DwstError', () => {
+      expect(error).to.be.an.instanceof(DwstError);
+    });
+    it('should store variable name', () => {
+      expect(error).to.deep.include({
+        variable: '?',
+      });
+    });
+  });
   describe('UnkownCommand error', () => {
     const error = new errors.UnknownCommand('foo');
     it('should extend DwstError', () => {
