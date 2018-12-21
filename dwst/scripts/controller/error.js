@@ -12,7 +12,7 @@
 */
 
 import errors from '../lib/errors.js';
-const {NoConnection, AlreadyConnected, SocketError, InvalidTemplateExpression, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
+const {NoConnection, AlreadyConnected, SocketError, InvalidTemplateExpression, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, InvalidVariableName, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
 
 function commaCommaOr(stringList) {
   if (stringList.length === 0) {
@@ -105,6 +105,13 @@ export default class ErrorHandler {
       return [
         [
           `Variable ${error.variable} is not a ${commaCommaOr(error.expected)}`,
+        ],
+      ];
+    }
+    if (error instanceof InvalidVariableName) {
+      return [
+        [
+          `Invalid variable name ${error.variable}`,
         ],
       ];
     }

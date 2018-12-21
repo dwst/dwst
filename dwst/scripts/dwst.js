@@ -39,8 +39,10 @@ import Loadtext from './plugins/loadtext.js';
 import Pwa from './plugins/pwa.js';
 import Reset from './plugins/reset.js';
 import Send from './plugins/send.js';
+import Set from './plugins/set.js';
 import Spam from './plugins/spam.js';
 import Splash from './plugins/splash.js';
+import Unset from './plugins/unset.js';
 import Vars from './plugins/vars.js';
 
 function loadModel(dwst) {
@@ -89,8 +91,10 @@ dwst.plugins = new Plugins(dwst, [
   Pwa,
   Reset,
   Send,
+  Set,
   Spam,
   Splash,
+  Unset,
   Vars,
 ]);
 

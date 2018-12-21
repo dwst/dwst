@@ -67,6 +67,13 @@ class InvalidDataType extends DwstError {
   }
 }
 
+class InvalidVariableName extends DwstError {
+  constructor(variable) {
+    super();
+    this.variable = variable;
+  }
+}
+
 class UnknownCommand extends DwstError {
   constructor(command) {
     super();
@@ -104,6 +111,7 @@ export default {
   InvalidCombination,
   InvalidUtf8,
   InvalidDataType,
+  InvalidVariableName,
   UnknownCommand,
   UnknownInstruction,
   UnknownHelpPage,
