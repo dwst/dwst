@@ -23,6 +23,7 @@ import DwstError from './types/error.js';
 
 import ByteRange from './functions/byte_range.js';
 import CharRange from './functions/char_range.js';
+import File from './functions/file.js';
 import RandomBytes from './functions/random_bytes.js';
 import RandomChars from './functions/random_chars.js';
 import Time from './functions/time.js';
@@ -34,8 +35,6 @@ import Disconnect from './plugins/disconnect.js';
 import Forget from './plugins/forget.js';
 import Help from './plugins/help.js';
 import Interval from './plugins/interval.js';
-import Loadbin from './plugins/loadbin.js';
-import Loadtext from './plugins/loadtext.js';
 import Pwa from './plugins/pwa.js';
 import Reset from './plugins/reset.js';
 import Send from './plugins/send.js';
@@ -59,6 +58,7 @@ function loadModel(dwst) {
   return new Model(dwst, history, save, [
     ByteRange,
     CharRange,
+    File,
     RandomBytes,
     RandomChars,
     Time,
@@ -86,8 +86,6 @@ dwst.plugins = new Plugins(dwst, [
   Forget,
   Help,
   Interval,
-  Loadbin,
-  Loadtext,
   Pwa,
   Reset,
   Send,
