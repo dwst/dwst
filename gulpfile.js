@@ -147,7 +147,7 @@ gulp.task('validate', ['jsonlint', 'eslint', 'stylelint', 'htmlhint']);
 gulp.task('mocha', () => {
   return gulp.src('test/test.js', {read: false})
     .pipe(mocha({
-      compilers: 'js:babel-core/register',
+      compilers: 'js:@babel/register',
     }));
 });
 
@@ -199,24 +199,10 @@ gulp.task('build-css', () => {
 });
 
 const webpackModuleConf = {
-  loaders: [
+  rules: [
     {
       test: /\.js$/,
       loader: 'babel-loader',
-      query: {
-        plugins: [
-          ['babel-plugin-transform-builtin-extend', {
-            globals: ['Error'],
-          }],
-        ],
-        presets: [
-          ['env', {
-            targets: {
-              browsers: require('./package.json').browserslist,
-            },
-          }],
-        ],
-      },
     },
   ],
 };
@@ -227,6 +213,7 @@ gulp.task('build-app-js', () => {
       output: {
         filename: jsRootFile,
       },
+      mode: 'production',
       devtool: 'source-map',
       module: webpackModuleConf,
     }, webpack2))
@@ -243,6 +230,7 @@ gulp.task('build-sw-js', () => {
       output: {
         filename: swRootFile,
       },
+      mode: 'production',
       devtool: 'source-map',
       module: webpackModuleConf,
     }, webpack2))
