@@ -18,18 +18,23 @@ export default class PromptHandler {
     this._dwst = dwst;
   }
 
-  _runPlugin(pluginName, paramString) {
+  async _runPlugin(pluginName, paramString) {
     const plugin = this._dwst.plugins.getPlugin(pluginName);
     if (plugin === null) {
       throw new this._dwst.lib.errors.UnknownCommand(pluginName);
     }
-    plugin.run(paramString);
+    return plugin.run(paramString);
   }
 
   run(command) {
     const [pluginName, ...params] = command.split(' ');
     const paramString = params.join(' ');
-    this._runPlugin(pluginName, paramString);
+    this._runPlugin(pluginName, paramString).catch(error => {
+      // setTimeout used to escape promise
+      setTimeout(() => {
+        throw error;
+      });
+    });
   }
 
   silent(line) {

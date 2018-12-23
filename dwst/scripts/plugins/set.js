@@ -38,13 +38,13 @@ export default class Set {
     return 'set variable';
   }
 
-  run(paramString) {
+  async run(paramString) {
     const [variableName, ...templateExpressionParts] = paramString.split(' ');
     if (variableName.length === 0) {
       throw new this._dwst.lib.errors.InvalidArgument(variableName, ['expected variable name']);
     }
     const templateExpression = templateExpressionParts.join(' ');
-    const buffer = this._dwst.controller.template.eval(templateExpression);
+    const buffer = await this._dwst.controller.template.eval(templateExpression);
     this._dwst.model.variables.setVariable(variableName, buffer);
     this._dwst.ui.terminal.mlog([
       `${buffer.byteLength}B of data stored in variable ${variableName}`,

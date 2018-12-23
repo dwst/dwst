@@ -32,7 +32,7 @@ export default class TemplateHandler {
     throw new this._dwst.lib.errors.InvalidDataType(name, ['FUNCTION']);
   }
 
-  _evalParticle(particle) {
+  async _evalParticle(particle) {
     if (particle.type === 'text') {
       return this._encoder.encode(particle.value);
     }
@@ -59,7 +59,7 @@ export default class TemplateHandler {
       throw new this._dwst.lib.errors.UnknownVariable(variableName);
     }
     if (particle.type === 'function') {
-      const output = this._evalFunction(particle);
+      const output = await this._evalFunction(particle);
       if (output.constructor === Uint8Array) {
         return output;
       }
@@ -71,12 +71,12 @@ export default class TemplateHandler {
     throw new Error('unexpected particle type');
   }
 
-  _evalTemplateExpression(templateExpression) {
+  async _evalTemplateExpression(templateExpression) {
     const rootNode = this._dwst.lib.parser.parseTemplateExpression(templateExpression);
     if (rootNode.type !== 'templateExpression') {
       throw new Error('unexpected root node type');
     }
-    const chunks = rootNode.particles.map(particle => this._evalParticle(particle));
+    const chunks = await Promise.all(rootNode.particles.map(particle => this._evalParticle(particle)));
     const buffer = this._dwst.lib.utils.joinBuffers(chunks).buffer;
     return buffer;
   }
