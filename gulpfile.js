@@ -147,7 +147,7 @@ gulp.task('validate', ['jsonlint', 'eslint', 'stylelint', 'htmlhint']);
 gulp.task('mocha', () => {
   return gulp.src('test/test.js', {read: false})
     .pipe(mocha({
-      compilers: 'js:@babel/register',
+      require: '@babel/register',
     }));
 });
 
