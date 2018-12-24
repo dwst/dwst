@@ -35,7 +35,7 @@
     "gulp-replace": "^0.6.1",
     "gulp-sequence": "^0.4.6",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-stylelint": "^5.0.0",
+    "gulp-stylelint": "^8.0.0",
     "gulp-webpack": "^1.5.0",
     "postcss-color-hex-alpha": "^3.0.0",
     "postcss-discard-comments": "^2.0.4",
@@ -43,7 +43,8 @@
     "postcss-sprites": "^4.2.1",
     "rewire": "^3.0.2",
     "sc5-styleguide": "^0.3.47",
-    "stylelint-no-unsupported-browser-features": "^1.0.0",
+    "stylelint": "^9.9.0",
+    "stylelint-no-unsupported-browser-features": "^3.0.2",
     "vinyl-fs": "^2.4.4",
     "webpack": "^4.28.2",
     "webpack-stream": "^5.2.1"

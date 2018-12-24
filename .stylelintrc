@@ -196,9 +196,7 @@
       "ignore": [
         "css-masks",
         "css-hyphens",
-        "multicolumn",
-        "viewport-units",
-        "outline"
+        "multicolumn"
       ]
     }]
   }
