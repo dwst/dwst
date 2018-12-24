@@ -17,7 +17,6 @@
 const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
-const gulpSequence = require('gulp-sequence');
 const jsonlint = require('gulp-jsonlint');
 const eslint = require('gulp-eslint');
 const htmlhint = require('gulp-htmlhint');
@@ -125,7 +124,7 @@ gulp.task('eslint', () => {
 });
 
 gulp.task('htmlhint', () => {
-  gulp.src(lintingPaths.html)
+  return gulp.src(lintingPaths.html)
     .pipe(htmlhint('.htmlhintrc'))
     .pipe(htmlhint.failReporter());
 });
@@ -142,7 +141,7 @@ gulp.task('stylelint', () => {
     }));
 });
 
-gulp.task('validate', ['jsonlint', 'eslint', 'stylelint', 'htmlhint']);
+gulp.task('validate', gulp.parallel('jsonlint', 'eslint', 'stylelint', 'htmlhint'));
 
 gulp.task('mocha', () => {
   return gulp.src('test/test.js', {read: false})
@@ -151,26 +150,10 @@ gulp.task('mocha', () => {
     }));
 });
 
-gulp.task('test', ['validate', 'mocha']);
-
-gulp.task('dev', ['build'], () => {
-  browserSync.init({
-    server: {
-      baseDir: buildBase,
-      index: htmlRootLink,
-    },
-  });
-  gulp.watch(sourcePaths.manifest, ['build-manifest']);
-  gulp.watch(sourcePaths.html, ['build-html']);
-  gulp.watch(sourcePaths.images, ['build-images']);
-  gulp.watch(sourcePaths.scripts, ['build-js']);
-  gulp.watch(sourcePaths.css, ['build-styleguide']);
-  gulp.watch(sourcePaths.sprites, ['build-styleguide']);
-  gulp.watch(sourcePaths.cssReadme, ['build-styleguide']);
-});
+gulp.task('test', gulp.parallel('validate', 'mocha'));
 
 gulp.task('clean', () => {
-  return gulp.src(buildBase, {read: false})
+  return gulp.src(buildBase, {read: false, allowEmpty: true})
     .pipe(clean());
 });
 
@@ -241,9 +224,7 @@ gulp.task('build-sw-js', () => {
     .pipe(browserSync.stream());
 });
 
-gulp.task('build-js', cb => {
-  gulpSequence('build-sw-js', 'build-app-js')(cb);
-});
+gulp.task('build-js', gulp.series('build-sw-js', 'build-app-js'));
 
 gulp.task('build-html', () => {
   // We bundle javascript with webpack for production builds
@@ -292,30 +273,44 @@ gulp.task('styleguide:generate', () => {
     .pipe(gulp.dest(targetDirs.styleguide));
 });
 
-gulp.task('styleguide:applystyles', ['build-css'], () => {
+gulp.task('styleguide:applystyles', gulp.series('build-css', () => {
   return gulp.src(targetPaths.cssRoot)
     .pipe(styleguide.applyStyles())
     .pipe(gulp.dest(targetDirs.styleguide));
-});
+}));
 
 gulp.task('replace-styleguide-favicon', () => {
   return gulp.src(sourcePaths.styleguideFavicon)
     .pipe(gulp.dest(path.join(targetDirs.styleguide, 'assets/img')));
 });
 
-gulp.task('build-styleguide', cb => {
-  // the cb hassle is needed since gulpSequence is used inside a watcher
-  gulpSequence(['styleguide:generate', 'styleguide:applystyles'], 'replace-styleguide-favicon')(cb);
-});
+gulp.task('build-styleguide', gulp.series(gulp.parallel('styleguide:generate', 'styleguide:applystyles'), 'replace-styleguide-favicon'));
 
-gulp.task('build-assets', ['build-js', 'build-styleguide', 'build-html', 'build-images', 'build-manifest']);
+gulp.task('build-assets', gulp.parallel('build-js', 'build-styleguide', 'build-html', 'build-images', 'build-manifest'));
 
-gulp.task('create-symlinks', () => {
+gulp.task('create-symlinks', done => {
   fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, targetPaths.styleguideHtmlLink);
   fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
   fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, targetPaths.serviceworkerLink);
+  done();
 });
 
-gulp.task('build', gulpSequence('clean', 'build-assets', 'create-symlinks'));
+gulp.task('build', gulp.series('clean', 'build-assets', 'create-symlinks'));
 
-gulp.task('default', ['build']);
+gulp.task('dev', gulp.series('build', () => {
+  browserSync.init({
+    server: {
+      baseDir: buildBase,
+      index: htmlRootLink,
+    },
+  });
+  gulp.watch(sourcePaths.manifest, gulp.series('build-manifest'));
+  gulp.watch(sourcePaths.html, gulp.series('build-html'));
+  gulp.watch(sourcePaths.images, gulp.series('build-images'));
+  gulp.watch(sourcePaths.scripts, gulp.series('build-js'));
+  gulp.watch(sourcePaths.css, gulp.series('build-styleguide'));
+  gulp.watch(sourcePaths.sprites, gulp.series('build-styleguide'));
+  gulp.watch(sourcePaths.cssReadme, gulp.series('build-styleguide'));
+}));
+
+gulp.task('default', gulp.series('build'));
