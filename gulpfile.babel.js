@@ -1,6 +1,4 @@
 
-/* global require */
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2018
@@ -14,29 +12,31 @@
 
 */
 
-const fs = require('fs');
-const path = require('path');
-const gulp = require('gulp');
-const jsonlint = require('gulp-jsonlint');
-const eslint = require('gulp-eslint');
-const htmlhint = require('gulp-htmlhint');
-const browserSync = require('browser-sync').create();
-const clean = require('gulp-clean');
-const webpackStream = require('webpack-stream');
-const webpack2 = require('webpack');
-const fse = require('fs-extra');
-const postcss = require('gulp-postcss');
-const atImport = require('postcss-import');
-const sprites = require('postcss-sprites');
-const colorHexAlpha = require('postcss-color-hex-alpha');
-const discardComments = require('postcss-discard-comments');
-const sourcemaps = require('gulp-sourcemaps');
-const rename = require('gulp-rename');
-const stylelint = require('gulp-stylelint');
-const autoprefixer = require('autoprefixer');
-const replace = require('gulp-replace');
-const mocha = require('gulp-mocha');
-const styleguide = require('sc5-styleguide');
+import fs from 'fs';
+import path from 'path';
+import gulp from 'gulp';
+import gulpJsonlint from 'gulp-jsonlint';
+import gulpEslint from 'gulp-eslint';
+import gulpHtmlhint from 'gulp-htmlhint';
+import gulpClean from 'gulp-clean';
+import webpackStream from 'webpack-stream';
+import webpack2 from 'webpack';
+import fse from 'fs-extra';
+import postcss from 'gulp-postcss';
+import atImport from 'postcss-import';
+import sprites from 'postcss-sprites';
+import colorHexAlpha from 'postcss-color-hex-alpha';
+import discardComments from 'postcss-discard-comments';
+import sourcemaps from 'gulp-sourcemaps';
+import rename from 'gulp-rename';
+import gulpStylelint from 'gulp-stylelint';
+import autoprefixer from 'autoprefixer';
+import replace from 'gulp-replace';
+import gulpMocha from 'gulp-mocha';
+import styleguide from 'sc5-styleguide';
+import {create as bsCreate} from 'browser-sync';
+
+const browserSync = bsCreate();
 
 const jsRootFile = 'dwst.js';
 const swRootFile = 'service_worker.js';
@@ -105,33 +105,33 @@ const styleguideBase = `/${VERSION}/${styleguideRoot}`;
 
 const lintingPaths = {
   json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc', 'package.json'],
-  javascript: [sourcePaths.scripts, 'gulpfile.js', 'dwst/**/test/**/*.js'],
+  javascript: [sourcePaths.scripts, 'gulpfile.babel.js', 'dwst/**/test/**/*.js'],
   html: sourcePaths.html,
   css: sourcePaths.css,
 };
 
-gulp.task('jsonlint', () => {
+export function jsonlint() {
   return gulp.src(lintingPaths.json)
-    .pipe(jsonlint())
-    .pipe(jsonlint.failOnError());
-});
+    .pipe(gulpJsonlint())
+    .pipe(gulpJsonlint.failOnError());
+}
 
-gulp.task('eslint', () => {
+export function eslint() {
   return gulp.src(lintingPaths.javascript)
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
-});
+    .pipe(gulpEslint())
+    .pipe(gulpEslint.format())
+    .pipe(gulpEslint.failAfterError());
+}
 
-gulp.task('htmlhint', () => {
+export function htmlhint() {
   return gulp.src(lintingPaths.html)
-    .pipe(htmlhint('.htmlhintrc'))
-    .pipe(htmlhint.failReporter());
-});
+    .pipe(gulpHtmlhint('.htmlhintrc'))
+    .pipe(gulpHtmlhint.failReporter());
+}
 
-gulp.task('stylelint', () => {
+export function stylelint() {
   return gulp.src(lintingPaths.css)
-    .pipe(stylelint({
+    .pipe(gulpStylelint({
       reporters: [
         {
           formatter: 'string',
@@ -139,25 +139,25 @@ gulp.task('stylelint', () => {
         },
       ],
     }));
-});
+}
 
-gulp.task('validate', gulp.parallel('jsonlint', 'eslint', 'stylelint', 'htmlhint'));
+export const validate = gulp.parallel(jsonlint, eslint, stylelint, htmlhint);
 
-gulp.task('mocha', () => {
+export function mocha() {
   return gulp.src('test/test.js', {read: false})
-    .pipe(mocha({
+    .pipe(gulpMocha({
       require: '@babel/register',
     }));
-});
+}
 
-gulp.task('test', gulp.parallel('validate', 'mocha'));
+export const test = gulp.parallel(validate, mocha);
 
-gulp.task('clean', () => {
+export function clean() {
   return gulp.src(buildBase, {read: false, allowEmpty: true})
-    .pipe(clean());
-});
+    .pipe(gulpClean());
+}
 
-gulp.task('build-css', () => {
+export function buildCss() {
   return gulp.src(sourcePaths.cssEntry)
     .pipe(sourcemaps.init())
     .pipe(postcss([
@@ -179,7 +179,7 @@ gulp.task('build-css', () => {
       p.dirname = path.join(targetDirs.styles, p.dirname);
     }))
     .pipe(browserSync.stream());
-});
+}
 
 const webpackModuleConf = {
   rules: [
@@ -190,7 +190,7 @@ const webpackModuleConf = {
   ],
 };
 
-gulp.task('build-app-js', () => {
+export function buildAppJs() {
   return gulp.src(sourcePaths.scriptEntry)
     .pipe(webpackStream({
       output: {
@@ -205,9 +205,9 @@ gulp.task('build-app-js', () => {
       p.dirname = path.join(targetDirs.scripts, p.dirname);
     }))
     .pipe(browserSync.stream());
-});
+}
 
-gulp.task('build-sw-js', () => {
+export function buildSwJs() {
   return gulp.src(sourcePaths.swEntry)
     .pipe(webpackStream({
       output: {
@@ -222,11 +222,11 @@ gulp.task('build-sw-js', () => {
       p.dirname = path.join(targetDirs.scripts, p.dirname);
     }))
     .pipe(browserSync.stream());
-});
+}
 
-gulp.task('build-js', gulp.series('build-sw-js', 'build-app-js'));
+export const buildJs = gulp.series(buildSwJs, buildAppJs);
 
-gulp.task('build-html', () => {
+export function buildHtml() {
   // We bundle javascript with webpack for production builds
   // So we should be fine without the module system
   return gulp.src(sourcePaths.html)
@@ -237,27 +237,27 @@ gulp.task('build-html', () => {
       p.dirname = path.join(versionBase, p.dirname);
     }))
     .pipe(browserSync.stream());
-});
+}
 
-gulp.task('build-images', () => {
+export function buildImages() {
   return gulp.src(sourcePaths.images)
     .pipe(gulp.dest(targetDirs.images))
     .pipe(rename(p => {
       p.dirname = path.join(targetDirs.images, p.dirname);
     }))
     .pipe(browserSync.stream());
-});
+}
 
-gulp.task('build-manifest', () => {
+export function buildManifest() {
   return gulp.src(sourcePaths.manifest)
     .pipe(gulp.dest(versionBase))
     .pipe(rename(p => {
       p.dirname = path.join(versionBase, p.dirname);
     }))
     .pipe(browserSync.stream());
-});
+}
 
-gulp.task('styleguide:generate', () => {
+export function styleguideGenerate() {
   return gulp.src(sourcePaths.css)
     .pipe(styleguide.generate({
       title: 'DWST Style Guide',
@@ -271,46 +271,46 @@ gulp.task('styleguide:generate', () => {
       ],
     }))
     .pipe(gulp.dest(targetDirs.styleguide));
-});
+}
 
-gulp.task('styleguide:applystyles', gulp.series('build-css', () => {
+export const styleguideApplystyles = gulp.series(buildCss, () => {
   return gulp.src(targetPaths.cssRoot)
     .pipe(styleguide.applyStyles())
     .pipe(gulp.dest(targetDirs.styleguide));
-}));
-
-gulp.task('replace-styleguide-favicon', () => {
-  return gulp.src(sourcePaths.styleguideFavicon)
-    .pipe(gulp.dest(path.join(targetDirs.styleguide, 'assets/img')));
 });
 
-gulp.task('build-styleguide', gulp.series(gulp.parallel('styleguide:generate', 'styleguide:applystyles'), 'replace-styleguide-favicon'));
+export function replaceStyleguideFavicon() {
+  return gulp.src(sourcePaths.styleguideFavicon)
+    .pipe(gulp.dest(path.join(targetDirs.styleguide, 'assets/img')));
+}
 
-gulp.task('build-assets', gulp.parallel('build-js', 'build-styleguide', 'build-html', 'build-images', 'build-manifest'));
+export const buildStyleguide = gulp.series(gulp.parallel(styleguideGenerate, styleguideApplystyles), replaceStyleguideFavicon);
 
-gulp.task('create-symlinks', done => {
+export const buildAssets = gulp.parallel(buildJs, buildStyleguide, buildHtml, buildImages, buildManifest);
+
+export function createSymlinks(done) {
   fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, targetPaths.styleguideHtmlLink);
   fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
   fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, targetPaths.serviceworkerLink);
   done();
-});
+}
 
-gulp.task('build', gulp.series('clean', 'build-assets', 'create-symlinks'));
+export const build = gulp.series(clean, buildAssets, createSymlinks);
 
-gulp.task('dev', gulp.series('build', () => {
+export const dev = gulp.series(build, () => {
   browserSync.init({
     server: {
       baseDir: buildBase,
       index: htmlRootLink,
     },
   });
-  gulp.watch(sourcePaths.manifest, gulp.series('build-manifest'));
-  gulp.watch(sourcePaths.html, gulp.series('build-html'));
-  gulp.watch(sourcePaths.images, gulp.series('build-images'));
-  gulp.watch(sourcePaths.scripts, gulp.series('build-js'));
-  gulp.watch(sourcePaths.css, gulp.series('build-styleguide'));
-  gulp.watch(sourcePaths.sprites, gulp.series('build-styleguide'));
-  gulp.watch(sourcePaths.cssReadme, gulp.series('build-styleguide'));
-}));
+  gulp.watch(sourcePaths.manifest, buildManifest);
+  gulp.watch(sourcePaths.html, buildHtml);
+  gulp.watch(sourcePaths.images, buildImages);
+  gulp.watch(sourcePaths.scripts, buildJs);
+  gulp.watch(sourcePaths.css, buildStyleguide);
+  gulp.watch(sourcePaths.sprites, buildStyleguide);
+  gulp.watch(sourcePaths.cssReadme, buildStyleguide);
+});
 
-gulp.task('default', gulp.series('build'));
+export default build;
