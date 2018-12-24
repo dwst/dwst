@@ -15,7 +15,8 @@
 const commands = [
   'git clone https://github.com/dwst/dwst.git',
   'cd dwst',
-  'npm install',
+  'npm install -g yarn',
+  'yarn',
   'gulp dev',
 ];
 
