@@ -1,4 +1,12 @@
+
+const appVersion = (() => {
+  if (typeof VERSION === 'undefined') {
+    return 'unknown-version';
+  }
+  return VERSION;
+})();
+
 export default {
-  appVersion: '2.5.7',
+  appVersion,
   echoServer: 'wss://echo.websocket.org/',
 };

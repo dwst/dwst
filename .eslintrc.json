@@ -12,6 +12,7 @@
     "chai-friendly"
   ],
   "globals": {
+    "VERSION": true,
     "chrome": true,
     "require": true
   },
