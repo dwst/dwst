@@ -75,8 +75,16 @@ const sourcePaths = {
   config: path.join(sourceDirs.scripts, 'model/config.js'),
 };
 
-// This is ugly but NodeGit does not support describe at the moment
-const VERSION = exec.execSync('git describe --tags', {encoding: 'ascii'}).split('\n')[0].split('\r')[0];
+const VERSION = (() => {
+  // This is ugly but NodeGit does not support describe at the moment
+  const stdout = exec.execSync('git describe --tags', {encoding: 'ascii'});
+  const firstLine = stdout.split('\n')[0].split('\r')[0];
+  const prefix = 'v';
+  if (firstLine.startsWith(prefix)) {
+    return firstLine.slice(prefix.length);
+  }
+  throw new Error('Unexpected version number format');
+})();
 
 const buildBase = 'build';
 const versionBase = path.join(buildBase, VERSION);
