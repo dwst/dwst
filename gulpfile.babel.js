@@ -12,8 +12,8 @@
 
 */
 
-import fs from 'fs';
 import path from 'path';
+import exec from 'child_process';
 import gulp from 'gulp';
 import gulpJsonlint from 'gulp-jsonlint';
 import gulpEslint from 'gulp-eslint';
@@ -75,11 +75,8 @@ const sourcePaths = {
   config: path.join(sourceDirs.scripts, 'model/config.js'),
 };
 
-const VERSION = (function () {
-  // hack to read the version number from an EcmaScript module
-  const configFile = fs.readFileSync(sourcePaths.config, {encoding: 'utf-8'});
-  return configFile.match(/appVersion: +'([^']*)',/)[1];
-}());
+// This is ugly but NodeGit does not support describe at the moment
+const VERSION = exec.execSync('git describe --tags', {encoding: 'ascii'}).split('\n')[0].split('\r')[0];
 
 const buildBase = 'build';
 const versionBase = path.join(buildBase, VERSION);
@@ -199,6 +196,11 @@ export function buildAppJs() {
       mode: 'production',
       devtool: 'source-map',
       module: webpackModuleConf,
+      plugins: [
+        new webpack2.DefinePlugin({
+          VERSION: JSON.stringify(VERSION),
+        }),
+      ],
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
     .pipe(rename(p => {
@@ -216,6 +218,11 @@ export function buildSwJs() {
       mode: 'production',
       devtool: 'source-map',
       module: webpackModuleConf,
+      plugins: [
+        new webpack2.DefinePlugin({
+          VERSION: JSON.stringify(VERSION),
+        }),
+      ],
     }, webpack2))
     .pipe(gulp.dest(targetDirs.scripts))
     .pipe(rename(p => {
