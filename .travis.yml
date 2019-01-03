@@ -2,6 +2,17 @@ language: node_js
 node_js:
   - "10"
 script: npm test
+deploy:
+  provider: pages
+  skip-cleanup: true
+  local-dir: release
+  repo: git@github.com:dwst/dwst.github.io.git
+  target-branch: master
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  on:
+    repo: dwst/dwst
+    branch: master
 addons:
   apt:
     sources:
