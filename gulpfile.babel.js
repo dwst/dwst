@@ -12,6 +12,7 @@
 
 */
 
+import fs from 'fs';
 import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
@@ -33,6 +34,7 @@ import gulpStylelint from 'gulp-stylelint';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
+import {Clone} from 'nodegit';
 import styleguide from 'sc5-styleguide';
 import {create as bsCreate} from 'browser-sync';
 
@@ -86,23 +88,36 @@ const VERSION = (() => {
   throw new Error('Unexpected version number format');
 })();
 
+function formTargets(base) {
+  const targetDirs = {
+    styles: path.join(base, 'styles'),
+    scripts: path.join(base, 'scripts'),
+    images: path.join(base, 'images'),
+    styleguide: path.join(base, 'styleguide'),
+  };
+  const targetPaths = {
+    cssRoot: path.join(targetDirs.styles, cssRootFile),
+    htmlRoot: path.join(base, htmlRootFile),
+    styleguideHtmlRoot: path.join(targetDirs.styleguide, styleguideRootFile),
+    serviceworkerRoot: path.join(targetDirs.scripts, serviceworkerRootFile),
+  };
+  return [targetDirs, targetPaths];
+}
+
+function formLinkTargets(base) {
+  const targets = {
+    htmlLink: path.join(base, htmlRootLink),
+    styleguideHtmlLink: path.join(base, styleguideRootLink),
+    serviceworkerLink: path.join(base, serviceworkerRootLink),
+  };
+  return targets;
+}
 const buildBase = 'build';
 const versionBase = path.join(buildBase, VERSION);
-const targetDirs = {
-  styles: path.join(versionBase, 'styles'),
-  scripts: path.join(versionBase, 'scripts'),
-  images: path.join(versionBase, 'images'),
-  styleguide: path.join(versionBase, 'styleguide'),
-};
-const targetPaths = {
-  cssRoot: path.join(targetDirs.styles, cssRootFile),
-  htmlRoot: path.join(versionBase, htmlRootFile),
-  htmlLink: path.join(buildBase, htmlRootLink),
-  styleguideHtmlRoot: path.join(targetDirs.styleguide, styleguideRootFile),
-  styleguideHtmlLink: path.join(buildBase, styleguideRootLink),
-  serviceworkerRoot: path.join(targetDirs.scripts, serviceworkerRootFile),
-  serviceworkerLink: path.join(buildBase, serviceworkerRootLink),
-};
+const [targetDirs, targetPaths] = formTargets(versionBase);
+const linkTargets = formLinkTargets(buildBase);
+
+const releaseBase = 'release';
 
 // The ending slash of both base paths seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
@@ -157,7 +172,7 @@ export function mocha() {
 
 export const test = gulp.parallel(validate, mocha);
 
-export function clean() {
+export function deleteBuild() {
   return gulp.src(buildBase, {read: false, allowEmpty: true})
     .pipe(gulpClean());
 }
@@ -304,13 +319,15 @@ export const buildStyleguide = gulp.series(gulp.parallel(styleguideGenerate, sty
 export const buildAssets = gulp.parallel(buildJs, buildStyleguide, buildHtml, buildImages, buildManifest);
 
 export function createSymlinks(done) {
-  fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, targetPaths.styleguideHtmlLink);
-  fse.ensureSymlinkSync(targetPaths.htmlRoot, targetPaths.htmlLink);
-  fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, targetPaths.serviceworkerLink);
+  fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, linkTargets.styleguideHtmlLink);
+  fse.ensureSymlinkSync(targetPaths.htmlRoot, linkTargets.htmlLink);
+  fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, linkTargets.serviceworkerLink);
   done();
 }
 
-export const build = gulp.series(clean, buildAssets, createSymlinks);
+export const buildWithoutLinks = gulp.series(deleteBuild, buildAssets);
+
+export const build = gulp.series(buildWithoutLinks, createSymlinks);
 
 export const dev = gulp.series(build, () => {
   browserSync.init({
@@ -327,5 +344,106 @@ export const dev = gulp.series(build, () => {
   gulp.watch(sourcePaths.sprites, buildStyleguide);
   gulp.watch(sourcePaths.cssReadme, buildStyleguide);
 });
+
+export function getCurrent(done) {
+  const releaseRepo = 'https://github.com/dwst/dwst.github.io.git';
+  Clone.clone(releaseRepo, releaseBase).then(() => done()).catch(err => {
+    throw err;
+  });
+}
+
+export function ungitCurrent() {
+  return gulp.src(path.join(releaseBase, '.git'), {read: false, allowEmpty: true})
+    .pipe(gulpClean());
+}
+
+export const getOldStuff = gulp.series(deleteRelease, getCurrent, ungitCurrent);
+
+export function addNewStuff() {
+  return gulp.src(path.join(buildBase, '**/*'))
+    .pipe(gulp.dest(releaseBase));
+}
+
+export function deleteRelease() {
+  return gulp.src(releaseBase, {read: false, allowEmpty: true})
+    .pipe(gulpClean());
+}
+
+function getStableReleases() {
+  return fs.readdirSync(releaseBase).map(name => {
+    if (fs.lstatSync(path.join(releaseBase, name)).isDirectory() === false) {
+      // not a directory
+      return null;
+    }
+    if (name.startsWith('2.') === false) {
+      // not a release directory
+      return null;
+    }
+    if (name.includes('-')) {
+      // not a stable release directory
+      return null;
+    }
+    return name;
+  }).filter(x => x);
+}
+
+function compareVersions(a, b) {
+  if (a.includes('-') || b.includes('-')) {
+    throw new Error('Cannot compare unstable version numbers');
+  }
+  const [aMajor, aMinor, aPatch] = a.split('.').map(x => parseInt(x, 10));
+  const [bMajor, bMinor, bPatch] = b.split('.').map(x => parseInt(x, 10));
+  if (aMajor > bMajor) {
+    return -1;
+  }
+  if (bMajor > aMajor) {
+    return 1;
+  }
+  if (aMinor > bMinor) {
+    return -1;
+  }
+  if (bMinor > aMinor) {
+    return 1;
+  }
+  if (aPatch > bPatch) {
+    return -1;
+  }
+  if (bPatch > aPatch) {
+    return 1;
+  }
+  return 0;
+}
+
+function latestRelease() {
+  const stableReleases = getStableReleases();
+  stableReleases.sort(compareVersions);
+  return stableReleases[0];
+}
+
+function updateLink(target, link) {
+  try {
+    fs.unlinkSync(link);
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+  }
+  fse.ensureSymlinkSync(target, link);
+}
+
+export function updateReleaseSymlinks(done) {
+  const releaseLinks = formLinkTargets(releaseBase);
+  const latest = latestRelease();
+  const releasePath = path.join(releaseBase, latest);
+  const [, releaseTargets] = formTargets(releasePath);
+  updateLink(releaseTargets.styleguideHtmlRoot, releaseLinks.styleguideHtmlLink);
+  updateLink(releaseTargets.htmlRoot, releaseLinks.htmlLink);
+  updateLink(releaseTargets.serviceworkerRoot, releaseLinks.serviceworkerLink);
+  done();
+}
+
+export const buildRelease = gulp.series(gulp.parallel(getOldStuff, buildWithoutLinks), addNewStuff, updateReleaseSymlinks);
+
+export const clean = gulp.parallel(deleteBuild, deleteRelease);
 
 export default build;
