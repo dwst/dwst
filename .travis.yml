@@ -6,7 +6,7 @@ deploy:
   provider: pages
   skip-cleanup: true
   local-dir: release
-  repo: git@github.com:dwst/dwst.github.io.git
+  repo: dwst/dwst.github.io
   target-branch: master
   github-token: $GITHUB_TOKEN
   keep-history: true
