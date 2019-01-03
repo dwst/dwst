@@ -12,7 +12,7 @@ deploy:
   keep-history: true
   on:
     repo: dwst/dwst
-    branch: master
+    all_branches: true
 addons:
   apt:
     sources:
