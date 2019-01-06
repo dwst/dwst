@@ -17,8 +17,8 @@ const {UnknownCommand, UnknownHelpPage, UnknownInstruction} = errors;
 
 import chromePage from './_chrome.js';
 import commandsPage from './_commands.js';
-import developingPage from './_developing.js';
 import developmentPage from './_development.js';
+import localPage from './_local.js';
 import firefoxPage from './_firefox.js';
 import functionsPage from './_functions.js';
 import introductionPage from './_introduction.js';
@@ -28,38 +28,58 @@ import styleguidePage from './_styleguide.js';
 import simulatorPage from './_simulator.js';
 import unprotectedPage from './_unprotected.js';
 
-function createBreadCrumbs(section = null) {
-  const root = [
-    {
-      type: 'dwstgg',
-      text: 'DWSTGG',
-    },
-  ];
-  if (section === null) {
-    return root;
+const topicMap = {
+  '#firefox': '#unprotected',
+  '#chrome': '#unprotected',
+  '#local': '#development',
+  '#styleguide': '#development',
+  '#simulator': '#development',
+};
+
+function *crumbSections(section) {
+
+  // first crumb
+  yield '#help';
+  if (section === '#help') {
+    return;
   }
-  return root.concat([
+
+  // optional middle crumb
+  if (topicMap.hasOwnProperty(section)) {
+    yield  topicMap[section];
+  } else if (section.endsWith('()')) {
+    yield '#functions';
+  } else if (section.startsWith('#') === false) {
+    yield '#commands';
+  }
+
+  // last crumb
+  yield section;
+}
+
+function createBreadCrumbs(section = '#help') {
+  return [...crumbSections(section)].flatMap(crumbText => [
     {
       type: 'regular',
       text: ' &raquo; ',
       unsafe: true,
     },
     {
-      type: 'dwstgg',
-      text: `${section}`,
-      section: `${section}`,
+      type: 'help',
+      text: `${crumbText}`,
+      section: `${crumbText}`,
     },
-  ]);
+  ]).slice(1);
 }
 
-export default class Dwstgg {
+export default class Help {
 
   constructor(dwst) {
     this._dwst = dwst;
   }
 
   _helpPage(section) {
-    if (section === '#main') {
+    if (section === '#help') {
       return mainPage();
     }
     if (section === '#chrome') {
@@ -68,11 +88,11 @@ export default class Dwstgg {
     if (section === '#firefox') {
       return firefoxPage();
     }
-    if (section === '#developing') {
-      return developingPage();
-    }
     if (section === '#development') {
       return developmentPage();
+    }
+    if (section === '#local') {
+      return localPage();
     }
     if (section === '#styleguide') {
       return styleguidePage();

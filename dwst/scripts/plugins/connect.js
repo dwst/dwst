@@ -76,7 +76,7 @@ export default class Connect {
           'Attempting unprotected connection from a secure origin. ',
           'See ',
           {
-            type: 'dwstgg',
+            type: 'help',
             text: '#unprotected',
             section: '#unprotected',
           },

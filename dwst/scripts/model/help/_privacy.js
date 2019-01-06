@@ -26,13 +26,13 @@ const gaSection = [
 const disableTracking = [
   'There are several ways to disable tracking. ',
   'You could use some browser extension that blocks Google Analytics or',
-  'you could use the DWST ',
+  'you could use the ',
   {
-    type: 'dwstgg',
-    text: '#development',
-    section: '#development',
+    type: 'help',
+    text: '#local',
+    section: '#local',
   },
-  ' server which should have Google Analytics disabled.',
+  ' DWST server which should have Google Analytics disabled.',
 ];
 
 const storageSection = [
@@ -40,7 +40,7 @@ const storageSection = [
   'DWST itself uses local storage for storing command history. ',
   'You may use the built-in ',
   {
-    type: 'dwstgg',
+    type: 'help',
     text: 'forget',
     section: 'forget',
   },

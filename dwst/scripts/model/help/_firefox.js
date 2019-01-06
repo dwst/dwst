@@ -31,7 +31,7 @@ export default function firefoxPage() {
     [
       'Firefox lets you disable the security feature that prevents you from connecting to ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#unprotected',
         section: '#unprotected',
       },

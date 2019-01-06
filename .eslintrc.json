@@ -95,7 +95,7 @@
     "prefer-spread": 2,
     "prefer-rest-params": 2,
     "no-eq-null": 2,
-    "no-restricted-syntax": [2, "SwitchStatement", "YieldExpression"],
+    "no-restricted-syntax": [2, "SwitchStatement"],
     "quote-props": [2, "as-needed"],
     "no-floating-decimal": 2,
     "no-extra-bind": 2,

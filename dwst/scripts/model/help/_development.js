@@ -12,7 +12,7 @@
 
 */
 
-export default function developingPage() {
+export default function developmentPage() {
   return [
     {
       type: 'h1',
@@ -22,16 +22,16 @@ export default function developingPage() {
     [
       '- Run the ',
       {
-        type: 'dwstgg',
-        text: '#development',
-        section: '#development',
+        type: 'help',
+        text: '#local',
+        section: '#local',
       },
-      ' server',
+      ' development server',
     ],
     [
       '- User interface ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#styleguide',
         section: '#styleguide',
       },
@@ -39,7 +39,7 @@ export default function developingPage() {
     [
       '- WebSocket server ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#simulator',
         section: '#simulator',
       },

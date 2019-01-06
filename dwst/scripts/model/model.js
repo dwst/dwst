@@ -15,14 +15,14 @@
 import config from './config.js';
 import History from './history.js';
 import Variables from './variables.js';
-import Dwstgg from './dwstgg/dwstgg.js';
+import Help from './help/help.js';
 
 export default class Model {
 
   constructor(dwst, history, save, functions) {
     this.config = config;
     this.history = new History(history, {save});
-    this.dwstgg = new Dwstgg(dwst);
+    this.help = new Help(dwst);
     this.connection = null;
     this.intervalId = null;
     this.variables = new Variables(dwst, functions);

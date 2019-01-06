@@ -38,7 +38,7 @@ export default class ErrorHandler {
       const connectTip = [
         'Use ',
         {
-          type: 'dwstgg',
+          type: 'help',
           text: 'connect',
           section: 'connect',
         },
@@ -81,7 +81,7 @@ export default class ErrorHandler {
         [
           'Invalid ',
           {
-            type: 'dwstgg',
+            type: 'help',
             text: error.command,
             section: error.command,
           },

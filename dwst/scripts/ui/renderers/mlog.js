@@ -88,7 +88,7 @@ function renderSegment(rawSegment, linkHandlers) {
       textSpan.innerHTML = safeText;
       return textSpan;
     }
-    if (segment.type === 'dwstgg') {
+    if (segment.type === 'help') {
       const linkWrapper = document.createElement('span');
       const linkWrapperClasses = ['dwst-mlog__help-link-wrapper'];
       if (segment.wrap === false) {
