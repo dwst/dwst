@@ -31,7 +31,7 @@ export default function sectionList(sections) {
   sections.sort().forEach(sec => {
     if (sec.length > 1) {
       const sectionSegment = {
-        type: 'dwstgg',
+        type: 'help',
         text: sec,
         section: sec,
         spacing: true,

@@ -41,9 +41,9 @@ export default class Help {
     return 'get help';
   }
 
-  _run(section = '#main') {
+  _run(section = '#help') {
     this._dwst.ui.terminal.clearLog();
-    const page = this._dwst.model.dwstgg.page(section);
+    const page = this._dwst.model.help.page(section);
     this._dwst.ui.terminal.mlog(page, 'system');
   }
 

@@ -27,21 +27,21 @@ const commandSegments = commands.map(c => {
   };
 });
 
-export default function developmentPage() {
+export default function localPage() {
   return ([
     {
       type: 'h1',
       text: 'DWST Development Server',
     },
     '',
-    'You can run DWST development server by executing the following commands in the shell near you.',
+    'You can run DWST local development server by executing the following commands in the shell near you.',
     '',
   ]).concat(commandSegments).concat([
     '',
     [
       'This is useful if you wish to customise DWST on source code level but can also be used to access ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#unprotected',
         section: '#unprotected',
       },

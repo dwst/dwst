@@ -45,13 +45,13 @@ export default function unprotectedPage() {
     '',
     [
       'The connection restrictions apply to DWST since it is served over https. ',
-      'You can work around the problem by setting up the DWST ',
+      'You can work around the problem by setting up ',
       {
-        type: 'dwstgg',
-        text: '#development',
-        section: '#development',
+        type: 'help',
+        text: '#local',
+        section: '#local',
       },
-      ' server on your local work station.',
+      ' DWST server on your workstation.',
     ],
     '',
     {
@@ -64,13 +64,13 @@ export default function unprotectedPage() {
       'However, doing this will screw up your security and release testing. ',
       'Nevertheless we have instructions for ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#Chrome',
         section: '#chrome',
       },
       ' and ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#Firefox',
         section: '#firefox',
       },

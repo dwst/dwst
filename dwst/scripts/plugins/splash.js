@@ -167,7 +167,7 @@ export default class Splash {
       historySummary.concat([
         ', including ',
         {
-          type: 'dwstgg',
+          type: 'help',
           text: 'connect',
           section: 'connect',
         },
@@ -257,7 +257,7 @@ export default class Splash {
     const privacyReminder = [
       [
         {
-          type: 'dwstgg',
+          type: 'help',
           text: 'Check',
           section: '#privacy',
           warning: true,

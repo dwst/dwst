@@ -30,7 +30,7 @@ export default function introductionPag() {
     [
       'Use the ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'connect',
         section: 'connect',
       },
@@ -38,7 +38,7 @@ export default function introductionPag() {
       'Type in text to send messages. ',
       'End the connection with the ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'disconnect',
         section: 'disconnect',
       },
@@ -53,26 +53,26 @@ export default function introductionPag() {
     [
       'Use the ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'send',
         section: 'send',
       },
       ' and ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'binary',
         section: 'binary',
       },
       ' commands to construct more complex messages. ',
       'Setup a periodic send with the ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'interval',
         section: 'interval',
       },
       ' command or send a burst of messages with the ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'spam',
         section: 'spam',
       },
@@ -94,7 +94,7 @@ export default function introductionPag() {
       '',
       'Click on the DWST logo or use the ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'splash',
         section: 'splash',
       },

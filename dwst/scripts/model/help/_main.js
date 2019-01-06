@@ -17,20 +17,13 @@ export default function mainPage() {
   return [
     {
       type: 'h1',
-      text: 'DWST Guide to Galaxy',
-    },
-    '',
-    'DWSTGG is here to help you get the most out of Dark WebSocket Terminal',
-    '',
-    {
-      type: 'h2',
-      text: 'Topics',
+      text: 'Help Pages',
     },
     '',
     [
       '- ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#introduction',
         section: '#introduction',
       },
@@ -39,7 +32,7 @@ export default function mainPage() {
     [
       '- Working with ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#unprotected',
         section: '#unprotected',
       },
@@ -48,7 +41,7 @@ export default function mainPage() {
     [
       '- ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#privacy',
         section: '#privacy',
       },
@@ -57,7 +50,7 @@ export default function mainPage() {
     [
       '- Alphabetical list of ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#commands',
         section: '#commands',
       },
@@ -65,19 +58,18 @@ export default function mainPage() {
     [
       '- Alphabetical list of ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#functions',
         section: '#functions',
       },
     ],
     [
-      '- ',
+      '- DWST ',
       {
-        type: 'dwstgg',
-        text: '#developing',
-        section: '#developing',
+        type: 'help',
+        text: '#development',
+        section: '#development',
       },
-      ' DWST itself',
     ],
     '',
     [

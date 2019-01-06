@@ -31,7 +31,7 @@ export default function chromePage() {
     [
       'Chrome lets you temporarily bypass the security feature that prevents you from connecting to ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: '#unprotected',
         section: '#unprotected',
       },
@@ -48,7 +48,7 @@ export default function chromePage() {
     [
       '1. Use ',
       {
-        type: 'dwstgg',
+        type: 'help',
         text: 'connect',
         section: 'connect',
       },
