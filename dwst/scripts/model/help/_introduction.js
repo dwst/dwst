@@ -12,94 +12,36 @@
 
 */
 
-export default function introductionPag() {
+import m from '../../types/m.js';
+
+export default function introductionPage() {
 
   return [
-    {
-      type: 'h1',
-      text: 'Introduction for Beginners',
-    },
+    m.h1('Introduction for Beginners'),
     '',
     'DWST is used to manually interact with a WebSocket server.',
     '',
-    {
-      type: 'h2',
-      text: 'The Very Basics',
-    },
+    m.h2('The Very Basics'),
     '',
-    [
-      'Use the ',
-      {
-        type: 'help',
-        text: 'connect',
-        section: 'connect',
-      },
-      ' command to establish a connection. ',
-      'Type in text to send messages. ',
-      'End the connection with the ',
-      {
-        type: 'help',
-        text: 'disconnect',
-        section: 'disconnect',
-      },
-      ' command when you are done.',
-    ],
+    m.paragraph(
+      m.line`Use the ${m.help('connect')} command to establish a connection.`,
+      'Type in text to send messages.',
+      m.line`End the connection with the ${m.help('disconnect')} command when you are done.`,
+    ),
     '',
-    {
-      type: 'h2',
-      text: 'Convenience Tools',
-    },
+    m.h2('Convenience Tools'),
     '',
-    [
-      'Use the ',
-      {
-        type: 'help',
-        text: 'send',
-        section: 'send',
-      },
-      ' and ',
-      {
-        type: 'help',
-        text: 'binary',
-        section: 'binary',
-      },
-      ' commands to construct more complex messages. ',
-      'Setup a periodic send with the ',
-      {
-        type: 'help',
-        text: 'interval',
-        section: 'interval',
-      },
-      ' command or send a burst of messages with the ',
-      {
-        type: 'help',
-        text: 'spam',
-        section: 'spam',
-      },
-      ' command.',
-    ],
+    m.paragraph(
+      m.line`Use the ${m.help('send')} and ${m.help('binary')} commands to construct more complex messages.`,
+      m.line`Setup a periodic send with the ${m.help('interval')} command or send a burst of messages with the ${m.help('spam')} command.`,
+    ),
     '',
-    {
-      type: 'h2',
-      text: 'In Case of Emergency',
-    },
+    m.h2('In Case of Emergency'),
     '',
-    [
-      'Use the ',
-      {
-        type: 'strong',
-        text: 'escape key',
-      },
-      ' for an emergency shutdown if you feel that things are spinning out of control. ',
-      '',
-      'Click on the DWST logo or use the ',
-      {
-        type: 'help',
-        text: 'splash',
-        section: 'splash',
-      },
-      ' command if you get lost.',
-    ],
+    m.paragraph(
+      m.line`Use the ${m.strong('escape key')} for an emergency shutdown if you feel that things are spinning out of control.`,
+      m.line`Click on the DWST logo or use the ${m.help('splash')} command if you get lost.`,
+    ),
     '',
   ];
 }

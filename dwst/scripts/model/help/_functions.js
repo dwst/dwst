@@ -12,6 +12,8 @@
 
 */
 
+import m from '../../types/m.js';
+
 import sectionList from './_section_list.js';
 
 export default function functionsPage(functions) {
@@ -20,20 +22,10 @@ export default function functionsPage(functions) {
   const listing = sectionList(sections);
 
   return ([
-    {
-      type: 'h1',
-      text: 'Alphabetical List of Functions',
-    },
+    m.h1('Alphabetical List of Functions'),
     '',
   ]).concat(listing).concat([
-    [
-      'Type ',
-      {
-        type: 'syntax',
-        text: '/help <function>',
-      },
-      ' for usage',
-    ],
+    m.line`Type ${m.syntax('/help <function>')} for usage`,
     '',
   ]);
 }

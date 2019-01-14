@@ -13,6 +13,8 @@
 
 */
 
+import m from '../../types/m.js';
+
 import parser from '../../lib/parser.js';
 const {escapeForTemplateExpression} = parser;
 
@@ -28,18 +30,6 @@ export default class Prompt {
     document.documentElement.classList.add('dwst-debug--guides');
   }
 
-  _showHelpTip() {
-    const helpTip = [
-      'type ',
-      {
-        type: 'command',
-        text: '/help',
-      },
-      ' to list available commands',
-    ];
-    this._dwst.ui.terminal.log(helpTip, 'system');
-  }
-
   send() {
     const raw = this._element.value;
     this._element.value = '';
@@ -49,7 +39,9 @@ export default class Prompt {
       return;
     }
     if (raw.length < 1) {
-      this._showHelpTip();
+      this._dwst.ui.terminal.mlog([
+        m.line`type ${m.command('/help')} to list available commands`,
+      ], 'system');
       return;
     }
     if (raw[0] === '/') {

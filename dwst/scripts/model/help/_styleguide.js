@@ -12,21 +12,15 @@
 
 */
 
+import m from '../../types/m.js';
+
 export default function styleguidePage() {
   return [
-    {
-      type: 'h1',
-      text: 'Living Styleguide',
-    },
+    m.h1('Living Styleguide'),
     '',
-    [
-      'DWST is built out of custom built user interface elements which are documented in the ',
-      {
-        type: 'link',
-        text: 'living styleguide',
-        url: '/styleguide',
-      },
-      '. The styleguide is generated automatically from KSS metadata which is included in related CSS files.',
-    ],
+    m.paragraph(
+      m.line`DWST is built out of custom built user interface elements which are documented in the ${m.link('/styleguide', 'living styleguide')}.`,
+      'The styleguide is generated automatically from KSS metadata which is included in related CSS files.',
+    ),
   ];
 }

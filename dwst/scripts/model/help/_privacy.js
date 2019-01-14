@@ -12,54 +12,34 @@
 
 */
 
-const gaSection = [
-  'We use ',
-  {
-    type: 'link',
-    text: 'Google Analytics',
-    url: 'https://www.google.com/analytics/',
-  },
-  ' to collect information about DWST usage. ',
-  'The main motivation is to collect statistical information to aid us develop and promote the software. ',
-];
+import m from '../../types/m.js';
 
-const disableTracking = [
-  'There are several ways to disable tracking. ',
-  'You could use some browser extension that blocks Google Analytics or',
-  'you could use the ',
-  {
-    type: 'help',
-    text: '#local',
-    section: '#local',
-  },
-  ' DWST server which should have Google Analytics disabled.',
-];
+const gaSection = m.paragraph(
+  m.line`We use ${m.link('https://www.google.com/analytics/', 'Google Analytics')} to collect information about DWST usage.`,
+  'The main motivation is to collect statistical information to aid us develop and promote the software.',
+);
 
-const storageSection = [
-  'Google Analytics stores some information in cookies. ',
-  'DWST itself uses local storage for storing command history. ',
-  'You may use the built-in ',
-  {
-    type: 'help',
-    text: 'forget',
-    section: 'forget',
-  },
-  ' command to quickly remove stored command history. ',
+const disableTracking = m.paragraph(
+  'There are several ways to disable tracking.',
+  m.line`You could use some browser extension that blocks Google Analytics or you could use the ${m.help('#local')} DWST server which should have Google Analytics disabled.`,
+);
+
+const storageSection = m.paragraph(
+  'Google Analytics stores some information in cookies.',
+  'DWST itself uses local storage for storing command history.',
+  m.line`You may use the built-in ${m.help('forget')} command to quickly remove stored command history.`,
   'Consider using tools provided by your browser for more serious cleaning.',
-];
+);
 
-const futureChanges = [
-  'This describes how we do things today. ',
+const futureChanges = m.paragraph(
+  'This describes how we do things today.',
   'Check this page again sometime for possible updates on privacy and tracking considerations.',
-];
+);
 
 export default function privacyPage() {
 
   return [
-    {
-      type: 'h1',
-      text: 'Privacy and Tracking Information',
-    },
+    m.h1('Privacy and Tracking Information'),
     '',
     gaSection,
     '',

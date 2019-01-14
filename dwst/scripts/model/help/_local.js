@@ -12,6 +12,8 @@
 
 */
 
+import m from '../../types/m.js';
+
 const commands = [
   'git clone https://github.com/dwst/dwst.git',
   'cd dwst',
@@ -20,33 +22,17 @@ const commands = [
   'gulp dev',
 ];
 
-const commandSegments = commands.map(c => {
-  return {
-    type: 'code',
-    text: c,
-  };
-});
+const commandSegments = commands.map(m.code);
 
 export default function localPage() {
   return ([
-    {
-      type: 'h1',
-      text: 'DWST Development Server',
-    },
+    m.h1('DWST Development Server'),
     '',
     'You can run DWST local development server by executing the following commands in the shell near you.',
     '',
   ]).concat(commandSegments).concat([
     '',
-    [
-      'This is useful if you wish to customise DWST on source code level but can also be used to access ',
-      {
-        type: 'help',
-        text: '#unprotected',
-        section: '#unprotected',
-      },
-      ' WebSockets.',
-    ],
+    m.line`This is useful if you wish to customise DWST on source code level but can also be used to access ${m.help('#unprotected')} WebSockets.`,
     '',
   ]);
 }

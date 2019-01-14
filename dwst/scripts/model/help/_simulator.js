@@ -12,34 +12,24 @@
 
 */
 
+import m from '../../types/m.js';
+
 export default function simulatorPage() {
   return [
-    {
-      type: 'h1',
-      text: 'Server Simulator',
-    },
+    m.h1('Server Simulator'),
     '',
-    [
-      'The built-in server simulator can be used for manual testing of dwst itself. ',
-      'It exists so dwst developers do not have to setup or burden test servers. ',
+    m.paragraph(
+      'The built-in server simulator can be used for manual testing of dwst itself.',
+      'It exists so dwst developers do not have to setup or burden test servers.',
       'It can be used for offline testing since it does not use the network.',
-    ],
+    ),
     '',
-    {
-      type: 'h2',
-      text: 'Modes',
-    },
+    m.h2('Modes'),
     '',
-    {
-      type: 'command',
-      text: '/connect dwst://echo',
-    },
+    m.command('/connect dwst://echo'),
     'returns sent messages back to you',
     '',
-    {
-      type: 'command',
-      text: '/connect dwst://flood',
-    },
+    m.command('/connect dwst://flood'),
     'creates a flood of incoming messages',
   ];
 }

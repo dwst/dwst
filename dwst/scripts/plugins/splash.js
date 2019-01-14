@@ -12,6 +12,8 @@
 
 */
 
+import m from '../types/m.js';
+
 export default class Splash {
 
   constructor(dwst) {
@@ -151,28 +153,17 @@ export default class Splash {
     const historySummary = this._dwst.model.history.getSummary();
     const maybeTooManyConnectCommands =  this._dwst.model.history.getConnectCommands(CONNECTION_LIST_CAP + 1);
     const connectCommands = maybeTooManyConnectCommands.slice(0, CONNECTION_LIST_CAP);
-    const connectionsLines = connectCommands.map(command => {
-      return {
-        type: 'command',
-        text: command,
-      };
-    });
+    const connectionsLines = connectCommands.map(command => m.line`${m.command(command)}`);
     const tooManyWarning = (() => {
       if (maybeTooManyConnectCommands.length > CONNECTION_LIST_CAP) {
-        return [`(more than ${CONNECTION_LIST_CAP} in total, hiding some)`];
+        return [
+          `(more than ${CONNECTION_LIST_CAP} in total, hiding some)`,
+        ];
       }
       return [];
     })();
     const historySection = ([
-      historySummary.concat([
-        ', including ',
-        {
-          type: 'help',
-          text: 'connect',
-          section: 'connect',
-        },
-        ' commands',
-      ]),
+      historySummary.concat(m.line`, including ${m.help('connect')} commands`),
     ]).concat(
       connectionsLines,
     ).concat(
@@ -182,37 +173,18 @@ export default class Splash {
       if (this._dwst.model.connection === null) {
         return [];
       }
-      const connectionStatus = [
-        'Currently ',
-        this._dwst.model.connection.verb,
-        ' to ',
-        {
-          type: 'strong',
-          text: this._dwst.model.connection.url,
-        },
-      ];
+      const connectionStatus = m.line`Currently ${this._dwst.model.connection.verb} to ${m.strong(this._dwst.model.connection.url)}`;
       const maybeProtocolStatus = (() => {
         const protocol = this._dwst.model.connection.protocol;
         if (protocol.length < 1) {
           return [];
         }
         return [
-          [
-            'Selected protocol: ',
-            {
-              type: 'strong',
-              text: protocol,
-            },
-          ],
+          m.line`Selected protocol: ${m.strong(protocol)}`,
         ];
       })();
       const disconnectInstructions = [
-        'Type ',
-        {
-          type: 'command',
-          text: '/disconnect',
-        },
-        ' to end the connection',
+        m.line`Type ${m.command('/disconnect')} to end the connection`,
       ];
       return ([
         connectionStatus,
@@ -222,87 +194,29 @@ export default class Splash {
       ]);
     })();
     const about = [
-      [
-        {
-          type: 'h1',
-          text: `Dark WebSocket Terminal ${this._dwst.model.config.appVersion}`,
-        },
-      ],
+      m.line`${m.h1(`Dark WebSocket Terminal ${this._dwst.model.config.appVersion}`)}`,
     ];
     const beginnerInfo = [
-      [
-        '1. Create a test connection by typing ',
-        {
-          type: 'command',
-          text: `/connect ${this._dwst.model.config.echoServer}`,
-        },
-      ],
-      [
-        '2. Type messages into the text input',
-      ],
-      [
-        '3. Click on DWST logo if you get lost',
-      ],
+      m.line`1. Create a test connection by typing ${m.command(`/connect ${this._dwst.model.config.echoServer}`)}`,
+      '2. Type messages into the text input',
+      '3. Click on DWST logo if you get lost',
     ];
     const helpReminder = [
-      [
-        'Type ',
-        {
-          type: 'command',
-          text: '/help',
-        },
-        ' to see the full range of available commands',
-      ],
+      m.line`Type ${m.command('/help')} to see the full range of available commands`,
     ];
     const privacyReminder = [
-      [
-        {
-          type: 'help',
-          text: 'Check',
-          section: '#privacy',
-          warning: true,
-        },
-        ' privacy and tracking info',
-      ],
+      m.line`${m.help('Check', '#privacy', true)} privacy and tracking info`,
     ];
     const linkSection = [
-      [
-        {
-          type: 'link',
-          text: 'GitHub',
-          url: 'https://github.com/dwst/dwst',
-        },
-        {
-          type: 'regular',
-          text: ' &bull; ',
-          unsafe: true,
-        },
-        {
-          type: 'link',
-          text: 'chat',
-          url: 'https://gitter.im/dwst/dwst',
-        },
-        {
-          type: 'regular',
-          text: ' &bull; ',
-          unsafe: true,
-        },
-        {
-          type: 'link',
-          text: 'rfc6455',
-          url: 'https://tools.ietf.org/html/rfc6455',
-        },
-        {
-          type: 'regular',
-          text: ' &bull; ',
-          unsafe: true,
-        },
-        {
-          type: 'link',
-          text: 'iana',
-          url: 'https://www.iana.org/assignments/websocket/websocket.xhtml',
-        },
-      ],
+      m.line`${
+        m.link('https://github.com/dwst/dwst', 'GitHub')
+      }${m.regular(' &bull; ', true)}${
+        m.link('https://gitter.im/dwst/dwst', 'chat')
+      }${m.regular(' &bull; ', true)}${
+        m.link('https://tools.ietf.org/html/rfc6455', 'rfc6455')
+      }${m.regular(' &bull; ', true)}${
+        m.link('https://www.iana.org/assignments/websocket/websocket.xhtml', 'iana')
+      }`,
     ];
     const sections = (() => {
       if (this._dwst.model.connection !== null) {
