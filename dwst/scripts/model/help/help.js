@@ -12,6 +12,7 @@
 
 */
 
+import m from '../../types/m.js';
 import errors from '../../lib/errors.js';
 const {UnknownCommand, UnknownHelpPage, UnknownInstruction} = errors;
 
@@ -59,16 +60,8 @@ function *crumbSections(section) {
 
 function createBreadCrumbs(section = '#help') {
   return [...crumbSections(section)].flatMap(crumbText => [
-    {
-      type: 'regular',
-      text: ' &raquo; ',
-      unsafe: true,
-    },
-    {
-      type: 'help',
-      text: `${crumbText}`,
-      section: `${crumbText}`,
-    },
+    m.regular(' &raquo; ', true),
+    m.help(crumbText),
   ]).slice(1);
 }
 
@@ -128,45 +121,22 @@ export default class Help {
     if (typeof plugin.usage === 'undefined') {
       throw new UnknownHelpPage(command);
     }
-    const usage = plugin.usage().map(usageExample => {
-      return {
-        type: 'syntax',
-        text: usageExample,
-      };
-    });
-    const examples = plugin.examples().map(exampleCommand => {
-      return {
-        type: 'command',
-        text: exampleCommand,
-      };
-    });
+    const usage = plugin.usage().map(m.syntax);
+    const examples = plugin.examples().map(m.command);
 
     return ([
       [
-        {
-          type: 'h1',
-          text: `${command}`,
-        },
-        {
-          type: 'regular',
-          text: ' &ndash; ',
-          unsafe: true,
-        },
+        m.h1(command),
+        m.regular(' &ndash; ', true),
         plugin.info(),
       ],
       '',
       '',
-      {
-        type: 'h2',
-        text: 'Syntax',
-      },
+      m.h2('Syntax'),
       '',
     ]).concat(usage).concat([
       '',
-      {
-        type: 'h2',
-        text: 'Examples',
-      },
+      m.h2('Examples'),
       '',
     ]).concat(examples).concat([
       '',
@@ -197,30 +167,17 @@ export default class Help {
 
     return ([
       [
-        {
-          type: 'h1',
-          text: `${section}`,
-        },
-        {
-          type: 'regular',
-          text: ' &ndash; ',
-          unsafe: true,
-        },
+        m.h1(section),
+        m.regular(' &ndash; ', true),
         func.info(),
       ],
       '',
       '',
-      {
-        type: 'h2',
-        text: 'Syntax',
-      },
+      m.h2('Syntax'),
       '',
     ]).concat(usage).concat([
       '',
-      {
-        type: 'h2',
-        text: 'Examples',
-      },
+      m.h2('Examples'),
       '',
     ]).concat(examples).concat([
       '',

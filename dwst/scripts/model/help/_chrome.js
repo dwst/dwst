@@ -12,48 +12,25 @@
 
 */
 
+import m from '../../types/m.js';
+
 const disclaimer = [
-  {
-    type: 'h2',
-    text: '!!! Follow at your own risk !!!',
-  },
+  m.h2('!!! Follow at your own risk !!!'),
   '',
   'Disabling security is generally a bad idea and you should only do it if you understand the implications.',
 ];
 
 export default function chromePage() {
   return ([
-    {
-      type: 'h1',
-      text: 'Insecure WebSocket Access in Chrome',
-    },
+    m.h1('Insecure WebSocket Access in Chrome'),
     '',
-    [
-      'Chrome lets you temporarily bypass the security feature that prevents you from connecting to ',
-      {
-        type: 'help',
-        text: '#unprotected',
-        section: '#unprotected',
-      },
-      ' WebSockets.',
-    ],
+    m.line`Chrome lets you temporarily bypass the security feature that prevents you from connecting to ${m.help('#unprotected')} WebSockets.`,
     '',
   ]).concat(disclaimer).concat([
     '',
-    {
-      type: 'h2',
-      text: 'Instructions',
-    },
+    m.h2('Instructions'),
     '',
-    [
-      '1. Use ',
-      {
-        type: 'help',
-        text: 'connect',
-        section: 'connect',
-      },
-      ' on a ws:// address',
-    ],
+    m.line`1. Use ${m.help('connect')} on a ws:// address`,
     '2. Look for a shield icon',
     '3. Click on the shield icon',
     '4. Click "Load unsafe scripts"',

@@ -12,6 +12,8 @@
 
 */
 
+import m from '../../types/m.js';
+
 import sectionList from './_section_list.js';
 
 export default function commandsPage(commands) {
@@ -19,20 +21,10 @@ export default function commandsPage(commands) {
   const listing = sectionList(commands);
 
   return ([
-    {
-      type: 'h1',
-      text: 'Alphabetical List of Commands',
-    },
+    m.h1('Alphabetical List of Commands'),
     '',
   ]).concat(listing).concat([
-    [
-      'Type ',
-      {
-        type: 'syntax',
-        text: '/help <command>',
-      },
-      ' for usage',
-    ],
+    m.line`Type ${m.syntax('/help <command>')} for usage`,
     '',
   ]);
 }

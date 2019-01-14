@@ -11,6 +11,8 @@
 
 */
 
+
+import m from '../types/m.js';
 import errors from '../lib/errors.js';
 const {NoConnection, AlreadyConnected, SocketError, InvalidTemplateExpression, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, InvalidVariableName, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
 
@@ -35,32 +37,22 @@ export default class ErrorHandler {
 
   _errorToMLog(error) {
     if (error instanceof NoConnection) {
-      const connectTip = [
-        'Use ',
-        {
-          type: 'help',
-          text: 'connect',
-          section: 'connect',
-        },
-        ' to form a connection and try again.',
+      return [
+        'No connection.',
+        `Cannot send: ${error.msg}`,
+        m.line`Use ${m.help('connect')} to form a connection and try again.`,
       ];
-      return ['No connection.', `Cannot send: ${error.msg}`, connectTip];
     }
     if (error instanceof AlreadyConnected) {
       return [
         'Already connected to a server',
-        [
-          'Type ',
-          {
-            type: 'command',
-            text: '/disconnect',
-          },
-          ' to end the connection',
-        ],
+        m.line`Type ${m.command('/disconnect')} to end the connection`,
       ];
     }
     if (error instanceof SocketError) {
-      return ['WebSocket error.'];
+      return [
+        'WebSocket error.',
+      ];
     }
     if (error instanceof InvalidTemplateExpression) {
       const padding = ' '.repeat(error.errorPosition);
@@ -74,104 +66,56 @@ export default class ErrorHandler {
       ];
     }
     if (error instanceof InvalidArgument) {
-      return [`Invalid argument: ${error.argument}`, error.extraInfo];
+      return [
+        `Invalid argument: ${error.argument}`,
+        error.extraInfo,
+      ];
     }
     if (error instanceof InvalidCombination) {
       return [
-        [
-          'Invalid ',
-          {
-            type: 'help',
-            text: error.command,
-            section: error.command,
-          },
-          ' command combination.',
-        ],
-        [
-          'Compatible commands: ',
-          error.commands.join(', '),
-        ],
+        m.line`Invalid ${m.help(error.command)} command combination.`,
+        `Compatible commands: ${error.commands.join(', ')}`,
       ];
     }
     if (error instanceof InvalidUtf8) {
       return [
-        [
-          `Utf-8 decoder failed to process ${error.buffer.byteLength}B buffer`,
-        ],
-        error.buffer,
+        `Utf-8 decoder failed to process ${error.buffer.byteLength}B buffer`,
+        `${error.buffer}`,
       ];
     }
     if (error instanceof InvalidDataType) {
       return [
-        [
-          `Variable ${error.variable} is not a ${commaCommaOr(error.expected)}`,
-        ],
+        `Variable ${error.variable} is not a ${commaCommaOr(error.expected)}`,
       ];
     }
     if (error instanceof InvalidVariableName) {
       return [
-        [
-          `Invalid variable name ${error.variable}`,
-        ],
+        `Invalid variable name ${error.variable}`,
       ];
     }
     if (error instanceof UnknownCommand) {
       return [
-        [
-          'Unknown command ',
-          {
-            type: 'strong',
-            text: error.command,
-          },
-        ],
-        [
-          'Type ',
-          {
-            type: 'command',
-            text: '/help #commands',
-          },
-          ' to list available commands',
-        ],
+        m.line`Unknown command ${m.strong(error.command)}`,
+        m.line`Type ${m.command('/help #commands')} to list available commands`,
       ];
     }
     if (error instanceof UnknownInstruction) {
       return [
-        [
-          'Unknown function ',
-          {
-            type: 'strong',
-            text: error.instruction,
-          },
-        ],
-        [
-          'Type ',
-          {
-            type: 'command',
-            text: '/help #functions',
-          },
-          ' to list available functions',
-        ],
+        m.line`Unknown function ${m.strong(error.instruction)}`,
+        m.line`Type ${m.command('/help #functions')} to list available functions`,
       ];
     }
     if (error instanceof UnknownHelpPage) {
-      const listTip = [
-        'Display help index by typing ',
-        {
-          type: 'command',
-          text: '/help',
-        },
+      return [
+        `Unkown help page: ${error.page}`,
+        m.line`Display help index by typing ${m.command('/help')}`,
       ];
-      return [`Unkown help page: ${error.page}`, listTip];
     }
     if (error instanceof UnknownVariable) {
-      const listTip = [
-        'List available variables by typing ',
-        {
-          type: 'command',
-          text: '/vars',
-        },
+      return [
+        `Variable "${error.variable}" does not exist.`,
+        m.line`List available variables by typing ${m.command('/vars')}`,
       ];
-      return [`Variable "${error.variable}" does not exist.`, listTip];
     }
 
     throw new Error(`missing error handler for ${error.constructor.name}`);

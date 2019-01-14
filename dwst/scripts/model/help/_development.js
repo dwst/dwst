@@ -12,37 +12,14 @@
 
 */
 
+import m from '../../types/m.js';
+
 export default function developmentPage() {
   return [
-    {
-      type: 'h1',
-      text: 'DWST Development',
-    },
+    m.h1('DWST Development'),
     '',
-    [
-      '- Run the ',
-      {
-        type: 'help',
-        text: '#local',
-        section: '#local',
-      },
-      ' development server',
-    ],
-    [
-      '- User interface ',
-      {
-        type: 'help',
-        text: '#styleguide',
-        section: '#styleguide',
-      },
-    ],
-    [
-      '- WebSocket server ',
-      {
-        type: 'help',
-        text: '#simulator',
-        section: '#simulator',
-      },
-    ],
+    m.line`- Run the ${m.help('#local')} development server`,
+    m.line`- User interface ${m.help('#styleguide')}`,
+    m.line`- WebSocket server ${m.help('#simulator')}`,
   ];
 }

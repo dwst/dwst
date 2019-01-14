@@ -12,6 +12,8 @@
 
 */
 
+import m from '../types/m.js';
+
 import Connection from '../connection.js';
 
 export default class Connect {
@@ -64,28 +66,19 @@ export default class Connect {
       const invalidChars = [...invalidCharsSet];
       if (invalidChars.length > 0) {
         const invalidCharsString = invalidChars.map(character => `"${character}"`).join(', ');
-        this._dwst.ui.terminal.mlog([`Skipped invalid protocol candidate "${protocolName}".`, `The following characters are not allowed: ${invalidCharsString}`], 'warning');
+        this._dwst.ui.terminal.mlog([
+          `Skipped invalid protocol candidate "${protocolName}".`,
+          `The following characters are not allowed: ${invalidCharsString}`,
+        ], 'warning');
         return false;
       }
       return true;
     });
     if (self.origin.startsWith('https://') && url.startsWith('ws://')) {
       const secureUrl = `wss://${url.slice('ws://'.length)}`;
+      const secureConnect = `/connect ${secureUrl} ${protocolString}`;
       this._dwst.ui.terminal.mlog([
-        [
-          'Attempting unprotected connection from a secure origin. ',
-          'See ',
-          {
-            type: 'help',
-            text: '#unprotected',
-            section: '#unprotected',
-          },
-          ' for details. Consider using ',
-          {
-            type: 'command',
-            text: `/connect ${secureUrl} ${protocolString}`,
-          },
-        ],
+        m.line`Attempting unprotected connection from a secure origin. See ${m.help('#unprotected')} for details. Consider using ${m.command(secureConnect)}`,
       ], 'warning');
     }
     this._dwst.model.connection = new Connection(url, protocols, this._dwst.controller.socket);

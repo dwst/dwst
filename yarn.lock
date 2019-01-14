@@ -3009,6 +3009,11 @@ core-js@^2.4.0, core-js@^2.5.0, core-js@^2.5.7:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.1.tgz#87416ae817de957a3f249b3b5ca475d4aaed6042"
   integrity sha512-L72mmmEayPJBejKIWe2pYtGis5r0tQ5NaJekdhyXgeMQTpJoBsH0NL4ElY2LfSoV15xeQWKQ+XTTOZdyero5Xg==
 
+core-js@^3.0.0-beta.8:
+  version "3.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.0-beta.8.tgz#2b0b5a26e01cb176c9197d84d1f05911bcd66f53"
+  integrity sha512-ex9wpitprNDuK6bPRljFW0z0IBatqtmqeuZ1HpcFcSkdOQSGNu3XdZSTshEuAIeYgLarHpw55P3SQlKAnXmpuQ==
+
 core-js@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.3.0.tgz#fab83fbb0b2d8dc85fa636c4b9d34c75420c6d65"

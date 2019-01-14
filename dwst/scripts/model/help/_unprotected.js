@@ -12,70 +12,38 @@
 
 */
 
+import m from '../../types/m.js';
+
 export default function unprotectedPage() {
   return [
-    {
-      type: 'h1',
-      text: 'Working with Unprotected WebSockets',
-    },
+    m.h1('Working with Unprotected WebSockets'),
     '',
-    [
-      'Browsers tend to prevent unprotected WebSockets connections from secure origins. ',
-      'You may encounter this problem if your target WebSocket address starts with',
-      {
-        type: 'strong',
-        text: ' ws://',
-      },
-    ],
+    m.paragraph(
+      'Browsers tend to prevent unprotected WebSockets connections from secure origins.',
+      m.line`You may encounter this problem if your target WebSocket address starts with ${m.strong('ws://')}`,
+    ),
     '',
-    {
-      type: 'h2',
-      text: 'Use wss INSTEAD',
-    },
+    m.h2('Use wss INSTEAD'),
     '',
-    [
-      'The most straight forward fix is to use the secure address instead. ',
+    m.paragraph(
+      'The most straight forward fix is to use the secure address instead.',
       'However, the server needs to accept secure connections for this to work.',
-    ],
+    ),
     '',
-    {
-      type: 'h2',
-      text: 'Use Dev Server',
-    },
+    m.h2('Use Dev Server'),
     '',
-    [
-      'The connection restrictions apply to DWST since it is served over https. ',
-      'You can work around the problem by setting up ',
-      {
-        type: 'help',
-        text: '#local',
-        section: '#local',
-      },
-      ' DWST server on your workstation.',
-    ],
+    m.paragraph(
+      'The connection restrictions apply to DWST since it is served over https.',
+      m.line`You can work around the problem by setting up ${m.help('#local')} DWST server on your workstation.`,
+    ),
     '',
-    {
-      type: 'h2',
-      text: 'Disable Security',
-    },
+    m.h2('Disable Security'),
     '',
-    [
-      'Finally, you have the option of disabling related browser security features. ',
-      'However, doing this will screw up your security and release testing. ',
-      'Nevertheless we have instructions for ',
-      {
-        type: 'help',
-        text: '#Chrome',
-        section: '#chrome',
-      },
-      ' and ',
-      {
-        type: 'help',
-        text: '#Firefox',
-        section: '#firefox',
-      },
-      '.',
-    ],
+    m.paragraph(
+      'Finally, you have the option of disabling related browser security features.',
+      'However, doing this will screw up your security and release testing.',
+      m.line`Nevertheless we have instructions for ${m.help('#chrome')} and ${m.help('#firefox')}.`,
+    ),
     '',
   ];
 }

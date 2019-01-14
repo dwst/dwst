@@ -12,6 +12,8 @@
 
 */
 
+import m from '../types/m.js';
+
 export default class PwaHandler {
 
   constructor(dwst) {
@@ -22,14 +24,7 @@ export default class PwaHandler {
   beforeInstallPrompt(evt) {
     this._prompt = evt;
     this._dwst.ui.terminal.mlog([
-      [
-        'Type ',
-        {
-          type: 'command',
-          text: '/pwa install',
-        },
-        ' to install',
-      ],
+      m.line`Type ${m.command('/pwa install')} to install`,
     ], 'system');
   }
 

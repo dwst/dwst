@@ -41,7 +41,10 @@ export default class Forget {
   _removeHistory() {
     this._dwst.model.history.forget();
     const historyLine = this._dwst.model.history.getSummary().concat(['.']);
-    this._dwst.ui.terminal.mlog(['Successfully forgot stored history!', historyLine], 'system');
+    this._dwst.ui.terminal.mlog([
+      'Successfully forgot stored history!',
+      historyLine,
+    ], 'system');
   }
 
   _run(target) {

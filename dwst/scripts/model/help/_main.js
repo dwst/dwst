@@ -12,73 +12,21 @@
 
 */
 
+import m from '../../types/m.js';
+
 export default function mainPage() {
 
   return [
-    {
-      type: 'h1',
-      text: 'Help Pages',
-    },
+    m.h1('Help Pages'),
     '',
-    [
-      '- ',
-      {
-        type: 'help',
-        text: '#introduction',
-        section: '#introduction',
-      },
-      ' for beginners',
-    ],
-    [
-      '- Working with ',
-      {
-        type: 'help',
-        text: '#unprotected',
-        section: '#unprotected',
-      },
-      ' sockets',
-    ],
-    [
-      '- ',
-      {
-        type: 'help',
-        text: '#privacy',
-        section: '#privacy',
-      },
-      ' and tracking information',
-    ],
-    [
-      '- Alphabetical list of ',
-      {
-        type: 'help',
-        text: '#commands',
-        section: '#commands',
-      },
-    ],
-    [
-      '- Alphabetical list of ',
-      {
-        type: 'help',
-        text: '#functions',
-        section: '#functions',
-      },
-    ],
-    [
-      '- DWST ',
-      {
-        type: 'help',
-        text: '#development',
-        section: '#development',
-      },
-    ],
+    m.line`- ${m.help('#introduction')} for beginners`,
+    m.line`- Working with ${m.help('#unprotected')} sockets`,
+    m.line`- ${m.help('#privacy')} and tracking information`,
+    m.line`- Alphabetical list of ${m.help('#commands')}`,
+    m.line`- Alphabetical list of ${m.help('#functions')}`,
+    m.line`- DWST ${m.help('#development')}`,
     '',
-    [
-      'Open with ',
-      {
-        type: 'syntax',
-        text: '/help #<keyword>',
-      },
-    ],
+    m.line`Open with ${m.syntax('/help #<keyword>')}`,
     '',
   ];
 }
