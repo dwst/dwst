@@ -12,10 +12,11 @@
 
 */
 
+import parseControlChars from '../../lib/control.js';
+import m from '../../types/m.js';
+
 import renderLogEntry from '../renderers/log_entry.js';
 import renderGfx from '../renderers/gfx.js';
-
-import parseControlChars from '../../lib/control.js';
 
 function createLines(mlogItems) {
   const CR = '\\r';
@@ -97,11 +98,7 @@ function partToMlog(part) {
     return `\\u{${charCode.toString(16)}}`;
   })();
   const title = `${text} - ${part.name} (${part.abbr})`;
-  return {
-    type: 'control',
-    text,
-    title,
-  };
+  return m.control(text, title);
 }
 
 function hilightControlChars(msg) {

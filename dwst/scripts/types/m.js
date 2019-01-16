@@ -37,16 +37,50 @@ function arrayJoin([x, ...xs], delimiter) {
   return [x].concat(xs.flatMap(item => [delimiter, item]));
 }
 
+function paragraph(...lines) {
+  return arrayJoin(lines, ' ').flat();
+}
+
+function help(text, section = text, userOptions = {}) {
+  return {
+    warning: false,
+    spacing: false,
+    wrap: true,
+    afterText: null,
+    ...userOptions,
+    type: 'help',
+    text,
+    section,
+  };
+}
+
+function sectionList(sections) {
+  const spacing = true;
+  const wrap = false;
+  const available = sections.sort().map((sec, i, arr) => {
+    const lastIndex = arr.length - 1;
+    if (i < lastIndex) {
+      return help(sec, sec, {spacing, wrap, afterText: ','});
+    }
+    return help(sec, sec, {spacing, wrap});
+  });
+  return paragraph(...available);
+}
+
 export default {
-  line: (text, ...vars) => roundrobinMerge(text, vars),
-  paragraph: (...lines) => arrayJoin(lines, ' ').flat(),
-  help: (text, section = text, warning = false) => ({type: 'help', text, section, warning}),
-  command: text => ({type: 'command', text}),
-  strong: text => ({type: 'strong', text}),
-  code: text => ({type: 'code', text}),
   h1: text => ({type: 'h1', text}),
   h2: text => ({type: 'h2', text}),
-  syntax: text => ({type: 'syntax', text}),
+  unsafe: text => ({type: 'regular', text, unsafe: true}),
+  regular: text => ({type: 'regular', text}),
+  strong: text => ({type: 'strong', text}),
+  command: text => ({type: 'command', text}),
   link: (url, text = url) => ({type: 'link', text, url}),
-  regular: (text, unsafe = false) => ({type: 'regular', text, unsafe}),
+  syntax: text => ({type: 'syntax', text}),
+  code: text => ({type: 'code', text}),
+  control: (text, title) => ({type: 'control', text, title}),
+  hexline: (hexes, text) => ({type: 'hexline', text, hexes}),
+  line: (text, ...vars) => roundrobinMerge(text, vars),
+  help,
+  paragraph,
+  sectionList,
 };

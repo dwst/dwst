@@ -14,16 +14,14 @@
 
 import m from '../../types/m.js';
 
-import sectionList from './_section_list.js';
-
 export default function commandsPage(commands) {
 
-  const listing = sectionList(commands);
+  const longNames = commands.filter(name => name.length > 1);
 
   return ([
     m.h1('Alphabetical List of Commands'),
     '',
-  ]).concat(listing).concat([
+    m.sectionList(longNames),
     m.line`Type ${m.syntax('/help <command>')} for usage`,
     '',
   ]);
