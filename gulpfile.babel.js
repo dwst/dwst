@@ -166,7 +166,7 @@ export const validate = gulp.parallel(jsonlint, eslint, stylelint, htmlhint);
 export function mocha() {
   return gulp.src('test/test.js', {read: false})
     .pipe(gulpMocha({
-      require: ['@babel/register', 'core-js/features/array/flat', 'core-js/features/array/flat-map'],
+      require: '@babel/register',
     }));
 }
 
