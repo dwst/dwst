@@ -14,6 +14,7 @@
 */
 
 import lib from './lib/lib.js';
+import types from './types/types.js';
 import Model from './model/model.js';
 import Ui from './ui/ui.js';
 import Controller from './controller/controller.js';
@@ -67,6 +68,7 @@ function loadModel(dwst) {
 
 const dwst = Object.seal({
   lib,
+  types,
   model: null,
   ui: null,
   controller: null,
