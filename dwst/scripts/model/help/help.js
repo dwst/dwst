@@ -60,7 +60,7 @@ function *crumbSections(section) {
 
 function createBreadCrumbs(section = '#help') {
   return [...crumbSections(section)].flatMap(crumbText => [
-    m.regular(' &raquo; ', true),
+    m.unsafe(' &raquo; '),
     m.help(crumbText),
   ]).slice(1);
 }
@@ -127,7 +127,7 @@ export default class Help {
     return ([
       [
         m.h1(command),
-        m.regular(' &ndash; ', true),
+        m.unsafe(' &ndash; '),
         plugin.info(),
       ],
       '',
@@ -152,18 +152,8 @@ export default class Help {
     if (typeof func.usage === 'undefined') {
       throw new UnknownHelpPage(funcName);
     }
-    const usage = func.usage().map(usageExample => {
-      return {
-        type: 'syntax',
-        text: usageExample,
-      };
-    });
-    const examples = func.examples().map(exampleCommand => {
-      return {
-        type: 'command',
-        text: exampleCommand,
-      };
-    });
+    const usage = func.usage().map(m.syntax);
+    const examples = func.examples().map(m.command);
 
     return ([
       [

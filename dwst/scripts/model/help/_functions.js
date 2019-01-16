@@ -14,17 +14,14 @@
 
 import m from '../../types/m.js';
 
-import sectionList from './_section_list.js';
-
 export default function functionsPage(functions) {
 
   const sections = functions.map(funcName => `${funcName}()`);
-  const listing = sectionList(sections);
 
   return ([
     m.h1('Alphabetical List of Functions'),
     '',
-  ]).concat(listing).concat([
+    m.sectionList(sections),
     m.line`Type ${m.syntax('/help <function>')} for usage`,
     '',
   ]);

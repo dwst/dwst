@@ -13,6 +13,8 @@
 
 */
 
+import m from '../types/m.js';
+
 class ElementHistory {
 
   constructor(history = []) {
@@ -119,10 +121,7 @@ export default class History {
       historyLine.push('is empty');
     } else {
       historyLine.push('contains ');
-      historyLine.push({
-        type: 'strong',
-        text: `${history.length}`,
-      });
+      historyLine.push(m.strong(`${history.length}`));
       if (history.length === 1) {
         historyLine.push(' command');
       } else {

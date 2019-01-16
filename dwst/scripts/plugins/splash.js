@@ -205,16 +205,16 @@ export default class Splash {
       m.line`Type ${m.command('/help')} to see the full range of available commands`,
     ];
     const privacyReminder = [
-      m.line`${m.help('Check', '#privacy', true)} privacy and tracking info`,
+      m.line`${m.help('Check', '#privacy', {warning: true})} privacy and tracking info`,
     ];
     const linkSection = [
       m.line`${
         m.link('https://github.com/dwst/dwst', 'GitHub')
-      }${m.regular(' &bull; ', true)}${
+      }${m.unsafe(' &bull; ')}${
         m.link('https://gitter.im/dwst/dwst', 'chat')
-      }${m.regular(' &bull; ', true)}${
+      }${m.unsafe(' &bull; ')}${
         m.link('https://tools.ietf.org/html/rfc6455', 'rfc6455')
-      }${m.regular(' &bull; ', true)}${
+      }${m.unsafe(' &bull; ')}${
         m.link('https://www.iana.org/assignments/websocket/websocket.xhtml', 'iana')
       }`,
     ];
