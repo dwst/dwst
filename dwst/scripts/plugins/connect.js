@@ -12,8 +12,6 @@
 
 */
 
-import m from '../types/m.js';
-
 import Connection from '../connection.js';
 
 export default class Connect {
@@ -45,6 +43,9 @@ export default class Connect {
   }
 
   _run(url, protocolString = '') {
+
+    const m = this._dwst.types.m;
+
     if (this._dwst.model.connection !== null) {
       throw new this._dwst.lib.errors.AlreadyConnected();
     }

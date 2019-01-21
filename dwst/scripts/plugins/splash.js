@@ -12,8 +12,6 @@
 
 */
 
-import m from '../types/m.js';
-
 export default class Splash {
 
   constructor(dwst) {
@@ -41,6 +39,8 @@ export default class Splash {
   }
 
   run() {
+
+    const m = this._dwst.types.m;
 
     this._dwst.ui.terminal.clearLog();
 
