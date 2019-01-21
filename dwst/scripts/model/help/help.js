@@ -12,8 +12,8 @@
 
 */
 
-import m from '../../types/m.js';
-import errors from '../../lib/errors.js';
+import m from '../../types/m/m.js';
+import errors from '../../types/errors/errors.js';
 const {UnknownCommand, UnknownHelpPage, UnknownInstruction} = errors;
 
 import chromePage from './_chrome.js';

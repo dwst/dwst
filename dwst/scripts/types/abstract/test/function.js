@@ -1,7 +1,7 @@
 
 /**
 
-  Authors: Toni Ruottu, Finland 2010-2018
+  Authors: Toni Ruottu, Finland 2018
 
   This file is part of Dark WebSocket Terminal.
 
@@ -12,12 +12,14 @@
 
 */
 
-import parser from './parser.js';
-import control from './control.js';
-import utils from './utils.js';
+import {expect} from 'chai';
 
-export default {
-  control,
-  utils,
-  parser,
-};
+import DwstFunction from '../function.js';
+
+describe('DwstFunction', () => {
+  it('should be abstract', () => {
+    expect(() => {
+      new DwstFunction();
+    }).to.throw();
+  });
+});

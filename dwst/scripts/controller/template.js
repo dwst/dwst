@@ -12,7 +12,7 @@
 
 */
 
-import DwstFunction from '../types/function.js';
+import DwstFunction from '../types/abstract/function.js';
 
 export default class TemplateHandler {
 
@@ -24,12 +24,12 @@ export default class TemplateHandler {
   _evalFunction({name, args}) {
     const func = this._dwst.model.variables.getVariable(name);
     if (func === null) {
-      throw new this._dwst.lib.errors.UnknownInstruction(name);
+      throw new this._dwst.types.errors.UnknownInstruction(name);
     }
     if (func instanceof DwstFunction) {
       return func.run(args);
     }
-    throw new this._dwst.lib.errors.InvalidDataType(name, ['FUNCTION']);
+    throw new this._dwst.types.errors.InvalidDataType(name, ['FUNCTION']);
   }
 
   async _evalParticle(particle) {
@@ -53,10 +53,10 @@ export default class TemplateHandler {
       if (typeof value  === 'string') {
         return this._encoder.encode(value);
       }
-      if (value instanceof this._dwst.lib.types.DwstFunction) {
-        throw new this._dwst.lib.errors.InvalidDataType(variableName, ['STRING', 'BINARY']);
+      if (value instanceof this._dwst.types.abstract.DwstFunction) {
+        throw new this._dwst.types.errors.InvalidDataType(variableName, ['STRING', 'BINARY']);
       }
-      throw new this._dwst.lib.errors.UnknownVariable(variableName);
+      throw new this._dwst.types.errors.UnknownVariable(variableName);
     }
     if (particle.type === 'function') {
       const output = await this._evalFunction(particle);

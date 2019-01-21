@@ -13,7 +13,7 @@
 
 */
 
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 
 import parser from '../../lib/parser.js';
 const {escapeForTemplateExpression} = parser;

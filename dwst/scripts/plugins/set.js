@@ -41,7 +41,7 @@ export default class Set {
   async run(paramString) {
     const [variableName, ...templateExpressionParts] = paramString.split(' ');
     if (variableName.length === 0) {
-      throw new this._dwst.lib.errors.InvalidArgument(variableName, ['expected variable name']);
+      throw new this._dwst.types.errors.InvalidArgument(variableName, ['expected variable name']);
     }
     const templateExpression = templateExpressionParts.join(' ');
     const buffer = await this._dwst.controller.template.eval(templateExpression);

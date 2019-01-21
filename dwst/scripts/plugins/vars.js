@@ -51,7 +51,7 @@ export default class Vars {
         this._dwst.ui.terminal.blog(v, 'system');
         return;
       }
-      if (v instanceof this._dwst.lib.types.DwstFunction) {
+      if (v instanceof this._dwst.types.abstract.DwstFunction) {
         this._dwst.ui.terminal.blog('<function>', 'system');
         return;
       }

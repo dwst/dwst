@@ -59,7 +59,7 @@ export default class Interval {
       const firstPart = commandParts[0];
       const otherParts = commandParts.slice(1);
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
-        throw new this._dwst.lib.errors.InvalidCombination('interval', ['send', 'binary']);
+        throw new this._dwst.types.errors.InvalidCombination('interval', ['send', 'binary']);
       }
       return [firstPart.slice(1), otherParts.join(' ')];
     })();
@@ -76,7 +76,7 @@ export default class Interval {
         if (this._dwst.model.intervalId !== null) {
           clearInterval(this._dwst.model.intervalId);
           this._dwst.model.intervalId = null;
-          throw new this._dwst.lib.errors.NoConnection(message);
+          throw new this._dwst.types.errors.NoConnection(message);
         }
         return;
       }

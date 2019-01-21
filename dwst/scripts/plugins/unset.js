@@ -40,11 +40,11 @@ export default class Unset {
 
   run(variableName) {
     if (variableName.length === 0) {
-      throw new this._dwst.lib.errors.InvalidArgument(variableName, ['expected variable name']);
+      throw new this._dwst.types.errors.InvalidArgument(variableName, ['expected variable name']);
     }
     const buffer = this._dwst.model.variables.getVariable(variableName);
     if (buffer === null) {
-      throw new this._dwst.lib.errors.UnknownVariable(variableName);
+      throw new this._dwst.types.errors.UnknownVariable(variableName);
     }
     this._dwst.model.variables.deleteVariable(variableName);
     this._dwst.ui.terminal.mlog([

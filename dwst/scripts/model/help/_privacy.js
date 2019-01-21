@@ -12,7 +12,7 @@
 
 */
 
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 
 const gaSection = m.paragraph(
   m.line`We use ${m.link('https://www.google.com/analytics/', 'Google Analytics')} to collect information about DWST usage.`,

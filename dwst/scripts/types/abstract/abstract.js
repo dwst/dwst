@@ -12,12 +12,10 @@
 
 */
 
-import parser from './parser.js';
-import control from './control.js';
-import utils from './utils.js';
+import DwstError from './error.js';
+import DwstFunction from './function.js';
 
 export default {
-  control,
-  utils,
-  parser,
+  DwstError,
+  DwstFunction,
 };

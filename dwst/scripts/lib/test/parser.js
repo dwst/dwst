@@ -15,7 +15,7 @@
 
 import rewire from 'rewire';
 import {expect} from 'chai';
-import errors from '../errors.js';
+import errors from '../../types/errors/errors.js';
 const {InvalidTemplateExpression} = errors;
 import parser from '../parser.js';
 const parserRewire = rewire('../parser.js');

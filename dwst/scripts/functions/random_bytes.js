@@ -12,7 +12,7 @@
 
 */
 
-import DwstFunction from '../types/function.js';
+import DwstFunction from '../types/abstract/function.js';
 
 export default class RandomBytes extends DwstFunction {
 

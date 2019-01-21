@@ -16,14 +16,11 @@ import {expect} from 'chai';
 
 import m from '../m.js';
 
-describe('markdown module', () => {
-
-  describe('sectionList function', () => {
-    it('should work', () => {
-      expect(m.sectionList(['foo', 'bar'])).to.deep.equal(m.paragraph(
-        m.help('bar', 'bar', {spacing: true, wrap: false, afterText: ','}),
-        m.help('foo', 'foo', {spacing: true, wrap: false}),
-      ));
-    });
+describe('sectionList', () => {
+  it('should work', () => {
+    expect(m.sectionList(['foo', 'bar'])).to.deep.equal(m.paragraph(
+      m.help('bar', 'bar', {spacing: true, wrap: false, afterText: ','}),
+      m.help('foo', 'foo', {spacing: true, wrap: false}),
+    ));
   });
 });

@@ -13,7 +13,7 @@
 */
 
 import parseControlChars from '../../lib/control.js';
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 
 import renderLogEntry from '../renderers/log_entry.js';
 import renderGfx from '../renderers/gfx.js';

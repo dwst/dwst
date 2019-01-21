@@ -28,7 +28,7 @@ export default class Variables {
 
   setVariable(variableName, value) {
     if (this._dwst.lib.parser.isValidVariableName(variableName) === false) {
-      throw new this._dwst.lib.errors.InvalidVariableName(variableName);
+      throw new this._dwst.types.errors.InvalidVariableName(variableName);
     }
     this._variables.set(variableName, value);
   }

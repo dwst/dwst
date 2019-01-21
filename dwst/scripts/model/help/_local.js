@@ -12,7 +12,7 @@
 
 */
 
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 
 const commands = [
   'git clone https://github.com/dwst/dwst.git',

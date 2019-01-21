@@ -11,7 +11,7 @@
 
 */
 
-import DwstError from '../types/error.js';
+import DwstError from '../abstract/error.js';
 
 class NoConnection extends DwstError {
   constructor(msg) {

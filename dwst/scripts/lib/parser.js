@@ -15,8 +15,8 @@
 
 // DWST template expression parser
 
-import Parsee from '../types/parsee.js';
-import errors from './errors.js';
+import Parsee from '../types/util/parsee.js';
+import errors from '../types/errors/errors.js';
 const {InvalidTemplateExpression} = errors;
 import utils from './utils.js';
 

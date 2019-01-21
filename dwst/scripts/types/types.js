@@ -12,8 +12,14 @@
 
 */
 
-import m from './m.js';
+import abstract from './abstract/abstract.js';
+import errors from './errors/errors.js';
+import m from './m/m.js';
+import util from './util/util.js';
 
 export default {
+  abstract,
+  errors,
   m,
+  util,
 };

@@ -1,3 +1,4 @@
+
 /**
 
   Authors: Toni Ruottu, Finland 2010-2018
@@ -11,10 +12,8 @@
 
 */
 
-import DwstError from '../types/error.js';
-import DwstFunction from '../types/function.js';
+import Parsee from './parsee.js';
 
 export default {
-  DwstError,
-  DwstFunction,
+  Parsee,
 };

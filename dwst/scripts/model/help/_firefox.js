@@ -12,7 +12,7 @@
 
 */
 
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 
 const disclaimer = [
   m.h2('!!! Follow at your own risk !!!'),
