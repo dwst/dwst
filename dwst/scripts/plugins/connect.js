@@ -47,7 +47,7 @@ export default class Connect {
     const m = this._dwst.types.m;
 
     if (this._dwst.model.connection !== null) {
-      throw new this._dwst.lib.errors.AlreadyConnected();
+      throw new this._dwst.types.errors.AlreadyConnected();
     }
     const protoCandidates = (() => {
       if (protocolString === '') {

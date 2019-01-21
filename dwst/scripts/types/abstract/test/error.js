@@ -16,7 +16,7 @@ import {expect} from 'chai';
 
 import DwstError from '../error.js';
 
-describe('DwstError data type', () => {
+describe('DwstError', () => {
   it('should be abstract', () => {
     expect(() => {
       new DwstError();

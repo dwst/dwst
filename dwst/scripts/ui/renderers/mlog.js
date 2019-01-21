@@ -12,7 +12,7 @@
 
 */
 
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 import utils from '../../lib/utils.js';
 
 function hexify(num) {

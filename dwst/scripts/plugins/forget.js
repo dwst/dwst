@@ -53,7 +53,7 @@ export default class Forget {
       this._dwst.ui.terminal.log("You may wish to use your browser's cleaning features to remove tracking cookies and other remaining traces.", 'warning');
     } else {
       const historyLine = this._dwst.model.history.getSummary().concat(['.']);
-      throw new this._dwst.lib.errors.InvalidArgument(target, historyLine);
+      throw new this._dwst.types.errors.InvalidArgument(target, historyLine);
     }
   }
 

@@ -20,7 +20,7 @@ import Ui from './ui/ui.js';
 import Controller from './controller/controller.js';
 import Plugins from './model/plugins.js';
 
-import DwstError from './types/error.js';
+import DwstError from './types/abstract/error.js';
 
 import ByteRange from './functions/byte_range.js';
 import CharRange from './functions/char_range.js';

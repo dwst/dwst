@@ -51,7 +51,7 @@ export default class Binary {
     const msg = `<${buffer.byteLength}B of data> `;
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {
-      throw new this._dwst.lib.errors.NoConnection(msg);
+      throw new this._dwst.types.errors.NoConnection(msg);
     }
     this._dwst.model.connection.send(buffer);
   }

@@ -48,7 +48,7 @@ export default class Spam {
       const firstPart = commandParts[0];
       const otherParts = commandParts.slice(1);
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
-        throw new this._dwst.lib.errors.InvalidCombination('spam', ['send', 'binary']);
+        throw new this._dwst.types.errors.InvalidCombination('spam', ['send', 'binary']);
       }
       return [firstPart.slice(1), otherParts.join(' ')];
     })();
@@ -63,7 +63,7 @@ export default class Spam {
         return payload;
       })();
       if (this._dwst.model.connection === null || this._dwst.model.connection.isOpen() === false) {
-        throw new this._dwst.lib.errors.NoConnection(message);
+        throw new this._dwst.types.errors.NoConnection(message);
       }
       this._dwst.controller.prompt.run([command, message].join(' '));
       const nextspam = () => {

@@ -12,8 +12,8 @@
 */
 
 
-import m from '../types/m.js';
-import errors from '../lib/errors.js';
+import m from '../types/m/m.js';
+import errors from '../types/errors/errors.js';
 const {NoConnection, AlreadyConnected, SocketError, InvalidTemplateExpression, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, InvalidVariableName, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
 
 function commaCommaOr(stringList) {

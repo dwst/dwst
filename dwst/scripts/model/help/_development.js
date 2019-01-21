@@ -12,7 +12,7 @@
 
 */
 
-import m from '../../types/m.js';
+import m from '../../types/m/m.js';
 
 export default function developmentPage() {
   return [

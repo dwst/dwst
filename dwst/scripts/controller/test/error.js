@@ -14,9 +14,9 @@
 
 import {expect} from 'chai';
 
-import errors from '../../lib/errors.js';
+import errors from '../../types/errors/errors.js';
 const {InvalidTemplateExpression} = errors;
-import DwstError from '../../types/error.js';
+import DwstError from '../../types/abstract/error.js';
 
 import ErrorHandler from '../error.js';
 

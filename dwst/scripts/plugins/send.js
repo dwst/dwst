@@ -53,7 +53,7 @@ export default class Send {
       return text;
     } catch (e) {
       if (e instanceof TypeError) {
-        throw new this._dwst.lib.errors.InvalidUtf8(buffer);
+        throw new this._dwst.types.errors.InvalidUtf8(buffer);
       }
       throw e;
     }
@@ -64,7 +64,7 @@ export default class Send {
     const msg = this._encode(buffer);
     const connection = this._dwst.model.connection;
     if (connection === null || connection.isClosing() || connection.isClosed()) {
-      throw new this._dwst.lib.errors.NoConnection(msg);
+      throw new this._dwst.types.errors.NoConnection(msg);
     }
     this._dwst.model.connection.send(msg);
   }

@@ -1,6 +1,7 @@
 
 describe('data type collection', () => {
-  require('./parsee.js');
-  require('./error.js');
-  require('./m.js');
+  require('../abstract/test/test.js');
+  require('../errors/test/test.js');
+  require('../m/test/test.js');
+  require('../util/test/test.js');
 });
