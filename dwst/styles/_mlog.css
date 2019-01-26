@@ -131,7 +131,7 @@ Styleguide 2.8
   text-transform: uppercase;
 }
 .dwst-mlog__link {
-  color: var(--dwst-color-blue);
+  color: var(--dwst-color-blue--light);
 }
 .dwst-mlog__syntax {
   font-style: italic;
