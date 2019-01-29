@@ -12,22 +12,68 @@
 
 */
 
+const REPEAT = ' ';
+
+function *colorMasks(colors) {
+  let color = colors[0];
+  if (color === REPEAT) {
+    throw new Error('invalid color mask');
+  }
+  let parts = [];
+  for (const symbol of colors) {
+    if (symbol === color) {
+      parts.push(color);
+    } else if (symbol === REPEAT) {
+      parts.push(color);
+    } else {
+      yield parts.join('');
+      parts = [symbol];
+      color = symbol;
+    }
+  }
+  if (parts.length > 0) {
+    yield parts.join('');
+  }
+}
+
+function *cellProperties(chars, colors) {
+  let remainder = chars.slice();
+  for (const mask of colorMasks(colors)) {
+    const color = mask[0];
+    const text = remainder.slice(0, mask.length);
+    remainder = remainder.slice(mask.length);
+    yield {text, color};
+  }
+}
+
+function *izip(a, b) {
+  const iterA = a[Symbol.iterator]();
+  const iterB = b[Symbol.iterator]();
+  while (true) {
+    const resultA = iterA.next();
+    const resultB = iterB.next();
+    if (resultA.done || resultB.done) {
+      return;
+    }
+    yield [resultA.value, resultB.value];
+  }
+}
+
 export default function renderGfx(lines, colors) {
 
   const gfxContent = document.createElement('div');
   gfxContent.setAttribute('class', 'dwst-gfx__content');
-  lines.forEach((line, li) => {
-    const logLine = document.createElement('div');
-    logLine.setAttribute('class', 'dwst-gfx__line');
-    [...line].forEach((chr, ci) => {
-      const color = colors[li][ci];
-      const outputCell = document.createElement('span');
-      outputCell.setAttribute('class', `dwst-gfx__element dwst-gfx__element--color-${color}`);
-      outputCell.innerHTML = chr;
-      logLine.appendChild(outputCell);
-    });
-    gfxContent.appendChild(logLine);
-  });
+  for (const [chars, cols] of izip(lines, colors)) {
+    const gfxLine = document.createElement('div');
+    gfxLine.setAttribute('class', 'dwst-gfx__line');
+    for (const {text, color} of cellProperties(chars, cols)) {
+      const gfxCell = document.createElement('span');
+      gfxCell.setAttribute('class', `dwst-gfx__element dwst-gfx__element--color-${color}`);
+      gfxCell.innerHTML = text;
+      gfxLine.appendChild(gfxCell);
+    }
+    gfxContent.appendChild(gfxLine);
+  }
   const background = document.createElement('div');
   background.setAttribute('class', 'dwst-gfx__background');
   const safe = document.createElement('div');
