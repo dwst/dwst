@@ -153,6 +153,7 @@
     "object-property-newline": [2, {"allowMultiplePropertiesPerLine": true}],
     "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
     "spaced-comment": 2,
+    "lines-between-class-members": 2,
 
     "max-depth": 0,
     "no-magic-numbers": [0, {"ignore": [0, 1, 2, 3]}],

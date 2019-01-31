@@ -31,6 +31,7 @@ class InvalidTemplateExpression extends DwstError {
     this.remainder = remainder;
     this.expression = expression;
   }
+
   get errorPosition() {
     return this.expression.length - this.remainder.length;
   }
