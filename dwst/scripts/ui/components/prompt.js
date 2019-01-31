@@ -58,10 +58,8 @@ export default class Prompt {
       this.send();
     } else if (event.keyCode === 38) { // up
       this._element.value = this._dwst.model.history.getPrevious(this._element.value);
-      return;
     } else if (event.keyCode === 40) { // down
       this._element.value = this._dwst.model.history.getNext(this._element.value);
-      return;
     }
   }
 

@@ -132,6 +132,7 @@
     "no-duplicate-imports": 2,
     "require-yield": 2,
     "prefer-destructuring": 2,
+    "no-useless-return": 2,
 
     "rest-spread-spacing": 2,
     "template-curly-spacing": 2,
