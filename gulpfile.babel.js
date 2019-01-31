@@ -80,7 +80,7 @@ const sourcePaths = {
 const VERSION = (() => {
   // This is ugly but NodeGit does not support describe at the moment
   const stdout = exec.execSync('git describe --tags', {encoding: 'ascii'});
-  const firstLine = stdout.split('\n')[0].split('\r')[0];
+  const firstLine = stdout.split('\n').shift().split('\r').shift();
   const prefix = 'v';
   if (firstLine.startsWith(prefix)) {
     return firstLine.slice(prefix.length);
