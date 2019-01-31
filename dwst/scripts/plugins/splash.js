@@ -183,14 +183,11 @@ export default class Splash {
           m.line`Selected protocol: ${m.strong(protocol)}`,
         ];
       })();
-      const disconnectInstructions = [
-        m.line`Type ${m.command('/disconnect')} to end the connection`,
-      ];
       return ([
         connectionStatus,
       ]).concat(maybeProtocolStatus).concat([
         '',
-        disconnectInstructions,
+        m.line`Type ${m.command('/disconnect')} to end the connection`,
       ]);
     })();
     const about = [
