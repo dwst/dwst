@@ -77,7 +77,7 @@ export default class TemplateHandler {
       throw new Error('unexpected root node type');
     }
     const chunks = await Promise.all(rootNode.particles.map(particle => this._evalParticle(particle)));
-    const buffer = this._dwst.lib.utils.joinBuffers(chunks).buffer;
+    const {buffer} = this._dwst.lib.utils.joinBuffers(chunks);
     return buffer;
   }
 

@@ -40,7 +40,7 @@ export default class Splash {
 
   run() {
 
-    const m = this._dwst.types.m;
+    const {m} = this._dwst.types;
 
     this._dwst.ui.terminal.clearLog();
 
@@ -175,7 +175,7 @@ export default class Splash {
       }
       const connectionStatus = m.line`Currently ${this._dwst.model.connection.verb} to ${m.strong(this._dwst.model.connection.url)}`;
       const maybeProtocolStatus = (() => {
-        const protocol = this._dwst.model.connection.protocol;
+        const {protocol} = this._dwst.model.connection;
         if (protocol.length < 1) {
           return [];
         }

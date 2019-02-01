@@ -156,10 +156,11 @@ export default class Terminal {
 
   mlog(mlogDescription, type, userOptions) {
 
-    const options = Object.assign({
+    const options = {
       textData: false,
       truncated: false,
-    }, userOptions);
+      ...userOptions,
+    };
 
     const logLine = renderLogEntry(mlogDescription, type, this._dwst.controller.link, options);
 

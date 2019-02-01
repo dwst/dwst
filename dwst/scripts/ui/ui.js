@@ -42,7 +42,7 @@ export default class Ui {
 
   globalKeyPress(event) {
     if (event.key === 'Escape') {
-      const connection = this._dwst.model.connection;
+      const {connection} = this._dwst.model;
       if (connection !== null && (connection.isOpen() || connection.isConnecting())) {
         this._dwst.controller.prompt.loud('/disconnect');
       } else {
@@ -56,7 +56,7 @@ export default class Ui {
     // and aligns the text in the gfx section with the text in log lines.
     const MAX_MAXCHARS = 110;
     Reflect.apply(Array.prototype.forEach, this._element.getElementsByClassName('dwst-gfx'), [maxDiv => {
-      const ref = maxDiv.getElementsByClassName('dwst-gfx__line')[0];
+      const [ref] = maxDiv.getElementsByClassName('dwst-gfx__line');
       const refTextWidth = ref.offsetWidth;
       const refTextLength = ref.textContent.length;
       const refWidth = refTextWidth / refTextLength;
@@ -68,7 +68,7 @@ export default class Ui {
         const invisibleLeft = Math.round(invisible / 2);
         leftMargin -= invisibleLeft;
       }
-      const field = maxDiv.getElementsByClassName('dwst-gfx__content')[0];
+      const [field] = maxDiv.getElementsByClassName('dwst-gfx__content');
       field.setAttribute('style', `transform: initial; margin-left: ${leftMargin}ch;`);
     }]);
   }

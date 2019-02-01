@@ -117,7 +117,7 @@ export default class Connection {
   }
 
   get verb() {
-    const readyState = this.ws.readyState;
+    const {readyState} = this.ws;
     if (readyState === 0) {
       return 'connecting';
     }

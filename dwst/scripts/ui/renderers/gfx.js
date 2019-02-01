@@ -15,7 +15,7 @@
 const REPEAT = ' ';
 
 function *colorMasks(colors) {
-  let color = colors[0];
+  let [color] = colors;
   if (color === REPEAT) {
     throw new Error('invalid color mask');
   }
@@ -39,7 +39,7 @@ function *colorMasks(colors) {
 function *cellProperties(chars, colors) {
   let remainder = chars.slice();
   for (const mask of colorMasks(colors)) {
-    const color = mask[0];
+    const [color] = mask;
     const text = remainder.slice(0, mask.length);
     remainder = remainder.slice(mask.length);
     yield {text, color};

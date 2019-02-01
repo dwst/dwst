@@ -44,7 +44,7 @@ export default class Connect {
 
   _run(url, protocolString = '') {
 
-    const m = this._dwst.types.m;
+    const {m} = this._dwst.types;
 
     if (this._dwst.model.connection !== null) {
       throw new this._dwst.types.errors.AlreadyConnected();

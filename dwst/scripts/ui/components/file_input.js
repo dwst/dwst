@@ -20,9 +20,9 @@ export default class FileInput {
   }
 
   read(callback) {
-    const upload = this._element.getElementsByTagName('input')[0];
+    const [upload] = this._element.getElementsByTagName('input');
     upload.onchange = () => {
-      const file = upload.files[0];
+      const [file] = upload.files;
       this._element.innerHTML = this._element.innerHTML;
       callback(file);
     };

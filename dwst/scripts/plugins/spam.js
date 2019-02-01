@@ -45,8 +45,7 @@ export default class Spam {
       if (commandParts.length < 1) {
         return ['send', null];
       }
-      const firstPart = commandParts[0];
-      const otherParts = commandParts.slice(1);
+      const [firstPart, ...otherParts] = commandParts;
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
         throw new this._dwst.types.errors.InvalidCombination('spam', ['send', 'binary']);
       }

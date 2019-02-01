@@ -266,9 +266,8 @@ function escapeForTemplateExpression(textString) {
     if (rm.length < 1) {
       return str;
     }
-    const head = rm[0];
-    const find = head[0];
-    const rep = head[1];
+    const [head] = rm;
+    const [find, rep] = head;
 
     const parts = str.split(find);
     const complete = [];
