@@ -14,12 +14,12 @@
 
 export default class AutoScrollButton {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
   }
 
-  init() {
+  init(element) {
+    this._element = element;
     this._element.addEventListener('click', evt => {
       evt.preventDefault();
       this._dwst.ui.screen.scrollLog();

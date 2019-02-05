@@ -103,7 +103,7 @@ export default class Help {
       return introductionPage();
     }
     if (section === '#commands') {
-      const commands = this._dwst.plugins.getNames();
+      const commands = this._dwst.model.plugins.getNames();
       return commandsPage(commands);
     }
     if (section === '#functions') {
@@ -114,7 +114,7 @@ export default class Help {
   }
 
   _commandHelp(command) {
-    const plugin = this._dwst.plugins.getPlugin(command);
+    const plugin = this._dwst.model.plugins.getPlugin(command);
     if (plugin === null) {
       throw new UnknownCommand(command);
     }

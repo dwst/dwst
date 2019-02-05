@@ -16,16 +16,18 @@ import config from './config.js';
 import History from './history.js';
 import Variables from './variables.js';
 import Help from './help/help.js';
+import Plugins from './plugins.js';
 
 export default class Model {
 
-  constructor(dwst, history, save, functions) {
+  constructor(dwst) {
     this.config = config;
-    this.history = new History(history, {save});
+    this.history = new History(dwst);
     this.help = new Help(dwst);
     this.connection = null;
     this.intervalId = null;
-    this.variables = new Variables(dwst, functions);
+    this.variables = new Variables(dwst);
+    this.plugins = new Plugins(dwst);
   }
 
 }

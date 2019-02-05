@@ -24,20 +24,19 @@ import FileInput from './components/file_input.js';
 
 export default class Ui {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
     this._resizePending = false;
 
-    this.terminal = new Terminal(element.getElementById('js-terminal'), this._dwst);
-    this.clock = new Clock(element.getElementById('js-clock'), this._dwst);
-    this.prompt = new Prompt(element.getElementById('js-prompt'), this._dwst);
-    this.sendButton = new SendButton(element.getElementById('js-send-button'), this._dwst);
-    this.menuButton = new MenuButton(element.getElementById('js-menu-button'), this._dwst);
-    this.screen = new Screen(element.getElementById('js-screen'), this._dwst);
-    this.autoScrollButton = new AutoScrollButton(element.getElementById('js-auto-scroll-button'), this._dwst);
-    this.scrollNotification = new ScrollNotification(element.getElementById('js-scroll-notification'), this._dwst);
-    this.fileInput = new FileInput(element.getElementById('js-file-input'), this._dwst);
+    this.terminal = new Terminal(this._dwst);
+    this.clock = new Clock(this._dwst);
+    this.prompt = new Prompt(this._dwst);
+    this.sendButton = new SendButton(this._dwst);
+    this.menuButton = new MenuButton(this._dwst);
+    this.screen = new Screen(this._dwst);
+    this.autoScrollButton = new AutoScrollButton(this._dwst);
+    this.scrollNotification = new ScrollNotification(this._dwst);
+    this.fileInput = new FileInput(this._dwst);
   }
 
   globalKeyPress(event) {
@@ -83,13 +82,18 @@ export default class Ui {
     }
   }
 
-  init() {
+  init(element) {
+    this._element = element;
     this._element.addEventListener('keydown', evt => this.globalKeyPress(evt));
-    this.prompt.init();
-    this.sendButton.init();
-    this.menuButton.init();
-    this.autoScrollButton.init();
-    this.scrollNotification.init();
+    this.terminal.init(element.getElementById('js-terminal'));
+    this.clock.init(element.getElementById('js-clock'));
+    this.prompt.init(element.getElementById('js-prompt'));
+    this.sendButton.init(element.getElementById('js-send-button'));
+    this.menuButton.init(element.getElementById('js-menu-button'));
+    this.screen.init(element.getElementById('js-screen'));
+    this.autoScrollButton.init(element.getElementById('js-auto-scroll-button'));
+    this.scrollNotification.init(element.getElementById('js-scroll-notification'));
+    this.fileInput.init(element.getElementById('js-file-input'));
     this._dwst.controller.prompt.silent('/splash');
     this.prompt.focus();
     window.addEventListener('resize', () => this._throttledUpdateGfxPositions());

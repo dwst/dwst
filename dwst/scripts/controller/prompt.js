@@ -19,7 +19,7 @@ export default class PromptHandler {
   }
 
   async _runPlugin(pluginName, paramString) {
-    const plugin = this._dwst.plugins.getPlugin(pluginName);
+    const plugin = this._dwst.model.plugins.getPlugin(pluginName);
     if (plugin === null) {
       throw new this._dwst.types.errors.UnknownCommand(pluginName);
     }

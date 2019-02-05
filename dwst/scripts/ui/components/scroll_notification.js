@@ -14,9 +14,13 @@
 
 export default class ScrollNotification {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
+  }
+
+  init(element) {
+    this._element = element;
+    setInterval(() => this.scrollNotificationUpdate(), 1000);
   }
 
   scrollNotificationUpdate() {
@@ -33,9 +37,5 @@ export default class ScrollNotification {
 
   hideScrollNotification() {
     this._element.setAttribute('style', 'display: none;');
-  }
-
-  init() {
-    setInterval(() => this.scrollNotificationUpdate(), 1000);
   }
 }

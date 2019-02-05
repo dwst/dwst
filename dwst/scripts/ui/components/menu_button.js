@@ -14,9 +14,16 @@
 
 export default class MenuButton {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
+  }
+
+  init(element) {
+    this._element = element;
+    this._element.addEventListener('click', () => {
+      this._dwst.controller.prompt.loud('/splash');
+      this._dwst.ui.screen.scrollLog();
+    });
   }
 
   connected(state) {
@@ -25,12 +32,5 @@ export default class MenuButton {
     } else {
       this._element.classList.replace('dwst-button--splash-connected', 'dwst-button--splash');
     }
-  }
-
-  init() {
-    this._element.addEventListener('click', () => {
-      this._dwst.controller.prompt.loud('/splash');
-      this._dwst.ui.screen.scrollLog();
-    });
   }
 }

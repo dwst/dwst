@@ -14,10 +14,15 @@
 
 export default class Plugins {
 
-  constructor(dwst, pluginClasses) {
+  constructor(dwst) {
     this._commands = new Map();
+    this._dwst = dwst;
+  }
+
+  setPlugins(pluginClasses) {
+    this._commands.clear();
     for (const Constructor of pluginClasses) {
-      const plugin = new Constructor(dwst);
+      const plugin = new Constructor(this._dwst);
       for (const command of plugin.commands()) {
         this._commands.set(command, plugin);
       }

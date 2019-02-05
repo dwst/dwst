@@ -105,8 +105,12 @@ class ElementHistory {
 
 export default class History {
 
-  constructor(savedHistory, options) {
-    this.save = options.save;
+  constructor(dwst) {
+    this._dwst = dwst;
+    this.history = new ElementHistory([]);
+  }
+
+  setHistory(savedHistory) {
     this.history = new ElementHistory(savedHistory);
   }
 
@@ -133,14 +137,14 @@ export default class History {
 
   forget() {
     const emptyHistory = [];
-    this.history = new ElementHistory(emptyHistory, {save: this.save});
-    this.save(emptyHistory);
+    this.history = new ElementHistory(emptyHistory);
+    this._dwst.controller.history.save(emptyHistory);
   }
 
   addItem(value, edition) {
     this.history.addItem(value, edition, () => {
       const history = this.history.getAll();
-      this.save(history);
+      this._dwst.controller.history.save(history);
     });
   }
 

@@ -20,9 +20,13 @@ const {escapeForTemplateExpression} = parser;
 
 export default class Prompt {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
+  }
+
+  init(element) {
+    this._element = element;
+    this._element.addEventListener('keydown', evt => this._keyHandler(evt));
   }
 
   _enableDebugger() {
@@ -77,10 +81,6 @@ export default class Prompt {
       this._element.value = '';
     }
     this._element.focus();
-  }
-
-  init() {
-    this._element.addEventListener('keydown', evt => this._keyHandler(evt));
   }
 
   focus() {
