@@ -16,9 +16,12 @@ import renderTime from '../renderers/time.js';
 
 export default class Clock {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
+  }
+
+  init(element) {
+    this._element = element;
   }
 
   refreshClock() {

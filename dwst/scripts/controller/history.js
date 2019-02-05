@@ -12,16 +12,23 @@
 
 */
 
-export default class SendButton {
+const HISTORY_KEY = 'history';
+
+export default class HistoryHandler {
 
   constructor(dwst) {
     this._dwst = dwst;
   }
 
-  init(element) {
-    this._element = element;
-    this._element.addEventListener('click', () => {
-      this._dwst.ui.prompt.send();
-    });
+  load() {
+    const response = localStorage.getItem(HISTORY_KEY);
+    if (response !== null) {
+      this._dwst.model.history.setHistory(JSON.parse(response));
+    }
+  }
+
+  save(history) {
+    const saveState = JSON.stringify(history);
+    localStorage.setItem(HISTORY_KEY, saveState);
   }
 }

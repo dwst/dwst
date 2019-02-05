@@ -12,6 +12,9 @@
 
 */
 
+import HistoryHandler from './history.js';
+import PluginsHandler from './plugins.js';
+import FunctionsHandler from './functions.js';
 import LinkHandler from './link.js';
 import TemplateHandler from './template.js';
 import PromptHandler from './prompt.js';
@@ -22,6 +25,9 @@ import PwaHandler from './pwa.js';
 export default class Controller {
 
   constructor(dwst) {
+    this.history = new HistoryHandler(dwst);
+    this.plugins = new PluginsHandler(dwst);
+    this.functions = new FunctionsHandler(dwst);
     this.link = new LinkHandler(dwst);
     this.template = new TemplateHandler(dwst);
     this.prompt = new PromptHandler(dwst);

@@ -14,16 +14,10 @@
 
 export default class Variables {
 
-  constructor(dwst, functionClasses) {
+  constructor(dwst) {
     this._dwst = dwst;
     this._functions = new Map();
     this._variables = new Map();
-    for (const Constructor of functionClasses) {
-      const func = new Constructor(dwst);
-      for (const name of func.commands()) {
-        this._functions.set(name, func);
-      }
-    }
   }
 
   setVariable(variableName, value) {
@@ -47,6 +41,16 @@ export default class Variables {
 
   getVariableNames() {
     return [...this._variables.keys()];
+  }
+
+  setFunctions(functionClasses) {
+    this._functions.clear();
+    for (const Constructor of functionClasses) {
+      const func = new Constructor(this._dwst);
+      for (const name of func.commands()) {
+        this._functions.set(name, func);
+      }
+    }
   }
 
   getFunction(functionName) {

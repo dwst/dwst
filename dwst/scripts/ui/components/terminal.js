@@ -115,10 +115,13 @@ function hilightControlChars(msg) {
 
 export default class Terminal {
 
-  constructor(element, dwst) {
-    this._element = element;
+  constructor(dwst) {
     this._dwst = dwst;
     this._limit = 1000;
+  }
+
+  init(element) {
+    this._element = element;
   }
 
   reset() {
