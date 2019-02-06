@@ -12,8 +12,6 @@
 
 */
 
-import Connection from '../connection.js';
-
 export default class Connect {
 
   constructor(dwst) {
@@ -46,9 +44,6 @@ export default class Connect {
 
     const {m} = this._dwst.types;
 
-    if (this._dwst.model.connection !== null) {
-      throw new this._dwst.types.errors.AlreadyConnected();
-    }
     const protoCandidates = (() => {
       if (protocolString === '') {
         return [];
@@ -82,7 +77,7 @@ export default class Connect {
         m.line`Attempting unprotected connection from a secure origin. See ${m.help('#unprotected')} for details. Consider using ${m.command(secureConnect)}`,
       ], 'warning');
     }
-    this._dwst.model.connection = new Connection(url, protocols, this._dwst.controller.socket);
+    this._dwst.controller.connection.connect(url, protocols);
     const protoFormatted = protocols.join(', ');
     const negotiation = (() => {
       if (protocols.length < 1) {
@@ -90,7 +85,7 @@ export default class Connect {
       }
       return [`Accepted protocols: ${protoFormatted}`];
     })();
-    this._dwst.ui.terminal.mlog([`Connecting to ${this._dwst.model.connection.url}`].concat(negotiation), 'system');
+    this._dwst.ui.terminal.mlog([`Connecting to ${url}`].concat(negotiation), 'system');
   }
 
   run(paramString) {

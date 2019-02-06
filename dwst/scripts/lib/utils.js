@@ -71,4 +71,11 @@ export default {
     return out;
   },
 
+  globalThrow: error => {
+    setTimeout(() => {
+      // setTimeout used to escape promises
+      throw error;
+    });
+  },
+
 };

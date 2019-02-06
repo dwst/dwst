@@ -61,14 +61,14 @@ export default class Spam {
         }
         return payload;
       })();
-      if (this._dwst.model.connection === null || this._dwst.model.connection.isOpen() === false) {
-        throw new this._dwst.types.errors.NoConnection(message);
-      }
-      this._dwst.controller.prompt.run([command, message].join(' '));
-      const nextspam = () => {
-        spam(limit, i + 1);
-      };
-      setTimeout(nextspam, 0);
+      this._dwst.controller.prompt.runPlugin(command, message).then(() => {
+        const nextspam = () => {
+          spam(limit, i + 1);
+        };
+        setTimeout(nextspam, 0);
+      }).catch(error => {
+        this._dwst.lib.utils.globalThrow(error);
+      });
     };
     spam(times);
   }
