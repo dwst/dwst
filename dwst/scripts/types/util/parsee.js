@@ -1,6 +1,6 @@
 /**
 
-  Authors: Toni Ruottu, Finland 2017-2018
+  Authors: Toni Ruottu, Finland 2010-2019
            Lauri Kaitala, Finland 2017
 
   This file is part of Dark WebSocket Terminal.
