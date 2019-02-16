@@ -12,7 +12,7 @@
 
 */
 
-import FakeSocket from './simulator/fake.js';
+import FakeSocket from '../simulator/socket.js';
 
 export default class ConnectionHandler {
 
