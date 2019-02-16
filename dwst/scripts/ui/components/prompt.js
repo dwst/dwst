@@ -1,7 +1,7 @@
 
 /**
 
-  Authors: Toni Ruottu, Finland 2010-2018
+  Authors: Toni Ruottu, Finland 2010-2019
            William Orr, US 2012
 
   This file is part of Dark WebSocket Terminal.
