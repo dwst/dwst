@@ -18,6 +18,7 @@ import FunctionsHandler from './functions.js';
 import LinkHandler from './link.js';
 import TemplateHandler from './template.js';
 import PromptHandler from './prompt.js';
+import ConnectionHandler from './connection.js';
 import SocketHandler from './socket.js';
 import ErrorHandler from './error.js';
 import PwaHandler from './pwa.js';
@@ -31,6 +32,7 @@ export default class Controller {
     this.link = new LinkHandler(dwst);
     this.template = new TemplateHandler(dwst);
     this.prompt = new PromptHandler(dwst);
+    this.connection = new ConnectionHandler(dwst);
     this.socket = new SocketHandler(dwst);
     this.error = new ErrorHandler(dwst);
     this.pwa = new PwaHandler(dwst);

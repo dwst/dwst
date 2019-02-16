@@ -62,11 +62,7 @@ export default class Send {
   async run(templateExpression) {
     const buffer = await this._dwst.controller.template.eval(templateExpression);
     const msg = this._encode(buffer);
-    const {connection} = this._dwst.model;
-    if (connection === null || connection.isClosing() || connection.isClosed()) {
-      throw new this._dwst.types.errors.NoConnection(msg);
-    }
-    this._dwst.model.connection.send(msg);
+    this._dwst.controller.connection.send(msg);
   }
 }
 

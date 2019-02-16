@@ -48,12 +48,6 @@ export default class Binary {
 
   async run(templateExpression) {
     const buffer = await this._dwst.controller.template.eval(templateExpression);
-    const msg = `<${buffer.byteLength}B of data> `;
-    const {connection} = this._dwst.model;
-    if (connection === null || connection.isClosing() || connection.isClosed()) {
-      throw new this._dwst.types.errors.NoConnection(msg);
-    }
-    this._dwst.model.connection.send(buffer);
+    this._dwst.controller.connection.send(buffer);
   }
 }
-

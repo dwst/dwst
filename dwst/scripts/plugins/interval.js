@@ -71,15 +71,13 @@ export default class Interval {
         }
         return payload;
       })();
-      if (this._dwst.model.connection === null || this._dwst.model.connection.isOpen() === false) {
+      this._dwst.controller.prompt.runPlugin(command, message).catch(error => {
         if (this._dwst.model.intervalId !== null) {
           clearInterval(this._dwst.model.intervalId);
           this._dwst.model.intervalId = null;
-          throw new this._dwst.types.errors.NoConnection(message);
+          this._dwst.lib.utils.globalThrow(error);
         }
-        return;
-      }
-      this._dwst.controller.prompt.run([command, message].join(' '));
+      });
       count += 1;
     };
     if (this._dwst.model.intervalId !== null) {

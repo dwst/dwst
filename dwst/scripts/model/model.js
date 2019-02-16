@@ -17,6 +17,7 @@ import History from './history.js';
 import Variables from './variables.js';
 import Help from './help/help.js';
 import Plugins from './plugins.js';
+import Connection from './connection.js';
 
 export default class Model {
 
@@ -24,7 +25,7 @@ export default class Model {
     this.config = config;
     this.history = new History(dwst);
     this.help = new Help(dwst);
-    this.connection = null;
+    this.connection = new Connection(dwst);
     this.intervalId = null;
     this.variables = new Variables(dwst);
     this.plugins = new Plugins(dwst);

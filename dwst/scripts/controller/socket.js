@@ -18,18 +18,20 @@ export default class SocketHandler {
     this._dwst = dwst;
   }
 
-  onConnectionOpen(protocol) {
+  onOpen() {
+    const socket = this._dwst.model.connection.getSocket();
+    socket.resetClock();
     const selected = (() => {
-      if (protocol.length < 1) {
+      if (socket.protocol.length < 1) {
         return [];
       }
-      return [`Selected protocol: ${protocol}`];
+      return [`Selected protocol: ${socket.protocol}`];
     })();
     this._dwst.ui.terminal.mlog(['Connection established.'].concat(selected), 'system');
     this._dwst.ui.menuButton.connected(true);
   }
 
-  onConnectionClose(e, sessionLength) {
+  onClose(e) {
     const meanings = {
       1000: 'Normal Closure',
       1001: 'Going Away',
@@ -56,18 +58,25 @@ export default class SocketHandler {
       }
       return [`Close reason: ${e.reason}`];
     })();
+    const socket = this._dwst.model.connection.getSocket();
     const sessionLengthString = (() => {
-      if (sessionLength === null) {
+      if (socket.sessionLength === null) {
         return [];
       }
-      return [`Session length: ${sessionLength}ms`];
+      return [`Session length: ${socket.sessionLength}ms`];
     })();
+    const ws = socket.getRawSocket();
+    ws.onopen = null;
+    ws.onclose = null;
+    ws.onmessage = null;
+    ws.onerror = null;
+    this._dwst.model.connection.clearSocket();
     this._dwst.ui.terminal.mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
-    this._dwst.model.connection = null;
     this._dwst.ui.menuButton.connected(false);
   }
 
-  onMessage(msg) {
+  onMessage(msg2) {
+    const msg = msg2.data;
     if (typeof msg === 'string') {
       this._dwst.ui.terminal.tlog(msg, 'received');
     } else {
@@ -82,17 +91,5 @@ export default class SocketHandler {
 
   onError() {
     this._dwst.ui.terminal.log('WebSocket error.', 'error');
-  }
-
-  beforeSendWhileConnecting(verb) {
-    this._dwst.ui.terminal.log(`Attempting to send data while ${verb}`, 'warning');
-  }
-
-  onSend(msg) {
-    if (typeof msg === 'string') {
-      this._dwst.ui.terminal.tlog(msg, 'sent');
-    } else {
-      this._dwst.ui.terminal.blog(msg, 'sent');
-    }
   }
 }

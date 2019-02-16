@@ -12,13 +12,15 @@
 
 */
 
+import utils from '../lib/utils.js';
+
 export default class PromptHandler {
 
   constructor(dwst) {
     this._dwst = dwst;
   }
 
-  async _runPlugin(pluginName, paramString) {
+  async runPlugin(pluginName, paramString) {
     const plugin = this._dwst.model.plugins.getPlugin(pluginName);
     if (plugin === null) {
       throw new this._dwst.types.errors.UnknownCommand(pluginName);
@@ -29,11 +31,8 @@ export default class PromptHandler {
   run(command) {
     const [pluginName, ...params] = command.split(' ');
     const paramString = params.join(' ');
-    this._runPlugin(pluginName, paramString).catch(error => {
-      // setTimeout used to escape promise
-      setTimeout(() => {
-        throw error;
-      });
+    this.runPlugin(pluginName, paramString).catch(error => {
+      utils.globalThrow(error);
     });
   }
 

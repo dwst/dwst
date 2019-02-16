@@ -170,10 +170,11 @@ export default class Splash {
       tooManyWarning,
     );
     const statusSection = (() => {
-      if (this._dwst.model.connection === null) {
+      const socket = this._dwst.model.connection.getSocket();
+      if (socket === null) {
         return [];
       }
-      const connectionStatus = m.line`Currently ${this._dwst.model.connection.verb} to ${m.strong(this._dwst.model.connection.url)}`;
+      const connectionStatus = m.line`Currently ${socket.verb} to ${m.strong(socket.url)}`;
       const maybeProtocolStatus = (() => {
         const {protocol} = this._dwst.model.connection;
         if (protocol.length < 1) {
@@ -216,7 +217,7 @@ export default class Splash {
       }`,
     ];
     const sections = (() => {
-      if (this._dwst.model.connection !== null) {
+      if (this._dwst.model.connection.getSocket() !== null) {
         return [
           about,
           [''],
