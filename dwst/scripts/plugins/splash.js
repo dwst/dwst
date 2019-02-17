@@ -176,7 +176,7 @@ export default class Splash {
       }
       const connectionStatus = m.line`Currently ${socket.verb} to ${m.strong(socket.url)}`;
       const maybeProtocolStatus = (() => {
-        const {protocol} = this._dwst.model.connection;
+        const {protocol} = socket;
         if (protocol.length < 1) {
           return [];
         }
