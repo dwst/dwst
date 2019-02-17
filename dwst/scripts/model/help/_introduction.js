@@ -33,6 +33,7 @@ export default function introductionPage() {
     '',
     m.paragraph(
       m.line`Use the ${m.help('send')} and ${m.help('binary')} commands to construct more complex messages.`,
+      m.line`Embed dynamic or generated content into your messages with ${m.help('#functions')}.`,
       m.line`Setup a periodic send with the ${m.help('interval')} command or send a burst of messages with the ${m.help('spam')} command.`,
     ),
     '',
