@@ -23,6 +23,7 @@ import localPage from './_local.js';
 import firefoxPage from './_firefox.js';
 import functionsPage from './_functions.js';
 import introductionPage from './_introduction.js';
+import filesPage from './_files.js';
 import mainPage from './_main.js';
 import privacyPage from './_privacy.js';
 import styleguidePage from './_styleguide.js';
@@ -101,6 +102,9 @@ export default class Help {
     }
     if (section === '#introduction') {
       return introductionPage();
+    }
+    if (section === '#files') {
+      return filesPage();
     }
     if (section === '#commands') {
       const commands = this._dwst.model.plugins.getNames();

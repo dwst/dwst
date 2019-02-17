@@ -21,6 +21,7 @@ export default function mainPage() {
     '',
     m.line`- ${m.help('#introduction')} for beginners`,
     m.line`- Working with ${m.help('#unprotected')} sockets`,
+    m.line`- Working with ${m.help('#files')} and variables`,
     m.line`- ${m.help('#privacy')} and tracking information`,
     m.line`- Alphabetical list of ${m.help('#commands')}`,
     m.line`- Alphabetical list of ${m.help('#functions')}`,
