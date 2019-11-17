@@ -9,7 +9,7 @@ deploy:
   repo: dwst/dwst.github.io
   target-branch: master
   github-token: $GITHUB_TOKEN
-  commit-message: "Deploy %{git_tag} %{git_commit_msg}%"
+  commit-message: "Deploy %{git_tag} %{git_commit_msg}"
   on:
     repo: dwst/dwst
     all_branches: true
