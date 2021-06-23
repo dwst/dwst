@@ -30,21 +30,21 @@
   <meta name="description" content="Dark WebSocket Terminal provides netcat like functionality for conversing with a WebSocket server." />
 </head>
 <body class="dwst-base dwst-layout">
-  <div class="dwst-layout__background">
+  <aside class="dwst-layout__background" aria-hidden="true">
     <div class="dwst-debug__background-guide">
       <div class="dwst-debug__content-guide"></div>
     </div>
-  </div>
-  <div id="js-screen" class="dwst-layout__content-area dwst-scroll-area">
+  </aside>
+  <main id="js-screen" class="dwst-layout__content-area dwst-scroll-area">
     <div id="js-terminal" class="dwst-scroll-area__content">
     </div>
-  </div>
-  <div id="js-scroll-notification" class="dwst-layout__notification-area dwst-notification" style="display: none;">
+  </main>
+  <aside id="js-scroll-notification" class="dwst-layout__notification-area dwst-notification" style="display: none;">
     <a id="js-auto-scroll-button" href="#" class="dwst-notification__link">scroll to bottom</a>
-  </div>
-  <div class="dwst-layout__control-area">
+  </aside>
+  <nav class="dwst-layout__control-area">
     <div class="dwst-bar">
-      <div class="dwst-bar__item">
+      <div class="dwst-bar__item" aria-hidden="true">
         <div id="js-clock" class="dwst-time dwst-time--panel dwst-time--placeholder">00:00:00</div>
       </div>
       <div class="dwst-bar__item dwst-bar__item--grow"><div class="dwst-prompt">
@@ -58,8 +58,8 @@
       </div></div>
       <div class="dwst-bar__item"><button id="js-menu-button" class="dwst-button dwst-button--splash" aria-label="menu"></button></div>
     </div>
-  </div>
-  <div id="js-file-input" style="visibility: hidden;">
+  </nav>
+  <div id="js-file-input" style="visibility: hidden;" aria-hidden="true">
     <input type="file" />
   </div>
   <script type="module" src="scripts/dwst.js" charset="UTF-8"></script>
