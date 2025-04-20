@@ -7,7 +7,14 @@
     "last 1 edge versions"
   ],
   "scripts": {
-    "test": "gulp test && gulp buildRelease"
+    "build": "yarn gulp build",
+    "build:release": "yarn gulp buildRelease",
+    "lint": "yarn lint:js && yarn lint:json && yarn lint:css && yarn lint:html",
+    "lint:css": "yarn gulp stylelint",
+    "lint:html": "yarn gulp htmlhint",
+    "lint:js": "yarn gulp eslint",
+    "lint:json": "yarn gulp jsonlint",
+    "test": "yarn gulp mocha"
   },
   "engines": {
     "node": "*"
