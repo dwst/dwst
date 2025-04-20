@@ -25,9 +25,6 @@ addEventListener('install', evt => {
 /* eslint-disable consistent-return */
 
 addEventListener('fetch', evt => {
-  if (evt.request.url.indexOf('styleguide') !== -1) {
-    return false;
-  }
   if (evt.request.url.indexOf('google-analytics.com') !== -1) {
     return false;
   }

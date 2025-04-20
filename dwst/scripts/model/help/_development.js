@@ -19,7 +19,6 @@ export default function developmentPage() {
     m.h1('DWST Development'),
     '',
     m.line`- Run the ${m.help('#local')} development server`,
-    m.line`- User interface ${m.help('#styleguide')}`,
     m.line`- WebSocket server ${m.help('#simulator')}`,
   ];
 }

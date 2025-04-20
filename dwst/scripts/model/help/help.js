@@ -26,7 +26,6 @@ import introductionPage from './_introduction.js';
 import filesPage from './_files.js';
 import mainPage from './_main.js';
 import privacyPage from './_privacy.js';
-import styleguidePage from './_styleguide.js';
 import simulatorPage from './_simulator.js';
 import unprotectedPage from './_unprotected.js';
 
@@ -34,7 +33,6 @@ const topicMap = {
   '#firefox': '#unprotected',
   '#chrome': '#unprotected',
   '#local': '#development',
-  '#styleguide': '#development',
   '#simulator': '#development',
 };
 
@@ -87,9 +85,6 @@ export default class Help {
     }
     if (section === '#local') {
       return localPage();
-    }
-    if (section === '#styleguide') {
-      return styleguidePage();
     }
     if (section === '#simulator') {
       return simulatorPage();

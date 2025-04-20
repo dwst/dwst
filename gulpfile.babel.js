@@ -35,7 +35,6 @@ import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
 import {Clone} from 'nodegit';
-import styleguide from 'sc5-styleguide';
 import {create as bsCreate} from 'browser-sync';
 
 const browserSync = bsCreate();
@@ -45,9 +44,6 @@ const swRootFile = 'service_worker.js';
 const cssRootFile = 'dwst.css';
 const htmlRootFile = 'dwst.html';
 const htmlRootLink = 'index.html';
-const styleguideRoot = 'styleguide';
-const styleguideRootFile = 'index.html';
-const styleguideRootLink = path.join(styleguideRoot, 'index.html');
 const serviceworkerRootFile = 'service_worker.js';
 const serviceworkerRootLink = 'service_worker.js';
 
@@ -73,7 +69,6 @@ const sourcePaths = {
   scripts: path.join(sourceDirs.scripts, '**/*.js'),
   scriptEntry: path.join(sourceDirs.scripts, 'dwst.js'),
   swEntry: path.join(sourceDirs.scripts, 'service_worker.js'),
-  styleguideFavicon: path.join(sourceDirs.styles, 'favicon.ico'),
   config: path.join(sourceDirs.scripts, 'model/config.js'),
 };
 
@@ -93,12 +88,10 @@ function formTargets(base) {
     styles: path.join(base, 'styles'),
     scripts: path.join(base, 'scripts'),
     images: path.join(base, 'images'),
-    styleguide: path.join(base, 'styleguide'),
   };
   const targetPaths = {
     cssRoot: path.join(targetDirs.styles, cssRootFile),
     htmlRoot: path.join(base, htmlRootFile),
-    styleguideHtmlRoot: path.join(targetDirs.styleguide, styleguideRootFile),
     serviceworkerRoot: path.join(targetDirs.scripts, serviceworkerRootFile),
   };
   return [targetDirs, targetPaths];
@@ -107,7 +100,6 @@ function formTargets(base) {
 function formLinkTargets(base) {
   const targets = {
     htmlLink: path.join(base, htmlRootLink),
-    styleguideHtmlLink: path.join(base, styleguideRootLink),
     serviceworkerLink: path.join(base, serviceworkerRootLink),
   };
   return targets;
@@ -119,9 +111,8 @@ const linkTargets = formLinkTargets(buildBase);
 
 const releaseBase = 'release';
 
-// The ending slash of both base paths seems to be meaninful for some reason
+// The ending slash seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
-const styleguideBase = `/${VERSION}/${styleguideRoot}`;
 
 const lintingPaths = {
   json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc', 'package.json'],
@@ -287,39 +278,9 @@ export function buildManifest() {
     .pipe(browserSync.stream());
 }
 
-export function styleguideGenerate() {
-  return gulp.src(sourcePaths.css)
-    .pipe(styleguide.generate({
-      title: 'DWST Style Guide',
-      overviewPath: sourcePaths.cssReadme,
-      rootPath: targetDirs.styleguide,
-      appRoot: styleguideBase,
-      disableEncapsulation: true,
-      readOnly: true,
-      extraHead: [
-        '<style>.sg-design {display: none;}</style>',
-      ],
-    }))
-    .pipe(gulp.dest(targetDirs.styleguide));
-}
-
-export const styleguideApplystyles = gulp.series(buildCss, () => {
-  return gulp.src(targetPaths.cssRoot)
-    .pipe(styleguide.applyStyles())
-    .pipe(gulp.dest(targetDirs.styleguide));
-});
-
-export function replaceStyleguideFavicon() {
-  return gulp.src(sourcePaths.styleguideFavicon)
-    .pipe(gulp.dest(path.join(targetDirs.styleguide, 'assets/img')));
-}
-
-export const buildStyleguide = gulp.series(gulp.parallel(styleguideGenerate, styleguideApplystyles), replaceStyleguideFavicon);
-
-export const buildAssets = gulp.parallel(buildJs, buildStyleguide, buildHtml, buildImages, buildManifest);
+export const buildAssets = gulp.parallel(buildJs, buildHtml, buildImages, buildManifest);
 
 export function createSymlinks(done) {
-  fse.ensureSymlinkSync(targetPaths.styleguideHtmlRoot, linkTargets.styleguideHtmlLink);
   fse.ensureSymlinkSync(targetPaths.htmlRoot, linkTargets.htmlLink);
   fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, linkTargets.serviceworkerLink);
   done();
@@ -340,9 +301,6 @@ export const dev = gulp.series(build, () => {
   gulp.watch(sourcePaths.html, buildHtml);
   gulp.watch(sourcePaths.images, buildImages);
   gulp.watch(sourcePaths.scripts, buildJs);
-  gulp.watch(sourcePaths.css, buildStyleguide);
-  gulp.watch(sourcePaths.sprites, buildStyleguide);
-  gulp.watch(sourcePaths.cssReadme, buildStyleguide);
 });
 
 export function getCurrent(done) {
@@ -436,7 +394,6 @@ export function updateReleaseSymlinks(done) {
   const latest = latestRelease();
   const releasePath = path.join(releaseBase, latest);
   const [, releaseTargets] = formTargets(releasePath);
-  updateLink(releaseTargets.styleguideHtmlRoot, releaseLinks.styleguideHtmlLink);
   updateLink(releaseTargets.htmlRoot, releaseLinks.htmlLink);
   updateLink(releaseTargets.serviceworkerRoot, releaseLinks.serviceworkerLink);
   done();
