@@ -34,7 +34,7 @@ import gulpStylelint from 'gulp-stylelint';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
-import {Clone} from 'nodegit';
+import {simpleGit} from 'simple-git';
 import {create as bsCreate} from 'browser-sync';
 
 const browserSync = bsCreate();
@@ -73,7 +73,8 @@ const sourcePaths = {
 };
 
 const VERSION = (() => {
-  // This is ugly but NodeGit does not support describe at the moment
+  // This is ugly but SimpleGit does not support describe at the moment
+  // See https://github.com/steveukx/git-js/issues/318
   const stdout = exec.execSync('git describe --tags', {encoding: 'ascii'});
   const firstLine = stdout.split('\n').shift().split('\r').shift();
   const prefix = 'v';
@@ -305,7 +306,7 @@ export const dev = gulp.series(build, () => {
 
 export function getCurrent(done) {
   const releaseRepo = 'https://github.com/dwst/dwst.github.io.git';
-  Clone.clone(releaseRepo, releaseBase).then(() => done()).catch(err => {
+  simpleGit().clone(releaseRepo, releaseBase).then(() => done()).catch(err => {
     throw err;
   });
 }
