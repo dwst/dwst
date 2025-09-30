@@ -279,7 +279,7 @@ export function buildManifest() {
     .pipe(browserSync.stream());
 }
 
-export const buildAssets = gulp.parallel(buildJs, buildHtml, buildImages, buildManifest);
+export const buildAssets = gulp.parallel(buildJs, buildCss, buildHtml, buildImages, buildManifest);
 
 export function createSymlinks(done) {
   fse.ensureSymlinkSync(targetPaths.htmlRoot, linkTargets.htmlLink);
@@ -302,6 +302,7 @@ export const dev = gulp.series(build, () => {
   gulp.watch(sourcePaths.html, buildHtml);
   gulp.watch(sourcePaths.images, buildImages);
   gulp.watch(sourcePaths.scripts, buildJs);
+  gulp.watch(sourcePaths.css, buildCss);
 });
 
 export function getCurrent(done) {
