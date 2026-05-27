@@ -6,7 +6,12 @@ addEventListener('install', evt => {
   const staticAssets = [
     'styles/dwst.css',
     'scripts/dwst.js',
-    'images/sprite.png',
+    'sprites/minilogo.png',
+    'sprites/minilogo-hover.png',
+    'sprites/minilogo-connected.png',
+    'sprites/minilogo-connected-hover.png',
+    'sprites/return.png',
+    'sprites/return-hover.png',
     'images/favicon.png',
     'images/favicon.ico',
     'images/icon_120.png',

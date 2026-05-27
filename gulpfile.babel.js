@@ -25,7 +25,6 @@ import webpack2 from 'webpack';
 import fse from 'fs-extra';
 import postcss from 'gulp-postcss';
 import atImport from 'postcss-import';
-import sprites from 'postcss-sprites';
 import colorHexAlpha from 'postcss-color-hex-alpha';
 import discardComments from 'postcss-discard-comments';
 import sourcemaps from 'gulp-sourcemaps';
@@ -88,6 +87,7 @@ function formTargets(base) {
   const targetDirs = {
     styles: path.join(base, 'styles'),
     scripts: path.join(base, 'scripts'),
+    sprites: path.join(base, 'sprites'),
     images: path.join(base, 'images'),
   };
   const targetPaths = {
@@ -174,13 +174,6 @@ export function buildCss() {
     .pipe(sourcemaps.init())
     .pipe(postcss([
       atImport(),
-      sprites({
-        spritePath: targetDirs.images,
-        stylesheetPath: targetDirs.styles,
-        spritesmith: {
-          padding: 2,
-        },
-      }),
       colorHexAlpha(),
       autoprefixer(),
       discardComments(),
@@ -270,6 +263,15 @@ export function buildImages() {
     .pipe(browserSync.stream());
 }
 
+export function buildSprites() {
+  return gulp.src(sourcePaths.sprites)
+    .pipe(gulp.dest(targetDirs.sprites))
+    .pipe(rename(p => {
+      p.dirname = path.join(targetDirs.sprites, p.dirname);
+    }))
+    .pipe(browserSync.stream());
+}
+
 export function buildManifest() {
   return gulp.src(sourcePaths.manifest)
     .pipe(gulp.dest(versionBase))
@@ -279,7 +281,7 @@ export function buildManifest() {
     .pipe(browserSync.stream());
 }
 
-export const buildAssets = gulp.parallel(buildJs, buildCss, buildHtml, buildImages, buildManifest);
+export const buildAssets = gulp.parallel(buildJs, buildCss, buildHtml, buildImages, buildSprites, buildManifest);
 
 export function createSymlinks(done) {
   fse.ensureSymlinkSync(targetPaths.htmlRoot, linkTargets.htmlLink);
@@ -301,6 +303,7 @@ export const dev = gulp.series(build, () => {
   gulp.watch(sourcePaths.manifest, buildManifest);
   gulp.watch(sourcePaths.html, buildHtml);
   gulp.watch(sourcePaths.images, buildImages);
+  gulp.watch(sourcePaths.sprites, buildSprites);
   gulp.watch(sourcePaths.scripts, buildJs);
   gulp.watch(sourcePaths.css, buildCss);
 });
