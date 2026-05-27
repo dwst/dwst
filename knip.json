@@ -15,8 +15,7 @@
     "@babel/register",
     "babel-loader",
     "eslint-plugin-chai-friendly",
-    "eslint-plugin-import",
-    "gulp-webpack"
+    "eslint-plugin-import"
   ],
   "rules": {
     "duplicates": "off"
