@@ -26,7 +26,7 @@
     "@babel/preset-env": "^7.29.7",
     "@babel/register": "^7.0.0",
     "autoprefixer": "^9.4.3",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^10.1.1",
     "browser-sync": "^3.0.4",
     "chai": "^4.2.0",
     "core-js": "^3.0.0-beta.8",
@@ -44,7 +44,6 @@
     "gulp-replace": "^1.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^8.0.0",
-    "gulp-webpack": "^1.5.0",
     "knip": "^6.14.1",
     "postcss-color-hex-alpha": "^5.0.2",
     "postcss-discard-comments": "^4.0.1",
@@ -53,8 +52,8 @@
     "simple-git": "^3.36.0",
     "stylelint": "^9.9.0",
     "stylelint-no-unsupported-browser-features": "^3.0.2",
-    "webpack": "^4.28.2",
-    "webpack-stream": "^5.2.1"
+    "webpack": "^5.107.2",
+    "webpack-stream": "^7.0.0"
   },
   "babel": {
     "presets": [
