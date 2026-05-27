@@ -16,7 +16,6 @@ import fs from 'fs';
 import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
-import gulpJsonlint from 'gulp-jsonlint';
 import gulpEslint from 'gulp-eslint';
 import gulpHtmlhint from 'gulp-htmlhint';
 import gulpClean from 'gulp-clean';
@@ -122,10 +121,21 @@ const lintingPaths = {
   css: sourcePaths.css,
 };
 
-export function jsonlint() {
-  return gulp.src(lintingPaths.json)
-    .pipe(gulpJsonlint())
-    .pipe(gulpJsonlint.failOnError());
+// TODO: replace with @eslint/json once the eslint toolchain is bumped to a version that supports it.
+export function jsonlint(done) {
+  const errors = lintingPaths.json.flatMap(file => {
+    try {
+      JSON.parse(fs.readFileSync(file, 'utf8'));
+      return [];
+    } catch (e) {
+      return [`${file}: ${e.message}`];
+    }
+  });
+  if (errors.length > 0) {
+    done(new Error(`JSON validation failed:\n  ${errors.join('\n  ')}`));
+    return;
+  }
+  done();
 }
 
 export function eslint() {

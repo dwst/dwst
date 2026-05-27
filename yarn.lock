@@ -2107,13 +2107,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"JSV@npm:^4.0.x":
-  version: 4.0.2
-  resolution: "JSV@npm:4.0.2"
-  checksum: 10c0/51c9da17f8b064ef11f287b4488ca5d5f5b747ccbf5185b1d02f7e7d8a6116374ee0b26f87dd2e44b592dcfbf254352e2b0452bdb954ec959ec09819384f14aa
-  languageName: node
-  linkType: hard
-
 "abbrev@npm:^4.0.0":
   version: 4.0.0
   resolution: "abbrev@npm:4.0.0"
@@ -2364,13 +2357,6 @@ __metadata:
   dependencies:
     color-convert: "npm:^2.0.1"
   checksum: 10c0/895a23929da416f2bd3de7e9cb4eabd340949328ab85ddd6e484a637d8f6820d485f53933446f5291c3b760cbc488beb8e88573dd0f9c7daf83dccc8fe81b041
-  languageName: node
-  linkType: hard
-
-"ansi-styles@npm:~1.0.0":
-  version: 1.0.0
-  resolution: "ansi-styles@npm:1.0.0"
-  checksum: 10c0/940e0422e80025975f7d55ad177da151936094df013f7aa56b062656b81457423cf7f9dea26fb3fc8dc8c1e943eb4c6954736196892a3e825b877bd8acbfe939
   languageName: node
   linkType: hard
 
@@ -3366,17 +3352,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:~0.4.0":
-  version: 0.4.0
-  resolution: "chalk@npm:0.4.0"
-  dependencies:
-    ansi-styles: "npm:~1.0.0"
-    has-color: "npm:~0.1.0"
-    strip-ansi: "npm:~0.1.0"
-  checksum: 10c0/c6ad1d0c341d8e133bf518ca953a80aac5e46f006dc293878cd919e7bed524f6b14893d9b3081737ed0ff4a85d1d9f9a395aad8286a5c0a7dcf3bfd6df5e7aca
-  languageName: node
-  linkType: hard
-
 "character-entities-html4@npm:^1.0.0":
   version: 1.1.4
   resolution: "character-entities-html4@npm:1.1.4"
@@ -4353,7 +4328,6 @@ __metadata:
     gulp-clean: "npm:^0.4.0"
     gulp-eslint: "npm:^5.0.0"
     gulp-htmlhint: "npm:^4.0.2"
-    gulp-jsonlint: "npm:^1.2.2"
     gulp-mocha: "npm:^9.0.0"
     gulp-postcss: "npm:^8.0.0"
     gulp-rename: "npm:^1.2.2"
@@ -6078,20 +6052,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gulp-jsonlint@npm:^1.2.2":
-  version: 1.3.2
-  resolution: "gulp-jsonlint@npm:1.3.2"
-  dependencies:
-    ansi-colors: "npm:^4.1.1"
-    fancy-log: "npm:^1.3.3"
-    jsonlint: "npm:1.6.3"
-    map-stream: "npm:0.0.7"
-    plugin-error: "npm:1.0.1"
-    through2: "npm:^3.0.1"
-  checksum: 10c0/8dd59074572dd20f87005724d9a4fa79d371ebdf0fafb200673316e2c7d44a681625944144fdf8739c269981aba80318dfb0ff9b872a509e16f7a5e41c2cdc19
-  languageName: node
-  linkType: hard
-
 "gulp-mocha@npm:^9.0.0":
   version: 9.0.0
   resolution: "gulp-mocha@npm:9.0.0"
@@ -6218,13 +6178,6 @@ __metadata:
   version: 1.1.0
   resolution: "has-bigints@npm:1.1.0"
   checksum: 10c0/2de0cdc4a1ccf7a1e75ffede1876994525ac03cc6f5ae7392d3415dd475cd9eee5bceec63669ab61aa997ff6cceebb50ef75561c7002bed8988de2b9d1b40788
-  languageName: node
-  linkType: hard
-
-"has-color@npm:~0.1.0":
-  version: 0.1.7
-  resolution: "has-color@npm:0.1.7"
-  checksum: 10c0/c764308047c43f48fb421fc2a041b883547f3a3c8204cdfc0e36595da7bdf8ab317251f1511bdd0597e4be2fcf0fa29db5c52df81001e3b0b8d864ef1dbecbe3
   languageName: node
   linkType: hard
 
@@ -7450,18 +7403,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonlint@npm:1.6.3":
-  version: 1.6.3
-  resolution: "jsonlint@npm:1.6.3"
-  dependencies:
-    JSV: "npm:^4.0.x"
-    nomnom: "npm:^1.5.x"
-  bin:
-    jsonlint: lib/cli.js
-  checksum: 10c0/801175d69bcb5ee2ef7ca0bffcb54201e0e6ae43dedb5923acfbaadfa8e1d3a772335326a11b5d12e1a356e2c8ae824732dcdd2b71480b4c709af6c21af3277b
-  languageName: node
-  linkType: hard
-
 "just-debounce@npm:^1.0.0":
   version: 1.1.0
   resolution: "just-debounce@npm:1.1.0"
@@ -7840,13 +7781,6 @@ __metadata:
   version: 2.0.0
   resolution: "map-obj@npm:2.0.0"
   checksum: 10c0/e8e0f786fb944614475dab3d5d727a24c4e6f000e35e6b35ebd4c62fc3e336a773db1ae317bc658cc9563ce17225c658049206e6fe650ccd1232329c58b4436d
-  languageName: node
-  linkType: hard
-
-"map-stream@npm:0.0.7":
-  version: 0.0.7
-  resolution: "map-stream@npm:0.0.7"
-  checksum: 10c0/77da244656dad5013bd147b0eef6f0343a212f14761332b97364fe348d4d70f0b8a0903457d6fc88772ec7c3d4d048b24f8db3aa5c0f77a8ce8bf2391473b8ec
   languageName: node
   linkType: hard
 
@@ -8315,16 +8249,6 @@ __metadata:
     "@types/sarif": "npm:^2.1.7"
     fs-extra: "npm:^11.1.1"
   checksum: 10c0/e2ea03e004349b75fcb68523537224d47c5cb7a0be5b6ed3a2d816d2547ceaebf38250977474f8301fa4d82de00052c7e9640c774fe4a5df30eadbb4e268db12
-  languageName: node
-  linkType: hard
-
-"nomnom@npm:^1.5.x":
-  version: 1.8.1
-  resolution: "nomnom@npm:1.8.1"
-  dependencies:
-    chalk: "npm:~0.4.0"
-    underscore: "npm:~1.6.0"
-  checksum: 10c0/d086d5da3043f85e68816fb017d013f209ca987d050893a73672bc8946be3284ed1bf3e0c774679fea88ecc47c2d22f505b5adc37748384622afd544d2076d9c
   languageName: node
   linkType: hard
 
@@ -9135,18 +9059,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"plugin-error@npm:1.0.1, plugin-error@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "plugin-error@npm:1.0.1"
-  dependencies:
-    ansi-colors: "npm:^1.0.1"
-    arr-diff: "npm:^4.0.0"
-    arr-union: "npm:^3.1.0"
-    extend-shallow: "npm:^3.0.2"
-  checksum: 10c0/9b0ef44f8d2749013dfeb4a86c8082f2f277bf72e0c694c30dd504d0b329f321db91fe9d9cb0f7e8579f7ffa4260b7792827bc5ef4f87d6bcc0fc691de3d91a1
-  languageName: node
-  linkType: hard
-
 "plugin-error@npm:^0.1.2":
   version: 0.1.2
   resolution: "plugin-error@npm:0.1.2"
@@ -9157,6 +9069,18 @@ __metadata:
     arr-union: "npm:^2.0.1"
     extend-shallow: "npm:^1.1.2"
   checksum: 10c0/bc08395a4ae874c4d3215b827be8e86c5535b4c834a1025ebbdea5b33bdfd82ac6db600f15df5a22eefc0f2adfce0da388b4c49fa4543af64220fbf1b6cd381a
+  languageName: node
+  linkType: hard
+
+"plugin-error@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "plugin-error@npm:1.0.1"
+  dependencies:
+    ansi-colors: "npm:^1.0.1"
+    arr-diff: "npm:^4.0.0"
+    arr-union: "npm:^3.1.0"
+    extend-shallow: "npm:^3.0.2"
+  checksum: 10c0/9b0ef44f8d2749013dfeb4a86c8082f2f277bf72e0c694c30dd504d0b329f321db91fe9d9cb0f7e8579f7ffa4260b7792827bc5ef4f87d6bcc0fc691de3d91a1
   languageName: node
   linkType: hard
 
@@ -11002,15 +10926,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strip-ansi@npm:~0.1.0":
-  version: 0.1.1
-  resolution: "strip-ansi@npm:0.1.1"
-  bin:
-    strip-ansi: cli.js
-  checksum: 10c0/f593f30d82c9b3ff694b125aef5c8779aeedab5556ccaacfe62431c895d2ecfcbb7dcf1bdc4172d1a5350a77534a671d8a4c6546b08a676e5ad108c49cc09b0d
-  languageName: node
-  linkType: hard
-
 "strip-bom-string@npm:1.X":
   version: 1.0.0
   resolution: "strip-bom-string@npm:1.0.0"
@@ -11652,13 +11567,6 @@ __metadata:
   version: 0.1.2
   resolution: "unc-path-regex@npm:0.1.2"
   checksum: 10c0/bf9c781c4e2f38e6613ea17a51072e4b416840fbe6eeb244597ce9b028fac2fb6cfd3dde1f14111b02c245e665dc461aab8168ecc30b14364d02caa37f812996
-  languageName: node
-  linkType: hard
-
-"underscore@npm:~1.6.0":
-  version: 1.6.0
-  resolution: "underscore@npm:1.6.0"
-  checksum: 10c0/23db03890dc042984b5a6082f2784969aa1af0110b11486347b84e3e1c5ebc3a83531cfc031097900ccfc88cf2ded43970220d94e388e5b10e56519813d7d029
   languageName: node
   linkType: hard
 
