@@ -10,11 +10,12 @@
   "scripts": {
     "build": "yarn gulp build",
     "build:release": "yarn gulp buildRelease",
-    "lint": "yarn lint:js && yarn lint:json && yarn lint:css && yarn lint:html",
+    "lint": "yarn lint:js && yarn lint:json && yarn lint:css && yarn lint:html && yarn lint:knip",
     "lint:css": "yarn gulp stylelint",
     "lint:html": "yarn gulp htmlhint",
     "lint:js": "yarn gulp eslint",
     "lint:json": "yarn gulp jsonlint",
+    "lint:knip": "knip",
     "test": "yarn gulp mocha"
   },
   "engines": {
@@ -31,6 +32,7 @@
     "core-js": "^3.0.0-beta.8",
     "eslint-plugin-chai-friendly": "^0.4.1",
     "eslint-plugin-import": "^2.14.0",
+    "fs-extra": "^11.2.0",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-eslint": "^5.0.0",
@@ -43,6 +45,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^8.0.0",
     "gulp-webpack": "^1.5.0",
+    "knip": "^6.14.1",
     "postcss-color-hex-alpha": "^5.0.2",
     "postcss-discard-comments": "^4.0.1",
     "postcss-import": "^12.0.1",
