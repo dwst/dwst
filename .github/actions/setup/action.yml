@@ -2,9 +2,11 @@ name: "Setup"
 runs:
   using: "composite"
   steps:
+    - shell: bash
+      run: corepack enable
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
         cache: yarn
     - shell: bash
-      run: yarn install --immutable --immutable-cache --check-cache
+      run: yarn install --immutable
