@@ -50,17 +50,17 @@
     "selector-nested-pattern": "^$",
     "custom-media-pattern": "^$",
 
-    "property-blacklist": [],
-    "comment-word-blacklist": [],
-    "declaration-property-unit-blacklist": {},
-    "declaration-property-value-blacklist": {},
+    "property-disallowed-list": [],
+    "comment-word-disallowed-list": [],
+    "declaration-property-unit-disallowed-list": {},
+    "declaration-property-value-disallowed-list": {},
 
-    "function-url-scheme-whitelist": [],
-    "selector-attribute-operator-whitelist": ["="],
-    "unit-whitelist": ["%", "ch", "em", "pt", "px", "vh", "vw"],
-    "at-rule-whitelist": ["media","import"],
-    "media-feature-name-whitelist": ["min-width"],
-    "selector-pseudo-class-whitelist": [
+    "function-url-scheme-allowed-list": [],
+    "selector-attribute-operator-allowed-list": ["="],
+    "unit-allowed-list": ["%", "ch", "em", "pt", "px", "vh", "vw"],
+    "at-rule-allowed-list": ["media","import"],
+    "media-feature-name-allowed-list": ["min-width"],
+    "selector-pseudo-class-allowed-list": [
       "active",
       "after",
       "before",
@@ -70,7 +70,7 @@
       "root",
       "window-inactive"
     ],
-    "function-whitelist": [
+    "function-allowed-list": [
       "linear-gradient",
       "translateX",
       "calc",
