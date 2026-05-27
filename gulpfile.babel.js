@@ -34,7 +34,7 @@ import gulpStylelint from 'gulp-stylelint';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
-import {simpleGit} from 'simple-git';
+import {simpleGit} from 'simple-git'; // eslint-disable-line import/namespace
 import {create as bsCreate} from 'browser-sync';
 
 const browserSync = bsCreate();
