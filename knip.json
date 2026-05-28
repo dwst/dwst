@@ -3,11 +3,10 @@
   "entry": [
     "dwst/scripts/dwst.js",
     "dwst/scripts/service_worker.js",
-    "test/test.js",
     "gulpfile.babel.js"
   ],
   "project": ["dwst/scripts/**/*.js", "test/**/*.js", "dwst/test/**/*.js"],
-  "ignoreDependencies": ["@babel/register", "babel-loader"],
+  "ignoreDependencies": ["babel-loader"],
   "rules": {
     "duplicates": "off"
   },

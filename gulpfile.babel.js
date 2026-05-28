@@ -27,7 +27,6 @@ import sourcemaps from 'gulp-sourcemaps';
 import rename from 'gulp-rename';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
-import gulpMocha from 'gulp-mocha';
 import { simpleGit } from 'simple-git';
 import { create as bsCreate } from 'browser-sync';
 
@@ -109,14 +108,6 @@ const releaseBase = 'release';
 
 // The ending slash seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
-
-export function mocha() {
-  return gulp.src('test/test.js', { read: false }).pipe(
-    gulpMocha({
-      require: '@babel/register',
-    }),
-  );
-}
 
 export function deleteBuild() {
   return gulp
