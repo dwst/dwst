@@ -83,6 +83,6 @@ Offline here means **the UI works without network** — the WebSocket connection
 
 ## Conventions worth knowing
 
-- `.eslintrc.json` is strict — notable bans include `switch` statements (`no-restricted-syntax`), `no-bitwise`, `no-ternary`, `no-await-in-loop`, `no-console`, `no-undefined`, `no-negated-condition`, and `prefer-reflect` (use `Reflect.apply` etc.).
+- `eslint.config.mjs` (flat config, eslint 9) is strict — notable bans include `switch` statements (`no-restricted-syntax`), `no-bitwise`, `no-ternary`, `no-await-in-loop`, `no-console`, `no-undefined`, and `no-negated-condition`. Preferring `Reflect.apply` etc. is still the convention, but is no longer machine-enforced: the `prefer-reflect` rule was removed in eslint 9.
 - License is CC0-1.0; source files carry the standard CC0 header block. New files in `dwst/scripts/` follow the same header.
 - Each subsystem class receives `dwst` in its constructor. Don't store sub-references at construction time (`this._socket = dwst.model.connection.socket`) — those can be null/replaced; reach through `this._dwst` each time.

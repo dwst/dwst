@@ -15,7 +15,7 @@ import fs from 'fs';
 import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
-import gulpEslint from 'gulp-eslint';
+import gulpEslint from 'gulp-eslint-new';
 import gulpHtmlhint from 'gulp-htmlhint';
 import gulpClean from 'gulp-clean';
 import webpackStream from 'webpack-stream';
@@ -31,7 +31,7 @@ import gulpStylelint from 'gulp-stylelint';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
-import { simpleGit } from 'simple-git'; // eslint-disable-line import/namespace
+import { simpleGit } from 'simple-git';
 import { create as bsCreate } from 'browser-sync';
 
 const browserSync = bsCreate();

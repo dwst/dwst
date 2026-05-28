@@ -24,6 +24,9 @@ export default class FileInput {
     const [upload] = this._element.getElementsByTagName('input');
     upload.onchange = () => {
       const [file] = upload.files;
+      // Re-parses the markup, replacing the file input with a fresh node so
+      // the field resets and the same file can be selected again later.
+      // eslint-disable-next-line no-self-assign
       this._element.innerHTML = this._element.innerHTML;
       callback(file);
     };

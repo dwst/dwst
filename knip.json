@@ -7,12 +7,7 @@
     "gulpfile.babel.js"
   ],
   "project": ["dwst/scripts/**/*.js", "test/**/*.js", "dwst/test/**/*.js"],
-  "ignoreDependencies": [
-    "@babel/register",
-    "babel-loader",
-    "eslint-plugin-chai-friendly",
-    "eslint-plugin-import"
-  ],
+  "ignoreDependencies": ["@babel/register", "babel-loader"],
   "rules": {
     "duplicates": "off"
   },
