@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019

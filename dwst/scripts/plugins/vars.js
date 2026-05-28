@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Vars {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,17 +21,11 @@ export default class Vars {
   }
 
   usage() {
-    return [
-      '/vars',
-      '/vars [name]',
-    ];
+    return ['/vars', '/vars [name]'];
   }
 
   examples() {
-    return [
-      '/vars',
-      '/vars foo',
-    ];
+    return ['/vars', '/vars foo'];
   }
 
   info() {
@@ -43,7 +35,7 @@ export default class Vars {
   _run(variable = null) {
     if (variable !== null) {
       const v = this._dwst.model.variables.getVariable(variable);
-      if (typeof v  === 'string') {
+      if (typeof v === 'string') {
         this._dwst.ui.terminal.tlog(v, 'system');
         return;
       }
@@ -62,9 +54,9 @@ export default class Vars {
       this._dwst.ui.terminal.log('No variables in memory.', 'system');
       return;
     }
-    const listing = [...vars].map(name => {
+    const listing = [...vars].map((name) => {
       const value = this._dwst.model.variables.getVariable(name);
-      if (typeof value  === 'string') {
+      if (typeof value === 'string') {
         const utf8 = new TextEncoder().encode(value);
         return `${name} <${utf8.byteLength}B of utf-8 text>`;
       }
@@ -86,4 +78,3 @@ export default class Vars {
     this._run(...params);
   }
 }
-

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Spam {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,16 +21,11 @@ export default class Spam {
   }
 
   usage() {
-    return [
-      '/spam <times> [command line...]',
-    ];
+    return ['/spam <times> [command line...]'];
   }
 
   examples() {
-    return [
-      '/spam 10',
-      '/spam 6 /binary ${randomBytes(10)}',
-    ];
+    return ['/spam 10', '/spam 6 /binary ${randomBytes(10)}'];
   }
 
   info() {
@@ -47,7 +40,10 @@ export default class Spam {
       }
       const [firstPart, ...otherParts] = commandParts;
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
-        throw new this._dwst.types.errors.InvalidCombination('spam', ['send', 'binary']);
+        throw new this._dwst.types.errors.InvalidCombination('spam', [
+          'send',
+          'binary',
+        ]);
       }
       return [firstPart.slice(1), otherParts.join(' ')];
     })();
@@ -61,14 +57,17 @@ export default class Spam {
         }
         return payload;
       })();
-      this._dwst.controller.prompt.runPlugin(command, message).then(() => {
-        const nextspam = () => {
-          spam(limit, i + 1);
-        };
-        setTimeout(nextspam, 0);
-      }).catch(error => {
-        this._dwst.lib.utils.globalThrow(error);
-      });
+      this._dwst.controller.prompt
+        .runPlugin(command, message)
+        .then(() => {
+          const nextspam = () => {
+            spam(limit, i + 1);
+          };
+          setTimeout(nextspam, 0);
+        })
+        .catch((error) => {
+          this._dwst.lib.utils.globalThrow(error);
+        });
     };
     spam(times);
   }
@@ -82,4 +81,3 @@ export default class Spam {
     this._run(...params);
   }
 }
-

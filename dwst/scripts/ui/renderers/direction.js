@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,12 +12,9 @@
 */
 
 export default function renderDirection(type) {
-
   const direction = document.createElement('span');
   direction.setAttribute('class', `dwst-direction dwst-direction--${type}`);
   direction.innerHTML = `${type}:`;
 
   return direction;
-
 }
-

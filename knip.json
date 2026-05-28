@@ -6,11 +6,7 @@
     "test/test.js",
     "gulpfile.babel.js"
   ],
-  "project": [
-    "dwst/scripts/**/*.js",
-    "test/**/*.js",
-    "dwst/test/**/*.js"
-  ],
+  "project": ["dwst/scripts/**/*.js", "test/**/*.js", "dwst/test/**/*.js"],
   "ignoreDependencies": [
     "@babel/register",
     "babel-loader",

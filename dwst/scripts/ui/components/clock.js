@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import renderTime from '../renderers/time.js';
 
 export default class Clock {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -37,5 +35,4 @@ export default class Clock {
   onLoad() {
     this.startClock();
   }
-
 }

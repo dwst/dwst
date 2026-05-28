@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -24,13 +23,14 @@ function hexify(num) {
 }
 
 function charify(num) {
-  if (num > 0x7e || num < 0x20) { // non-printable
+  if (num > 0x7e || num < 0x20) {
+    // non-printable
     return '.';
   }
   return String.fromCharCode(num);
 }
 
-function *hexdump(buffer) {
+function* hexdump(buffer) {
   const dv = new DataView(buffer);
   let offset = 0;
   while (offset < buffer.byteLength) {
@@ -47,16 +47,14 @@ function *hexdump(buffer) {
       offset += 1;
     }
     yield [hexes, text];
-
   }
 }
 
 function hexLines(buffer) {
-  return [...hexdump(buffer)].map(lineData => m.hexline(...lineData));
+  return [...hexdump(buffer)].map((lineData) => m.hexline(...lineData));
 }
 
 function renderSegment(rawSegment, linkHandlers) {
-
   const segment = (() => {
     if (typeof rawSegment === 'string') {
       return m.regular(rawSegment);
@@ -98,10 +96,10 @@ function renderSegment(rawSegment, linkHandlers) {
     }
     link.setAttribute('class', classes.join(' '));
     const command = `/help ${segment.section}`;
-    link.onclick = (evt => {
+    link.onclick = (evt) => {
       evt.preventDefault();
       linkHandlers.onHelpLinkClick(command);
-    });
+    };
     link.setAttribute('href', '#');
     link.setAttribute('title', command);
     const textSpan = document.createElement('span');
@@ -118,10 +116,10 @@ function renderSegment(rawSegment, linkHandlers) {
     const link = document.createElement('a');
     link.setAttribute('class', 'dwst-mlog__command-link');
     const command = rawText;
-    link.onclick = (evt => {
+    link.onclick = (evt) => {
       evt.preventDefault();
       linkHandlers.onCommandLinkClick(command);
-    });
+    };
     link.setAttribute('href', '#');
     link.setAttribute('title', safeText);
     const textSpan = document.createElement('span');
@@ -142,7 +140,7 @@ function renderSegment(rawSegment, linkHandlers) {
 
     const chunksWanted = 4;
     const chunkLength = 4;
-    [...Array(chunksWanted).keys()].forEach(i => {
+    [...Array(chunksWanted).keys()].forEach((i) => {
       const [hexChunk = []] = [hexChunks[i]];
       const [textChunk = []] = [textChunks[i]];
 
@@ -152,7 +150,9 @@ function renderSegment(rawSegment, linkHandlers) {
       hexItem.innerHTML = hexContent;
       byteGrid.appendChild(hexItem);
 
-      const textContent = utils.htmlescape(textChunk.join('').padEnd(chunkLength));
+      const textContent = utils.htmlescape(
+        textChunk.join('').padEnd(chunkLength),
+      );
       const textItem = document.createElement('span');
       textItem.setAttribute('class', 'dwst-byte-grid__item');
       textItem.innerHTML = textContent;
@@ -227,17 +227,18 @@ function getLineSegments(line) {
 }
 
 export default function renderMlog(sections, type, linkHandlers, options) {
-
-  const domSections = sections.map(section => {
+  const domSections = sections.map((section) => {
     const lines = [];
     if (section instanceof ArrayBuffer) {
       lines.push(...hexLines(section));
     } else {
       lines.push(section);
     }
-    const domLines = lines.map(line => {
+    const domLines = lines.map((line) => {
       const segments = getLineSegments(line);
-      const domSegments = segments.map(segment => renderSegment(segment, linkHandlers));
+      const domSegments = segments.map((segment) =>
+        renderSegment(segment, linkHandlers),
+      );
       return domSegments;
     });
     return domLines;
@@ -250,9 +251,9 @@ export default function renderMlog(sections, type, linkHandlers, options) {
   if (options.truncated) {
     outputCell.classList.add('dwst-mlog--truncated');
   }
-  domSections.forEach(domSection => {
-    domSection.forEach(domLine => {
-      domLine.forEach(domSegment => {
+  domSections.forEach((domSection) => {
+    domSection.forEach((domLine) => {
+      domLine.forEach((domSegment) => {
         outputCell.appendChild(domSegment);
       });
       const br = document.createElement('br');

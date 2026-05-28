@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class RandomChars extends DwstFunction {
-
   constructor(dwst) {
     super();
     this._dwst = dwst;
@@ -26,16 +24,11 @@ export default class RandomChars extends DwstFunction {
   }
 
   usage() {
-    return [
-      'randomChars(<number>)',
-    ];
+    return ['randomChars(<number>)'];
   }
 
   examples() {
-    return [
-      '/s ${randomChars(10)}',
-      '/b ${randomChars(10)}',
-    ];
+    return ['/s ${randomChars(10)}', '/b ${randomChars(10)}'];
   }
 
   info() {

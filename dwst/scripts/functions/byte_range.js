@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class ByteRange extends DwstFunction {
-
   constructor(dwst) {
     super();
     this._dwst = dwst;
@@ -26,16 +24,11 @@ export default class ByteRange extends DwstFunction {
   }
 
   usage() {
-    return [
-      'byteRange(<start>, <end>)',
-    ];
+    return ['byteRange(<start>, <end>)'];
   }
 
   examples() {
-    return [
-      '/s From a to z: ${byteRange(97,122)}',
-      '/b ${byteRange(0,0xff)}',
-    ];
+    return ['/s From a to z: ${byteRange(97,122)}', '/b ${byteRange(0,0xff)}'];
   }
 
   info() {

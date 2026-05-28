@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -14,7 +13,7 @@
 
 const REPEAT = ' ';
 
-function *colorMasks(colors) {
+function* colorMasks(colors) {
   let [color] = colors;
   if (color === REPEAT) {
     throw new Error('invalid color mask');
@@ -36,17 +35,17 @@ function *colorMasks(colors) {
   }
 }
 
-function *cellProperties(chars, colors) {
+function* cellProperties(chars, colors) {
   let remainder = chars.slice();
   for (const mask of colorMasks(colors)) {
     const [color] = mask;
     const text = remainder.slice(0, mask.length);
     remainder = remainder.slice(mask.length);
-    yield {text, color};
+    yield { text, color };
   }
 }
 
-function *izip(a, b) {
+function* izip(a, b) {
   const iterA = a[Symbol.iterator]();
   const iterB = b[Symbol.iterator]();
   while (true) {
@@ -60,15 +59,17 @@ function *izip(a, b) {
 }
 
 export default function renderGfx(lines, colors) {
-
   const gfxContent = document.createElement('div');
   gfxContent.setAttribute('class', 'dwst-gfx__content');
   for (const [chars, cols] of izip(lines, colors)) {
     const gfxLine = document.createElement('div');
     gfxLine.setAttribute('class', 'dwst-gfx__line');
-    for (const {text, color} of cellProperties(chars, cols)) {
+    for (const { text, color } of cellProperties(chars, cols)) {
       const gfxCell = document.createElement('span');
-      gfxCell.setAttribute('class', `dwst-gfx__element dwst-gfx__element--color-${color}`);
+      gfxCell.setAttribute(
+        'class',
+        `dwst-gfx__element dwst-gfx__element--color-${color}`,
+      );
       gfxCell.innerHTML = text;
       gfxLine.appendChild(gfxCell);
     }
@@ -91,5 +92,3 @@ export default function renderGfx(lines, colors) {
 
   return gfxContainer;
 }
-
-

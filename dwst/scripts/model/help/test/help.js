@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,28 +12,42 @@
 */
 
 import rewire from 'rewire';
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 const helpRewire = rewire('../help.js');
 const crumbSections = helpRewire.__get__('crumbSections');
 
 describe('help module', () => {
-
   describe('crumbSections function', () => {
     it('should support main page', () => {
       expect([...crumbSections('#help')]).to.deep.equal(['#help']);
     });
     it('should support subpage', () => {
-      expect([...crumbSections('#privacy')]).to.deep.equal(['#help', '#privacy']);
+      expect([...crumbSections('#privacy')]).to.deep.equal([
+        '#help',
+        '#privacy',
+      ]);
     });
     it('should support subpage of a subpage', () => {
-      expect([...crumbSections('#simulator')]).to.deep.equal(['#help', '#development', '#simulator']);
+      expect([...crumbSections('#simulator')]).to.deep.equal([
+        '#help',
+        '#development',
+        '#simulator',
+      ]);
     });
     it('should support command page', () => {
-      expect([...crumbSections('send')]).to.deep.equal(['#help', '#commands', 'send']);
+      expect([...crumbSections('send')]).to.deep.equal([
+        '#help',
+        '#commands',
+        'send',
+      ]);
     });
     it('should support function page', () => {
-      expect([...crumbSections('randomBytes()')]).to.deep.equal(['#help', '#functions', 'randomBytes()']);
+      expect([...crumbSections('randomBytes()')]).to.deep.equal([
+        '#help',
+        '#functions',
+        'randomBytes()',
+      ]);
     });
   });
 });

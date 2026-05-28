@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Splash {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Splash {
   }
 
   usage() {
-    return [
-      '/splash',
-    ];
+    return ['/splash'];
   }
 
   examples() {
-    return [
-      '/splash',
-    ];
+    return ['/splash'];
   }
 
   info() {
@@ -39,8 +33,7 @@ export default class Splash {
   }
 
   run() {
-
-    const {m} = this._dwst.types;
+    const { m } = this._dwst.types;
 
     this._dwst.ui.terminal.clearLog();
 
@@ -150,24 +143,26 @@ export default class Splash {
 
     const CONNECTION_LIST_CAP = 3;
     const historySummary = this._dwst.model.history.getSummary();
-    const maybeTooManyConnectCommands =  this._dwst.model.history.getConnectCommands(CONNECTION_LIST_CAP + 1);
-    const connectCommands = maybeTooManyConnectCommands.slice(0, CONNECTION_LIST_CAP);
-    const connectionsLines = connectCommands.map(command => m.line`${m.command(command)}`);
+    const maybeTooManyConnectCommands =
+      this._dwst.model.history.getConnectCommands(CONNECTION_LIST_CAP + 1);
+    const connectCommands = maybeTooManyConnectCommands.slice(
+      0,
+      CONNECTION_LIST_CAP,
+    );
+    const connectionsLines = connectCommands.map(
+      (command) => m.line`${m.command(command)}`,
+    );
     const tooManyWarning = (() => {
       if (maybeTooManyConnectCommands.length > CONNECTION_LIST_CAP) {
-        return [
-          `(more than ${CONNECTION_LIST_CAP} in total, hiding some)`,
-        ];
+        return [`(more than ${CONNECTION_LIST_CAP} in total, hiding some)`];
       }
       return [];
     })();
-    const historySection = ([
+    const historySection = [
       historySummary.concat(m.line`, including ${m.help('connect')} commands`),
-    ]).concat(
-      connectionsLines,
-    ).concat(
-      tooManyWarning,
-    );
+    ]
+      .concat(connectionsLines)
+      .concat(tooManyWarning);
     const statusSection = (() => {
       const socket = this._dwst.model.connection.getSocket();
       if (socket === null) {
@@ -175,20 +170,18 @@ export default class Splash {
       }
       const connectionStatus = m.line`Currently ${socket.verb} to ${m.strong(socket.url)}`;
       const maybeProtocolStatus = (() => {
-        const {protocol} = socket;
+        const { protocol } = socket;
         if (protocol.length < 1) {
           return [];
         }
-        return [
-          m.line`Selected protocol: ${m.strong(protocol)}`,
-        ];
+        return [m.line`Selected protocol: ${m.strong(protocol)}`];
       })();
-      return ([
-        connectionStatus,
-      ]).concat(maybeProtocolStatus).concat([
-        '',
-        m.line`Type ${m.command('/disconnect')} to end the connection`,
-      ]);
+      return [connectionStatus]
+        .concat(maybeProtocolStatus)
+        .concat([
+          '',
+          m.line`Type ${m.command('/disconnect')} to end the connection`,
+        ]);
     })();
     const about = [
       m.line`${m.h1(`Dark WebSocket Terminal ${this._dwst.model.config.appVersion}`)}`,
@@ -202,18 +195,22 @@ export default class Splash {
       m.line`Type ${m.command('/help')} to see the full range of available commands`,
     ];
     const privacyReminder = [
-      m.line`${m.help('Check', '#privacy', {warning: true})} privacy and tracking info`,
+      m.line`${m.help('Check', '#privacy', { warning: true })} privacy and tracking info`,
     ];
     const linkSection = [
-      m.line`${
-        m.link('https://github.com/dwst/dwst', 'GitHub')
-      }${m.unsafe(' &bull; ')}${
-        m.link('https://gitter.im/dwst/dwst', 'chat')
-      }${m.unsafe(' &bull; ')}${
-        m.link('https://tools.ietf.org/html/rfc6455', 'rfc6455')
-      }${m.unsafe(' &bull; ')}${
-        m.link('https://www.iana.org/assignments/websocket/websocket.xhtml', 'iana')
-      }`,
+      m.line`${m.link(
+        'https://github.com/dwst/dwst',
+        'GitHub',
+      )}${m.unsafe(' &bull; ')}${m.link(
+        'https://gitter.im/dwst/dwst',
+        'chat',
+      )}${m.unsafe(' &bull; ')}${m.link(
+        'https://tools.ietf.org/html/rfc6455',
+        'rfc6455',
+      )}${m.unsafe(' &bull; ')}${m.link(
+        'https://www.iana.org/assignments/websocket/websocket.xhtml',
+        'iana',
+      )}`,
     ];
     const sections = (() => {
       if (this._dwst.model.connection.getSocket() !== null) {
@@ -258,5 +255,4 @@ export default class Splash {
     this._dwst.ui.terminal.gfx(shape, colors);
     this._dwst.ui.terminal.mlog([].concat(...sections), 'system');
   }
-
 }

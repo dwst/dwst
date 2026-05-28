@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -24,7 +23,6 @@ import ErrorHandler from './error.js';
 import PwaHandler from './pwa.js';
 
 export default class Controller {
-
   constructor(dwst) {
     this.history = new HistoryHandler(dwst);
     this.plugins = new PluginsHandler(dwst);

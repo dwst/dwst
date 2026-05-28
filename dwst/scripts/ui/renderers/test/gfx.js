@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,14 +12,13 @@
 */
 
 import rewire from 'rewire';
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 const gfxRewire = rewire('../gfx.js');
 const colorMasks = gfxRewire.__get__('colorMasks');
 const izip = gfxRewire.__get__('izip');
 
 describe('gfx module', () => {
-
   describe('colorMasks function', () => {
     it('should split single pattern', () => {
       expect([...colorMasks('1')]).to.deep.equal(['1']);
@@ -52,7 +50,11 @@ describe('gfx module', () => {
 
   describe('izip function', () => {
     it('should zip two arrays', () => {
-      expect([...izip([1, 2, 3], [4, 5, 6])]).to.deep.equal([[1, 4], [2, 5], [3, 6]]);
+      expect([...izip([1, 2, 3], [4, 5, 6])]).to.deep.equal([
+        [1, 4],
+        [2, 5],
+        [3, 6],
+      ]);
     });
     it('should return iterator', () => {
       expect(izip([1], [4])[Symbol.iterator]).to.be.a('function');

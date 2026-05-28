@@ -1,4 +1,3 @@
-
 const appVersion = (() => {
   if (typeof VERSION === 'undefined') {
     return 'unknown-version';

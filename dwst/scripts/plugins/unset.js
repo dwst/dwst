@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Unset {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Unset {
   }
 
   usage() {
-    return [
-      '/unset <variable>',
-    ];
+    return ['/unset <variable>'];
   }
 
   examples() {
-    return [
-      '/unset foo',
-    ];
+    return ['/unset foo'];
   }
 
   info() {
@@ -40,16 +34,15 @@ export default class Unset {
 
   run(variableName) {
     if (variableName.length === 0) {
-      throw new this._dwst.types.errors.InvalidArgument(variableName, ['expected variable name']);
+      throw new this._dwst.types.errors.InvalidArgument(variableName, [
+        'expected variable name',
+      ]);
     }
     const buffer = this._dwst.model.variables.getVariable(variableName);
     if (buffer === null) {
       throw new this._dwst.types.errors.UnknownVariable(variableName);
     }
     this._dwst.model.variables.deleteVariable(variableName);
-    this._dwst.ui.terminal.mlog([
-      `Variable ${variableName} deleted`,
-    ], 'system');
+    this._dwst.ui.terminal.mlog([`Variable ${variableName} deleted`], 'system');
   }
 }
-

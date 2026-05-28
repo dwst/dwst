@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Reset {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Reset {
   }
 
   usage() {
-    return [
-      '/reset',
-    ];
+    return ['/reset'];
   }
 
   examples() {
-    return [
-      '/reset',
-    ];
+    return ['/reset'];
   }
 
   info() {
@@ -42,4 +36,3 @@ export default class Reset {
     this._dwst.ui.terminal.reset();
   }
 }
-

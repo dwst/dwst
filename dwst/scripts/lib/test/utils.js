@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -14,7 +13,7 @@
 */
 
 import utils from '../utils.js';
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 describe('utils module', () => {
   describe('parseNum function', () => {
@@ -32,9 +31,7 @@ describe('utils module', () => {
     it('should make chunks from an array', () => {
       const array = [1, 2, 3];
       const chunkSize = 2;
-      const expectedChunks = [
-        [1, 2], [3],
-      ];
+      const expectedChunks = [[1, 2], [3]];
       const result = utils.chunkify(array, chunkSize);
       expect(result).to.deep.equal(expectedChunks);
     });

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -29,7 +28,6 @@ import Unset from '../plugins/unset.js';
 import Vars from '../plugins/vars.js';
 
 export default class PluginsHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }

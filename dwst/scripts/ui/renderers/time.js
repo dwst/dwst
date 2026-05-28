@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -31,6 +30,4 @@ export default function renderTime(contentOnly = false) {
   time.innerHTML = content;
 
   return time;
-
 }
-

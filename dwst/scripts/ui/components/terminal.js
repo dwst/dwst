@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -41,7 +40,7 @@ function createLines(mlogItems) {
         line = [];
         line.push(part);
         previous = null;
-      } else  if (part.text === CR) {
+      } else if (part.text === CR) {
         lines.push(line);
         line = [];
         line.push(part);
@@ -63,7 +62,7 @@ function createLines(mlogItems) {
         line = [];
         line.push(part);
         previous = null;
-      } else  if (part.text === CR) {
+      } else if (part.text === CR) {
         line.push(part);
         lines.push(line);
         line = [];
@@ -103,7 +102,7 @@ function partToMlog(part) {
 
 function hilightControlChars(msg) {
   const parts = parseControlChars(msg);
-  const mlogItems = parts.map(part => {
+  const mlogItems = parts.map((part) => {
     if (typeof part === 'object') {
       return partToMlog(part);
     }
@@ -114,7 +113,6 @@ function hilightControlChars(msg) {
 }
 
 export default class Terminal {
-
   constructor(dwst) {
     this._dwst = dwst;
     this._limit = 1000;
@@ -158,14 +156,18 @@ export default class Terminal {
   }
 
   mlog(mlogDescription, type, userOptions) {
-
     const options = {
       textData: false,
       truncated: false,
       ...userOptions,
     };
 
-    const logLine = renderLogEntry(mlogDescription, type, this._dwst.controller.link, options);
+    const logLine = renderLogEntry(
+      mlogDescription,
+      type,
+      this._dwst.controller.link,
+      options,
+    );
 
     const item = document.createElement('div');
     item.setAttribute('class', `dwst-log__item dwst-log__item--${type}`);
@@ -190,12 +192,14 @@ export default class Terminal {
       view = buffer;
       truncated = false;
     }
-    this.mlog([
-      `<${buffer.byteLength}B of binary data>`,
-      view,
-    ], type, {truncated});
+    this.mlog([`<${buffer.byteLength}B of binary data>`, view], type, {
+      truncated,
+    });
     if (truncated) {
-      this.log(`User interface limit exceeded! Showing ${limit}B of the ${size}B buffer.`, 'warning');
+      this.log(
+        `User interface limit exceeded! Showing ${limit}B of the ${size}B buffer.`,
+        'warning',
+      );
     }
   }
 
@@ -212,9 +216,12 @@ export default class Terminal {
       truncated = false;
     }
     const mlogDescription = hilightControlChars(view);
-    this.mlog(mlogDescription, type, {textData: true, truncated});
+    this.mlog(mlogDescription, type, { textData: true, truncated });
     if (truncated) {
-      this.log(`User interface limit exceeded! Showing ${limit} of ${size} characters.`, 'warning');
+      this.log(
+        `User interface limit exceeded! Showing ${limit} of ${size} characters.`,
+        'warning',
+      );
     }
   }
 }

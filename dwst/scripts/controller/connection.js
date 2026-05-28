@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import FakeSocket from '../simulator/socket.js';
 
 export default class ConnectionHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -62,7 +60,10 @@ export default class ConnectionHandler {
       throw new this._dwst.types.errors.NoConnection(msg);
     }
     if (socket.verb !== 'connected') {
-      this._dwst.ui.terminal.log(`Attempting to send data while ${socket.verb}`, 'warning');
+      this._dwst.ui.terminal.log(
+        `Attempting to send data while ${socket.verb}`,
+        'warning',
+      );
     }
     if (typeof buffer === 'string') {
       this._dwst.ui.terminal.tlog(buffer, 'sent');

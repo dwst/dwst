@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 const HISTORY_KEY = 'history';
 
 export default class HistoryHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }

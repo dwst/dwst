@@ -13,9 +13,11 @@
 */
 
 function indexOfAny(inputString, chars) {
-  const indices = new Set(chars.map(character => {
-    return inputString.indexOf(character);
-  }));
+  const indices = new Set(
+    chars.map((character) => {
+      return inputString.indexOf(character);
+    }),
+  );
   indices.delete(-1);
   if (indices.size === 0) {
     return -1;
@@ -24,7 +26,7 @@ function indexOfAny(inputString, chars) {
 }
 
 function indexOfNone(inputString, chars) {
-  const indices = inputString.split('').map(character => {
+  const indices = inputString.split('').map((character) => {
     return chars.includes(character);
   });
   const thisIndexOf = indices.indexOf(false);
@@ -35,7 +37,6 @@ function indexOfNone(inputString, chars) {
 }
 
 export default class Parsee {
-
   constructor(original) {
     this._remainder = original;
   }
@@ -81,4 +82,3 @@ export default class Parsee {
     return this._remainder;
   }
 }
-

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class CharRange extends DwstFunction {
-
   constructor(dwst) {
     super();
     this._dwst = dwst;
@@ -26,9 +24,7 @@ export default class CharRange extends DwstFunction {
   }
 
   usage() {
-    return [
-      'charRange(<start>, <end>)',
-    ];
+    return ['charRange(<start>, <end>)'];
   }
 
   examples() {

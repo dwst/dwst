@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,14 +14,13 @@
 import m from '../../types/m/m.js';
 
 export default function functionsPage(functions) {
+  const sections = functions.map((funcName) => `${funcName}()`);
 
-  const sections = functions.map(funcName => `${funcName}()`);
-
-  return ([
+  return [
     m.h1('Alphabetical List of Functions'),
     '',
     m.sectionList(sections),
     m.line`Type ${m.syntax('/help <function>')} for usage`,
     '',
-  ]);
+  ];
 }

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Binary {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,10 +21,7 @@ export default class Binary {
   }
 
   usage() {
-    return [
-      '/binary [template]',
-      '/b [template]',
-    ];
+    return ['/binary [template]', '/b [template]'];
   }
 
   examples() {
@@ -47,7 +42,8 @@ export default class Binary {
   }
 
   async run(templateExpression) {
-    const buffer = await this._dwst.controller.template.eval(templateExpression);
+    const buffer =
+      await this._dwst.controller.template.eval(templateExpression);
     this._dwst.controller.connection.send(buffer);
   }
 }

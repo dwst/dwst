@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -21,18 +20,20 @@ const disclaimer = [
 ];
 
 export default function firefoxPage() {
-  return ([
+  return [
     m.h1('Insecure WebSocket Access in Firefox'),
     '',
     m.line`Firefox lets you disable the security feature that prevents you from connecting to ${m.help('#unprotected')} WebSockets.`,
     '',
-  ]).concat(disclaimer).concat([
-    '',
-    m.h2('Instructions'),
-    '',
-    '1. Go to about:config',
-    '2. Search for WebSocket',
-    '3. Set allowInsecureFromHTTPS to true',
-    '',
-  ]);
+  ]
+    .concat(disclaimer)
+    .concat([
+      '',
+      m.h2('Instructions'),
+      '',
+      '1. Go to about:config',
+      '2. Search for WebSocket',
+      '3. Set allowInsecureFromHTTPS to true',
+      '',
+    ]);
 }

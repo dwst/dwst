@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2018
@@ -32,8 +31,8 @@ import gulpStylelint from 'gulp-stylelint';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
-import {simpleGit} from 'simple-git'; // eslint-disable-line import/namespace
-import {create as bsCreate} from 'browser-sync';
+import { simpleGit } from 'simple-git'; // eslint-disable-line import/namespace
+import { create as bsCreate } from 'browser-sync';
 
 const browserSync = bsCreate();
 
@@ -73,7 +72,7 @@ const sourcePaths = {
 const VERSION = (() => {
   // This is ugly but SimpleGit does not support describe at the moment
   // See https://github.com/steveukx/git-js/issues/318
-  const stdout = exec.execSync('git describe --tags', {encoding: 'ascii'});
+  const stdout = exec.execSync('git describe --tags', { encoding: 'ascii' });
   const firstLine = stdout.split('\n').shift().split('\r').shift();
   const prefix = 'v';
   if (firstLine.startsWith(prefix)) {
@@ -116,14 +115,18 @@ const appBase = `/${VERSION}/`;
 
 const lintingPaths = {
   json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc', 'package.json'],
-  javascript: [sourcePaths.scripts, 'gulpfile.babel.js', 'dwst/**/test/**/*.js'],
+  javascript: [
+    sourcePaths.scripts,
+    'gulpfile.babel.js',
+    'dwst/**/test/**/*.js',
+  ],
   html: sourcePaths.html,
   css: sourcePaths.css,
 };
 
 // TODO: replace with @eslint/json once the eslint toolchain is bumped to a version that supports it.
 export function jsonlint(done) {
-  const errors = lintingPaths.json.flatMap(file => {
+  const errors = lintingPaths.json.flatMap((file) => {
     try {
       JSON.parse(fs.readFileSync(file, 'utf8'));
       return [];
@@ -139,60 +142,65 @@ export function jsonlint(done) {
 }
 
 export function eslint() {
-  return gulp.src(lintingPaths.javascript)
+  return gulp
+    .src(lintingPaths.javascript)
     .pipe(gulpEslint())
     .pipe(gulpEslint.format())
     .pipe(gulpEslint.failAfterError());
 }
 
 export function htmlhint() {
-  return gulp.src(lintingPaths.html)
+  return gulp
+    .src(lintingPaths.html)
     .pipe(gulpHtmlhint('.htmlhintrc'))
     .pipe(gulpHtmlhint.failReporter());
 }
 
 export function stylelint() {
-  return gulp.src(lintingPaths.css)
-    .pipe(gulpStylelint({
+  return gulp.src(lintingPaths.css).pipe(
+    gulpStylelint({
       reporters: [
         {
           formatter: 'string',
           console: true,
         },
       ],
-    }));
+    }),
+  );
 }
 
 export const validate = gulp.parallel(jsonlint, eslint, stylelint, htmlhint);
 
 export function mocha() {
-  return gulp.src('test/test.js', {read: false})
-    .pipe(gulpMocha({
+  return gulp.src('test/test.js', { read: false }).pipe(
+    gulpMocha({
       require: '@babel/register',
-    }));
+    }),
+  );
 }
 
 export const test = gulp.parallel(validate, mocha);
 
 export function deleteBuild() {
-  return gulp.src(buildBase, {read: false, allowEmpty: true})
+  return gulp
+    .src(buildBase, { read: false, allowEmpty: true })
     .pipe(gulpClean());
 }
 
 export function buildCss() {
-  return gulp.src(sourcePaths.cssEntry)
+  return gulp
+    .src(sourcePaths.cssEntry)
     .pipe(sourcemaps.init())
-    .pipe(postcss([
-      atImport(),
-      colorHexAlpha(),
-      autoprefixer(),
-      discardComments(),
-    ]))
+    .pipe(
+      postcss([atImport(), colorHexAlpha(), autoprefixer(), discardComments()]),
+    )
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(targetDirs.styles))
-    .pipe(rename(p => {
-      p.dirname = path.join(targetDirs.styles, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(targetDirs.styles, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
@@ -206,46 +214,62 @@ const webpackModuleConf = {
 };
 
 export function buildAppJs() {
-  return gulp.src(sourcePaths.scriptEntry)
-    .pipe(webpackStream({
-      output: {
-        filename: jsRootFile,
-      },
-      mode: 'production',
-      devtool: 'source-map',
-      module: webpackModuleConf,
-      plugins: [
-        new webpack2.DefinePlugin({
-          VERSION: JSON.stringify(VERSION),
-        }),
-      ],
-    }, webpack2))
+  return gulp
+    .src(sourcePaths.scriptEntry)
+    .pipe(
+      webpackStream(
+        {
+          output: {
+            filename: jsRootFile,
+          },
+          mode: 'production',
+          devtool: 'source-map',
+          module: webpackModuleConf,
+          plugins: [
+            new webpack2.DefinePlugin({
+              VERSION: JSON.stringify(VERSION),
+            }),
+          ],
+        },
+        webpack2,
+      ),
+    )
     .pipe(gulp.dest(targetDirs.scripts))
-    .pipe(rename(p => {
-      p.dirname = path.join(targetDirs.scripts, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(targetDirs.scripts, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
 export function buildSwJs() {
-  return gulp.src(sourcePaths.swEntry)
-    .pipe(webpackStream({
-      output: {
-        filename: swRootFile,
-      },
-      mode: 'production',
-      devtool: 'source-map',
-      module: webpackModuleConf,
-      plugins: [
-        new webpack2.DefinePlugin({
-          VERSION: JSON.stringify(VERSION),
-        }),
-      ],
-    }, webpack2))
+  return gulp
+    .src(sourcePaths.swEntry)
+    .pipe(
+      webpackStream(
+        {
+          output: {
+            filename: swRootFile,
+          },
+          mode: 'production',
+          devtool: 'source-map',
+          module: webpackModuleConf,
+          plugins: [
+            new webpack2.DefinePlugin({
+              VERSION: JSON.stringify(VERSION),
+            }),
+          ],
+        },
+        webpack2,
+      ),
+    )
     .pipe(gulp.dest(targetDirs.scripts))
-    .pipe(rename(p => {
-      p.dirname = path.join(targetDirs.scripts, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(targetDirs.scripts, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
@@ -254,48 +278,70 @@ export const buildJs = gulp.series(buildSwJs, buildAppJs);
 export function buildHtml() {
   // We bundle javascript with webpack for production builds
   // So we should be fine without the module system
-  return gulp.src(sourcePaths.html)
+  return gulp
+    .src(sourcePaths.html)
     .pipe(replace('<script type="module"', '<script'))
     .pipe(replace('<base href="/"', `<base href="${appBase}"`))
     .pipe(gulp.dest(versionBase))
-    .pipe(rename(p => {
-      p.dirname = path.join(versionBase, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(versionBase, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
 export function buildImages() {
-  return gulp.src(sourcePaths.images)
+  return gulp
+    .src(sourcePaths.images)
     .pipe(gulp.dest(targetDirs.images))
-    .pipe(rename(p => {
-      p.dirname = path.join(targetDirs.images, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(targetDirs.images, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
 export function buildSprites() {
-  return gulp.src(sourcePaths.sprites)
+  return gulp
+    .src(sourcePaths.sprites)
     .pipe(gulp.dest(targetDirs.sprites))
-    .pipe(rename(p => {
-      p.dirname = path.join(targetDirs.sprites, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(targetDirs.sprites, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
 export function buildManifest() {
-  return gulp.src(sourcePaths.manifest)
+  return gulp
+    .src(sourcePaths.manifest)
     .pipe(gulp.dest(versionBase))
-    .pipe(rename(p => {
-      p.dirname = path.join(versionBase, p.dirname);
-    }))
+    .pipe(
+      rename((p) => {
+        p.dirname = path.join(versionBase, p.dirname);
+      }),
+    )
     .pipe(browserSync.stream());
 }
 
-export const buildAssets = gulp.parallel(buildJs, buildCss, buildHtml, buildImages, buildSprites, buildManifest);
+export const buildAssets = gulp.parallel(
+  buildJs,
+  buildCss,
+  buildHtml,
+  buildImages,
+  buildSprites,
+  buildManifest,
+);
 
 export function createSymlinks(done) {
   fse.ensureSymlinkSync(targetPaths.htmlRoot, linkTargets.htmlLink);
-  fse.ensureSymlinkSync(targetPaths.serviceworkerRoot, linkTargets.serviceworkerLink);
+  fse.ensureSymlinkSync(
+    targetPaths.serviceworkerRoot,
+    linkTargets.serviceworkerLink,
+  );
   done();
 }
 
@@ -320,52 +366,59 @@ export const dev = gulp.series(build, () => {
 
 export function getCurrent(done) {
   const releaseRepo = 'https://github.com/dwst/dwst.github.io.git';
-  simpleGit().clone(releaseRepo, releaseBase).then(() => done()).catch(err => {
-    throw err;
-  });
+  simpleGit()
+    .clone(releaseRepo, releaseBase)
+    .then(() => done())
+    .catch((err) => {
+      throw err;
+    });
 }
 
 export function ungitCurrent() {
-  return gulp.src(path.join(releaseBase, '.git'), {read: false, allowEmpty: true})
+  return gulp
+    .src(path.join(releaseBase, '.git'), { read: false, allowEmpty: true })
     .pipe(gulpClean());
 }
 
 export const getOldStuff = gulp.series(deleteRelease, getCurrent, ungitCurrent);
 
 export function addNewStuff() {
-  return gulp.src(path.join(buildBase, '**/*'))
-    .pipe(gulp.dest(releaseBase));
+  return gulp.src(path.join(buildBase, '**/*')).pipe(gulp.dest(releaseBase));
 }
 
 export function deleteRelease() {
-  return gulp.src(releaseBase, {read: false, allowEmpty: true})
+  return gulp
+    .src(releaseBase, { read: false, allowEmpty: true })
     .pipe(gulpClean());
 }
 
 function getStableReleases() {
-  return fs.readdirSync(releaseBase).map(name => {
-    if (fs.lstatSync(path.join(releaseBase, name)).isDirectory() === false) {
-      // not a directory
-      return null;
-    }
-    if (name.startsWith('2.') === false) {
-      // not a release directory
-      return null;
-    }
-    if (name.includes('-')) {
-      // not a stable release directory
-      return null;
-    }
-    return name;
-  }).filter(x => x);
+  return fs
+    .readdirSync(releaseBase)
+    .map((name) => {
+      if (fs.lstatSync(path.join(releaseBase, name)).isDirectory() === false) {
+        // not a directory
+        return null;
+      }
+      if (name.startsWith('2.') === false) {
+        // not a release directory
+        return null;
+      }
+      if (name.includes('-')) {
+        // not a stable release directory
+        return null;
+      }
+      return name;
+    })
+    .filter((x) => x);
 }
 
 function compareVersions(a, b) {
   if (a.includes('-') || b.includes('-')) {
     throw new Error('Cannot compare unstable version numbers');
   }
-  const [aMajor, aMinor, aPatch] = a.split('.').map(x => parseInt(x, 10));
-  const [bMajor, bMinor, bPatch] = b.split('.').map(x => parseInt(x, 10));
+  const [aMajor, aMinor, aPatch] = a.split('.').map((x) => parseInt(x, 10));
+  const [bMajor, bMinor, bPatch] = b.split('.').map((x) => parseInt(x, 10));
   if (aMajor > bMajor) {
     return -1;
   }
@@ -414,7 +467,11 @@ export function updateReleaseSymlinks(done) {
   done();
 }
 
-export const buildRelease = gulp.series(gulp.parallel(getOldStuff, buildWithoutLinks), addNewStuff, updateReleaseSymlinks);
+export const buildRelease = gulp.series(
+  gulp.parallel(getOldStuff, buildWithoutLinks),
+  addNewStuff,
+  updateReleaseSymlinks,
+);
 
 export const clean = gulp.parallel(deleteBuild, deleteRelease);
 

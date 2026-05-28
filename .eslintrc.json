@@ -8,21 +8,16 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": [
-    "chai-friendly"
-  ],
+  "plugins": ["chai-friendly"],
   "globals": {
     "VERSION": true,
     "chrome": true,
     "require": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:import/errors"
-  ],
+  "extends": ["eslint:recommended", "plugin:import/errors"],
   "rules": {
     "camelcase": [2, { "properties": "never" }],
-    "no-plusplus": [2, { "allowForLoopAfterthoughts": true}],
+    "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
     "strict": [2, "global"],
     "one-var": [2, "never"],
     "prefer-template": 2,
@@ -114,10 +109,10 @@
     "lines-between-class-members": 2,
 
     "max-depth": 0,
-    "no-magic-numbers": [0, {"ignore": [0, 1, 2, 3]}],
+    "no-magic-numbers": [0, { "ignore": [0, 1, 2, 3] }],
     "no-use-before-define": 0,
     "no-implicit-globals": 0,
-    "no-warning-comments": [2, {"terms": ["WAITING"], "location": "start"}],
+    "no-warning-comments": [2, { "terms": ["WAITING"], "location": "start" }],
 
     "wrap-regex": 0,
     "no-restricted-imports": 0,
@@ -161,6 +156,5 @@
     "no-label-var": 0,
     "init-declarations": 0,
     "block-scoped-var": 0
-
   }
 }

@@ -11,10 +11,23 @@
 
 */
 
-
 import m from '../types/m/m.js';
 import errors from '../types/errors/errors.js';
-const {NoConnection, AlreadyConnected, SocketError, InvalidTemplateExpression, InvalidArgument, InvalidCombination, InvalidUtf8, InvalidDataType, InvalidVariableName, UnknownCommand, UnknownInstruction, UnknownHelpPage, UnknownVariable} = errors;
+const {
+  NoConnection,
+  AlreadyConnected,
+  SocketError,
+  InvalidTemplateExpression,
+  InvalidArgument,
+  InvalidCombination,
+  InvalidUtf8,
+  InvalidDataType,
+  InvalidVariableName,
+  UnknownCommand,
+  UnknownInstruction,
+  UnknownHelpPage,
+  UnknownVariable,
+} = errors;
 
 function commaCommaOr(stringList) {
   if (stringList.length === 0) {
@@ -30,7 +43,6 @@ function commaCommaOr(stringList) {
 }
 
 export default class ErrorHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -50,9 +62,7 @@ export default class ErrorHandler {
       ];
     }
     if (error instanceof SocketError) {
-      return [
-        'WebSocket error.',
-      ];
+      return ['WebSocket error.'];
     }
     if (error instanceof InvalidTemplateExpression) {
       const padding = ' '.repeat(error.errorPosition);
@@ -66,10 +76,7 @@ export default class ErrorHandler {
       ];
     }
     if (error instanceof InvalidArgument) {
-      return [
-        `Invalid argument: ${error.argument}`,
-        error.extraInfo,
-      ];
+      return [`Invalid argument: ${error.argument}`, error.extraInfo];
     }
     if (error instanceof InvalidCombination) {
       return [
@@ -89,9 +96,7 @@ export default class ErrorHandler {
       ];
     }
     if (error instanceof InvalidVariableName) {
-      return [
-        `Invalid variable name ${error.variable}`,
-      ];
+      return [`Invalid variable name ${error.variable}`];
     }
     if (error instanceof UnknownCommand) {
       return [

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -20,7 +19,6 @@ import Plugins from './plugins.js';
 import Connection from './connection.js';
 
 export default class Model {
-
   constructor(dwst) {
     this.config = config;
     this.history = new History(dwst);
@@ -30,5 +28,4 @@ export default class Model {
     this.variables = new Variables(dwst);
     this.plugins = new Plugins(dwst);
   }
-
 }

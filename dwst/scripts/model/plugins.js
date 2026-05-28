@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Plugins {
-
   constructor(dwst) {
     this._commands = new Map();
     this._dwst = dwst;

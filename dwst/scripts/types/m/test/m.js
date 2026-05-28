@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -12,15 +11,17 @@
 
 */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import m from '../m.js';
 
 describe('sectionList', () => {
   it('should work', () => {
-    expect(m.sectionList(['foo', 'bar'])).to.deep.equal(m.paragraph(
-      m.help('bar', 'bar', {spacing: true, wrap: false, afterText: ','}),
-      m.help('foo', 'foo', {spacing: true, wrap: false}),
-    ));
+    expect(m.sectionList(['foo', 'bar'])).to.deep.equal(
+      m.paragraph(
+        m.help('bar', 'bar', { spacing: true, wrap: false, afterText: ',' }),
+        m.help('foo', 'foo', { spacing: true, wrap: false }),
+      ),
+    );
   });
 });
