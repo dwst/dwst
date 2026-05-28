@@ -2497,7 +2497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-colors@npm:^4.1.1, ansi-colors@npm:^4.1.3":
+"ansi-colors@npm:^4.1.3":
   version: 4.1.3
   resolution: "ansi-colors@npm:4.1.3"
   checksum: 10c0/ec87a2f59902f74e61eada7f6e6fe20094a628dab765cfdbd03c3477599368768cffccdb5d3bb19a1b6c99126783a143b1fee31aab729b31ffe5836c7e5e28b9
@@ -3110,15 +3110,6 @@ __metadata:
   version: 0.6.1
   resolution: "batch@npm:0.6.1"
   checksum: 10c0/925a13897b4db80d4211082fe287bcf96d297af38e26448c857cee3e095c9792e3b8f26b37d268812e7f38a589f694609de8534a018b1937d7dc9f84e6b387c5
-  languageName: node
-  linkType: hard
-
-"beeper@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "beeper@npm:2.1.0"
-  dependencies:
-    yoctodelay: "npm:^1.1.0"
-  checksum: 10c0/780c73f8910728b9ea008644cebd9814bac55bf452d2a9bb00e27fdd87124a3c6b20749bfb7dc5c50376745841eba1c52430e5dc0bd2c8100eedfae24ebc19cb
   languageName: node
   linkType: hard
 
@@ -4381,12 +4372,12 @@ __metadata:
     globals: "npm:^17.6.0"
     gulp: "npm:^4.0.0"
     gulp-clean: "npm:^0.4.0"
-    gulp-htmlhint: "npm:^4.0.2"
     gulp-mocha: "npm:^9.0.0"
     gulp-postcss: "npm:^8.0.0"
     gulp-rename: "npm:^1.2.2"
     gulp-replace: "npm:^1.0.0"
     gulp-sourcemaps: "npm:^2.6.4"
+    htmlhint: "npm:^1.9.2"
     knip: "npm:^6.14.1"
     postcss-color-hex-alpha: "npm:^5.0.2"
     postcss-discard-comments: "npm:^4.0.1"
@@ -6142,25 +6133,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gulp-htmlhint@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "gulp-htmlhint@npm:4.0.2"
-  dependencies:
-    ansi-colors: "npm:^4.1.1"
-    beeper: "npm:^2.0.0"
-    fancy-log: "npm:^1.3.2"
-    htmlhint: "npm:^1.1.2"
-    plugin-error: "npm:^1.0.1"
-    strip-ansi: "npm:^6.0.0"
-    strip-json-comments: "npm:^3.1.1"
-    through2: "npm:^3.0.1"
-    vinyl: "npm:^2.2.1"
-  peerDependencies:
-    htmlhint: ^0.14.0 || ^1.0.0
-  checksum: 10c0/7520c73876d91c6fba9de4c51fa072a843a63155b4a3aa5d31c68321ee7e2fee42b15377a5f023b26503fc8d0d65e9e13d5de3d65373d1d529c53f247f471742
-  languageName: node
-  linkType: hard
-
 "gulp-mocha@npm:^9.0.0":
   version: 9.0.0
   resolution: "gulp-mocha@npm:9.0.0"
@@ -6438,7 +6410,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"htmlhint@npm:^1.1.2":
+"htmlhint@npm:^1.9.2":
   version: 1.9.2
   resolution: "htmlhint@npm:1.9.2"
   dependencies:
@@ -6619,7 +6591,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.1, inherits@npm:^2.0.3, inherits@npm:^2.0.4, inherits@npm:~2.0.1, inherits@npm:~2.0.3, inherits@npm:~2.0.4":
+"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.1, inherits@npm:^2.0.3, inherits@npm:~2.0.1, inherits@npm:~2.0.3, inherits@npm:~2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 10c0/4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
@@ -9293,7 +9265,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:2 || 3, readable-stream@npm:3, readable-stream@npm:^3.1.1":
+"readable-stream@npm:3, readable-stream@npm:^3.1.1":
   version: 3.6.2
   resolution: "readable-stream@npm:3.6.2"
   dependencies:
@@ -10936,16 +10908,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"through2@npm:^3.0.1":
-  version: 3.0.2
-  resolution: "through2@npm:3.0.2"
-  dependencies:
-    inherits: "npm:^2.0.4"
-    readable-stream: "npm:2 || 3"
-  checksum: 10c0/8ea17efa2ce5b78ef5c52d08e29d0dbdad9c321c2add5192bba3434cae25b2319bf9cdac1c54c3bfbd721438a30565ca6f3f19eb79f62341dafc5a12429d2ccc
-  languageName: node
-  linkType: hard
-
 "through2@npm:^4.0.2":
   version: 4.0.2
   resolution: "through2@npm:4.0.2"
@@ -11947,13 +11909,6 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
-  languageName: node
-  linkType: hard
-
-"yoctodelay@npm:^1.1.0":
-  version: 1.2.0
-  resolution: "yoctodelay@npm:1.2.0"
-  checksum: 10c0/5931547f9943a6aa275458e95a630731ccaff1a2d1610adb30c97c03275dd4f69edf45bfd836944412d6a91cec225c5a071881939ee4546f86e089f371a60532
   languageName: node
   linkType: hard
 

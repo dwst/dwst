@@ -15,7 +15,6 @@ import fs from 'fs';
 import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
-import gulpHtmlhint from 'gulp-htmlhint';
 import gulpClean from 'gulp-clean';
 import webpackStream from 'webpack-stream';
 import webpack2 from 'webpack';
@@ -111,15 +110,6 @@ const releaseBase = 'release';
 // The ending slash seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
 
-export function htmlhint() {
-  return gulp
-    .src(sourcePaths.html)
-    .pipe(gulpHtmlhint('.htmlhintrc'))
-    .pipe(gulpHtmlhint.failReporter());
-}
-
-export const validate = gulp.parallel(htmlhint);
-
 export function mocha() {
   return gulp.src('test/test.js', { read: false }).pipe(
     gulpMocha({
@@ -127,8 +117,6 @@ export function mocha() {
     }),
   );
 }
-
-export const test = gulp.parallel(validate, mocha);
 
 export function deleteBuild() {
   return gulp
