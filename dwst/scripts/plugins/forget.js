@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Forget {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Forget {
   }
 
   usage() {
-    return [
-      '/forget everything',
-    ];
+    return ['/forget everything'];
   }
 
   examples() {
-    return [
-      '/forget everything',
-    ];
+    return ['/forget everything'];
   }
 
   info() {
@@ -41,16 +35,19 @@ export default class Forget {
   _removeHistory() {
     this._dwst.model.history.forget();
     const historyLine = this._dwst.model.history.getSummary().concat(['.']);
-    this._dwst.ui.terminal.mlog([
-      'Successfully forgot stored history!',
-      historyLine,
-    ], 'system');
+    this._dwst.ui.terminal.mlog(
+      ['Successfully forgot stored history!', historyLine],
+      'system',
+    );
   }
 
   _run(target) {
     if (target === 'everything') {
       this._removeHistory();
-      this._dwst.ui.terminal.log("You may wish to use your browser's cleaning features to remove tracking cookies and other remaining traces.", 'warning');
+      this._dwst.ui.terminal.log(
+        "You may wish to use your browser's cleaning features to remove tracking cookies and other remaining traces.",
+        'warning',
+      );
     } else {
       const historyLine = this._dwst.model.history.getSummary().concat(['.']);
       throw new this._dwst.types.errors.InvalidArgument(target, historyLine);

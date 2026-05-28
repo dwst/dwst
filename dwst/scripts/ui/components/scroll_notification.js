@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class ScrollNotification {
-
   constructor(dwst) {
     this._dwst = dwst;
   }

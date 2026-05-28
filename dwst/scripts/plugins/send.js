@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,10 +12,9 @@
 */
 
 export default class Send {
-
   constructor(dwst) {
     this._dwst = dwst;
-    this._encoder = new TextDecoder('utf-8', {fatal: true});
+    this._encoder = new TextDecoder('utf-8', { fatal: true });
   }
 
   commands() {
@@ -24,10 +22,7 @@ export default class Send {
   }
 
   usage() {
-    return [
-      '/send [template]',
-      '/s [template]',
-    ];
+    return ['/send [template]', '/s [template]'];
   }
 
   examples() {
@@ -49,7 +44,7 @@ export default class Send {
 
   _encode(buffer) {
     try {
-      const text = new TextDecoder('utf-8', {fatal: true}).decode(buffer);
+      const text = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
       return text;
     } catch (e) {
       if (e instanceof TypeError) {
@@ -60,9 +55,9 @@ export default class Send {
   }
 
   async run(templateExpression) {
-    const buffer = await this._dwst.controller.template.eval(templateExpression);
+    const buffer =
+      await this._dwst.controller.template.eval(templateExpression);
     const msg = this._encode(buffer);
     this._dwst.controller.connection.send(msg);
   }
 }
-

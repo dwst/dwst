@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,14 +12,13 @@
 */
 
 export default class AutoScrollButton {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
 
   init(element) {
     this._element = element;
-    this._element.addEventListener('click', evt => {
+    this._element.addEventListener('click', (evt) => {
       evt.preventDefault();
       this._dwst.ui.screen.scrollLog();
     });

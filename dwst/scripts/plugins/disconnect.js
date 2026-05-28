@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Disconnect {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Disconnect {
   }
 
   usage() {
-    return [
-      '/disconnect',
-    ];
+    return ['/disconnect'];
   }
 
   examples() {
-    return [
-      '/disconnect',
-    ];
+    return ['/disconnect'];
   }
 
   info() {
@@ -44,8 +38,10 @@ export default class Disconnect {
       this._dwst.ui.terminal.log('No connection to disconnect', 'warning');
       return;
     }
-    this._dwst.ui.terminal.mlog([`Closing connection to ${socket.url}`], 'system');
+    this._dwst.ui.terminal.mlog(
+      [`Closing connection to ${socket.url}`],
+      'system',
+    );
     this._dwst.controller.connection.tear();
   }
 }
-

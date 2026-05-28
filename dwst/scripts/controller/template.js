@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,13 +14,12 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class TemplateHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
     this._encoder = new TextEncoder();
   }
 
-  _evalFunction({name, args}) {
+  _evalFunction({ name, args }) {
     const func = this._dwst.model.variables.getVariable(name);
     if (func === null) {
       throw new this._dwst.types.errors.UnknownInstruction(name);
@@ -50,11 +48,14 @@ export default class TemplateHandler {
       if (value instanceof ArrayBuffer) {
         return new Uint8Array(value);
       }
-      if (typeof value  === 'string') {
+      if (typeof value === 'string') {
         return this._encoder.encode(value);
       }
       if (value instanceof this._dwst.types.abstract.DwstFunction) {
-        throw new this._dwst.types.errors.InvalidDataType(variableName, ['STRING', 'BINARY']);
+        throw new this._dwst.types.errors.InvalidDataType(variableName, [
+          'STRING',
+          'BINARY',
+        ]);
       }
       throw new this._dwst.types.errors.UnknownVariable(variableName);
     }
@@ -72,17 +73,19 @@ export default class TemplateHandler {
   }
 
   async _evalTemplateExpression(templateExpression) {
-    const rootNode = this._dwst.lib.parser.parseTemplateExpression(templateExpression);
+    const rootNode =
+      this._dwst.lib.parser.parseTemplateExpression(templateExpression);
     if (rootNode.type !== 'templateExpression') {
       throw new Error('unexpected root node type');
     }
-    const chunks = await Promise.all(rootNode.particles.map(particle => this._evalParticle(particle)));
-    const {buffer} = this._dwst.lib.utils.joinBuffers(chunks);
+    const chunks = await Promise.all(
+      rootNode.particles.map((particle) => this._evalParticle(particle)),
+    );
+    const { buffer } = this._dwst.lib.utils.joinBuffers(chunks);
     return buffer;
   }
 
   eval(templateExpression) {
     return this._evalTemplateExpression(templateExpression);
   }
-
 }

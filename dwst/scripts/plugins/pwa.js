@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Pwa {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Pwa {
   }
 
   usage() {
-    return [
-      '/pwa <action>',
-    ];
+    return ['/pwa <action>'];
   }
 
   examples() {
-    return [
-      '/pwa install',
-    ];
+    return ['/pwa install'];
   }
 
   info() {

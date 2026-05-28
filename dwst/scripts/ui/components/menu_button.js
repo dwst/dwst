@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class MenuButton {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -28,9 +26,15 @@ export default class MenuButton {
 
   connected(state) {
     if (state) {
-      this._element.classList.replace('dwst-button--splash', 'dwst-button--splash-connected');
+      this._element.classList.replace(
+        'dwst-button--splash',
+        'dwst-button--splash-connected',
+      );
     } else {
-      this._element.classList.replace('dwst-button--splash-connected', 'dwst-button--splash');
+      this._element.classList.replace(
+        'dwst-button--splash-connected',
+        'dwst-button--splash',
+      );
     }
   }
 }

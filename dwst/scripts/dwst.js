@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -47,17 +46,16 @@ window.addEventListener('load', () => {
   }
 });
 
-window.addEventListener('error', evt => {
+window.addEventListener('error', (evt) => {
   if (evt.error instanceof DwstError) {
     evt.preventDefault();
     dwst.controller.error.onDwstError(evt.error);
   }
 });
 
-window.addEventListener('beforeinstallprompt', evt => {
+window.addEventListener('beforeinstallprompt', (evt) => {
   dwst.controller.pwa.beforeInstallPrompt(evt);
 });
-
 
 // for live debugging
 window._dwst = dwst;

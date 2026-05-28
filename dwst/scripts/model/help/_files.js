@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import m from '../../types/m/m.js';
 
 export default function filesPage() {
-
   return [
     m.h1('Working with Files and Variables'),
     '',

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import Socket from './socket.js';
 
 export default class Connection {
-
   constructor(dwst) {
     this._dwst = dwst;
     this._socket = null;

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -20,7 +19,6 @@ import RandomChars from '../functions/random_chars.js';
 import Time from '../functions/time.js';
 
 export default class FunctionsHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }

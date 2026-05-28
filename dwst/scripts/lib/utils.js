@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,8 +12,7 @@
 */
 
 export default {
-
-  parseNum: str => {
+  parseNum: (str) => {
     if (str.length > 2 && str.substr(0, 2) === '0x') {
       return parseInt(str.substr(2), 16);
     }
@@ -50,14 +48,19 @@ export default {
       stop = b;
     }
     const length = stop - start;
-    return Array(length).fill().map((_, i) => start + i);
+    return Array(length)
+      .fill()
+      .map((_, i) => start + i);
   },
 
-  htmlescape: text => {
-    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  htmlescape: (text) => {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   },
 
-  joinBuffers: buffersToJoin => {
+  joinBuffers: (buffersToJoin) => {
     let total = 0;
     for (const buffer of buffersToJoin) {
       total += buffer.length;
@@ -71,11 +74,10 @@ export default {
     return out;
   },
 
-  globalThrow: error => {
+  globalThrow: (error) => {
     setTimeout(() => {
       // setTimeout used to escape promises
       throw error;
     });
   },
-
 };

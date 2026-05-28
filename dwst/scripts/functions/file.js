@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class File extends DwstFunction {
-
   constructor(dwst) {
     super();
     this._dwst = dwst;
@@ -26,17 +24,11 @@ export default class File extends DwstFunction {
   }
 
   usage() {
-    return [
-      'file()',
-    ];
+    return ['file()'];
   }
 
   examples() {
-    return [
-      '/s ${file()}',
-      '/b ${file()}',
-      '/set foo ${file()}',
-    ];
+    return ['/s ${file()}', '/b ${file()}', '/set foo ${file()}'];
   }
 
   info() {
@@ -44,10 +36,10 @@ export default class File extends DwstFunction {
   }
 
   _readFile() {
-    return new Promise(resolve => {
-      this._dwst.ui.fileInput.read(file => {
+    return new Promise((resolve) => {
+      this._dwst.ui.fileInput.read((file) => {
         const reader = new FileReader();
-        reader.addEventListener('load', evt => {
+        reader.addEventListener('load', (evt) => {
           const buffer = evt.target.result;
           resolve(buffer);
         });

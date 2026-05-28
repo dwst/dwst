@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Set {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Set {
   }
 
   usage() {
-    return [
-      '/set <variable> <value>',
-    ];
+    return ['/set <variable> <value>'];
   }
 
   examples() {
-    return [
-      '/set foo 123',
-    ];
+    return ['/set foo 123'];
   }
 
   info() {
@@ -41,14 +35,17 @@ export default class Set {
   async run(paramString) {
     const [variableName, ...templateExpressionParts] = paramString.split(' ');
     if (variableName.length === 0) {
-      throw new this._dwst.types.errors.InvalidArgument(variableName, ['expected variable name']);
+      throw new this._dwst.types.errors.InvalidArgument(variableName, [
+        'expected variable name',
+      ]);
     }
     const templateExpression = templateExpressionParts.join(' ');
-    const buffer = await this._dwst.controller.template.eval(templateExpression);
+    const buffer =
+      await this._dwst.controller.template.eval(templateExpression);
     this._dwst.model.variables.setVariable(variableName, buffer);
-    this._dwst.ui.terminal.mlog([
-      `${buffer.byteLength}B of data stored in variable ${variableName}`,
-    ], 'system');
+    this._dwst.ui.terminal.mlog(
+      [`${buffer.byteLength}B of data stored in variable ${variableName}`],
+      'system',
+    );
   }
 }
-

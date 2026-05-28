@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -23,7 +22,6 @@ import ScrollNotification from './components/scroll_notification.js';
 import FileInput from './components/file_input.js';
 
 export default class Ui {
-
   constructor(dwst) {
     this._dwst = dwst;
     this._resizePending = false;
@@ -53,22 +51,31 @@ export default class Ui {
     // Updating gfx positions with this method disables basic centering
     // and aligns the text in the gfx section with the text in log lines.
     const MAX_MAXCHARS = 110;
-    Reflect.apply(Array.prototype.forEach, this._element.getElementsByClassName('dwst-gfx'), [maxDiv => {
-      const [ref] = maxDiv.getElementsByClassName('dwst-gfx__line');
-      const refTextWidth = ref.offsetWidth;
-      const refTextLength = ref.textContent.length;
-      const refWidth = refTextWidth / refTextLength;
-      const windowWidth = window.innerWidth;
-      const maxFit = Math.floor(windowWidth / refWidth);
-      let leftMargin = 0;
-      if (maxFit < MAX_MAXCHARS) {
-        const invisible = MAX_MAXCHARS - maxFit;
-        const invisibleLeft = Math.round(invisible / 2);
-        leftMargin -= invisibleLeft;
-      }
-      const [field] = maxDiv.getElementsByClassName('dwst-gfx__content');
-      field.setAttribute('style', `transform: initial; margin-left: ${leftMargin}ch;`);
-    }]);
+    Reflect.apply(
+      Array.prototype.forEach,
+      this._element.getElementsByClassName('dwst-gfx'),
+      [
+        (maxDiv) => {
+          const [ref] = maxDiv.getElementsByClassName('dwst-gfx__line');
+          const refTextWidth = ref.offsetWidth;
+          const refTextLength = ref.textContent.length;
+          const refWidth = refTextWidth / refTextLength;
+          const windowWidth = window.innerWidth;
+          const maxFit = Math.floor(windowWidth / refWidth);
+          let leftMargin = 0;
+          if (maxFit < MAX_MAXCHARS) {
+            const invisible = MAX_MAXCHARS - maxFit;
+            const invisibleLeft = Math.round(invisible / 2);
+            leftMargin -= invisibleLeft;
+          }
+          const [field] = maxDiv.getElementsByClassName('dwst-gfx__content');
+          field.setAttribute(
+            'style',
+            `transform: initial; margin-left: ${leftMargin}ch;`,
+          );
+        },
+      ],
+    );
   }
 
   _throttledUpdateGfxPositions() {
@@ -83,7 +90,9 @@ export default class Ui {
 
   init(element) {
     this._element = element;
-    this._element.addEventListener('keydown', evt => this.globalKeyPress(evt));
+    this._element.addEventListener('keydown', (evt) =>
+      this.globalKeyPress(evt),
+    );
     this.terminal.init(element.getElementById('js-terminal'));
     this.clock.init(element.getElementById('js-clock'));
     this.prompt.init(element.getElementById('js-prompt'));
@@ -91,11 +100,15 @@ export default class Ui {
     this.menuButton.init(element.getElementById('js-menu-button'));
     this.screen.init(element.getElementById('js-screen'));
     this.autoScrollButton.init(element.getElementById('js-auto-scroll-button'));
-    this.scrollNotification.init(element.getElementById('js-scroll-notification'));
+    this.scrollNotification.init(
+      element.getElementById('js-scroll-notification'),
+    );
     this.fileInput.init(element.getElementById('js-file-input'));
     this._dwst.controller.prompt.silent('/splash');
     this.prompt.focus();
-    window.addEventListener('resize', () => this._throttledUpdateGfxPositions());
+    window.addEventListener('resize', () =>
+      this._throttledUpdateGfxPositions(),
+    );
   }
 
   onLoad() {

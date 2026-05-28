@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Clear {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,15 +21,11 @@ export default class Clear {
   }
 
   usage() {
-    return [
-      '/clear',
-    ];
+    return ['/clear'];
   }
 
   examples() {
-    return [
-      '/clear',
-    ];
+    return ['/clear'];
   }
 
   info() {

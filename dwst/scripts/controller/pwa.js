@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import m from '../types/m/m.js';
 
 export default class PwaHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
     this._prompt = null;
@@ -23,23 +21,27 @@ export default class PwaHandler {
 
   beforeInstallPrompt(evt) {
     this._prompt = evt;
-    this._dwst.ui.terminal.mlog([
-      m.line`Type ${m.command('/pwa install')} to install`,
-    ], 'system');
+    this._dwst.ui.terminal.mlog(
+      [m.line`Type ${m.command('/pwa install')} to install`],
+      'system',
+    );
   }
 
   onInstall() {
     if (this._prompt === null) {
-      this._dwst.ui.terminal.mlog([
-        'Installation not possible',
-        '',
-        'Possible reasons:',
-        '  * App already installed',
-        '  * App not frequently used',
-        '  * Browser has no PWA support',
-        '',
-        'You could try manual pwa installation with "Add to home screen" or similar browser feature',
-      ], 'warning');
+      this._dwst.ui.terminal.mlog(
+        [
+          'Installation not possible',
+          '',
+          'Possible reasons:',
+          '  * App already installed',
+          '  * App not frequently used',
+          '  * Browser has no PWA support',
+          '',
+          'You could try manual pwa installation with "Add to home screen" or similar browser feature',
+        ],
+        'warning',
+      );
       return;
     }
     this._prompt.prompt();

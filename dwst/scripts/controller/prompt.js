@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import utils from '../lib/utils.js';
 
 export default class PromptHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -31,7 +29,7 @@ export default class PromptHandler {
   run(command) {
     const [pluginName, ...params] = command.split(' ');
     const paramString = params.join(' ');
-    this.runPlugin(pluginName, paramString).catch(error => {
+    this.runPlugin(pluginName, paramString).catch((error) => {
       utils.globalThrow(error);
     });
   }

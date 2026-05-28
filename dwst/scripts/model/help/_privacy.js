@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -37,7 +36,6 @@ const futureChanges = m.paragraph(
 );
 
 export default function privacyPage() {
-
   return [
     m.h1('Privacy and Tracking Information'),
     '',

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -21,20 +20,22 @@ const disclaimer = [
 ];
 
 export default function chromePage() {
-  return ([
+  return [
     m.h1('Insecure WebSocket Access in Chrome'),
     '',
     m.line`Chrome lets you temporarily bypass the security feature that prevents you from connecting to ${m.help('#unprotected')} WebSockets.`,
     '',
-  ]).concat(disclaimer).concat([
-    '',
-    m.h2('Instructions'),
-    '',
-    m.line`1. Use ${m.help('connect')} on a ws:// address`,
-    '2. Look for a shield icon',
-    '3. Click on the shield icon',
-    '4. Click "Load unsafe scripts"',
-    '5. Use connect again',
-    '',
-  ]);
+  ]
+    .concat(disclaimer)
+    .concat([
+      '',
+      m.h2('Instructions'),
+      '',
+      m.line`1. Use ${m.help('connect')} on a ws:// address`,
+      '2. Look for a shield icon',
+      '3. Click on the shield icon',
+      '4. Click "Load unsafe scripts"',
+      '5. Use connect again',
+      '',
+    ]);
 }

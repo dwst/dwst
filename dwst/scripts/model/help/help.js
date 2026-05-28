@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -14,7 +13,7 @@
 
 import m from '../../types/m/m.js';
 import errors from '../../types/errors/errors.js';
-const {UnknownCommand, UnknownHelpPage, UnknownInstruction} = errors;
+const { UnknownCommand, UnknownHelpPage, UnknownInstruction } = errors;
 
 import chromePage from './_chrome.js';
 import commandsPage from './_commands.js';
@@ -36,8 +35,7 @@ const topicMap = {
   '#simulator': '#development',
 };
 
-function *crumbSections(section) {
-
+function* crumbSections(section) {
   // first crumb
   yield '#help';
   if (section === '#help') {
@@ -46,7 +44,7 @@ function *crumbSections(section) {
 
   // optional middle crumb
   if (topicMap.hasOwnProperty(section)) {
-    yield  topicMap[section];
+    yield topicMap[section];
   } else if (section.endsWith('()')) {
     yield '#functions';
   } else if (section.startsWith('#') === false) {
@@ -58,14 +56,12 @@ function *crumbSections(section) {
 }
 
 function createBreadCrumbs(section = '#help') {
-  return [...crumbSections(section)].flatMap(crumbText => [
-    m.unsafe(' &raquo; '),
-    m.help(crumbText),
-  ]).slice(1);
+  return [...crumbSections(section)]
+    .flatMap((crumbText) => [m.unsafe(' &raquo; '), m.help(crumbText)])
+    .slice(1);
 }
 
 export default class Help {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -123,23 +119,17 @@ export default class Help {
     const usage = plugin.usage().map(m.syntax);
     const examples = plugin.examples().map(m.command);
 
-    return ([
-      [
-        m.h1(command),
-        m.unsafe(' &ndash; '),
-        plugin.info(),
-      ],
+    return [
+      [m.h1(command), m.unsafe(' &ndash; '), plugin.info()],
       '',
       '',
       m.h2('Syntax'),
       '',
-    ]).concat(usage).concat([
-      '',
-      m.h2('Examples'),
-      '',
-    ]).concat(examples).concat([
-      '',
-    ]);
+    ]
+      .concat(usage)
+      .concat(['', m.h2('Examples'), ''])
+      .concat(examples)
+      .concat(['']);
   }
 
   _functionHelp(section) {
@@ -154,23 +144,17 @@ export default class Help {
     const usage = func.usage().map(m.syntax);
     const examples = func.examples().map(m.command);
 
-    return ([
-      [
-        m.h1(section),
-        m.regular(' &ndash; ', true),
-        func.info(),
-      ],
+    return [
+      [m.h1(section), m.regular(' &ndash; ', true), func.info()],
       '',
       '',
       m.h2('Syntax'),
       '',
-    ]).concat(usage).concat([
-      '',
-      m.h2('Examples'),
-      '',
-    ]).concat(examples).concat([
-      '',
-    ]);
+    ]
+      .concat(usage)
+      .concat(['', m.h2('Examples'), ''])
+      .concat(examples)
+      .concat(['']);
   }
 
   _pageContent(section) {
@@ -188,9 +172,6 @@ export default class Help {
     if (content === null) {
       return null;
     }
-    return ([
-      createBreadCrumbs(section),
-      '',
-    ]).concat(content);
+    return [createBreadCrumbs(section), ''].concat(content);
   }
 }

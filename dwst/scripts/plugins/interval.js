@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Interval {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,10 +21,7 @@ export default class Interval {
   }
 
   usage() {
-    return [
-      '/interval <interval> [command line...]',
-      '/interval',
-    ];
+    return ['/interval <interval> [command line...]', '/interval'];
   }
 
   examples() {
@@ -58,7 +53,10 @@ export default class Interval {
       }
       const [firstPart, ...otherParts] = commandParts;
       if (['/s', '/send', '/b', '/binary'].includes(firstPart) === false) {
-        throw new this._dwst.types.errors.InvalidCombination('interval', ['send', 'binary']);
+        throw new this._dwst.types.errors.InvalidCombination('interval', [
+          'send',
+          'binary',
+        ]);
       }
       return [firstPart.slice(1), otherParts.join(' ')];
     })();
@@ -71,13 +69,15 @@ export default class Interval {
         }
         return payload;
       })();
-      this._dwst.controller.prompt.runPlugin(command, message).catch(error => {
-        if (this._dwst.model.intervalId !== null) {
-          clearInterval(this._dwst.model.intervalId);
-          this._dwst.model.intervalId = null;
-          this._dwst.lib.utils.globalThrow(error);
-        }
-      });
+      this._dwst.controller.prompt
+        .runPlugin(command, message)
+        .catch((error) => {
+          if (this._dwst.model.intervalId !== null) {
+            clearInterval(this._dwst.model.intervalId);
+            this._dwst.model.intervalId = null;
+            this._dwst.lib.utils.globalThrow(error);
+          }
+        });
       count += 1;
     };
     if (this._dwst.model.intervalId !== null) {

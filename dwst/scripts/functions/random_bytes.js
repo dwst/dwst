@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class RandomBytes extends DwstFunction {
-
   constructor(dwst) {
     super();
     this._dwst = dwst;
@@ -26,15 +24,11 @@ export default class RandomBytes extends DwstFunction {
   }
 
   usage() {
-    return [
-      'randomBytes(<number>)',
-    ];
+    return ['randomBytes(<number>)'];
   }
 
   examples() {
-    return [
-      '/b ${randomBytes(16)}',
-    ];
+    return ['/b ${randomBytes(16)}'];
   }
 
   info() {

@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -12,7 +11,7 @@
 
 */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import DwstFunction from '../function.js';
 

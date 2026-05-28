@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import Parsee from '../types/util/parsee.js';
 
 const controlCharNames = {
-
   // C0 Controls
 
   '\x00': ['\\0', 'NUL', 'null terminator'],
@@ -91,7 +89,6 @@ const controlCharNames = {
 
   '\xa0': [null, 'NBSP', 'no-break space'],
   '\xad': [null, 'SHY', 'soft hyphen'],
-
 };
 
 const controlChars = Object.keys(controlCharNames);

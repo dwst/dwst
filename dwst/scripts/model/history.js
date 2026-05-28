@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -16,7 +15,6 @@
 import m from '../types/m/m.js';
 
 class ElementHistory {
-
   constructor(history = []) {
     if (!Array.isArray(history)) {
       throw new Error('invalid history saveState');
@@ -100,11 +98,9 @@ class ElementHistory {
     }
     return uniqueCommands;
   }
-
 }
 
 export default class History {
-
   constructor(dwst) {
     this._dwst = dwst;
     this.history = new ElementHistory([]);
@@ -175,4 +171,3 @@ export default class History {
     return this.history.getConnectCommands(cap);
   }
 }
-

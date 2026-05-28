@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -16,17 +15,16 @@
 import m from '../../types/m/m.js';
 
 import parser from '../../lib/parser.js';
-const {escapeForTemplateExpression} = parser;
+const { escapeForTemplateExpression } = parser;
 
 export default class Prompt {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
 
   init(element) {
     this._element = element;
-    this._element.addEventListener('keydown', evt => this._keyHandler(evt));
+    this._element.addEventListener('keydown', (evt) => this._keyHandler(evt));
   }
 
   _enableDebugger() {
@@ -43,9 +41,10 @@ export default class Prompt {
       return;
     }
     if (raw.length < 1) {
-      this._dwst.ui.terminal.mlog([
-        m.line`type ${m.command('/help')} to list available commands`,
-      ], 'system');
+      this._dwst.ui.terminal.mlog(
+        [m.line`type ${m.command('/help')} to list available commands`],
+        'system',
+      );
       return;
     }
     if (raw[0] === '/') {
@@ -60,10 +59,16 @@ export default class Prompt {
   _keyHandler(event) {
     if (event.keyCode === 13) {
       this.send();
-    } else if (event.keyCode === 38) { // up
-      this._element.value = this._dwst.model.history.getPrevious(this._element.value);
-    } else if (event.keyCode === 40) { // down
-      this._element.value = this._dwst.model.history.getNext(this._element.value);
+    } else if (event.keyCode === 38) {
+      // up
+      this._element.value = this._dwst.model.history.getPrevious(
+        this._element.value,
+      );
+    } else if (event.keyCode === 40) {
+      // down
+      this._element.value = this._dwst.model.history.getNext(
+        this._element.value,
+      );
     }
   }
 

@@ -1,4 +1,3 @@
-
 describe('data type collection', () => {
   require('../abstract/test/test.js');
   require('../errors/test/test.js');

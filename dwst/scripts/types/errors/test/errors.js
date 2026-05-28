@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -12,7 +11,7 @@
 
 */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import errors from '../errors.js';
 import DwstError from '../../abstract/error.js';
@@ -67,7 +66,9 @@ describe('InvalidTemplateExpression', () => {
   });
 });
 describe('InvalidArgument', () => {
-  const error = new errors.InvalidArgument('forget', ['you still have stuff in your history']);
+  const error = new errors.InvalidArgument('forget', [
+    'you still have stuff in your history',
+  ]);
   it('should extend DwstError', () => {
     expect(error).to.be.an.instanceof(DwstError);
   });

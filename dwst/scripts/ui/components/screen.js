@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Screen {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -38,5 +36,4 @@ export default class Screen {
     this._element.scrollTop = this._element.scrollHeight;
     this._dwst.ui.scrollNotification.hideScrollNotification();
   }
-
 }

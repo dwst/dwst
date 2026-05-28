@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -15,7 +14,6 @@
 import DwstFunction from '../types/abstract/function.js';
 
 export default class Time extends DwstFunction {
-
   constructor(dwst) {
     super();
     this._dwst = dwst;
@@ -26,16 +24,11 @@ export default class Time extends DwstFunction {
   }
 
   usage() {
-    return [
-      'time()',
-    ];
+    return ['time()'];
   }
 
   examples() {
-    return [
-      '/s ${time()}s since epoch',
-      '/b ${time()}',
-    ];
+    return ['/s ${time()}s since epoch', '/b ${time()}'];
   }
 
   info() {

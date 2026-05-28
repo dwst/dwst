@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -14,10 +13,9 @@
 
 import Parsee from '../parsee.js';
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 describe('Parsee', () => {
-
   let parsee;
 
   beforeEach(() => {

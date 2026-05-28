@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Help {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,18 +21,11 @@ export default class Help {
   }
 
   usage() {
-    return [
-      '/help',
-      '/help <command>',
-    ];
+    return ['/help', '/help <command>'];
   }
 
   examples() {
-    return [
-      '/help',
-      '/help send',
-      '/help binary',
-    ];
+    return ['/help', '/help send', '/help binary'];
   }
 
   info() {
@@ -56,4 +47,3 @@ export default class Help {
     this._run(...params);
   }
 }
-

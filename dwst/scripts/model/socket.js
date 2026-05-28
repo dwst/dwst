@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Socket {
-
   constructor(ws) {
     this._sessionStartTime = null;
     this._ws = ws;
@@ -24,14 +22,14 @@ export default class Socket {
   }
 
   resetClock() {
-    this._sessionStartTime = (new Date()).getTime();
+    this._sessionStartTime = new Date().getTime();
   }
 
   get sessionLength() {
     if (this._sessionStartTime === null) {
       return null;
     }
-    const currentTime = (new Date()).getTime();
+    const currentTime = new Date().getTime();
     return currentTime - this._sessionStartTime;
   }
 
@@ -40,7 +38,7 @@ export default class Socket {
   }
 
   get verb() {
-    const {readyState} = this._ws;
+    const { readyState } = this._ws;
     if (readyState === 0) {
       return 'connecting';
     }

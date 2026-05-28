@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -17,19 +16,16 @@
 
 import Parsee from '../types/util/parsee.js';
 import errors from '../types/errors/errors.js';
-const {InvalidTemplateExpression} = errors;
+const { InvalidTemplateExpression } = errors;
 import utils from './utils.js';
 
-const specialChars = [
-  '$',
-  '\\',
-];
+const specialChars = ['$', '\\'];
 
 function charCodeRange(start, end) {
   const startCode = start.charCodeAt(0);
   const endCode = end.charCodeAt(0);
   const charCodes = utils.range(startCode, endCode + 1);
-  return charCodes.map(charCode => String.fromCharCode(charCode));
+  return charCodes.map((charCode) => String.fromCharCode(charCode));
 }
 
 const digitChars = charCodeRange('0', '9');
@@ -47,7 +43,7 @@ function quote(string) {
 
 function isValidVariableName(variableName) {
   const validated = new Parsee(variableName).readWhile(variableNameChars);
-  return (variableName === validated);
+  return variableName === validated;
 }
 
 function skipSpace(parsee) {
@@ -62,7 +58,7 @@ function readTemplateExpressionByte(parsee) {
     throw new InvalidTemplateExpression(['hex digit'], String(parsee));
   }
   const value = parseInt(hex, 16);
-  return {type: 'byte', value};
+  return { type: 'byte', value };
 }
 
 function readTemplateExpressionCodePoint(parsee) {
@@ -88,7 +84,7 @@ function readTemplateExpressionCodePoint(parsee) {
     }
   }
   const value = parseInt(hex, 16);
-  return {type: 'codepoint', value};
+  return { type: 'codepoint', value };
 }
 
 function readTemplateExpressionEscape(parsee) {
@@ -110,30 +106,36 @@ function readTemplateExpressionEscape(parsee) {
   if (parsee.length > 0) {
     for (const [from, to] of mapping) {
       if (parsee.read(from)) {
-        return {type: 'text', value: to};
+        return { type: 'text', value: to };
       }
     }
   }
-  const expected = mapping.map(pair => pair[0]);
+  const expected = mapping.map((pair) => pair[0]);
   throw new InvalidTemplateExpression(expected.map(quote), String(parsee));
 }
 
 function readTemplateExpressionText(parsee) {
   const value = parsee.readUntil(specialChars);
-  return {type: 'text', value};
+  return { type: 'text', value };
 }
 
 function skipExpressionOpen(parsee) {
   const expressionOpen = '{';
   if (parsee.read(expressionOpen) === false) {
-    throw new InvalidTemplateExpression([expressionOpen].map(quote), String(parsee));
+    throw new InvalidTemplateExpression(
+      [expressionOpen].map(quote),
+      String(parsee),
+    );
   }
 }
 
 function skipExpressionClose(parsee) {
   const expressionClose = '}';
   if (parsee.read(expressionClose) === false) {
-    throw new InvalidTemplateExpression([expressionClose].map(quote), String(parsee));
+    throw new InvalidTemplateExpression(
+      [expressionClose].map(quote),
+      String(parsee),
+    );
   }
 }
 
@@ -154,7 +156,10 @@ function skipArgListClose(parsee) {
 function readVariableName(parsee) {
   const functionName = parsee.readWhile(variableNameChars);
   if (functionName.length === 0) {
-    throw new InvalidTemplateExpression(['a function name', 'a variable name'], String(parsee));
+    throw new InvalidTemplateExpression(
+      ['a function name', 'a variable name'],
+      String(parsee),
+    );
   }
   if (parsee.length === 0) {
     throw new InvalidTemplateExpression(['(', '}'].map(quote), String(parsee));
@@ -169,14 +174,14 @@ function readInteger(parsee) {
       throw new InvalidTemplateExpression(['hex digit'], String(parsee));
     }
     const value = parseInt(hexDigits, 16);
-    return {type: 'int', value};
+    return { type: 'int', value };
   }
   const digits = parsee.readWhile(digitChars);
   if (digits.length === 0) {
     throw new InvalidTemplateExpression(['an integer'], String(parsee));
   }
   const value = parseInt(digits, 10);
-  return {type: 'int', value};
+  return { type: 'int', value };
 }
 
 function readFunctionArgs(parsee) {
@@ -184,12 +189,13 @@ function readFunctionArgs(parsee) {
   if (parsee.startsWith(')')) {
     return functionArgs;
   }
-  if (integerLiteralChars.some(chr => parsee.startsWith(chr)) === false) {
+  if (integerLiteralChars.some((chr) => parsee.startsWith(chr)) === false) {
     const expected = ['an integer'].concat([')'].map(quote));
     throw new InvalidTemplateExpression(expected, String(parsee));
   }
 
-  while (true) {  // eslint-disable-line
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     const arg = readInteger(parsee);
     functionArgs.push(arg);
     skipSpace(parsee);
@@ -197,7 +203,10 @@ function readFunctionArgs(parsee) {
       return functionArgs;
     }
     if (parsee.read(',') === false) {
-      throw new InvalidTemplateExpression([',', ')'].map(quote), String(parsee));
+      throw new InvalidTemplateExpression(
+        [',', ')'].map(quote),
+        String(parsee),
+      );
     }
     skipSpace(parsee);
   }
@@ -212,10 +221,10 @@ function readExpression(parsee) {
     const args = readFunctionArgs(parsee);
     skipSpace(parsee);
     skipArgListClose(parsee);
-    return {type: 'function', name, args};
+    return { type: 'function', name, args };
   }
   if (parsee.startsWith('}')) {
-    return {type: 'variable', name};
+    return { type: 'variable', name };
   }
   throw new InvalidTemplateExpression(['(', '}'].map(quote), String(parsee));
 }
@@ -241,7 +250,7 @@ function readTemplateExpression(parsee) {
     const particle = readParticle(parsee);
     particles.push(particle);
   }
-  return {type: 'templateExpression', particles};
+  return { type: 'templateExpression', particles };
 }
 
 function parseTemplateExpression(templateExpression) {

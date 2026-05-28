@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class Connect {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -23,9 +21,7 @@ export default class Connect {
   }
 
   usage() {
-    return [
-      '/connect <ws-url> [p1[,p2[,...]]]',
-    ];
+    return ['/connect <ws-url> [p1[,p2[,...]]]'];
   }
 
   examples() {
@@ -41,8 +37,7 @@ export default class Connect {
   }
 
   _run(url, protocolString = '') {
-
-    const {m} = this._dwst.types;
+    const { m } = this._dwst.types;
 
     const protoCandidates = (() => {
       if (protocolString === '') {
@@ -50,22 +45,32 @@ export default class Connect {
       }
       return protocolString.split(',');
     })();
-    const protocols = protoCandidates.filter(protocolName => {
-
+    const protocols = protoCandidates.filter((protocolName) => {
       // https://tools.ietf.org/html/rfc6455#page-17
 
-      const basicAlphabet = this._dwst.lib.utils.range(0x21, 0x7e).map(charCode => String.fromCharCode(charCode));
+      const basicAlphabet = this._dwst.lib.utils
+        .range(0x21, 0x7e)
+        .map((charCode) => String.fromCharCode(charCode));
       const httpSeparators = new Set([...'()<>@,;:\\"/[]?={} \t']);
-      const validProtocolChars = new Set(basicAlphabet.filter(character => !httpSeparators.has(character)));
+      const validProtocolChars = new Set(
+        basicAlphabet.filter((character) => !httpSeparators.has(character)),
+      );
       const usedChars = [...protocolName];
-      const invalidCharsSet = new Set(usedChars.filter(character => !validProtocolChars.has(character)));
+      const invalidCharsSet = new Set(
+        usedChars.filter((character) => !validProtocolChars.has(character)),
+      );
       const invalidChars = [...invalidCharsSet];
       if (invalidChars.length > 0) {
-        const invalidCharsString = invalidChars.map(character => `"${character}"`).join(', ');
-        this._dwst.ui.terminal.mlog([
-          `Skipped invalid protocol candidate "${protocolName}".`,
-          `The following characters are not allowed: ${invalidCharsString}`,
-        ], 'warning');
+        const invalidCharsString = invalidChars
+          .map((character) => `"${character}"`)
+          .join(', ');
+        this._dwst.ui.terminal.mlog(
+          [
+            `Skipped invalid protocol candidate "${protocolName}".`,
+            `The following characters are not allowed: ${invalidCharsString}`,
+          ],
+          'warning',
+        );
         return false;
       }
       return true;
@@ -73,9 +78,12 @@ export default class Connect {
     if (self.origin.startsWith('https://') && url.startsWith('ws://')) {
       const secureUrl = `wss://${url.slice('ws://'.length)}`;
       const secureConnect = `/connect ${secureUrl} ${protocolString}`;
-      this._dwst.ui.terminal.mlog([
-        m.line`Attempting unprotected connection from a secure origin. See ${m.help('#unprotected')} for details. Consider using ${m.command(secureConnect)}`,
-      ], 'warning');
+      this._dwst.ui.terminal.mlog(
+        [
+          m.line`Attempting unprotected connection from a secure origin. See ${m.help('#unprotected')} for details. Consider using ${m.command(secureConnect)}`,
+        ],
+        'warning',
+      );
     }
     this._dwst.controller.connection.connect(url, protocols);
     const protoFormatted = protocols.join(', ');
@@ -85,7 +93,10 @@ export default class Connect {
       }
       return [`Accepted protocols: ${protoFormatted}`];
     })();
-    this._dwst.ui.terminal.mlog([`Connecting to ${url}`].concat(negotiation), 'system');
+    this._dwst.ui.terminal.mlog(
+      [`Connecting to ${url}`].concat(negotiation),
+      'system',
+    );
   }
 
   run(paramString) {

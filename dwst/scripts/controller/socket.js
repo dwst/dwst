@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -13,7 +12,6 @@
 */
 
 export default class SocketHandler {
-
   constructor(dwst) {
     this._dwst = dwst;
   }
@@ -27,7 +25,10 @@ export default class SocketHandler {
       }
       return [`Selected protocol: ${socket.protocol}`];
     })();
-    this._dwst.ui.terminal.mlog(['Connection established.'].concat(selected), 'system');
+    this._dwst.ui.terminal.mlog(
+      ['Connection established.'].concat(selected),
+      'system',
+    );
     this._dwst.ui.menuButton.connected(true);
   }
 
@@ -71,7 +72,12 @@ export default class SocketHandler {
     ws.onmessage = null;
     ws.onerror = null;
     this._dwst.model.connection.clearSocket();
-    this._dwst.ui.terminal.mlog(['Connection closed.', `Close status: ${code}`].concat(reason).concat(sessionLengthString), 'system');
+    this._dwst.ui.terminal.mlog(
+      ['Connection closed.', `Close status: ${code}`]
+        .concat(reason)
+        .concat(sessionLengthString),
+      'system',
+    );
     this._dwst.ui.menuButton.connected(false);
   }
 
@@ -81,7 +87,7 @@ export default class SocketHandler {
       this._dwst.ui.terminal.tlog(msg, 'received');
     } else {
       const fr = new FileReader();
-      fr.addEventListener('load', evt => {
+      fr.addEventListener('load', (evt) => {
         const buffer = evt.target.result;
         this._dwst.ui.terminal.blog(buffer, 'received');
       });

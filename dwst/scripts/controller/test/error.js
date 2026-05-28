@@ -1,4 +1,3 @@
-
 /**
 
   Authors: Toni Ruottu, Finland 2010-2019
@@ -12,20 +11,17 @@
 
 */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import errors from '../../types/errors/errors.js';
-const {InvalidTemplateExpression} = errors;
+const { InvalidTemplateExpression } = errors;
 import DwstError from '../../types/abstract/error.js';
 
 import ErrorHandler from '../error.js';
 
 describe('ErrorHandler class', () => {
-
   describe('onDwstError function', () => {
-
     class TerminalSimulator {
-
       constructor() {
         this.mlogCalled = false;
         this.mlogs = [];
@@ -55,19 +51,21 @@ describe('ErrorHandler class', () => {
       class UnexpectedDwstError extends DwstError {}
       expect(() => {
         errorHandler.onDwstError(new UnexpectedDwstError());
-      }).to.throw(Error).that.does.include({
-        message: 'missing error handler for UnexpectedDwstError',
-      });
+      })
+        .to.throw(Error)
+        .that.does.include({
+          message: 'missing error handler for UnexpectedDwstError',
+        });
       expect(fakedwst.ui.terminal.mlogCalled).to.be.false;
       expect(fakedwst.ui.terminal.mlogs).to.deep.equal([]);
       expect(fakedwst.ui.terminal.mlogTypes).to.deep.equal([]);
     });
     it('should mlog InvalidTemplateExpression error', () => {
-      errorHandler.onDwstError(new InvalidTemplateExpression(...[
-        ['")"'],
-        '}quux',
-        'foo${bar(123, 456}quux',
-      ]));
+      errorHandler.onDwstError(
+        new InvalidTemplateExpression(
+          ...[['")"'], '}quux', 'foo${bar(123, 456}quux'],
+        ),
+      );
       expect(fakedwst.ui.terminal.mlogCalled).to.be.true;
       expect(fakedwst.ui.terminal.mlogs).to.deep.equal([
         [
