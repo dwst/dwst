@@ -194,8 +194,8 @@ function readFunctionArgs(parsee) {
     throw new InvalidTemplateExpression(expected, String(parsee));
   }
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
-    // eslint-disable-line
     const arg = readInteger(parsee);
     functionArgs.push(arg);
     skipSpace(parsee);
