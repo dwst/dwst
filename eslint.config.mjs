@@ -2,13 +2,14 @@ import js from '@eslint/js';
 import globals from 'globals';
 import importPlugin from 'eslint-plugin-import';
 import chaiFriendly from 'eslint-plugin-chai-friendly';
+import json from '@eslint/json';
 
 export default [
   {
     ignores: ['build/**', 'release/**', '.yarn/**'],
   },
-  js.configs.recommended,
-  importPlugin.flatConfigs.errors,
+  { files: ['**/*.js'], ...js.configs.recommended },
+  { files: ['**/*.js'], ...importPlugin.flatConfigs.errors },
   {
     files: ['**/*.js'],
     languageOptions: {
@@ -123,5 +124,10 @@ export default [
     languageOptions: {
       globals: globals.node,
     },
+  },
+  {
+    files: ['**/*.json', '.htmlhintrc', '.stylelintrc'],
+    language: 'json/json',
+    ...json.configs.recommended,
   },
 ];

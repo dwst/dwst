@@ -114,7 +114,13 @@ const releaseBase = 'release';
 const appBase = `/${VERSION}/`;
 
 const lintingPaths = {
-  json: [sourcePaths.manifest, '.htmlhintrc', '.stylelintrc', 'package.json'],
+  json: [
+    '*.json',
+    '.prettierrc.json',
+    '.htmlhintrc',
+    '.stylelintrc',
+    path.join(sourceBase, '**/*.json'),
+  ],
   javascript: [
     sourcePaths.scripts,
     'gulpfile.babel.js',
@@ -124,26 +130,9 @@ const lintingPaths = {
   css: sourcePaths.css,
 };
 
-// TODO: replace with @eslint/json once the eslint toolchain is bumped to a version that supports it.
-export function jsonlint(done) {
-  const errors = lintingPaths.json.flatMap((file) => {
-    try {
-      JSON.parse(fs.readFileSync(file, 'utf8'));
-      return [];
-    } catch (e) {
-      return [`${file}: ${e.message}`];
-    }
-  });
-  if (errors.length > 0) {
-    done(new Error(`JSON validation failed:\n  ${errors.join('\n  ')}`));
-    return;
-  }
-  done();
-}
-
 export function eslint() {
   return gulp
-    .src(lintingPaths.javascript)
+    .src([...lintingPaths.javascript, ...lintingPaths.json])
     .pipe(gulpEslint())
     .pipe(gulpEslint.format())
     .pipe(gulpEslint.failAfterError());
@@ -169,7 +158,7 @@ export function stylelint() {
   );
 }
 
-export const validate = gulp.parallel(jsonlint, eslint, stylelint, htmlhint);
+export const validate = gulp.parallel(eslint, stylelint, htmlhint);
 
 export function mocha() {
   return gulp.src('test/test.js', { read: false }).pipe(
