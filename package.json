@@ -17,7 +17,7 @@
     "lint:html": "htmlhint --config .htmlhintrc dwst/dwst.html",
     "lint:js": "eslint .",
     "lint:knip": "knip",
-    "test": "yarn gulp mocha"
+    "test": "mocha --require @babel/register test/test.js"
   },
   "engines": {
     "node": "*"
@@ -40,13 +40,13 @@
     "globals": "^17.6.0",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
-    "gulp-mocha": "^9.0.0",
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^1.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "htmlhint": "^1.9.2",
     "knip": "^6.14.1",
+    "mocha": "^10.8.2",
     "postcss-color-hex-alpha": "^5.0.2",
     "postcss-discard-comments": "^4.0.1",
     "postcss-import": "^12.0.1",

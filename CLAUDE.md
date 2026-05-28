@@ -15,7 +15,7 @@ yarn build            # gulp build → ./build/<version>/
 yarn build:release    # gulp buildRelease → clones dwst.github.io and merges into ./release/
 yarn lint             # runs lint:js, lint:css, lint:html, lint:knip, lint:format
 yarn lint:js          # eslint CLI (flat config, owns its own file globs)
-yarn test             # gulp mocha (uses @babel/register)
+yarn test             # mocha via @babel/register, runs test/test.js
 gulp dev              # build + browser-sync at ./build with live reload on file change
 ```
 
