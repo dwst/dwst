@@ -15,7 +15,6 @@ import fs from 'fs';
 import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
-import gulpEslint from 'gulp-eslint-new';
 import gulpHtmlhint from 'gulp-htmlhint';
 import gulpClean from 'gulp-clean';
 import webpackStream from 'webpack-stream';
@@ -112,38 +111,14 @@ const releaseBase = 'release';
 // The ending slash seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
 
-const lintingPaths = {
-  json: [
-    '*.json',
-    '.prettierrc.json',
-    '.htmlhintrc',
-    '.stylelintrc',
-    path.join(sourceBase, '**/*.json'),
-  ],
-  javascript: [
-    sourcePaths.scripts,
-    'gulpfile.babel.js',
-    'dwst/**/test/**/*.js',
-  ],
-  html: sourcePaths.html,
-};
-
-export function eslint() {
-  return gulp
-    .src([...lintingPaths.javascript, ...lintingPaths.json])
-    .pipe(gulpEslint())
-    .pipe(gulpEslint.format())
-    .pipe(gulpEslint.failAfterError());
-}
-
 export function htmlhint() {
   return gulp
-    .src(lintingPaths.html)
+    .src(sourcePaths.html)
     .pipe(gulpHtmlhint('.htmlhintrc'))
     .pipe(gulpHtmlhint.failReporter());
 }
 
-export const validate = gulp.parallel(eslint, htmlhint);
+export const validate = gulp.parallel(htmlhint);
 
 export function mocha() {
   return gulp.src('test/test.js', { read: false }).pipe(

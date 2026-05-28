@@ -14,7 +14,7 @@ Node version is pinned in `.nvmrc` (v22). Use `yarn` (not npm) — `yarn.lock` i
 yarn build            # gulp build → ./build/<version>/
 yarn build:release    # gulp buildRelease → clones dwst.github.io and merges into ./release/
 yarn lint             # runs lint:js, lint:css, lint:html, lint:knip, lint:format
-yarn lint:js          # eslint via gulp
+yarn lint:js          # eslint CLI (flat config, owns its own file globs)
 yarn test             # gulp mocha (uses @babel/register)
 gulp dev              # build + browser-sync at ./build with live reload on file change
 ```

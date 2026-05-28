@@ -15,7 +15,7 @@
     "lint:css": "stylelint \"dwst/styles/*.css\"",
     "lint:format": "prettier --check \"**/*.{js,mjs,css,json}\"",
     "lint:html": "yarn gulp htmlhint",
-    "lint:js": "yarn gulp eslint",
+    "lint:js": "eslint .",
     "lint:knip": "knip",
     "test": "yarn gulp mocha"
   },
@@ -40,7 +40,6 @@
     "globals": "^17.6.0",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
-    "gulp-eslint-new": "^2.6.2",
     "gulp-htmlhint": "^4.0.2",
     "gulp-mocha": "^9.0.0",
     "gulp-postcss": "^8.0.0",
