@@ -27,7 +27,6 @@ import colorHexAlpha from 'postcss-color-hex-alpha';
 import discardComments from 'postcss-discard-comments';
 import sourcemaps from 'gulp-sourcemaps';
 import rename from 'gulp-rename';
-import gulpStylelint from 'gulp-stylelint';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
 import gulpMocha from 'gulp-mocha';
@@ -127,7 +126,6 @@ const lintingPaths = {
     'dwst/**/test/**/*.js',
   ],
   html: sourcePaths.html,
-  css: sourcePaths.css,
 };
 
 export function eslint() {
@@ -145,20 +143,7 @@ export function htmlhint() {
     .pipe(gulpHtmlhint.failReporter());
 }
 
-export function stylelint() {
-  return gulp.src(lintingPaths.css).pipe(
-    gulpStylelint({
-      reporters: [
-        {
-          formatter: 'string',
-          console: true,
-        },
-      ],
-    }),
-  );
-}
-
-export const validate = gulp.parallel(eslint, stylelint, htmlhint);
+export const validate = gulp.parallel(eslint, htmlhint);
 
 export function mocha() {
   return gulp.src('test/test.js', { read: false }).pipe(
