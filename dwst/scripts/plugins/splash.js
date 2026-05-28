@@ -44,8 +44,6 @@ export default class Splash {
 
     this._dwst.ui.terminal.clearLog();
 
-    /* eslint-disable quotes,object-property-newline */
-
     /*
     This template is left here as a comment in hopes it helps with creating new splash shapes.
     The /idkfa command may also be of use when working with splash shapes.
@@ -73,6 +71,7 @@ export default class Splash {
     ];
     */
 
+    // prettier-ignore
     const shape = [
       "                                                                                                              ",
       "                                                                                                              ",
@@ -95,6 +94,7 @@ export default class Splash {
       "                                                                                                              ",
     ];
 
+    // prettier-ignore
     const defaultColors = [
       "f                                                                                                             ",
       "f                                                                                                             ",
@@ -117,6 +117,7 @@ export default class Splash {
       "5                                                                                                             ",
     ];
 
+    // prettier-ignore
     const xmasColors = [
       "7                                                                                                             ",
       "7                                                                                                             ",
@@ -138,8 +139,6 @@ export default class Splash {
       "2                                                                                                             ",
       "2                                                                                                             ",
     ];
-
-    /* eslint-enable quotes,object-property-newline */
 
     let colors = defaultColors;
     const now = new Date();

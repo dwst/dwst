@@ -22,8 +22,6 @@ const parserRewire = rewire('../parser.js');
 
 const {escapeForTemplateExpression, parseTemplateExpression} = parser;
 
-/* eslint-disable object-property-newline */
-
 describe('parser module', () => {
 
   describe('quote helper function', () => {
