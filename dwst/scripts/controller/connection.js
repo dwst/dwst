@@ -52,7 +52,7 @@ export default class ConnectionHandler {
     const socket = this._dwst.model.connection.getSocket();
     if (socket === null || socket.isClosing() || socket.isClosed()) {
       let msg;
-      if (typeof foo === 'string') {
+      if (typeof buffer === 'string') {
         msg = buffer;
       } else {
         msg = `<${buffer.byteLength}B of data> `;
