@@ -1,0 +1,59 @@
+name: CD
+on:
+  push:
+    branches:
+      - main
+# Serialize deploys so two pushes can't race on the dwst.github.io working tree.
+concurrency:
+  group: cd
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # git describe --tags drives VERSION; tags are needed for it to work.
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Configure deploy key
+        env:
+          DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t rsa,ed25519 github.com >> ~/.ssh/known_hosts
+      - name: Clone the production site
+        run: git clone git@github.com:dwst/dwst.github.io.git release
+      - name: Build and overlay the new version
+        run: |
+          yarn gulp buildWithoutLinks
+          yarn gulp addNewStuff
+          yarn gulp updateReleaseSymlinks
+      - name: Dereference root symlinks into real files
+        # GitHub Pages (legacy) does not serve symlinked files, so the live
+        # index.html / service_worker.js must be real files pointing at the
+        # latest stable version, not symlinks.
+        run: |
+          cd release
+          for f in index.html service_worker.js; do
+            if [ -L "$f" ]; then
+              cp --remove-destination "$(readlink -f "$f")" "$f"
+            fi
+          done
+      - name: Deploy to dwst.github.io
+        run: |
+          VERSION="$(git describe --tags)"
+          cd release
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy."
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="github-actions[bot]@users.noreply.github.com" \
+              commit -m "Deploy $VERSION"
+          git push origin HEAD:master
