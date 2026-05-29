@@ -83,6 +83,7 @@ export default [
       'no-extend-native': 'error',
       'no-useless-call': 'error',
       'no-useless-escape': 'error',
+      'no-undef': ['error', { typeof: true }],
       'no-undef-init': 'error',
       'no-undefined': 'error',
       'no-continue': 'error',
