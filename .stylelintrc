@@ -37,7 +37,7 @@
 
     "function-url-scheme-allowed-list": [],
     "selector-attribute-operator-allowed-list": ["="],
-    "unit-allowed-list": ["%", "ch", "em", "pt", "px", "vh", "vw"],
+    "unit-allowed-list": ["%", "ch", "em", "pt", "px", "dvh", "vw"],
     "at-rule-allowed-list": ["media", "import"],
     "media-feature-name-allowed-list": ["min-width"],
     "selector-pseudo-class-allowed-list": [
