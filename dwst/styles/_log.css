@@ -31,7 +31,7 @@ Styleguide 2.12
 
 .dwst-log__clear {
   float: left;
-  height: calc(100vh - var(--dwst-bar-height));
+  height: calc(100dvh - var(--dwst-bar-height));
 }
 .dwst-log__item--command {
   margin-top: 1ch;
