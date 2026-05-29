@@ -314,7 +314,9 @@ export function ungitCurrent() {
 export const getOldStuff = gulp.series(deleteRelease, getCurrent, ungitCurrent);
 
 export function addNewStuff() {
-  return gulp.src(path.join(buildBase, '**/*')).pipe(gulp.dest(releaseBase));
+  return gulp
+    .src(path.join(buildBase, '**/*'), { encoding: false })
+    .pipe(gulp.dest(releaseBase));
 }
 
 export function deleteRelease() {
