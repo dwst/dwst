@@ -224,7 +224,7 @@ export function buildHtml() {
 
 export function buildImages() {
   return gulp
-    .src(sourcePaths.images)
+    .src(sourcePaths.images, { encoding: false })
     .pipe(gulp.dest(targetDirs.images))
     .pipe(
       rename((p) => {
@@ -236,7 +236,7 @@ export function buildImages() {
 
 export function buildSprites() {
   return gulp
-    .src(sourcePaths.sprites)
+    .src(sourcePaths.sprites, { encoding: false })
     .pipe(gulp.dest(targetDirs.sprites))
     .pipe(
       rename((p) => {
