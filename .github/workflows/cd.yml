@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - main
+    tags:
+      # Tagging a release deploys it as a clean version dir and new site
+      # root; untagged pushes to main publish as pre-release directories.
+      - 'v*'
+  workflow_dispatch:
 # Serialize deploys so two pushes can't race on the dwst.github.io working tree.
 concurrency:
   group: cd
