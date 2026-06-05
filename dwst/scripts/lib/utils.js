@@ -13,8 +13,8 @@
 
 export default {
   parseNum: (str) => {
-    if (str.length > 2 && str.substr(0, 2) === '0x') {
-      return parseInt(str.substr(2), 16);
+    if (str.length > 2 && str.startsWith('0x')) {
+      return parseInt(str.slice(2), 16);
     }
     const num = parseInt(str, 10);
     return num;
