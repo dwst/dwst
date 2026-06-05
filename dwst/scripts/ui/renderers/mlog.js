@@ -15,11 +15,7 @@ import m from '../../types/m/m.js';
 import utils from '../../lib/utils.js';
 
 function hexify(num) {
-  const hex = num.toString(16);
-  if (hex.length < 2) {
-    return `0${hex}`;
-  }
-  return hex;
+  return num.toString(16).padStart(2, '0');
 }
 
 function charify(num) {

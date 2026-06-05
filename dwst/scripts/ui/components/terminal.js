@@ -91,7 +91,7 @@ function partToMlog(part) {
     }
     const charCode = part.chr.charCodeAt(0);
     if (charCode < 0x80) {
-      const charHex = `0${charCode.toString(16)}`.slice(-2);
+      const charHex = charCode.toString(16).padStart(2, '0');
       return `\\x${charHex}`;
     }
     return `\\u{${charCode.toString(16)}}`;
