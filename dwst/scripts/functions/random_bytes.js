@@ -36,18 +36,12 @@ export default class RandomBytes extends DwstFunction {
   }
 
   run(args) {
-    const randombyte = () => {
-      const out = Math.floor(Math.random() * (0xff + 1));
-      return out;
-    };
     let num = 16;
     if (args.length === 1) {
       num = args[0].value;
     }
-    const bytes = [];
-    for (let i = 0; i < num; i++) {
-      bytes.push(randombyte());
-    }
-    return new Uint8Array(bytes);
+    const bytes = new Uint8Array(num);
+    crypto.getRandomValues(bytes);
+    return bytes;
   }
 }
