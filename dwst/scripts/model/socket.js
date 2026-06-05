@@ -22,14 +22,14 @@ export default class Socket {
   }
 
   resetClock() {
-    this._sessionStartTime = new Date().getTime();
+    this._sessionStartTime = Date.now();
   }
 
   get sessionLength() {
     if (this._sessionStartTime === null) {
       return null;
     }
-    const currentTime = new Date().getTime();
+    const currentTime = Date.now();
     return currentTime - this._sessionStartTime;
   }
 
