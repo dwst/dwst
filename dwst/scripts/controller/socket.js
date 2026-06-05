@@ -86,12 +86,9 @@ export default class SocketHandler {
     if (typeof msg === 'string') {
       this._dwst.ui.terminal.tlog(msg, 'received');
     } else {
-      const fr = new FileReader();
-      fr.addEventListener('load', (evt) => {
-        const buffer = evt.target.result;
+      msg.arrayBuffer().then((buffer) => {
         this._dwst.ui.terminal.blog(buffer, 'received');
       });
-      fr.readAsArrayBuffer(msg);
     }
   }
 
