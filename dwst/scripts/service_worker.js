@@ -32,7 +32,7 @@ addEventListener('install', (evt) => {
 /* eslint-disable consistent-return */
 
 addEventListener('fetch', (evt) => {
-  if (evt.request.url.indexOf('google-analytics.com') !== -1) {
+  if (evt.request.url.includes('google-analytics.com')) {
     return false;
   }
   evt.respondWith(
