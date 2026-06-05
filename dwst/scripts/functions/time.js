@@ -36,6 +36,6 @@ export default class Time extends DwstFunction {
   }
 
   run() {
-    return String(Math.round(new Date().getTime() / 1000));
+    return String(Math.round(Date.now() / 1000));
   }
 }
