@@ -38,12 +38,7 @@ export default class File extends DwstFunction {
   _readFile() {
     return new Promise((resolve) => {
       this._dwst.ui.fileInput.read((file) => {
-        const reader = new FileReader();
-        reader.addEventListener('load', (evt) => {
-          const buffer = evt.target.result;
-          resolve(buffer);
-        });
-        reader.readAsArrayBuffer(file);
+        file.arrayBuffer().then(resolve);
       });
     });
   }
