@@ -36,15 +36,23 @@ export default class RandomChars extends DwstFunction {
   }
 
   run(args) {
-    const randomchar = () => {
-      const out = Math.floor(Math.random() * (0xffff + 1));
-      const char = String.fromCodePoint(out);
-      return char;
-    };
     let num = 16;
     if (args.length === 1) {
       num = args[0].value;
     }
+    const validBmpCount = 0x10000 - 0x800;
+    const buf = new Uint16Array(1);
+    const randomchar = () => {
+      let code;
+      do {
+        crypto.getRandomValues(buf);
+        [code] = buf;
+      } while (code >= validBmpCount);
+      if (code >= 0xd800) {
+        return String.fromCodePoint(code + 0x800);
+      }
+      return String.fromCodePoint(code);
+    };
     let str = '';
     for (let i = 0; i < num; i++) {
       str += randomchar();
