@@ -47,7 +47,7 @@
     "htmlhint": "^1.9.2",
     "knip": "^6.14.1",
     "mocha": "^10.8.2",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.18",
     "postcss-color-hex-alpha": "^11.0.0",
     "postcss-discard-comments": "^8.0.0",
     "postcss-import": "^16.1.1",
