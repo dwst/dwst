@@ -3728,11 +3728,11 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-chai-friendly@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "eslint-plugin-chai-friendly@npm:1.2.0"
+  version: 1.2.1
+  resolution: "eslint-plugin-chai-friendly@npm:1.2.1"
   peerDependencies:
     eslint: ">=3.0.0"
-  checksum: 10c0/728569742d702d8133d18a4c494b21c1298efea0cd85c373d824641d7e6f0b3a16740f6c679238662cf6faa82febf5db84f1ea40ba1b3f8ae4eac2100470ddee
+  checksum: 10c0/45b2e8822fd4439e1024c3d7145ec56c32175795916e393542a0d9755c86d0d3661d618cf0e7303a2e46a71cb115d7c7f419b672175152e901b9e71794710574
   languageName: node
   linkType: hard
 
