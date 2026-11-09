@@ -26,7 +26,6 @@ import atImport from 'postcss-import';
 // eslint-disable-next-line import/no-unresolved
 import colorHexAlpha from 'postcss-color-hex-alpha';
 import discardComments from 'postcss-discard-comments';
-import sourcemaps from 'gulp-sourcemaps';
 import rename from 'gulp-rename';
 import autoprefixer from 'autoprefixer';
 import replace from 'gulp-replace';
@@ -120,13 +119,11 @@ export function deleteBuild() {
 
 export function buildCss() {
   return gulp
-    .src(sourcePaths.cssEntry)
-    .pipe(sourcemaps.init())
+    .src(sourcePaths.cssEntry, { sourcemaps: true })
     .pipe(
       postcss([atImport(), colorHexAlpha(), autoprefixer(), discardComments()]),
     )
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(targetDirs.styles))
+    .pipe(gulp.dest(targetDirs.styles, { sourcemaps: '.' }))
     .pipe(
       rename((p) => {
         p.dirname = path.join(targetDirs.styles, p.dirname);
