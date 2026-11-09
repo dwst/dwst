@@ -16,8 +16,7 @@ import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
 import gulpClean from 'gulp-clean';
-import webpackStream from 'webpack-stream';
-import webpack2 from 'webpack';
+import webpack from 'webpack';
 import fse from 'fs-extra';
 import postcss from 'gulp-postcss';
 import atImport from 'postcss-import';
@@ -141,64 +140,45 @@ const webpackModuleConf = {
   ],
 };
 
-export function buildAppJs() {
-  return gulp
-    .src(sourcePaths.scriptEntry)
-    .pipe(
-      webpackStream(
-        {
-          output: {
-            filename: jsRootFile,
-          },
-          mode: 'production',
-          devtool: 'source-map',
-          module: webpackModuleConf,
-          plugins: [
-            new webpack2.DefinePlugin({
-              VERSION: JSON.stringify(VERSION),
-            }),
-          ],
-        },
-        webpack2,
-      ),
-    )
-    .pipe(gulp.dest(targetDirs.scripts))
-    .pipe(
-      rename((p) => {
-        p.dirname = path.join(targetDirs.scripts, p.dirname);
+function bundleJs(entry, filename) {
+  const compiler = webpack({
+    entry: path.resolve(entry),
+    output: {
+      path: path.resolve(targetDirs.scripts),
+      filename,
+    },
+    mode: 'production',
+    devtool: 'source-map',
+    module: webpackModuleConf,
+    plugins: [
+      new webpack.DefinePlugin({
+        VERSION: JSON.stringify(VERSION),
       }),
-    )
-    .pipe(browserSync.stream());
+    ],
+  });
+  return new Promise((resolve, reject) => {
+    compiler.run((runError, stats) => {
+      compiler.close((closeError) => {
+        if (runError || closeError) {
+          reject(runError || closeError);
+          return;
+        }
+        if (stats.hasErrors()) {
+          reject(new Error(stats.toString('errors-only')));
+          return;
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+export function buildAppJs() {
+  return bundleJs(sourcePaths.scriptEntry, jsRootFile);
 }
 
 export function buildSwJs() {
-  return gulp
-    .src(sourcePaths.swEntry)
-    .pipe(
-      webpackStream(
-        {
-          output: {
-            filename: swRootFile,
-          },
-          mode: 'production',
-          devtool: 'source-map',
-          module: webpackModuleConf,
-          plugins: [
-            new webpack2.DefinePlugin({
-              VERSION: JSON.stringify(VERSION),
-            }),
-          ],
-        },
-        webpack2,
-      ),
-    )
-    .pipe(gulp.dest(targetDirs.scripts))
-    .pipe(
-      rename((p) => {
-        p.dirname = path.join(targetDirs.scripts, p.dirname);
-      }),
-    )
-    .pipe(browserSync.stream());
+  return bundleJs(sourcePaths.swEntry, swRootFile);
 }
 
 export const buildJs = gulp.series(buildSwJs, buildAppJs);
@@ -277,6 +257,11 @@ export const buildWithoutLinks = gulp.series(deleteBuild, buildAssets);
 
 export const build = gulp.series(buildWithoutLinks, createSymlinks);
 
+function reloadBrowsers(done) {
+  browserSync.reload();
+  done();
+}
+
 export const dev = gulp.series(build, () => {
   browserSync.init({
     server: {
@@ -288,7 +273,7 @@ export const dev = gulp.series(build, () => {
   gulp.watch(sourcePaths.html, buildHtml);
   gulp.watch(sourcePaths.images, buildImages);
   gulp.watch(sourcePaths.sprites, buildSprites);
-  gulp.watch(sourcePaths.scripts, buildJs);
+  gulp.watch(sourcePaths.scripts, gulp.series(buildJs, reloadBrowsers));
   gulp.watch(sourcePaths.css, buildCss);
 });
 
