@@ -7152,15 +7152,15 @@ __metadata:
   linkType: hard
 
 "stylelint-no-unsupported-browser-features@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "stylelint-no-unsupported-browser-features@npm:8.1.1"
+  version: 8.1.2
+  resolution: "stylelint-no-unsupported-browser-features@npm:8.1.2"
   dependencies:
     browserslist: "npm:^4.26.3"
     doiuse: "npm:^6.0.6"
     postcss: "npm:^8.4.32"
   peerDependencies:
     stylelint: ">=16.0.2"
-  checksum: 10c0/1e6533f91180891a6a90f2bbaf4cb8355f2d7d56acd272ad4c438eb870130db7da8e406081e87efa46a4ce05dc8d73192f0f8799db2a70821a5bce0cd40b2d38
+  checksum: 10c0/25e659c746afb29f4c43a17715e48a487579ae1a8c4ed367e711b05679e231e7be3521372cecaf72c6018a07f44bcceff0841c89f034ac0d8d32117ba7cd9b8b
   languageName: node
   linkType: hard
 
