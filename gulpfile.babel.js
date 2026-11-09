@@ -15,7 +15,6 @@ import fs from 'fs';
 import path from 'path';
 import exec from 'child_process';
 import gulp from 'gulp';
-import gulpClean from 'gulp-clean';
 import webpack from 'webpack';
 import fse from 'fs-extra';
 import postcss from 'gulp-postcss';
@@ -110,10 +109,12 @@ const releaseBase = 'release';
 // The ending slash seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
 
+function remove(target) {
+  return fs.promises.rm(target, { recursive: true, force: true });
+}
+
 export function deleteBuild() {
-  return gulp
-    .src(buildBase, { read: false, allowEmpty: true })
-    .pipe(gulpClean());
+  return remove(buildBase);
 }
 
 export function buildCss() {
@@ -288,9 +289,7 @@ export function getCurrent(done) {
 }
 
 export function ungitCurrent() {
-  return gulp
-    .src(path.join(releaseBase, '.git'), { read: false, allowEmpty: true })
-    .pipe(gulpClean());
+  return remove(path.join(releaseBase, '.git'));
 }
 
 export const getOldStuff = gulp.series(deleteRelease, getCurrent, ungitCurrent);
@@ -302,9 +301,7 @@ export function addNewStuff() {
 }
 
 export function deleteRelease() {
-  return gulp
-    .src(releaseBase, { read: false, allowEmpty: true })
-    .pipe(gulpClean());
+  return remove(releaseBase);
 }
 
 function getStableReleases() {
