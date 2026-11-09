@@ -19,9 +19,6 @@ import webpack from 'webpack';
 import fse from 'fs-extra';
 import postcss from 'gulp-postcss';
 import atImport from 'postcss-import';
-// Exports-only ESM package; resolves at runtime but eslint-plugin-import's
-// resolver can't follow its exports map.
-// eslint-disable-next-line import/no-unresolved
 import colorHexAlpha from 'postcss-color-hex-alpha';
 import discardComments from 'postcss-discard-comments';
 import rename from 'gulp-rename';
