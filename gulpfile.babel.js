@@ -109,8 +109,25 @@ const releaseBase = 'release';
 // The ending slash seems to be meaninful for some reason
 const appBase = `/${VERSION}/`;
 
+// The directory containing this gulpfile, i.e. the repository root.
+const projectRoot = __dirname;
+
 function remove(target) {
-  return fs.promises.rm(target, { recursive: true, force: true });
+  // Refuse to delete anything that is not strictly inside the repository,
+  // so a bad path or an unexpected working directory cannot wipe out
+  // unrelated files.
+  const resolved = path.resolve(target);
+  const relative = path.relative(projectRoot, resolved);
+  const outside =
+    relative === '' ||
+    relative.split(path.sep)[0] === '..' ||
+    path.isAbsolute(relative);
+  if (outside) {
+    return Promise.reject(
+      new Error(`Refusing to delete ${resolved}: not inside ${projectRoot}`),
+    );
+  }
+  return fs.promises.rm(resolved, { recursive: true, force: true });
 }
 
 export function deleteBuild() {
