@@ -1,6 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
-import importPlugin from 'eslint-plugin-import';
+import { flatConfigs as importX } from 'eslint-plugin-import-x';
 import chaiFriendly from 'eslint-plugin-chai-friendly';
 import json from '@eslint/json';
 
@@ -9,7 +9,7 @@ export default [
     ignores: ['build/**', 'release/**', '.yarn/**'],
   },
   { files: ['**/*.js'], ...js.configs.recommended },
-  { files: ['**/*.js'], ...importPlugin.flatConfigs.errors },
+  { files: ['**/*.js'], ...importX.errors },
   {
     files: ['**/*.js'],
     languageOptions: {
