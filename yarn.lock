@@ -1303,7 +1303,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/core@npm:^1.1.1":
+"@eslint/core@npm:^1.2.1":
   version: 1.2.1
   resolution: "@eslint/core@npm:1.2.1"
   dependencies:
@@ -1336,15 +1336,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/json@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@eslint/json@npm:1.2.0"
+"@eslint/json@npm:^2.0.0":
+  version: 2.1.1
+  resolution: "@eslint/json@npm:2.1.1"
   dependencies:
-    "@eslint/core": "npm:^1.1.1"
-    "@eslint/plugin-kit": "npm:^0.6.1"
-    "@humanwhocodes/momoa": "npm:^3.3.10"
+    "@eslint/core": "npm:^1.2.1"
+    "@eslint/plugin-kit": "npm:^0.7.3"
+    "@humanwhocodes/momoa": "npm:^3.3.13"
     natural-compare: "npm:^1.4.0"
-  checksum: 10c0/d7da38a24897a3f0896b1c21660b16f24de6c5071d614bc6b55df01f27c5f0d27cbef0618fbd60c8f9a6f9492174a87c0b979f96d84467c44042b1fd85cc8afa
+  checksum: 10c0/582550963a4dd9ad06ea5e30c44b64293c568fc77cb76ed092fdd1b13200d80d5a6bde8224551da44d95e09c7fa60109144027de419bdfe0408591cc69046832
   languageName: node
   linkType: hard
 
@@ -1365,13 +1365,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/plugin-kit@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "@eslint/plugin-kit@npm:0.6.1"
+"@eslint/plugin-kit@npm:^0.7.3":
+  version: 0.7.3
+  resolution: "@eslint/plugin-kit@npm:0.7.3"
   dependencies:
-    "@eslint/core": "npm:^1.1.1"
+    "@eslint/core": "npm:^1.2.1"
     levn: "npm:^0.4.1"
-  checksum: 10c0/f8354a7b92cc41e7a55d51986d192134be84f9dc0c91b5e649d075d733b56981c4ca8bf4460d54120c4c87b47984167bad2cb9bceb303f11b0a3bad22b3ed06a
+  checksum: 10c0/2daebaedcfbd261478e8b87dfb46d3118f48277c19eb298483ebc6f3b438e9688b86ddca13b3aeb08dfb06be00fb6073506852386aa124645c1170e7e33d140c
   languageName: node
   linkType: hard
 
@@ -1425,7 +1425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@humanwhocodes/momoa@npm:^3.3.10":
+"@humanwhocodes/momoa@npm:^3.3.13":
   version: 3.3.13
   resolution: "@humanwhocodes/momoa@npm:3.3.13"
   checksum: 10c0/94c063fbd25be062a172c06ae04ed151dbf504c144452cf884c760326977fc1b8ce82fe1c99160b96871351356edf13df888d9b7ab19005b9305ee6b26d371f0
@@ -3309,7 +3309,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.29.7"
     "@babel/register": "npm:^7.0.0"
     "@eslint/js": "npm:^9.39.4"
-    "@eslint/json": "npm:^1.2.0"
+    "@eslint/json": "npm:^2.0.0"
     autoprefixer: "npm:^10.5.0"
     babel-loader: "npm:^10.1.1"
     browser-sync: "npm:^3.0.4"
