@@ -44,7 +44,7 @@
     "gulp-replace": "^1.0.0",
     "htmlhint": "^1.9.2",
     "knip": "^6.14.1",
-    "mocha": "^10.8.2",
+    "mocha": "^12.0.0",
     "postcss": "^8.5.25",
     "postcss-color-hex-alpha": "^11.0.0",
     "postcss-discard-comments": "^8.0.0",
