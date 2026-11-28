@@ -23,9 +23,9 @@
     "node": "*"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.6",
-    "@babel/preset-env": "^7.29.7",
-    "@babel/register": "^7.0.0",
+    "@babel/core": "^8.0.0",
+    "@babel/preset-env": "^8.0.0",
+    "@babel/register": "^8.0.0",
     "@eslint/js": "^9.39.4",
     "@eslint/json": "^1.2.0",
     "autoprefixer": "^10.5.0",
